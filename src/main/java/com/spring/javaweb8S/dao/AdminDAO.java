@@ -10,5 +10,5 @@ public interface AdminDAO {
 
 	public void setBook(@Param("vo") BookVO vo);
 
-	
+
 }

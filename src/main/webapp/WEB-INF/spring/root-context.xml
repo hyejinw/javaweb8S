@@ -35,21 +35,22 @@
   <!-- 가공처리된 매퍼의 정보를 주입하기위한 DAO객체의 위치를 설정 -->
   <mybatis-spring:scan base-package="com.spring.javaweb8S.dao"/>
   
-  <!-- 메일 서비스(SMTP)에 필요한 환경설정(gmail.com) -->
-<!--   <bean id="mailSender" class="org.springframework.mail.javamail.JavaMailSenderImpl">
+  <!-- 메일서비스(SMTP)에 필요한 환경설정(gmail.com) -->
+  <bean id="mailSender" class="org.springframework.mail.javamail.JavaMailSenderImpl">
   	<property name="host" value="smtp.gmail.com" />
   	<property name="port" value="587" />
-  	<property name="username" value="lovelyjin11111@gmail.com" />
-  	<property name="password" value="lziz evxn xxzn elnw" />
+  	<property name="username" value="cccbbbsss1126@gmail.com" />
+  	<property name="password" value="sehfqrgytwufqtoe" />
   	<property name="javaMailProperties">
-  		<props>
-  			<prop key="key.transport.protocol">smtp</prop>
-  			<prop key="mail.smtp.starttls.enable">true</prop>
-  			<prop key="mail.debug">true</prop>
-  			<prop key="mail.smtp.ssl.trust">smtp.gmail.com</prop>
-  			<prop key="mail.smtp.ssl.protocols">TLSv1.2</prop>
-  		</props>
+  	  <props>
+  	    <prop key="mail.transport.protocol">smtp</prop>
+  	    <prop key="mail.smtp.starttls.enable">true</prop>
+  	    <prop key="mail.debug">true</prop>
+  	    <prop key="mail.smtp.ssl.trust">smtp.gmail.com</prop>
+  	    <prop key="mail.smtp.ssl.protocols">TLSv1.2</prop>
+  	  </props>
   	</property>
-  </bean> -->
+  </bean>
+  
   
 </beans>

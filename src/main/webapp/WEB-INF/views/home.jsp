@@ -57,7 +57,7 @@
 	<div class="w3-content w3-display-container" style="max-width:1500px;">
 <!-- 	<div class="w3-content w3-display-container" style="max-width:1500px; margin-top:60px"> -->
 	 	<div class="w3-display-container mySlides">
-		  <img src="${ctp}/resources/images/chaeg_banner1.jpg" style="width:100%">
+		  <img src="${ctp}/resources/images/main_banner1.jpg" style="width:100%">
 		  <div class="w3-display-bottomright w3-container">
 		    <p>
 		    	첵(의)세계에서 발행하는 책Chaeg은<br/>
@@ -69,7 +69,7 @@
 		  </div>
 		</div>
 	 	<div class="w3-display-container mySlides">
-		  <img src="${ctp}/resources/images/chaeg_banner2.jpg" style="width:100%">
+		  <img src="${ctp}/resources/images/main_banner2.jpg" style="width:100%">
 		  <div class="w3-display-bottomright w3-container">
 		    <p>
 		    	책을 좋아하는 사람들이 만든 책과 문화에 관한 월간지입니다.<br/>
@@ -80,7 +80,7 @@
 		  </div>
 		</div>
 	 	<div class="w3-display-container mySlides">
-		  <img src="${ctp}/resources/images/chaeg_banner3.jpg" style="width:100%">
+		  <img src="${ctp}/resources/images/main_banner3.jpg" style="width:100%">
 		  <div class="w3-display-bottomright w3-container">
 		    <p>
 		    	책을 좋아하는 사람들이 만든 책과 문화에 관한 월간지입니다.<br/>

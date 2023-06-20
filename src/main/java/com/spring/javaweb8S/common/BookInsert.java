@@ -19,20 +19,20 @@ import com.spring.javaweb8S.dao.AdminDAO;
 import com.spring.javaweb8S.vo.BookVO;
 
 public class BookInsert {
-	
+
 	@Autowired
 	AdminDAO adminDAO;
-	
-	
+
+
   public ArrayList<BookVO> bookInsert(String query) throws UnsupportedEncodingException {
-  	
+
   	ArrayList<BookVO> vos = new ArrayList<BookVO>();
-		
+
 		String encodedQuery = URLEncoder.encode(query, "UTF-8");
 		String apiUrl = "https://dapi.kakao.com/v3/search/book?target=title&query=" + encodedQuery;
-	
+
 	  String apiKey = "7687511cd3463867077e445e82c52e7a";
-	
+
 	  try {
       URL url = new URL(apiUrl);
       HttpURLConnection connection = (HttpURLConnection) url.openConnection();
@@ -54,44 +54,44 @@ public class BookInsert {
       connection.disconnect();
 
  //     System.out.println("Response Body: " + response.toString());
-      
+
       JSONParser parser = new JSONParser();
-      
+
       JSONObject obj = (JSONObject) parser.parse(response.toString());
       String data = obj.get("documents").toString();
       JSONArray resultArray = (JSONArray) parser.parse(data);
-      
-      		
-      for(int i=0; i<resultArray.size(); i++) {
+
+
+      for (Object element : resultArray) {
       	BookVO vo = new BookVO();
-      	JSONObject book = (JSONObject) resultArray.get(i);
+      	JSONObject book = (JSONObject) element;
       	//if(Integer.parseInt(book.get("datetime").toString().substring(0,4)) < 1950) break;
-      	
+
       	// 작가와 번역자는 array 처리
       	// 1) 작가
       	String authorsStr = book.get("authors").toString();
       	JSONArray authorsArray = (JSONArray) parser.parse(authorsStr);
       	String authors = "";
-      	
-      	for(int j=0; j<authorsArray.size(); j++) {
-      	  authors += authorsArray.get(j).toString() + "/";
+
+      	for (Object element2 : authorsArray) {
+      	  authors += element2.toString() + "/";
       	}
       	authors = authors.substring(0, authors.lastIndexOf("/"));
       	System.out.println("authors : " + authors);
-      	
+
       	// 2) 번역자
       	String translatorsStr = book.get("translators").toString();
       	JSONArray translatorsArray = (JSONArray) parser.parse(translatorsStr);
       	String translators = "";
-      	
+
       	if(translatorsArray.size() != 0) {
-      		for(int j=0; j<translatorsArray.size(); j++) {
-      			translators += translatorsArray.get(j).toString() + "/";
+      		for (Object element2 : translatorsArray) {
+      			translators += element2.toString() + "/";
       		}
       		translators = translators.substring(0, translators.lastIndexOf("/"));
       		System.out.println("translators : " + translators);
       	}
-      	
+
       	vo.setTitle(book.get("title").toString());
       	vo.setContents(book.get("contents").toString());
       	vo.setUrl(book.get("url").toString());
@@ -104,20 +104,20 @@ public class BookInsert {
       	vo.setSale_price(Integer.parseInt(book.get("sale_price").toString()));
       	vo.setThumbnail(book.get("thumbnail").toString());
       	vo.setStatus(book.get("status").toString());
-      	
+
       	if((adminDAO.getBookList(vo.getIsbn()) == null)) adminDAO.setBook(vo);
-      	
+
       	vos.add(vo);
       	System.out.println("vo : " + vo);
-      	
+
       }
-        
+
     } catch (IOException e) {
         e.printStackTrace();
 		} catch (ParseException e) {
 			e.printStackTrace();
 		}
-    
+
 	  return vos;
   }
 }

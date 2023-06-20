@@ -42,7 +42,7 @@
     <div class="w3-cell-row">
     	<div class="w3-cell l4 m8 s9">
 		  	<a href="${ctp}/" class="w3-bar-item w3-button w3-wide">
-		    	<img src="${ctp}/resources/images/mainLogo.png" style="width:100%; height:100%; max-width:400px" class="w3-hover-opacity">
+		    	<img src="${ctp}/resources/images/navLogo.png" style="width:100%; height:100%; max-width:350px" class="w3-hover-opacity">
 		    </a>
     	</div>
     
@@ -56,7 +56,7 @@
 	      <a href="#contact" class="w3-bar-item w3-button w3-round-xxlarge navContent"><b>게임</b></a>
 	      <a href="${ctp}/member/memberLogin" class="w3-bar-item w3-button w3-hover-white w3-round-xxlarge navContent">
 		      <p class="w3-tooltip"><i class="fa-solid fa-person-running" style="color: #000000; font-size:20px"></i>
-		      	<span class="w3-text w3-tag w3-small w3-animate-opacity w3-red">책(의)세계로 들어가기</span>
+		      	<span class="w3-text w3-tag w3-small w3-animate-opacity w3-red">책(의)세계로 로그인</span>
 	      	</p>
 	      </a>
 	      

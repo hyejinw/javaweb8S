@@ -6,7 +6,7 @@
 <head>
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
-	<title>login</title>
+	<title>책(의)세계로 로그인</title>
 	<jsp:include page="/WEB-INF/views/include/bs4.jsp" />
 	<style>
 		@import url(https://fonts.googleapis.com/css?family=Raleway:400,100,200,300);
@@ -86,8 +86,8 @@
 <jsp:include page="/WEB-INF/views/include/nav2.jsp" />
 	<div id="container" style="margin:100px 0px">
 	<div class="container-xl p-5 my-5">
-	<h2 class="text-center" style="margin:0px auto;">로그인</h2>
-		<form name="myform" method="post" action="${ctp}/LoginOk.kn_mem" style="margin-top:50px">
+	<h2 class="text-center" style="margin:0px auto;">LOGIN</h2>
+		<form name="myform" method="post" style="margin-top:50px">
 			<div class="form-group" style="margin:0px auto; padding-top:50px; width:60%"> <!-- 이 부분 추후에 반응형 사이즈로 재조절 필요 -->
 				<div class="row" style="margin-bottom:30px">
 					<div class="col-md-3 text-center">아이디</div>
@@ -106,10 +106,10 @@
 			    </div>
 				</div>
 				<div class="row text-center" style="margin-bottom:10px">
-					<div class="col"><button type="submit" class="btn2" style="background-color:#FFDB7E; font-size: 1em; border-color:#F5EBE0">책(의)세계로!</button></div>
+					<div class="col"><button type="submit" class="btn2" style="background-color:#282828; font-size: 0.9em; border-color:#F5EBE0; color:#F5EBE0">책(의)세계로 <i class="fa-solid fa-exclamation"></i></button></div>
 				</div>
 				<div class="row text-center" style="margin-bottom:10px">
-					<div class="col"><button type="button" onclick="location.href='${ctp}/Join.kn_mem';" class="btn2" style="background-color:#F5EBE0; font-size: 1em; border-color:#FFDB7E; color:black">회원가입</button></div>
+					<div class="col"><button type="button" onclick="location.href='${ctp}/member/memberJoin';" class="btn2" style="background-color:#F5EBE0; font-size: 0.9em; border-color:#282828; color:black">회원가입</button></div>
 				</div>
 			</div>
 		</form>

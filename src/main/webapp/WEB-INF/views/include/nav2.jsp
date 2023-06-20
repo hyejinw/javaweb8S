@@ -23,28 +23,27 @@
 </style>
 
 <div class="topNav">
-	
  <!-- Navbar (sit on top) -->
   <div class="w3-bar w3-white w3-card" id="myNavbar">
     <!-- Right-sided navbar links -->
     <div class="w3-cell-row">
     	<div class="w3-cell l4 m8 s9">
 		  	<a href="${ctp}/" class="w3-bar-item w3-button w3-wide">
-		    	<img src="${ctp}/resources/images/mainLogo.png" style="width:100%; height:100%; max-width:400px" class="w3-hover-opacity">
+		    	<img src="${ctp}/resources/images/navLogo.png" style="width:100%; height:100%; max-width:350px" class="w3-hover-opacity">
 		    </a>
     	</div>
     
 	    <div class="w3-right w3-hide-small w3-cell w3-cell-middle l8 m4 s3">
 	      <a href="#about" class="w3-bar-item w3-button w3-round-xxlarge navContent">매거진</a>
 	      <a href="#team" class="w3-bar-item w3-button w3-round-xxlarge navContent">책(의)세계란</a>
-	      <a href="#team" class="w3-bar-item w3-button w3-round-xxlarge navContent"><b>3개의 책</b></a>
-	      <a href="#work" class="w3-bar-item w3-button w3-round-xxlarge navContent"><b>컬렉션</b></a>
+	      <a href="#team" class="w3-bar-item w3-button w3-round-xxlarge navContent">3개의 책</a>
+	      <a href="#work" class="w3-bar-item w3-button w3-round-xxlarge navContent">컬렉션</a>
 	      <a href="#pricing" class="w3-bar-item w3-button w3-round-xxlarge navContent"><b>독립서점</b></a>
 	      <a href="#contact" class="w3-bar-item w3-button w3-round-xxlarge navContent"><b>뉴스레터</b></a>
 	      <a href="#contact" class="w3-bar-item w3-button w3-round-xxlarge navContent"><b>게임</b></a>
 	      <a href="${ctp}/member/memberLogin" class="w3-bar-item w3-button w3-hover-white w3-round-xxlarge navContent">
 		      <p class="w3-tooltip"><i class="fa-solid fa-person-running" style="color: #000000; font-size:20px"></i>
-		      	<span class="w3-text w3-tag w3-small w3-animate-opacity w3-red">책(의)세계로 들어가기</span>
+		      	<span class="w3-text w3-tag w3-small w3-animate-opacity w3-red">책(의)세계로 로그인</span>
 	      	</p>
 	      </a>
 	      
