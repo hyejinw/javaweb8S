@@ -6,20 +6,20 @@ drop table point;
 ALTER TABLE point AUTO_INCREMENT = 0;
 	
 create table point (
-	idx int not null auto_increment,         /* ì ë¦½ê¸ˆ ê³ ìœ ë²ˆí˜¸ */
-	memMid varchar(20) not null,             /* íšŒì› ê³ ìœ ë²ˆí˜¸(ì™¸ë˜í‚¤) */
-	orderIdx int,                            /* ì£¼ë¬¸ ê³ ìœ ë²ˆí˜¸(ì™¸ë˜í‚¤) */
-	point int not null,                      /* ì ë¦½ í¬ì¸íŠ¸ */
-	pointReason varchar(250) not null,       /* ì ë¦½ ì‚¬ìœ  */
-	pointStartDate varchar(50) not null,     /* ì ë¦½ì¼ */
+	idx int not null auto_increment,         /* Àû¸³±İ °íÀ¯¹øÈ£ */
+	memMid varchar(20) not null,             /* È¸¿ø °íÀ¯¹øÈ£(¿Ü·¡Å°) */
+	orderIdx int,                            /* ÁÖ¹® °íÀ¯¹øÈ£(¿Ü·¡Å°) */
+	point int not null,                      /* Àû¸³ Æ÷ÀÎÆ® */
+	pointReason varchar(250) not null,       /* Àû¸³ »çÀ¯ */
+	pointStartDate varchar(50) not null,     /* Àû¸³ÀÏ */
 
 	primary key(idx),
-	foreign key(memMid) references member(mid)     /* ì™¸ë˜í‚¤ ì„¤ì •: ë°˜ë“œì‹œ ê³ ìœ í•œ í‚¤ì—¬ì•¼ë§Œ í•œë‹¤. */
-	on update cascade															 /* ì›ë³¸ì˜ ë³€ê²½ì„ ë”°ë¼ê°„ë‹¤. */
+	foreign key(memMid) references member(mid)     /* ¿Ü·¡Å° ¼³Á¤: ¹İµå½Ã °íÀ¯ÇÑ Å°¿©¾ß¸¸ ÇÑ´Ù. */
+	on update cascade															 /* ¿øº»ÀÇ º¯°æÀ» µû¶ó°£´Ù. */
 	on delete cascade
 );
 
 	,
-	foreign key(orderIdx) references order(idx)    /* ì™¸ë˜í‚¤ ì„¤ì •: ë°˜ë“œì‹œ ê³ ìœ í•œ í‚¤ì—¬ì•¼ë§Œ í•œë‹¤. */
-	on update cascade															 /* ì›ë³¸ì˜ ë³€ê²½ì„ ë”°ë¼ê°„ë‹¤. */
+	foreign key(orderIdx) references order(idx)    /* ¿Ü·¡Å° ¼³Á¤: ¹İµå½Ã °íÀ¯ÇÑ Å°¿©¾ß¸¸ ÇÑ´Ù. */
+	on update cascade															 /* ¿øº»ÀÇ º¯°æÀ» µû¶ó°£´Ù. */
 	on delete cascade

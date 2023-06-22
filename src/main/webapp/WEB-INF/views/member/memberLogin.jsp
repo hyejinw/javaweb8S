@@ -101,8 +101,8 @@
 				<div class="row" style="margin:30px 0px">
 					<div class="col-md-4 text-right p-0"><input type="checkbox" name="idSave" id="remember_me" class="checkbox" checked /><label for="remember_me"><small>&nbsp; 아이디 저장</small></label></div>
 					<div class="col-md-8 text-right">
-						<a href="${ctp}/IdFinder.kn_mem" class="text-decoration-none"><small>아이디 찾기</small></a>&nbsp;&nbsp;|&nbsp;
-		    		<a href="${ctp}/PwdFinder.kn_mem" class="text-decoration-none"><small>비밀번호 찾기</small></a>
+						<a href="${ctp}/member/idFinder" class="text-decoration-none"><small>아이디 찾기</small></a>&nbsp;&nbsp;|&nbsp;
+		    		<a href="${ctp}/member/pwdFinder" class="text-decoration-none"><small>비밀번호 찾기</small></a>
 			    </div>
 				</div>
 				<div class="row text-center" style="margin-bottom:10px">

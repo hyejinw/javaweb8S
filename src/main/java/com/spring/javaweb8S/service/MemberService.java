@@ -12,4 +12,6 @@ public interface MemberService {
 
 	public void setMemberPoint(String recoMid, int point);
 
+	public void setMemberLoginProcess(MemberVO vo);
+
 }

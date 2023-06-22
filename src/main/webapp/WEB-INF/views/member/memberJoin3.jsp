@@ -45,11 +45,9 @@
       <input type="text" class="form-control radiusForm" name="name" id="name" onchange="nameCheck()" placeholder="성명을 입력하세요." required />
     	<div id="nameError" class="text-primary"></div>
     </div>
-    <div class="form-group" style="margin:30px 0px 15px 0px">
-      <label for="email1" >이메일 <span class="must">*</span> &nbsp; &nbsp; 
-      <input type="button" id="emailBtn" onclick="sendCode()" value="이메일 인증" class="btn btn-sm" />  &nbsp; &nbsp; <span id="emailSpinner" class="spinner-border spinner-border-sm"  style="display:none"></span>
-      <input type="button" id="changeEmail" onclick="enableEmailChange()" value="이메일 변경" class="btn btn-sm" style="display:none" /></label>
-        <div class="input-group">
+    <div class="form-group">
+      <label for="email1" >이메일 <span class="must">*</span> &nbsp; &nbsp;<input type="button" id="emailBtn" value="이메일 인증" class="btn btn-sm" disabled/></label>
+        <div class="input-group mb-1">
           <input type="text" class="form-control radiusForm" id="email1" name="email1" onblur="emailCheck()" placeholder="Email을 입력하세요." required />
           <div class="input-group-append">
             <select name="email2" id="email2" class="custom-select">
@@ -63,15 +61,50 @@
           </div>
         </div>
     	<div id="emailError" class="text-primary"></div>
+      <!-- 이메일 변경 -->
+      <div class="misspell_box mb-3" id="misspell_box" style="display:none;">
+        <span>&nbsp;&nbsp;<small>이메일을 잘못 입력하셨나요?</small></span>&nbsp;&nbsp;
+        <button class="email_change btn btn-sm">이메일 변경</button>
+      </div>
+          <!-- 인증코드 관련 -->
+	    <div class="auth_container">
+	
+	        <h3>인증 코드</h3>
+	
+	        <!-- 인증 코드 -->
+	        <div class="auth_box">
+	            
+	            <!-- 인증코드 입력창 컨테이너 -->
+	            <div class="input_container">
+	                <!-- 입력창 -->
+	                <input type="text" class="input input_auth" placeholder="받은 인증코드를 입력해주세요.">
+	                <!-- 유효시간 타이머 -->
+	                <span class="timer"></span>
+	            </div>
+	
+	            <button class="AuthBtn" disabled>인증코드 확인</button>
+	
+	        </div>
+	
+	        <!-- 인증코드 재발송 -->
+	        <div class="ReRFCBox">
+	            <span>인증코드를 받지 못하셨나요?</span>
+	            <button class="ReRFCBtn">[인증코드 재발송]</button>   
+	             
+	        </div>
+	
+	        <!-- 인증코드 상태 메세지 -->
+	        <p class="auth_msg msg">
+	            [인증코드 메세지]
+	        </p>
+	
+	    </div>
+      
+      
       <input type="hidden" name="email" id="email"/>
     </div>
     <div class="form-group">
-      <label for="code">인증코드 &nbsp; &nbsp; 
-    	<button type="submit" id="codeCheck" class="btn btn-sm" onclick="codeAuth()" disabled>인증</button></label>
-      <input type="text" name="code" id="code" class="form-control radiusForm" disabled />
-    </div>
-    <div class="form-group">
-      <div class="input-group mt-5 mb-3">
+      <div class="input-group mb-3">
         <div class="input-group-prepend">
           <span class="input-group-text">전화번호 <span class="must">*</span></span> &nbsp;&nbsp;
             <select name="tel1" id="tel1" class="custom-select">
@@ -372,23 +405,23 @@ o 로그 기록
 				return false;
 			}
 			
-		$.ajax({
-			type : "post",
-			url  : "${ctp}/member/memberIdCheck",
-			data : {mid : mid},
-			success:function(res) {
-				if(res == "1") {
-					alert("이미 사용 중인 아이디 입니다. 다시 입력해 주세요");
-					$("#mid").focus();
-				}
-				else  {
-					alert("사용 가능한 아이디 입니다.");
-					idCheckSw = 1;
-					myform.mid.readOnly = true;
-					$("#pwd").focus();
-				}
-			}
-		});
+    	$.ajax({
+    		type : "post",
+    		url  : "${ctp}/member/memberIdCheck",
+    		data : {mid : mid},
+    		success:function(res) {
+    			if(res == "1") {
+    				alert("이미 사용 중인 아이디 입니다. 다시 입력해 주세요");
+    				$("#mid").focus();
+    			}
+    			else  {
+    				alert("사용 가능한 아이디 입니다.");
+    				idCheckSw = 1;
+    				myform.mid.readOnly = true;
+    				$("#pwd").focus();
+    			}
+    		}
+    	});
 		}
 		
 		// 별명 중복버튼을 클릭했는지의 여부를 확인하기 위한 변수(버튼 클릭 후엔 내용 수정처리 불가)
@@ -410,23 +443,23 @@ o 로그 기록
 				return false;
 			}
 			
-		$.ajax({
-			type : "post",
-			url  : "${ctp}/member/memberNicknameCheck",
-			data : {nickname : nickname},
-			success:function(res) {
-				if(res == "1") {
-					alert("이미 사용 중인 별명입니다. 다시 입력해 주세요");
-					$("#nickname").focus();
-				}
-				else  {
-					alert("사용 가능한 별명입니다.");
+    	$.ajax({
+    		type : "post",
+    		url  : "${ctp}/member/memberNicknameCheck",
+    		data : {nickname : nickname},
+    		success:function(res) {
+    			if(res == "1") {
+    				alert("이미 사용 중인 별명입니다. 다시 입력해 주세요");
+    				$("#nickname").focus();
+    			}
+    			else  {
+    				alert("사용 가능한 별명입니다.");
 						myform.nickname.readOnly = true;
-					nicknameCheckSw = 1;
-					$("#nickname").focus();
-				}
-			}
-		});
+    				nicknameCheckSw = 1;
+    				$("#nickname").focus();
+    			}
+    		}
+    	});
 		}
 		
 		// 전화번호 길이 제한(4자리 이상부터 입력 불가)
@@ -440,15 +473,15 @@ o 로그 기록
 		// 첫 번째 전화번호 내용 입력 후 자동으로 커서 옮기기
 		$(document).ready(function() {
 	    $(".inputs").keyup(function () {
-	    if (this.value.length == this.maxLength) {
-	      $(this).next('.inputs').focus();
-	    }
+        if (this.value.length == this.maxLength) {
+          $(this).next('.inputs').focus();
+        }
 	    });
 		});	
 		
 		
 		let check = true;
-	
+
 		// 가입부분 체크
 		function joinCheck(){
 		  let mid = document.getElementById("mid").value.trim();
@@ -456,11 +489,11 @@ o 로그 기록
 		  let pwd2 = document.getElementById("pwd2").value.trim();
 		  let nickname = document.getElementById("nickname").value.trim();
 		  let name = document.getElementById("name").value.trim();
-		  
-			let email1 = myform.email1.value.trim();
-			let email2 = myform.email2.value;
-			let email = email1 + "@" + email2;
-		
+	  
+    	let email1 = myform.email1.value.trim();
+    	let email2 = myform.email2.value;
+    	let email = email1 + "@" + email2;
+    	
 		  let tel1 = myform.tel1.value;
 		  let tel2 = myform.tel2.value;
 		  let tel3 = myform.tel3.value;
@@ -489,7 +522,7 @@ o 로그 기록
 			   check = true;
 		  }
 		  
-			  // 비밀번호 확인
+ 		  // 비밀번호 확인
 		  if(!regex2.test(pwd)) {
 		    document.getElementById("pwdError").innerHTML="비밀번호가 올바르지 않습니다.(영어/숫자 필수, 특수문자 가능 4~20자)";
 		    check = false;
@@ -542,7 +575,8 @@ o 로그 기록
 			  check = true;
 		  }	 
 				     
-	
+				
+
 		  // 전화번호 확인
 		  if(tel2==="" || tel3===""){
 		    document.getElementById("telError").innerHTML="전화번호를 입력해주세요.";
@@ -558,7 +592,7 @@ o 로그 기록
 		  }
 		  
 		  if(!check){
-	/* 			  alert('입력된 값을 다시 확인해주세요.'); */
+/* 			  alert('입력된 값을 다시 확인해주세요.'); */
 			  alert('책(의)세계로 갈 준비를 완료해주세요!');
 			  window.scrollTo(0,130); // (그냥 위치만 바뀌는)스크롤 위로 올리기 
 			  check = true;
@@ -574,10 +608,6 @@ o 로그 기록
 		    else if(nicknameCheckSw == 0) {
 					alert("별명 중복확인을 해주세요.");
 					document.getElementById("nicknameBtn").focus();
-				} 
-		    else if(emailCheckSw == 0) {
-					alert("이메일 인증을 완료 해주세요.");
-					document.getElementById("emailBtn").focus();
 				} 
 				else {
 			    myform.tel.value = tel;
@@ -602,7 +632,7 @@ o 로그 기록
 			   check = true;
 		  }			
 		}
-			function pwdCheck() {
+ 		function pwdCheck() {
 			let regex2 = /^(?=.*[0-9])(?=.*[a-zA-Z])[a-zA-Z0-9!@#$%^&*()._-]{4,20}$/g; //(비밀번호)4자 이상 20자 이하, 영어/숫자 1개 이상 필수, 특수문자 허용
 			let pwd = document.getElementById("pwd").value.trim();
 			document.getElementById("pwdError").innerHTML="";
@@ -670,9 +700,9 @@ o 로그 기록
 		
 		function emailCheck() {
 			let regex4 = /^[0-9a-zA-Z]+$/g; // 이메일
-		let email1 = document.getElementById("email1").value.trim();
+    	let email1 = document.getElementById("email1").value.trim();
 		  document.getElementById("emailError").innerHTML="";
-	
+
 		  // 이메일확인
 		  if(!regex4.test(email1)){
 		    document.getElementById("emailError").innerHTML="이메일이 올바르지 않습니다.";
@@ -681,47 +711,20 @@ o 로그 기록
 		  else {
 			  document.getElementById("emailError").innerHTML="";
 			  check = true;
+			  
+			  document.querySelector("#emailBtn").disabled = false;
 		  }			
 		}
 		
-		// 이메일 인증버튼을 클릭했는지의 여부를 확인하기 위한 변수
-		let emailCheckSw = 0;
-	      
-		let emailInput1 = document.getElementById('email1');
-		let emailInput2 = document.getElementById('email2');
-	  let emailBtn = document.getElementById('emailBtn');
-	  let changeEmailBtn = document.getElementById('changeEmail');
-	  let codeInput = document.getElementById('code');
-	  let codeCheck = document.getElementById('codeCheck'); 
-	  let emailSpinner = document.getElementById('emailSpinner'); 
-	  let timerId;
-	  let timerElement = document.createElement('span');
-	  timerElement.id = 'timer';
-	  codeCheck.parentNode.appendChild(timerElement);
-	  let emailAuth = "";
-	  
-	  
-	  function sendCode() {
-			let regex4 = /^[0-9a-zA-Z]+$/g; // 이메일
-			let email1 = document.getElementById("email1").value.trim();
-		  document.getElementById("emailError").innerHTML="";
-	
-		  // 이메일확인
-		  if(!regex4.test(email1)){
-		    document.getElementById("emailError").innerHTML="이메일이 올바르지 않습니다.";
-		    check = false;
-		  }
-		  else {
-			  document.getElementById("emailError").innerHTML="";
-			  check = true;
-				
-			  // 이메일 스피터 생성
-			  emailSpinner.style.display = 'inline-block';
-			  
-				let email1 = myform.email1.value.trim();
+		// 화면이 로드되었을 때 발생하는 이벤트
+		$(document).ready(function(){
+	    $("#emailBtn").click(function(){
+	    	
+	    	let email1 = myform.email1.value.trim();
 	    	let email2 = myform.email2.value;
 	    	let email = email1 + "@" + email2;
-				
+				let emailAuth = "";
+			
 	      // 인증코드 이메일 발송 처리
 	      $.ajax({
 	    	  type : "post",
@@ -729,91 +732,139 @@ o 로그 기록
 	    	  data : {email : email},
 	    	  success : function(res) {
 	    		  emailAuth = res;
-	    		  /*emailAuthProcess(emailAuth);*/
-	    		  
-				    emailInput1.readOnly = true;
-				    emailInput2.disabled = true;
-				    emailBtn.disabled = true;
-				    changeEmailBtn.style.display = 'inline-block';
-				    timerId = startTimer();
-				    enableCodeCheck(); 
-				    
-						 // 이메일 스피터 생성
-					  emailSpinner.style.display = 'none';
+	    		  emailAuthProcess(emailAuth);
 	    	  },
 	    	  error : function() {
 	    		  alert('이메일 인증 오류가 발생했습니다. 재시도 부탁드립니다.')
 	    	  }
 	      });
-			
-		  }
-		
-	  }
-	
-	  function enableEmailChange() {
-	    emailInput1.readOnly = false;
-	    emailInput2.disabled = false;
-	    changeEmailBtn.style.display = 'none';
-	    codeInput.value = '';
-	    timerElement.textContent = '';
-	    codeInput.disabled = true;
-	    clearInterval(timerId);
-	    emailBtn.disabled = false;
-	    disableCodeCheck();
-	  }
-	
-	  function startTimer() {
-		  let timeLeft = 60;
-	
-	
-	    function countDown() {
-	      if (timeLeft === -1) {
-	        clearInterval(timerId);
-	        disableCodeCheck();
-	      } else {
-	        timerElement.textContent = '                 (남은 시간: ' + timeLeft + '초)';
-	        timeLeft--;
-	      }
-	    }
-	
-	    countDown();
-	    return setInterval(countDown, 1000);
-	  }
-	
-	  function enableCodeCheck() {
-	    codeCheck.disabled = false;
-	    codeInput.disabled = false;
-	  } 
-	
-	  function disableCodeCheck() {
-	    codeCheck.disabled = true;
-	    codeInput.disabled = true;
-	  }
-	
-	  function disableVerification() {
-	    emailBtn.disabled = true;
-	    emailInput1.readOnly = true;
-	    emailInput2.disabled = true;
-	    changeEmailBtn.style.display = 'none';
-	    clearInterval(timerId);
-	  }
-	
-		function codeAuth() {
-			let code = document.getElementById('code').value;
-			
-			if(code == emailAuth) {
-				alert('이메일 인증에 성공했습니다!');
-				disableCodeCheck();
-				disableVerification();
-				emailCheckSw = 1;
-			}
-			else {
-				alert('인증코드가 일치하지 않습니다. 재시도 부탁드립니다.');
-				enableCodeCheck();
-			}
+	    })
+		});
+	      
+		// 이메일 인증 부분
+		function emailAuthProcess(emailAuth) {
+      // 화면 처리
+      // 이메일 입력창 readonly로 변경
+		  $('#email1').attr("readonly", true);
+		  $('#email2').attr("readonly", true);
+		  
+      // 인증코드 발송 버튼 비활
+      $("#emailBtn").disabled = true;
+      
+      // 이메일 misspell box 보임으로 변경
+      document.getElementById("misspell_box").style.display = "block";
+      
+      // 타이머 설정 및 화면에 출력
+      timer_start();
+      
+      // auth_box 보임으로 변경
+      auth_container.style.display = "block";
+      // 인증 msg 인증코드 발송 성공. (10초 뒤부터 재발송 가능합니다.)
+      code_msg.textContent = "인증코드 발송 성공. (10초 뒤부터 재발송 가능합니다.)";
+      
+      // 인증 msg 색 변경
+      code_msg.style.color = msg_succ_color;
+      // 인증 msg 보임 처리
+      code_msg.style.display = "block";
 		}
-	
-	
+		
+    // 코드 유효성 (유효하면 true, 아니면 false)
+    let code_valid = false 
+    // 발송 후 지난 초
+    let current_time = 0;
+    // 유효시간 
+    let minutes,seconds;
+    let timer_thread;
+        
+		// 인증코드 유효시간 카운트다운 및 화면 출력
+    function timer_start() {
+        
+        // 인증코드 유효성 true
+        code_valid = true;
+        // 현재 발송 시간 초기화
+        current_time = 0
+        // 60초
+        let count = 60
+
+        timer.innerHTML = "00:60"
+        // 1초마다 실행
+        timer_thread = setInterval(function () {
+          
+          minutes = parseInt(count / 60, 10);
+          seconds = parseInt(count % 60, 10);
+  
+          minutes = minutes < 10 ? "0" + minutes : minutes;
+          seconds = seconds < 10 ? "0" + seconds : seconds;
+  
+
+          timer.innerHTML  = minutes + ":" + seconds;
+
+          // alert(minutes + ":" + seconds);
+          
+          // 타이머 끝
+          if (--count < 0) {
+              timer_stop();
+              timer.textContent = "시간초과"
+              // code msg 보임
+              code_msg.style.display = "block";
+              // code msg "인증코드가 만료되었습니다."
+              code_msg.textContent = "인증코드가 만료되었습니다.";
+              // 코드 색상 비정상
+              code_msg.style.color = msg_err_color;
+          }
+
+          current_time++
+
+      }, 1000);
+  
+    } 
+		
+    // 타이머 종료
+    function timer_stop(){
+      // 타이머 종료
+      clearInterval(timer_thread)
+      // 유효시간 만료
+			code_valid = false
+    }
+
+    // 인증코드가 유효하면 true, 만료되었다면 false 반환
+    function iscodeValid(){
+      return code_valid;
+    }
+
+    // 인증코드 발송 후 10초가 지났는가? 지났으면 true, 안지났으면 false
+    function isRerequest(){
+      return  current_time>=10?true:false;
+    }
+		
+ 		// 이메일 변경 버튼을 클릭할 때
+    // 이메일을 잘못 입력해서, 이메일을 변경하고자 함.
+    email_change_btn.onclick = function(e){
+      // 인증 절차 초기화
+
+      // 인증 코드 만료
+      ResponseCode = "";
+      // 타이머 종료
+      timer_stop();
+
+      // 화면 초기화
+      // auth container 안보임
+      auth_container.style.display = "none";
+      // misspell box 안보임
+      misspell_box.style.display = "none";
+      // 인증코드 btn 활성화
+      RFCBtn.disabled = false;
+      // 이메일 입력창 배경색 흰색으로 변경
+      email_input.style.backgroundColor = "white";
+      // 이메일 입력창 활성화
+      email_input.readOnly = false;
+
+      // 인증 확인 버튼 비활성화
+      code_check.disabled = true;
+    }
+    
+ 
+ 
 		function telCheck() {
 			let regex5 = /\d{2,3}-\d{3,4}-\d{4}$/g; //(전화번호)
 		  let tel1 = myform.tel1.value;
@@ -871,8 +922,7 @@ o 로그 기록
 				$('.agree').prop('checked',this.checked);
 			});
 		});
-	
-
+		
 	</script>
 	<style>
 		html {scroll-behavior:smooth;}

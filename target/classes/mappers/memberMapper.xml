@@ -19,4 +19,12 @@
 		update member set point += #{point};  <!-- 이렇게 쓸 수 있나? -->
 	</update>
 	
+	<update id="setMemberLoginProcess">
+		<if test="vo.todayCnt == 0">
+	  	update member set totCnt = totCnt + 1, todayCnt = 1, lastVisit = now() where idx = #{vo.idx};
+		</if>
+		<if test="vo.todayCnt != 0">
+	  	update member set totCnt = totCnt + 1, todayCnt = todayCnt + 1, lastVisit = now() where idx = #{vo.idx};
+		</if>
+	</update>
 </mapper>

@@ -91,8 +91,7 @@
 	  </div>
 	</div>
 	 --%>
-	<div class="w3-content w3-display-container" style="max-width:1500px;">
-<!-- 	<div class="w3-content w3-display-container" style="max-width:1500px; margin-top:60px"> -->
+	<div class="w3-content w3-display-container" style="max-width:5000px;">
 	 	<div class="w3-display-container mySlides">
 		  <img src="${ctp}/resources/images/main_banner1.jpg" style="width:100%">
 		  <div class="w3-display-bottomright w3-container">

@@ -35,6 +35,13 @@ public class MemberServiceImpl implements MemberService {
 	public void setMemberPoint(String recoMid, int point) {
 		memberDAO.setMemberPoint(recoMid, point);
 	}
+
+	// 로그인 성공
+	@Override
+	public void setMemberLoginProcess(MemberVO vo) {
+		memberDAO.setMemberLoginProcess(vo);
+		
+	}
 	
 	
 

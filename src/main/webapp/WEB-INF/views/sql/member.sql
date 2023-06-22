@@ -1,26 +1,26 @@
 show tables;
 
 create table member (
-	idx int not null auto_increment,      /* íšŒì› ê³ ìœ ë²ˆí˜¸ */
-	mid varchar(20) not null,             /* íšŒì› ì•„ì´ë””(ì¤‘ë³µ ë¶ˆí—ˆ) */
-	pwd varchar(100) not null,            /* íšŒì› ë¹„ë°€ë²ˆí˜¸(SHA 256 ì•”í˜¸í™” ì²˜ë¦¬) */
-	name varchar(20) not null,            /* íšŒì› ì„±ëª… */
-  nickname varchar(20) not null,        /* íšŒì› ë³„ëª… */
-	email varchar(50) not null,           /* ì´ë©”ì¼ (ì•„ì´ë””ë‚˜ ë¹„ë°€ë²ˆí˜¸ ë¶„ì‹¤ ì‹œ ì‚¬ìš©) */
-	tel varchar(15) not null,             /*ì „í™”ë²ˆí˜¸(010-1234-5678)*/
-	memPhoto varchar(250) not null default 'defaultImage.jpg',   /* í”„ë¡œí•„ ì‚¬ì§„ */
-	memType varchar(5) not null default 'ì¼ë°˜',   /* íšŒì› ì¢…ë¥˜ */
-  point int not null,                   /* ì ë¦½ê¸ˆ */
+	idx int not null auto_increment,      /* È¸¿ø °íÀ¯¹øÈ£ */
+	mid varchar(20) not null,             /* È¸¿ø ¾ÆÀÌµğ(Áßº¹ ºÒÇã) */
+	pwd varchar(100) not null,            /* È¸¿ø ºñ¹Ğ¹øÈ£(SHA 256 ¾ÏÈ£È­ Ã³¸®) */
+	name varchar(20) not null,            /* È¸¿ø ¼º¸í */
+  nickname varchar(20) not null,        /* È¸¿ø º°¸í */
+	email varchar(50) not null,           /* ÀÌ¸ŞÀÏ (¾ÆÀÌµğ³ª ºñ¹Ğ¹øÈ£ ºĞ½Ç ½Ã »ç¿ë) */
+	tel varchar(15) not null,             /*ÀüÈ­¹øÈ£(010-1234-5678)*/
+	memPhoto varchar(250) not null default 'defaultImage.jpg',   /* ÇÁ·ÎÇÊ »çÁø */
+	memType varchar(5) not null default 'ÀÏ¹İ',   /* È¸¿ø Á¾·ù */
+  point int not null,                   /* Àû¸³±İ */
 
-  agreement int default 1 not null,                    /* ì•½ê´€ë™ì˜ (0:ë¯¸ë™ì˜, 1:ë™ì˜) */
-  pwdUpdateDate datetime default now() not null,       /* ë¹„ë°€ë²ˆí˜¸ ë³€ê²½ì¼ (6ê°œì›” ì´í›„, ë³€ê²½ ìœ ë„) */
+  agreement int default 1 not null,                    /* ¾à°üµ¿ÀÇ (0:¹Ìµ¿ÀÇ, 1:µ¿ÀÇ) */
+  pwdUpdateDate datetime default now() not null,       /* ºñ¹Ğ¹øÈ£ º¯°æÀÏ (6°³¿ù ÀÌÈÄ, º¯°æ À¯µµ) */
  	
-	totCnt int default 0 not null,                       /* ì´ ë°©ë¬¸ ìˆ˜ */
-	todayCnt int default 0,                              /* ì˜¤ëŠ˜ ë°©ë¬¸ ìˆ˜ */  
-	firstVisit datetime default now(),                   /* ê°€ì…ì¼ */
-	lastVisit datetime default now(),                    /* ë§ˆì§€ë§‰ ë°©ë¬¸ì¼ */
-	memberDel char(2) default 'NO',                      /* íšŒì› íƒˆí‡´ì‹ ì²­ì—¬ë¶€(NO:í˜„ì¬ í™œë™ ì¤‘, OK: íƒˆí‡´ ì‹ ì²­ ì¤‘) */
-	memberDelReason text,                                /* íšŒì› íƒˆí‡´ì‚¬ìœ  */
+	totCnt int default 0 not null,                       /* ÃÑ ¹æ¹® ¼ö */
+	todayCnt int default 0,                              /* ¿À´Ã ¹æ¹® ¼ö */  
+	firstVisit datetime default now(),                   /* °¡ÀÔÀÏ */
+	lastVisit datetime default now(),                    /* ¸¶Áö¸· ¹æ¹®ÀÏ */
+	memberDel char(2) default 'NO',                      /* È¸¿ø Å»Åğ½ÅÃ»¿©ºÎ(NO:ÇöÀç È°µ¿ Áß, OK: Å»Åğ ½ÅÃ» Áß) */
+	memberDelReason text,                                /* È¸¿ø Å»Åğ»çÀ¯ */
 	            
 	primary key(idx),
 	unique key(mid),

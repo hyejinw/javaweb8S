@@ -23,6 +23,18 @@ public class MessageController {
 			model.addAttribute("msg", "가입 과정에서 오류가 발생했습니다.\\n재시도 부탁드립니다.");
 			model.addAttribute("url", "/member/memberJoin");
 		}
+		else if(msgFlag.equals("memberMidNo")) {
+			model.addAttribute("msg", "존재하지 않는 아이디입니다.");
+			model.addAttribute("url", "/member/memberLogin");
+		}
+		else if(msgFlag.equals("memberPwdNo")) {
+			model.addAttribute("msg", "비밀번호가 다릅니다.");
+			model.addAttribute("url", "/member/memberLogin");
+		}
+		else if(msgFlag.equals("memberLoginOk")) {
+			model.addAttribute("msg", mid+"님 다시 만나 반갑습니다.");
+			model.addAttribute("url", "/");
+		}
 		
 		
 		return "include/message";

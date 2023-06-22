@@ -14,4 +14,6 @@ public interface MemberDAO {
 
 	public void setMemberPoint(@Param("recoMid") String recoMid, @Param("point") int point);
 
+	public void setMemberLoginProcess(@Param("vo") MemberVO vo);
+
 }
