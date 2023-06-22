@@ -43,6 +43,7 @@
     			else  {
     				alert("사용 가능한 아이디 입니다.");
     				idCheckSw = 1;
+    				myform.mid.readOnly = true;
     				$("#pwd").focus();
     			}
     		}
@@ -50,37 +51,38 @@
 		}
 		
 		// 별명 중복버튼을 클릭했는지의 여부를 확인하기 위한 변수(버튼 클릭 후엔 내용 수정처리 불가)
-		let nickNameCheckSw = 0;
+		let nicknameCheckSw = 0;
 		
 		// 별명 중복 검사 
-		function nickNameCheck() {
-			let nickName = myform.nickName.value.trim();
+		function nickCheck() {
+			let nickname = myform.nickname.value.trim();
 			let regex6 = /^[가-힣0-9]+$/; //(별명)한글,영문,숫자만 적어도 1자이상 
 			
-			if(nickName == "") {
+			if(nickname == "") {
 				alert("별명을 입력하세요");
-				myform.nickName.focus();
+				myform.nickname.focus();
 				return false;
 			}
-			else if(!regex6.test(nickName)) {
-				document.getElementById("nickNameError").innerHTML="별명 형식에 맞춰주세요.(한글/숫자만 1자 이상)";
-		    myform.nickName.focus();
+			else if(!regex6.test(nickname)) {
+				document.getElementById("nicknameError").innerHTML="별명 형식에 맞춰주세요.(한글/숫자만 1자 이상)";
+				myform.nickname.focus();
 				return false;
 			}
 			
     	$.ajax({
     		type : "post",
-    		url  : "${ctp}/member/memberNickNameCheck",
-    		data : {nickName : nickName},
+    		url  : "${ctp}/member/memberNicknameCheck",
+    		data : {nickname : nickname},
     		success:function(res) {
     			if(res == "1") {
-    				alert("이미 사용 중인 별명 입니다. 다시 입력해 주세요");
-    				$("#nickName").focus();
+    				alert("이미 사용 중인 별명입니다. 다시 입력해 주세요");
+    				$("#nickname").focus();
     			}
     			else  {
-    				alert("사용 가능한 별명 입니다.");
-    				nickNameCheckSw = 1;
-    				$("#nickName").focus();
+    				alert("사용 가능한 별명입니다.");
+						myform.nickname.readOnly = true;
+    				nicknameCheckSw = 1;
+    				$("#nickname").focus();
     			}
     		}
     	});
@@ -109,9 +111,9 @@
 		// 가입부분 체크
 		function joinCheck(){
 		  let mid = document.getElementById("mid").value.trim();
-		  let pwd1 = document.getElementById("pwd1").value.trim();
+		  let pwd = document.getElementById("pwd").value.trim();
 		  let pwd2 = document.getElementById("pwd2").value.trim();
-		  let nickName = document.getElementById("nickName").value.trim();
+		  let nickname = document.getElementById("nickname").value.trim();
 		  let name = document.getElementById("name").value.trim();
 	  
     	let email1 = myform.email1.value.trim();
@@ -130,10 +132,10 @@
 		  let regex2 = /^(?=.*[0-9])(?=.*[a-zA-Z])[a-zA-Z0-9!@#$%^&*()._-]{4,20}$/g; 
 		  //(비밀번호)4자 이상 20자 이하, 영어/숫자 1개 이상 필수, 특수문자 허용
 		  
-		  let regex3 = /^[가-힣a-zA-Z]+$/;  // (성명)한글,영문만 적어도 1자이상 
+		  let regex3 = /^[가-힣a-zA-Z]{2,10}$/;  // (성명)한글,영문 2~10자
 	 		let regex4 = /^[0-9a-zA-Z]+$/g; // 이메일 
 	 		let regex5 = /\d{2,3}-\d{3,4}-\d{4}$/g; //(전화번호)
-	 		let regex6 = /^[가-힣0-9]+$/; //(별명)한글,영문,숫자만 적어도 1자이상 
+	 		let regex6 = /^[가-힣0-9]{2,10}$/; //(별명)한글,숫자 2~10자
 			
 		  	
 		  // 아이디 확인
@@ -146,8 +148,8 @@
 			   check = true;
 		  }
 		  
-		  // 비밀번호 확인
-		  if(!regex2.test(pwd1)) {
+ 		  // 비밀번호 확인
+		  if(!regex2.test(pwd)) {
 		    document.getElementById("pwdError").innerHTML="비밀번호가 올바르지 않습니다.(영어/숫자 필수, 특수문자 가능 4~20자)";
 		    check = false;
 		  }
@@ -158,7 +160,7 @@
 			    document.getElementById("pwdError2").innerHTML="비밀번호를 다시 입력해주세요.";
 			    check = false;
 			  }
-			  else if(pwd1 !== pwd2) {
+			  else if(pwd !== pwd2) {
 			    document.getElementById("pwdError2").innerHTML="비밀번호가 동일하지 않습니다.";
 			    check = false;
 			  }
@@ -167,21 +169,21 @@
 		  	  document.getElementById("pwdError2").innerHTML="";
 		  	  check = true;
 			  }
-		  }
+		  } 
 		  
 		  // 별명 확인
-		  if(!regex6.test(nickName)){
-		    document.getElementById("nickNameError").innerHTML="별명이 올바르지 않습니다.(한글/숫자만 1자이상)";
+		  if(!regex6.test(nickname)){
+		    document.getElementById("nicknameError").innerHTML="별명이 올바르지 않습니다.(한글/숫자만 2~10자)";
 		    check = false;
 		  }
 		  else {
-			  document.getElementById("nickNameError").innerHTML="";
+			  document.getElementById("nicknameError").innerHTML="";
 			  check = true;
 		  }	
 				  
 		  // 성명 확인
 		  if(!regex3.test(name)){
-		    document.getElementById("nameError").innerHTML="성명이 올바르지 않습니다.(한글/영문만 1자이상)";
+		    document.getElementById("nameError").innerHTML="성명이 올바르지 않습니다.(한글/영문만 2~10자)";
 		    check = false;
 		  }
 		  else {
@@ -229,9 +231,9 @@
 					alert("아이디 중복확인을 해주세요.");
 					document.getElementById("midBtn").focus();
 				} 
-		    else if(nickNameCheckSw == 0) {
+		    else if(nicknameCheckSw == 0) {
 					alert("별명 중복확인을 해주세요.");
-					document.getElementById("nickNameBtn").focus();
+					document.getElementById("nicknameBtn").focus();
 				} 
 				else {
 			    myform.tel.value = tel;
@@ -256,13 +258,13 @@
 			   check = true;
 		  }			
 		}
-		function pwd1Check() {
+ 		function pwdCheck() {
 			let regex2 = /^(?=.*[0-9])(?=.*[a-zA-Z])[a-zA-Z0-9!@#$%^&*()._-]{4,20}$/g; //(비밀번호)4자 이상 20자 이하, 영어/숫자 1개 이상 필수, 특수문자 허용
-			let pwd1 = document.getElementById("pwd1").value.trim();
+			let pwd = document.getElementById("pwd").value.trim();
 			document.getElementById("pwdError").innerHTML="";
 			
 		  // 비밀번호 확인
-		  if(!regex2.test(pwd1)) {
+		  if(!regex2.test(pwd)) {
 		    document.getElementById("pwdError").innerHTML="비밀번호가 올바르지 않습니다.(영어/숫자 필수, 특수문자 가능 4~20자)";
 		    check = false;
 		  }
@@ -272,14 +274,14 @@
 	  	}	
 		}
 		function pwd2Check() {
-			let pwd1 = document.getElementById("pwd1").value.trim();
+			let pwd = document.getElementById("pwd").value.trim();
 			let pwd2 = document.getElementById("pwd2").value.trim();
 			document.getElementById("pwdError").innerHTML="";
 			document.getElementById("pwdError2").innerHTML="";
 			
 			
 		  // 비밀번호 확인2
-		  if(pwd1 !== pwd2) {
+		  if(pwd !== pwd2) {
 			    document.getElementById("pwdError2").innerHTML="비밀번호가 동일하지 않습니다.";
 			    check = false;
 		  }
@@ -288,16 +290,16 @@
 	  	  document.getElementById("pwdError2").innerHTML="";
 	  	  check = true;
 		  }
-		}
+		} 
 		
 		function nameCheck() {
-			let regex3 = /^[가-힣a-zA-Z]+$/;  // (성명)한글,영문만 적어도 1자이상 
+			let regex3 = /^[가-힣a-zA-Z]{2,10}$/;  // (성명)한글,영문 2~10자
 			let name = document.getElementById("name").value.trim();
 			document.getElementById("nameError").innerHTML="";
 			
 		  // 성명 확인
 		  if(!regex3.test(name)){
-		    document.getElementById("nameError").innerHTML="성명이 올바르지 않습니다.(한글/영문만 1자이상)";
+		    document.getElementById("nameError").innerHTML="성명이 올바르지 않습니다.(한글/영문만 2~10자)";
 		    check = false;
 		  }
 		  else {
@@ -306,18 +308,18 @@
 		  }			
 		}
 		
-		function nickNameCheck() {
-			let regex6 = /^[가-힣0-9]+$/; //(별명)한글,영문,숫자만 적어도 1자이상 
-			let nickName = document.getElementById("nickName").value.trim();
-			document.getElementById("nickNameError").innerHTML="";
+		function nicknameCheck() {
+			let regex6 = /^[가-힣0-9]{2,10}$/; //(별명)한글,숫자 2~10자
+			let nickname = document.getElementById("nickname").value.trim();
+			document.getElementById("nicknameError").innerHTML="";
 			
 		  // 별명 확인
-		  if(!regex6.test(nickName)){
-		    document.getElementById("nickNameError").innerHTML="별명이 올바르지 않습니다.(한글/숫자만 1자이상)";
+		  if(!regex6.test(nickname)){
+		    document.getElementById("nicknameError").innerHTML="별명이 올바르지 않습니다.(한글/숫자만 2~10자)";
 		    check = false;
 		  }
 		  else {
-			  document.getElementById("nickNameError").innerHTML="";
+			  document.getElementById("nicknameError").innerHTML="";
 			  check = true;
 		  }			
 		}
@@ -361,6 +363,36 @@
 		}
 		
 		$(document).ready(function(){
+			$('#recoMid').focusout(function(){
+				let recoMid =document.getElementById("recoMid").value.trim();
+				let str = '';
+				
+				if(recoMid != '') {
+					$.ajax({
+						type : "post",
+						url : "${ctp}/member/recoMid",
+						data : {recoMid : recoMid},
+						success : function(res) {
+							if(res == '1') {
+							  /* check = true; 이걸 이렇게 주는 게 맞나? */
+								str += '<span>존재하는 회원입니다.</span>';
+							}
+							else {
+								str += '<span>존재하지 않는 회원입니다. 적립이 불가능합니다 :)</span>';
+							}
+							$('#recoMidCheck').html(str);
+						},
+						error : function() {
+							alert('추천인 아이디 검색 오류\n재시도 부탁드립니다.');
+						}
+					});
+				}
+				else {
+					$('#recoMidCheck').html(str);
+				}
+			});
+			
+			
 			$('.check-all').click(function(){
 				$('.agree').prop('checked',this.checked);
 			});
@@ -369,9 +401,14 @@
 	</script>
 	<style>
 		html {scroll-behavior:smooth;}
+		body {color:#212529;}
 		#container {font-size: 1.1em;}
 		
 		.text-primary {
+			font-size: 0.8em;
+			padding:2px 10px;
+		}
+		.text-success {
 			font-size: 0.8em;
 			padding:2px 10px;
 		}
@@ -425,8 +462,8 @@
     	<div id="midError" class="text-primary"></div>
     </div>
     <div class="form-group">
-      <label for="pwd1">비밀번호 <span class="must">*</span></label>
-      <input type="password" class="form-control radiusForm" maxlength=20 name="pwd1" id="pwd1" onchange="pwd1Check()" placeholder="비밀번호를 입력하세요." required />
+      <label for="pwd">비밀번호 <span class="must">*</span></label>
+      <input type="password" class="form-control radiusForm" maxlength=20 name="pwd" id="pwd" onchange="pwdCheck()" placeholder="비밀번호를 입력하세요." required />
       <div id="pwdError" class="text-primary"></div>
     </div>
     <div class="form-group">
@@ -435,9 +472,9 @@
       <div id="pwdError2" class="text-primary"></div>
     </div>
     <div class="form-group">
-      <label for="nickName">별명 <span class="must">*</span> &nbsp; &nbsp;<input type="button" id="nickNameBtn" value="별명 중복체크" class="btn btn-sm" onclick="nickNameCheck()"/></label>
-      <input type="text" class="form-control radiusForm" name="nickName" id="nickName" onchange="nickNameCheck()" placeholder="별명을 입력하세요." required />
-    	<div id="nickNameError" class="text-primary"></div>
+      <label for="nickname">별명 <span class="must">*</span> &nbsp; &nbsp;<input type="button" id="nicknameBtn" value="별명 중복체크" class="btn btn-sm" onclick="nickCheck()"/></label>
+      <input type="text" class="form-control radiusForm" name="nickname" id="nickname" onchange="nicknameCheck()" placeholder="별명을 입력하세요." required />
+    	<div id="nicknameError" class="text-primary"></div>
     </div>
     <div class="form-group">
       <label for="name">성명 <span class="must">*</span></label>
@@ -462,9 +499,8 @@
     	<div id="emailError" class="text-primary"></div>
       <input type="hidden" name="email" id="email"/>
     </div>
-    
     <div class="form-group">
-      <div class="input-group mb-1">
+      <div class="input-group mb-3">
         <div class="input-group-prepend">
           <span class="input-group-text">전화번호 <span class="must">*</span></span> &nbsp;&nbsp;
             <select name="tel1" id="tel1" class="custom-select">
@@ -487,6 +523,13 @@
       </div>
       <div id="telError" class="text-primary"></div>
     </div> 
+    <div class="form-group">
+      <label for="recoMid"><i class="fa-solid fa-user-group"></i> 추천인 아이디&nbsp;&nbsp;<small>(신규회원과 추천인 모두 5000point씩 적립됩니다)</small></label>
+      <input type="text" class="form-control radiusForm" name="recoMid" id="recoMid" placeholder="추천인 아이디를 입력하세요." />
+    	<div id="recoMidCheck" class="text-success"></div>
+    </div>
+    
+    
   	<hr/>
   	<br/>
   	<div class="form-check">
