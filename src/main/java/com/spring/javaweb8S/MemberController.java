@@ -61,7 +61,7 @@ public class MemberController {
 		else return "0";
 	}
 	
-	// 회원가입 시, 추천인 아이디 검색
+	// 회원가입 시, 추천인 아이디 검색!
 	@ResponseBody
 	@RequestMapping(value = "/recoMid", method = RequestMethod.POST)
 	public String recoMidPost(String recoMid) {
