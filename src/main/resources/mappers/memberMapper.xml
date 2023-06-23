@@ -16,7 +16,7 @@
 	</insert>
 	
 	<update id="setMemberPoint">
-		update member set point += #{point};  <!-- 이렇게 쓸 수 있나? -->
+		update member set point = point + #{point};
 	</update>
 	
 	<update id="setMemberLoginProcess">

@@ -47,8 +47,8 @@
     	</div>
     
 	    <div class="w3-right w3-hide-small w3-cell w3-cell-middle l8 m4 s3">
-	      <a href="#about" class="w3-bar-item w3-button w3-round-xxlarge navContent">매거진</a>
 	      <a href="#team" class="w3-bar-item w3-button w3-round-xxlarge navContent">책(의)세계란</a>
+	      <a href="#about" class="w3-bar-item w3-button w3-round-xxlarge navContent">매거진</a>
 	      <a href="#team" class="w3-bar-item w3-button w3-round-xxlarge navContent">3개의 책</a>
 	      <a href="#work" class="w3-bar-item w3-button w3-round-xxlarge navContent">컬렉션</a>
 	      <a href="#pricing" class="w3-bar-item w3-button w3-round-xxlarge navContent"><b>독립서점</b></a>
