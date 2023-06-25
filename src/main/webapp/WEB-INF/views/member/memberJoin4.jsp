@@ -21,9 +21,14 @@
     <br/>
   	<small style="color:red; margin-top:15px">별(*) 표시는 필수 입력사항입니다.</small><br/><br/>
     <div class="form-group">
-      <label for="mid">아이디 <span class="must">*</span> &nbsp; &nbsp;<input type="button" id="midBtn" value="아이디 중복체크" class="btn btn-sm" onclick="idCheck()"/></label>
-      <input type="text" class="form-control radiusForm" name="mid" id="mid" onchange="midCheck()" placeholder="아이디를 입력하세요." required autofocus/>
-    	<div id="midError" class="text-primary"></div>
+      <label for="nickname">별명 <span class="must">*</span> &nbsp; &nbsp;<input type="button" id="nicknameBtn" value="별명 중복체크" class="btn btn-sm" onclick="nickCheck()"/></label>
+      <input type="text" class="form-control radiusForm" name="nickname" id="nickname" onchange="nicknameCheck()" placeholder="별명을 입력하세요." autofocus required />
+    	<div id="nicknameError" class="text-primary"></div>
+    </div>
+    <div class="form-group">
+      <label for="name">성명 <span class="must">*</span></label>
+      <input type="text" class="form-control radiusForm" name="name" id="name" onchange="nameCheck()" placeholder="성명을 입력하세요." required />
+    	<div id="nameError" class="text-primary"></div>
     </div>
     <div class="form-group">
       <label for="pwd">비밀번호 <span class="must">*</span></label>
@@ -34,16 +39,6 @@
       <label for="pwd2">비밀번호 확인 <span class="must">*</span></label>
       <input type="password" class="form-control radiusForm" maxlength=20 name="pwd2" id="pwd2" onchange="pwd2Check()" placeholder="비밀번호를 입력하세요." required />
       <div id="pwdError2" class="text-primary"></div>
-    </div>
-    <div class="form-group">
-      <label for="nickname">별명 <span class="must">*</span> &nbsp; &nbsp;<input type="button" id="nicknameBtn" value="별명 중복체크" class="btn btn-sm" onclick="nickCheck()"/></label>
-      <input type="text" class="form-control radiusForm" name="nickname" id="nickname" onchange="nicknameCheck()" placeholder="별명을 입력하세요." autofocus required />
-    	<div id="nicknameError" class="text-primary"></div>
-    </div>
-    <div class="form-group">
-      <label for="name">성명 <span class="must">*</span></label>
-      <input type="text" class="form-control radiusForm" name="name" id="name" onchange="nameCheck()" placeholder="성명을 입력하세요." required />
-    	<div id="nameError" class="text-primary"></div>
     </div>
     <div class="form-group" style="margin:30px 0px 15px 0px">
       <label for="email1" >이메일 <span class="must">*</span> &nbsp; &nbsp; 
@@ -488,7 +483,7 @@ o 로그 기록
 			   document.getElementById("midError").innerHTML="";
 			   check = true;
 		  }
-/*		  
+		  
 			  // 비밀번호 확인
 		  if(!regex2.test(pwd)) {
 		    document.getElementById("pwdError").innerHTML="비밀번호가 올바르지 않습니다.(영문/숫자 필수, 특수문자 가능 4~20자)";
@@ -511,7 +506,7 @@ o 로그 기록
 		  	  check = true;
 			  }
 		  } 
-*/		  
+		  
 		  // 별명 확인
 		  if(!regex6.test(nickname)){
 		    document.getElementById("nicknameError").innerHTML="별명이 올바르지 않습니다.(한글/숫자만 2~10자)";
@@ -601,10 +596,8 @@ o 로그 기록
 			   document.getElementById("midError").innerHTML="";
 			   check = true;
 		  }			
-		}	
-/*		
-		function pwdCheck() {
-				
+		}
+			function pwdCheck() {
 			let regex2 = /^(?=.*[0-9])(?=.*[a-zA-Z])[a-zA-Z0-9!@#$%^&*()._-]{4,20}$/g; //(비밀번호)4자 이상 20자 이하, 영문/숫자 1개 이상 필수, 특수문자 허용
 			let pwd = document.getElementById("pwd").value.trim();
 			document.getElementById("pwdError").innerHTML="";
@@ -637,9 +630,8 @@ o 로그 기록
 	  	  check = true;
 		  }
 		} 
-*/		
+		
 		function nameCheck() {
-			
 			let regex3 = /^[가-힣a-zA-Z]{2,10}$/;  // (성명)한글,영문 2~10자
 			let name = document.getElementById("name").value.trim();
 			document.getElementById("nameError").innerHTML="";
@@ -673,7 +665,7 @@ o 로그 기록
 		
 		function emailCheck() {
 			let regex4 = /^[0-9a-zA-Z]+$/g; // 이메일
-			let email1 = document.getElementById("email1").value.trim();
+		let email1 = document.getElementById("email1").value.trim();
 		  document.getElementById("emailError").innerHTML="";
 	
 		  // 이메일확인
@@ -732,6 +724,7 @@ o 로그 기록
 	    	  data : {email : email},
 	    	  success : function(res) {
 	    		  emailAuth = res;
+	    		  /*emailAuthProcess(emailAuth);*/
 	    		  
 				    emailInput1.readOnly = true;
 				    emailInput2.disabled = true;
@@ -742,8 +735,6 @@ o 로그 기록
 				    
 						// 이메일 스피너 가리기
 					  emailSpinner.style.display = 'none';
-						
-				    alert("메일함에서 인증코드를 확인해주세요.");
 	    	  },
 	    	  error : function() {
 	    		  alert('이메일 인증 오류가 발생했습니다. 재시도 부탁드립니다.')

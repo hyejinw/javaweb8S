@@ -14,4 +14,10 @@ public interface MemberService {
 
 	public void setMemberLoginProcess(MemberVO vo);
 
+	public String getMidFinder(String name, String email);
+
+	public String getPwdFinder(String mid, String email);
+
+	public void setMemberPwdUpdate(String mid, String encode);
+
 }

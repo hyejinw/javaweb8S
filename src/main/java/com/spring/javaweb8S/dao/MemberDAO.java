@@ -16,4 +16,10 @@ public interface MemberDAO {
 
 	public void setMemberLoginProcess(@Param("vo") MemberVO vo);
 
+	public String getMidFinder(@Param("name") String name, @Param("email") String email);
+
+	public String getPwdFinder(@Param("mid") String mid, @Param("email") String email);
+
+	public void setMemberPwdUpdate(@Param("mid") String mid, @Param("pwd") String pwd);
+
 }

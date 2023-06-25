@@ -59,6 +59,7 @@
 		}
 		#back-to-top:hover {
 		  cursor: pointer;
+		  text-decoration: none;
 		  background-color: #333;
 		}
 		#back-to-top:active {
@@ -95,9 +96,9 @@
 	 	<div class="w3-display-container mySlides">
 		  <img src="${ctp}/resources/images/main_banner1.jpg" style="width:100%">
 		  <div class="w3-display-bottomright w3-container">
-		    <p>
+		    <p style="margin:0px 30px 100px 0px;"><b>
 		    	첵(의)세계에서 발행하는 책Chaeg은<br/>
-		    	책을 좋아하는 사람들이 만든 책과 문화에 관한 월간지입니다.<br/><br/>
+		    	책을 좋아하는 사람들이 만든 책과 문화에 관한 월간지입니다.<br/><br/></b>
 		    	책을 많이 읽는 사람만을 위한 잡지는 아닙니다.<br/>
 		    	굳이 많이 읽지 않아도 책을 좋아하거나, 즐겨 사거나,<br/>
 		    	힐끗 책의 세계에 다가가보기 원하는 사람 모두를 위한 잡지입니다.<br/>
@@ -107,22 +108,23 @@
 	 	<div class="w3-display-container mySlides">
 		  <img src="${ctp}/resources/images/main_banner2.jpg" style="width:100%">
 		  <div class="w3-display-bottomright w3-container">
-		    <p>
-		    	책을 좋아하는 사람들이 만든 책과 문화에 관한 월간지입니다.<br/>
-		    	책을 많이 읽는 사람만을 위한 잡지는 아닙니다.<br/>
-		    	굳이 많이 읽지 않아도 책을 좋아하거나, 즐겨 사거나,<br/>
-		    	힐끗 책의 세계에 다가가보기 원하는 사람 모두를 위한 잡지입니다.<br/>
+		    <p style="margin:0px 30px 100px 0px;"><b>
+		    	'3개의 책'은 책(의)세계에서 운영하는 도서 커뮤니티 입니다.<br/><br/></b>
+				  세상은 나와 너, 우리로 만들어진 '3개의 책' 이란 테마 안에서,<br/> 
+		    	매일 새로운 이야기와 물음으로 책의 안팎과 주변의 세계를 살피고 있습니다.<br/>
+					다양한 목적의 의미있는 일에 기여하기를, 마침내 책에 대한 호기심으로<br/>
+					이어지기를 소원합니다.<br/>
 		    </p>
 		  </div>
 		</div>
 	 	<div class="w3-display-container mySlides">
 		  <img src="${ctp}/resources/images/main_banner3.jpg" style="width:100%">
 		  <div class="w3-display-bottomright w3-container">
-		    <p>
-		    	책을 좋아하는 사람들이 만든 책과 문화에 관한 월간지입니다.<br/>
-		    	책을 많이 읽는 사람만을 위한 잡지는 아닙니다.<br/>
-		    	굳이 많이 읽지 않아도 책을 좋아하거나, 즐겨 사거나,<br/>
-		    	힐끗 책의 세계에 다가가보기 원하는 사람 모두를 위한 잡지입니다.<br/>
+		    <p style="margin:0px 30px 100px 0px;"><b>
+		    	책의 세계는 가볍고 즐거워야 합니다.<br/><br/></b>
+		    	책(의)세계는 ‘책을 읽자’ ‘더 똑똑해지자’식의 계몽을 위한 공간이 아닙니다.<br/>
+		    	다만 맛있는 음식이 넘쳐나는 잔치에 더 많은 사람들을<br/>
+		    	초대하고 싶은 마음으로 가꾼 열린 공간입니다.<br/>
 		    </p>
 		  </div>
 		</div>
@@ -478,7 +480,7 @@
 		  myIndex++;
 		  if (myIndex > x.length) {myIndex = 1}    
 		  x[myIndex-1].style.display = "block";  
-		  setTimeout(carousel, 7000); // Change image every 2 seconds
+		  setTimeout(carousel, 15000); // Change image every 15 seconds
 		}
 	
 		// Modal Image Gallery

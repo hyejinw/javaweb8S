@@ -9,7 +9,6 @@
 	<title>책(의)세계로 로그인</title>
 	<jsp:include page="/WEB-INF/views/include/bs4.jsp" />
 	<style>
-		@import url(https://fonts.googleapis.com/css?family=Raleway:400,100,200,300);
 		#container {font-size: 1.2em;}
 		
 		form .checkbox {

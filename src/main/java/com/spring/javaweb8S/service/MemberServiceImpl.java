@@ -42,6 +42,24 @@ public class MemberServiceImpl implements MemberService {
 		memberDAO.setMemberLoginProcess(vo);
 		
 	}
+
+	// 아이디 찾기
+	@Override
+	public String getMidFinder(String name, String email) {
+		return memberDAO.getMidFinder(name, email);
+	}
+
+	// 비밀번호 찾기
+	@Override
+	public String getPwdFinder(String mid, String email) {
+		return memberDAO.getPwdFinder(mid, email);
+	}
+
+	// 비밀번호 변경
+	@Override
+	public void setMemberPwdUpdate(String mid, String pwd) {
+		memberDAO.setMemberPwdUpdate(mid, pwd);
+	}
 	
 	
 

@@ -12,5 +12,11 @@ public class AdminController {
 	public String practice() {
 		return "admin/practice";
 	}
+	
+	// 관리자 메인 창
+	@RequestMapping(value = "/adminPage", method = RequestMethod.GET)
+	public String adminPageGet() {
+		return "admin/adminPage";
+	}
 
 }

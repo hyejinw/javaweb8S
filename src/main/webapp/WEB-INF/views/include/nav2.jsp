@@ -1,7 +1,10 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <c:set var="ctp" value="${pageContext.request.contextPath}"/>
-
+<%
+	String memType = session.getAttribute("sMemType")==null ? "": (String) session.getAttribute("sMemType");
+	pageContext.setAttribute("memType", memType);
+%>
 <style>
 	/* .topNav {font-family: 'SUIT-Regular';}   */
 /* 	.topNav {font-family: 'OTWelcomeRA';}   */
@@ -17,10 +20,32 @@
 	.navContent {
 		color: black;
 		font-size: 17px;
-		margin-right: 10px
+		margin-right: 7px
+	}
+	.navContent:hover {
+		text-decoration:none;
+	}
+	.detailContent:hover {
+		color: #9DB2BF;
 	}
 	
 </style>
+<script>
+	'use strict';
+	
+	function memCheck(memType, flag) {
+		if(memType == '') {        /* 비로그인 접근 */
+			alert('로그인이 필요합니다');
+			location.href = '${ctp}/member/memberLogin';
+		}
+		else if(flag == 'memPage') {
+			location.href = '${ctp}/member/memberPage';
+		}
+		else if(flag == 'cart') {
+			location.href = '${ctp}/member/memberCart';
+		}
+	}
+</script>
 
 <div class="topNav">
  <!-- Navbar (sit on top) -->
@@ -34,19 +59,64 @@
     	</div>
     
 	    <div class="w3-right w3-hide-small w3-cell w3-cell-middle l8 m4 s3">
-	      <a href="#about" class="w3-bar-item w3-button w3-round-xxlarge navContent">매거진</a>
-	      <a href="#team" class="w3-bar-item w3-button w3-round-xxlarge navContent">책(의)세계란</a>
-	      <a href="#team" class="w3-bar-item w3-button w3-round-xxlarge navContent">3개의 책</a>
-	      <a href="#work" class="w3-bar-item w3-button w3-round-xxlarge navContent">컬렉션</a>
-	      <a href="#pricing" class="w3-bar-item w3-button w3-round-xxlarge navContent"><b>독립서점</b></a>
-	      <a href="#contact" class="w3-bar-item w3-button w3-round-xxlarge navContent"><b>뉴스레터</b></a>
-	      <a href="#contact" class="w3-bar-item w3-button w3-round-xxlarge navContent"><b>게임</b></a>
-	      <a href="${ctp}/member/memberLogin" class="w3-bar-item w3-button w3-hover-white w3-round-xxlarge navContent">
-		      <p class="w3-tooltip"><i class="fa-solid fa-person-running" style="color: #000000; font-size:20px"></i>
-		      	<span class="w3-text w3-tag w3-small w3-animate-opacity w3-red">책(의)세계로 로그인</span>
-	      	</p>
-	      </a>
+	      <div class="w3-dropdown-hover w3-white" style="padding: 8px 16px">
+		      <!-- <a href="#team" class="w3-bar-item w3-button w3-hover-white w3-round-xxlarge navContent">책(의)세계란</a> -->
+		      <a class="w3-hover-white w3-round-xxlarge navContent"><span class="detailContent">책(의)세계란</span>&nbsp;<i class="fa-solid fa-caret-down"></i></a>
+		      <div class="w3-dropdown-content w3-bar-block w3-card-4">
+		        <a href="#" class="w3-bar-item w3-button">소개</a>
+		        <a href="#" class="w3-bar-item w3-button">뉴스레터</a>
+		      </div>
+		    </div>
+		    
+	      <a href="#about" class="w3-bar-item w3-button w3-hover-white w3-round-xxlarge navContent"><b><span class="detailContent">매거진</span></b></a>
 	      
+	      <div class="w3-dropdown-hover w3-white" style="padding:8px 16px">
+		      <!-- <a href="#team" class="w3-bar-item w3-button w3-hover-white w3-round-xxlarge navContent">책(의)세계란</a> -->
+		      <a class="w3-hover-white w3-round-xxlarge navContent"><b><span class="detailContent">3개의 책</span></b>&nbsp;<i class="fa-solid fa-caret-down"></i></a>
+		      <div class="w3-dropdown-content w3-bar-block w3-card-4">
+		        <a href="#" class="w3-bar-item w3-button">입장</a>
+		        <a href="#" class="w3-bar-item w3-button">커뮤니티 가이드</a>
+		      </div>
+		    </div>
+		    
+		    
+	      <a href="#work" class="w3-bar-item w3-button w3-hover-white w3-round-xxlarge navContent"><span class="detailContent">컬렉션</span></a>
+	      <a href="#pricing" class="w3-bar-item w3-button w3-hover-white w3-round-xxlarge navContent"><span class="detailContent">독립서점</span></a>
+	      <a href="#contact" class="w3-bar-item w3-button w3-hover-white w3-round-xxlarge navContent"><span class="detailContent">게임</span></a>
+	      <c:if test="${memType == ''}">
+		      <a href="${ctp}/member/memberLogin" class="w3-bar-item w3-button w3-hover-white w3-round-xxlarge navContent" style="padding-right:0px">
+			      <span class="detailContent"><p class="w3-tooltip"><i class="fa-solid fa-person-running" style="color: #000000; font-size:25px" title="책(의)세계로 로그인"></i><br/>
+			      <font size="2" class="w3-center" style="font-weight:400">로그인</font>
+			      </p></span>
+		      </a>
+	      </c:if>
+	      <c:if test="${memType != ''}">
+		      <a href="${ctp}/member/memberLogout" class="w3-bar-item w3-button w3-hover-white w3-round-xxlarge navContent"  style="padding-right:0px">
+			      <span class="detailContent"><p class="w3-tooltip"><i class="fa-solid fa-person-walking-dashed-line-arrow-right" style="color: #000000; font-size:25px" title="책(의)세계에서 로그아웃"></i><br/>
+			      <font size="2" class="w3-center" style="font-weight:400">로그아웃</font>
+			      </p></span>
+		      </a>
+	      </c:if>
+	      <c:if test="${memType != '관리자'}">
+		      <a href="javascript:memCheck('${memType}', 'memPage')" class="w3-bar-item w3-button w3-hover-white w3-round-xxlarge navContent" style="padding-right:0px">
+			      <span class="detailContent"><p class="w3-tooltip"><i class="fa-regular fa-id-card" style="color: #000000; font-size:25px" title="마이페이지"></i><br/>
+			      <font size="2" class="w3-center" style="font-weight:400">마이페이지</font>
+			      </p></span>
+		      </a>
+	      </c:if>
+	      <c:if test="${memType == '관리자'}">
+		      <a href="${ctp}/admin/adminPage" class="w3-bar-item w3-button w3-hover-white w3-round-xxlarge navContent" style="padding-right:0px">
+			      <span class="detailContent"><p class="w3-tooltip"><i class="fa-regular fa-id-card" style="color: #07689F; font-size:25px" title="마이페이지"></i><br/>
+			      <font size="2" class="w3-center" style="font-weight:400" color="#07689F">관리자창</font>
+			      </p></span>
+		      </a>
+	      </c:if>
+	      <a href="javascript:memCheck('${memType}', 'cart')" class="w3-bar-item w3-button w3-hover-white w3-round-xxlarge navContent">
+		      <span class="detailContent"><p class="w3-tooltip"><i class="fa-solid fa-cart-shopping" style="color: #000000; font-size:25px" title="장바구니"></i>
+		      <br/>
+		      <font size="2" class="w3-center" style="font-weight:400">장바구니</font>
+		      </p></span>
+	      </a>
 	    </div>
 		</div>
 		

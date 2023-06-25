@@ -17,7 +17,7 @@ public class MessageController {
 		
 		if(msgFlag.equals("memberJoinOk")) {
 			model.addAttribute("msg", "가입되셨습니다. 책(의)세계에 오신 걸 환영합니다.");
-			model.addAttribute("url", "/");
+			model.addAttribute("url", "/member/memberLogin");
 		}
 		else if(msgFlag.equals("memberJoinNo")) {
 			model.addAttribute("msg", "가입 과정에서 오류가 발생했습니다.\\n재시도 부탁드립니다.");
@@ -33,6 +33,10 @@ public class MessageController {
 		}
 		else if(msgFlag.equals("memberLoginOk")) {
 			model.addAttribute("msg", mid+"님 다시 만나 반갑습니다.");
+			model.addAttribute("url", "/");
+		}
+		else if(msgFlag.equals("memberLogout")) {
+			model.addAttribute("msg", mid+"님 로그아웃 되었습니다.");
 			model.addAttribute("url", "/");
 		}
 		

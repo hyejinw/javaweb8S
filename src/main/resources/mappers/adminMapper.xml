@@ -3,7 +3,7 @@
 <mapper namespace="com.spring.javaweb8S.dao.AdminDAO">
 
 <!-- 	<select id="getBookList" resultType="com.spring.javaweb8S.vo.BookVO">
-		select * from book where isbn = #{isbn};
+		select * from bo_book where isbn = #{isbn};
 	</select> -->
 
 
