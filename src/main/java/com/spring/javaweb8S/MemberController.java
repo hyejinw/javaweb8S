@@ -1,5 +1,6 @@
 package com.spring.javaweb8S;
 
+import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.UUID;
@@ -142,19 +143,19 @@ public class MemberController {
 	// 회원가입 시, 이메일 인증!
 	@ResponseBody
 	@RequestMapping(value = "/memberEmailAuth", method = RequestMethod.POST)
-	public String memberEmailAuthPost(String email) throws MessagingException {
+	public String memberEmailAuthPost(String email, HttpServletRequest request) throws MessagingException {
 		
 		// 이메일 인증용 랜덤 숫자배열 6자리
 		UUID uid = UUID.randomUUID();
 		String emailAuth = uid.toString().substring(0,6);
 		
 		// 이메일 전송!
-		mailAuthSend(email, emailAuth);
+		mailAuthSend(email, emailAuth, request);
 		return emailAuth;
 	}
 
 	// 이메일 인증코드 발송
-	private void mailAuthSend(String toMail, String emailAuth) throws MessagingException {
+	private void mailAuthSend(String toMail, String emailAuth, HttpServletRequest request) throws MessagingException {
 		String title = "책(의)세계에서 발송한 이메일 인증코드입니다";
 		
 		// 메일 전송을 위한 객체 : MimeMessage(), MimeMessageHelper()
@@ -170,13 +171,17 @@ public class MemberController {
 		content += "<p><img src=\"cid:navLogo.png\" width='300px'></p>";
 		content += "<br><h4>안녕하세요. 책(의)세계입니다.<br>이메일 인증코드를 보내드립니다.</h4><br>";
 		content += "<br><hr><h2><font color='blue'>"+emailAuth+"</font></h2><br>";
-		content += "<br><h4>위 인증코드를 입력해주세요!</h4><br>";
+		content += "<br><h4>위 인증코드를 입력해주세요!</h4>";
 		content += "<h3>책(의)세계 드림</h3><br>";
 		messageHelper.setText(content, true);
 		
 		// 본문에 기재된 그림파일의 경로를 별도로 표시시켜준다. 그런 후, 다시 보관함에 담기
+		
+		
+		String realPath = request.getSession().getServletContext().getRealPath("/resources/images/");
+		File file = new File(realPath + "navLogo.png");
 //		FileSystemResource file = new FileSystemResource("D:\\javaweb\\springframework\\project\\javaweb8S\\src\\main\\webapp\\resources\\images\\navLogo.png");
-		FileSystemResource file = new FileSystemResource("//Users//fromj//coding//javaweb//springframework//javaweb8S//javaweb8S//src//main//webapp//resources//images//navLogo.png");
+//		FileSystemResource file = new FileSystemResource("//Users//fromj//coding//javaweb//springframework//javaweb8S//javaweb8S//src//main//webapp//resources//images//navLogo.png");
 		messageHelper.addInline("navLogo.png", file);
 
 		// 메일 전송
@@ -244,13 +249,13 @@ public class MemberController {
 			memberService.setMemberPwdUpdate(mid, passwordEncoder.encode(tempPwd));
 			
 			// 이메일 전송!
-			mailTempPwdSend(email, tempPwd);
+			mailTempPwdSend(email, tempPwd, request);
 		}
 		return res;
 	}
 	
 	// 이메일로 임시 비밀번호 발송 
-	private void mailTempPwdSend(String email, String tempPwd) throws MessagingException {
+	private void mailTempPwdSend(String email, String tempPwd, HttpServletRequest request) throws MessagingException {
 		String title = "책(의)세계에서 발송한 임시 비밀번호입니다";
 		
 		// 메일 전송을 위한 객체 : MimeMessage(), MimeMessageHelper()
@@ -266,13 +271,15 @@ public class MemberController {
 		content += "<p><img src=\"cid:navLogo.png\" width='300px'></p>";
 		content += "<br><h4>안녕하세요. 책(의)세계입니다.<br>임시 비밀번호를 보내드립니다.</h4><br>";
 		content += "<br><hr><h2><font color='blue'>"+tempPwd+"</font></h2><br>";
-		content += "<br><h4>로그인 후, 마이페이지에서 비밀번호를 변경해주세요!</h4><br>";
+		content += "<br><h4>로그인 후, 마이페이지에서 비밀번호를 변경해주세요!</h4>";
 		content += "<h3>책(의)세계 드림</h3><br>";
 		messageHelper.setText(content, true);
 		
 		// 본문에 기재된 그림파일의 경로를 별도로 표시시켜준다. 그런 후, 다시 보관함에 담기
+		String realPath = request.getSession().getServletContext().getRealPath("/resources/images/");
+		File file = new File(realPath + "navLogo.png");		
 //		FileSystemResource file = new FileSystemResource("D:\\javaweb\\springframework\\project\\javaweb8S\\src\\main\\webapp\\resources\\images\\navLogo.png");
-		FileSystemResource file = new FileSystemResource("//Users//fromj//coding//javaweb//springframework//javaweb8S//javaweb8S//src//main//webapp//resources//images//navLogo.png");
+//		FileSystemResource file = new FileSystemResource("//Users//fromj//coding//javaweb//springframework//javaweb8S//javaweb8S//src//main//webapp//resources//images//navLogo.png");
 		messageHelper.addInline("navLogo.png", file);
 
 		// 메일 전송

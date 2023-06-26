@@ -739,17 +739,18 @@ o 로그 기록
 				    changeEmailBtn.style.display = 'inline-block';
 				    timerId = startTimer();
 				    enableCodeCheck(); 
-				    
-						// 이메일 스피너 가리기
-					  emailSpinner.style.display = 'none';
 						
 				    alert("메일함에서 인증코드를 확인해주세요.");
+						// 이메일 스피너 가리기
+					  emailSpinner.style.display = 'none';
 	    	  },
 	    	  error : function() {
 	    		  alert('이메일 인증 오류가 발생했습니다. 재시도 부탁드립니다.')
+						// 이메일 스피너 가리기
+					  emailSpinner.style.display = 'none';
 	    	  }
 	      });
-			
+		    
 		  }
 		
 	  }

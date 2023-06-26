@@ -130,7 +130,7 @@
 		      <br/>
 		      <font size="2" class="w3-center" style="font-weight:400">장바구니</font>
 		      </p></span>
-	      </a>
+	      </a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 	    </div>
 		</div>
 		
