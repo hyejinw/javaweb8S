@@ -30,7 +30,7 @@
 	}
 	
 	@import url(//fonts.googleapis.com/earlyaccess/notosanskr.css);
-	body,h1,h2,h3,h4,h5,h6 {font-family: 'Noto Sans KR', sans-serif;}
+	body,h1,h2,h3,h4,h5,h6 {font-family: 'SUIT-Regular', 'Noto Sans KR', sans-serif;}
 
 /* 	.notosanskr * { 
 	 font-family: 'Noto Sans KR', sans-serif;

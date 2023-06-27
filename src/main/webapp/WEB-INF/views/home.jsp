@@ -77,21 +77,6 @@
 <a id="back-to-top"></a>
 <jsp:include page="/WEB-INF/views/include/nav.jsp" />
 
-	
-<%-- 	<div class="w3-content w3-display-container" style="max-width:1500px;">
-<!-- 	<div class="w3-content w3-display-container" style="max-width:1500px; margin-top:60px"> -->
-	  <img class="mySlides" src="${ctp}/resources/images/chaeg_banner1.jpg" style="width:100%">
-	  <img class="mySlides" src="${ctp}/resources/images/chaeg_banner2.jpg" style="width:100%">
-	  <img class="mySlides" src="${ctp}/resources/images/chaeg_banner3.jpg" style="width:100%">
-	  <div class="w3-center w3-container w3-section w3-large w3-text-white w3-display-bottommiddle" style="width:100%">
-	    <div class="w3-left w3-hover-text-khaki" onclick="plusDivs(-1)"><font color="#282828" size="6px">&#10094;</font></div>
-	    <div class="w3-right w3-hover-text-khaki" onclick="plusDivs(1)"><font color="#282828" size="6px">&#10095;</font></div>
-	    <span class="w3-badge demo w3-border w3-transparent w3-hover-white" onclick="currentDiv(1)"></span>
-	    <span class="w3-badge demo w3-border w3-transparent w3-hover-white" onclick="currentDiv(2)"></span>
-	    <span class="w3-badge demo w3-border w3-transparent w3-hover-white" onclick="currentDiv(3)"></span>
-	  </div>
-	</div>
-	 --%>
 	<div class="w3-content w3-display-container" style="max-width:5000px;">
 	 	<div class="w3-display-container mySlides">
 		  <img src="${ctp}/resources/images/main_banner1.jpg" style="width:100%">

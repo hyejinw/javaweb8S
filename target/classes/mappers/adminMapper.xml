@@ -6,5 +6,11 @@
 		select * from bo_book where isbn = #{isbn};
 	</select> -->
 
+	<select id="getDefaultPhoto" resultType="com.spring.javaweb8S.vo.DefaultPhotoVO">
+		select * from bo_defaultPhoto order by idx;
+	</select>
 
+	<insert id="memberDefaultPhotoInsert">
+		insert into bo_defaultPhoto values (default, #{vo.fName}, #{vo.memo}, default); 
+	</insert>
 </mapper>

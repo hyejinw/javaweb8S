@@ -179,10 +179,10 @@ public class MemberController {
 		
 		
 		String realPath = request.getSession().getServletContext().getRealPath("/resources/images/");
-		File file = new File(realPath + "navLogo.png");
-//		FileSystemResource file = new FileSystemResource("D:\\javaweb\\springframework\\project\\javaweb8S\\src\\main\\webapp\\resources\\images\\navLogo.png");
-//		FileSystemResource file = new FileSystemResource("//Users//fromj//coding//javaweb//springframework//javaweb8S//javaweb8S//src//main//webapp//resources//images//navLogo.png");
-		messageHelper.addInline("navLogo.png", file);
+		File file = new File(realPath + "logo.png");
+//		FileSystemResource file = new FileSystemResource("D:\\javaweb\\springframework\\project\\javaweb8S\\src\\main\\webapp\\resources\\images\\logo.png");
+//		FileSystemResource file = new FileSystemResource("//Users//fromj//coding//javaweb//springframework//javaweb8S//javaweb8S//src//main//webapp//resources//images//logo.png");
+		messageHelper.addInline("logo.png", file);
 
 		// 메일 전송
 		mailSender.send(message);
@@ -277,10 +277,10 @@ public class MemberController {
 		
 		// 본문에 기재된 그림파일의 경로를 별도로 표시시켜준다. 그런 후, 다시 보관함에 담기
 		String realPath = request.getSession().getServletContext().getRealPath("/resources/images/");
-		File file = new File(realPath + "navLogo.png");		
-//		FileSystemResource file = new FileSystemResource("D:\\javaweb\\springframework\\project\\javaweb8S\\src\\main\\webapp\\resources\\images\\navLogo.png");
-//		FileSystemResource file = new FileSystemResource("//Users//fromj//coding//javaweb//springframework//javaweb8S//javaweb8S//src//main//webapp//resources//images//navLogo.png");
-		messageHelper.addInline("navLogo.png", file);
+		File file = new File(realPath + "logo.png");		
+//		FileSystemResource file = new FileSystemResource("D:\\javaweb\\springframework\\project\\javaweb8S\\src\\main\\webapp\\resources\\images\\logo.png");
+//		FileSystemResource file = new FileSystemResource("//Users//fromj//coding//javaweb//springframework//javaweb8S//javaweb8S//src//main//webapp//resources//images//logo.png");
+		messageHelper.addInline("logo.png", file);
 
 		// 메일 전송
 		mailSender.send(message);

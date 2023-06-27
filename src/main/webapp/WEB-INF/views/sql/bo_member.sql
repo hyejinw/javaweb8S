@@ -29,4 +29,5 @@ create table bo_member (
 
 desc bo_member;
 drop table bo_member;
-ALTER TABLE bo_member AUTO_INCREMENT = 0;
+ALTER TABLE bo_member AUTO_INCREMENT = 1;
+
