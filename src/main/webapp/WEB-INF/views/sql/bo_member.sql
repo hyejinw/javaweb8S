@@ -19,7 +19,7 @@ create table bo_member (
 	todayCnt int default 0,                              /* 오늘 방문 수 */  
 	firstVisit datetime default now(),                   /* 가입일 */
 	lastVisit datetime default now(),                    /* 마지막 방문일 */
-	memberDel char(2) default 'NO',                      /* 회원 탈퇴신청여부(NO:현재 활동 중, OK: 탈퇴 신청 중) */
+	memberDel char(5) default '미탈퇴',                    /* 회원 탈퇴신청여부(NO:현재 활동 중, OK: 탈퇴 신청 중) */
 	memberDelReason text,                                /* 회원 탈퇴사유 */
 	            
 	primary key(idx),

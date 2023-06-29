@@ -2,15 +2,90 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.spring.javaweb8S.dao.AdminDAO">
 
-<!-- 	<select id="getBookList" resultType="com.spring.javaweb8S.vo.BookVO">
+	<select id="getBookIsbn" resultType="com.spring.javaweb8S.vo.BookVO">
 		select * from bo_book where isbn = #{isbn};
-	</select> -->
-
-	<select id="getDefaultPhoto" resultType="com.spring.javaweb8S.vo.DefaultPhotoVO">
-		select * from bo_defaultPhoto order by idx;
 	</select>
 
+	<select id="getDefaultPhoto" resultType="com.spring.javaweb8S.vo.DefaultPhotoVO">
+		select * from bo_defaultPhoto order by idx desc;
+	</select>
+	
+	<select id="getProverb" resultType="com.spring.javaweb8S.vo.ProverbVO">
+		select * from bo_proverb order by idx desc limit #{startIndexNo},#{pageSize};
+	</select>
+	
+	<select id="proverbTotRecCnt" resultType="int">
+		select count(*) from bo_proverb;
+	</select>
+	
+	<select id="bookTotRecCnt" resultType="int">
+		select count(*) from bo_book;
+	</select>
+	
+	<select id="getBooks" resultType="com.spring.javaweb8S.vo.BookVO">
+		select * from bo_book order by idx desc limit #{startIndexNo},#{pageSize};
+	</select>
+	
+	<select id="bookTotRecCntSearch" resultType="int">
+		select count(*) from bo_book where ${search} like concat('%',#{searchString},'%');
+	</select>
+
+	<select id="getDBBooks" resultType="com.spring.javaweb8S.vo.BookVO">
+		select * from bo_book where ${search} like concat('%',#{searchString},'%') order by idx desc limit #{startIndexNo},#{pageSize};
+	</select>
+	
+	<select id="magazineTotRecCnt" resultType="int">
+		select count(*) from bo_magazine;
+	</select>
+	
+	<select id="getMagazineList" resultType="com.spring.javaweb8S.vo.MagazineVO">
+		select * from bo_magazine order by idx desc limit #{startIndexNo},#{pageSize};
+	</select>
+	
 	<insert id="memberDefaultPhotoInsert">
-		insert into bo_defaultPhoto values (default, #{vo.fName}, #{vo.memo}, default); 
+		insert into bo_defaultPhoto values (default, #{vo.photoName}, #{vo.memo}, default); 
 	</insert>
+
+	<insert id="setProverb">
+		insert into bo_proverb values (default, #{vo.content}, #{vo.origin}); 
+	</insert>
+	
+	<insert id="setBook">
+		insert into bo_book values(default,#{vo.title},#{vo.contents},#{vo.url},#{vo.isbn},#{vo.datetime},#{vo.authors},#{vo.publisher},
+		#{vo.translators},#{vo.price},#{vo.sale_price},#{vo.thumbnail},#{vo.status},default,default,default);
+	</insert>
+	
+	<update id="setChangeMemberPhotos">
+		update bo_member set memPhoto = default where memPhoto in
+   	<foreach collection="defaultPhotoList" item="defaultPhotoList" open="(" close=")" separator=",">
+   		#{defaultPhotoList}
+    </foreach>
+	</update>
+	
+	<update id="setUpdateProverb">
+		update bo_proverb set content = #{vo.content}, origin = #{vo.origin} where idx = #{vo.idx};
+	</update>
+	
+	<delete id="memberDefaultPhotoDelete">
+		delete from bo_defaultPhoto where 1=1 and 
+		photoName in
+    <foreach collection="defaultPhotoList" item="defaultPhotoList" open="(" close=")" separator=",">
+   		#{defaultPhotoList}
+    </foreach>
+	</delete>
+	
+	<delete id="setProverbDelete">
+		delete from bo_proverb where idx in
+    <foreach collection="proverbList" item="proverbList" open="(" close=")" separator=",">
+   		#{proverbList}
+    </foreach>
+	</delete>
+	
+	<delete id="setBookDelete">
+		delete from bo_book where idx in
+    <foreach collection="bookList" item="bookList" open="(" close=")" separator=",">
+   		#{bookList}
+    </foreach>
+	</delete>
+	
 </mapper>

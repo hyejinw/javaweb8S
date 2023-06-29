@@ -23,8 +23,8 @@
 	<!-- Sidebar/menu -->
 	<nav class="w3-sidebar w3-collapse w3-white" style="z-index:3;width:300px;" id="mySidebar"><br>
 	  <div class="w3-container w3-row" style="margin-top:50px;">
-	    <div class="w3-col w3-center">
-	      <%-- <img src="${ctp}/admin/member/adminPhoto.png" class="w3-circle w3-margin-right" style="width:46px"> --%>
+	    <div class="w3-col w3-center mb-3">
+	      <img src="${ctp}/admin/member/adminPhoto.png" class="w3-circle" style="width:50px">
 	    </div>
 	  </div>
 	  <div class="w3-container w3-row">
@@ -62,7 +62,7 @@
 		      </div>
 		      <div id="collapseTwo" class="collapse" data-parent="#accordion">
 		        <div class="card-body" style="margin:10px">  <!-- 판매관리로 가는 링크, 매거진 문의로 가는 링크 -->
-			        <a href="${ctp}/admin/memberList">매거진 정보 관리</a><hr/>
+			        <a href="${ctp}/admin/magazine/magazineList">매거진 정보 관리</a><hr/>
 		        </div>
 		      </div>
 		    </div>
@@ -76,7 +76,8 @@
 		      <div id="collapseThree" class="collapse" data-parent="#accordion">
 		        <div class="card-body" style="margin:10px">
 			        <a href="${ctp}/admin/memberList">한 줄 ___ 관리</a><hr/>
-			        <a href="${ctp}/admin/memberList">등록 책 관리</a>
+			        <a href="${ctp}/admin/community/book">등록 책 관리</a><hr/>
+			        <a href="${ctp}/admin/community/proverb">책 명언 관리</a> <!-- 함 -->
 		        </div>
 		      </div>
 		    </div>

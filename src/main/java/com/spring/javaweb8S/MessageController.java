@@ -39,13 +39,13 @@ public class MessageController {
 			model.addAttribute("msg", mid+"님 로그아웃 되었습니다.");
 			model.addAttribute("url", "/");
 		}
-		else if(msgFlag.equals("admin/memberDefaultPhotoInsertOk")) {
+		else if(msgFlag.equals("memberDefaultPhotoInsertOk")) {
 			model.addAttribute("msg", "성공적으로 업로드 되었습니다.");
-			model.addAttribute("url", "/member/memberPhoto");
+			model.addAttribute("url", "/admin/member/memberPhoto");
 		}
-		else if(msgFlag.equals("admin/memberDefaultPhotoInsertNo")) {
+		else if(msgFlag.equals("memberDefaultPhotoInsertNo")) {
 			model.addAttribute("msg", "업로드 실패하였습니다. 재시도부탁드립니다.");
-			model.addAttribute("url", "/member/memberPhoto");
+			model.addAttribute("url", "/admin/member/memberPhoto");
 		}
 		
 		

@@ -2,7 +2,7 @@ show tables;
 
 create table bo_defaultPhoto (
 	idx int not null auto_increment,         /* 고유번호 */
-	fName varchar(250) not null,             /* 사진 파일명 */
+	photoName varchar(250) not null,         /* 사진 파일명 */
 	memo varchar(250),                       /* 설명 */
 	photoDate datetime default now(),        /* 업로드 일 */
 	            

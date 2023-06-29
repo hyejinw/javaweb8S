@@ -14,15 +14,16 @@ import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import com.spring.javaweb8S.dao.AdminDAO;
 import com.spring.javaweb8S.vo.BookVO;
 
-public class BookInsert {
+@Service
+public class BookInsertSearch {
 
 	@Autowired
 	AdminDAO adminDAO;
-
 
   public ArrayList<BookVO> bookInsert(String query) throws UnsupportedEncodingException {
 
@@ -39,8 +40,8 @@ public class BookInsert {
       connection.setRequestMethod("GET");
       connection.setRequestProperty("Authorization", "KakaoAK " + apiKey);
 
-      int responseCode = connection.getResponseCode();
-      System.out.println("Response Code: " + responseCode);
+//      int responseCode = connection.getResponseCode();
+//      System.out.println("Response Code: " + responseCode);
 
       BufferedReader reader = new BufferedReader(new InputStreamReader(connection.getInputStream()));
       String line;
@@ -53,8 +54,6 @@ public class BookInsert {
       reader.close();
       connection.disconnect();
 
- //     System.out.println("Response Body: " + response.toString());
-
       JSONParser parser = new JSONParser();
 
       JSONObject obj = (JSONObject) parser.parse(response.toString());
@@ -65,7 +64,6 @@ public class BookInsert {
       for (Object element : resultArray) {
       	BookVO vo = new BookVO();
       	JSONObject book = (JSONObject) element;
-      	//if(Integer.parseInt(book.get("datetime").toString().substring(0,4)) < 1950) break;
 
       	// 작가와 번역자는 array 처리
       	// 1) 작가
@@ -77,7 +75,6 @@ public class BookInsert {
       	  authors += element2.toString() + "/";
       	}
       	authors = authors.substring(0, authors.lastIndexOf("/"));
-      	System.out.println("authors : " + authors);
 
       	// 2) 번역자
       	String translatorsStr = book.get("translators").toString();
@@ -89,7 +86,6 @@ public class BookInsert {
       			translators += element2.toString() + "/";
       		}
       		translators = translators.substring(0, translators.lastIndexOf("/"));
-      		System.out.println("translators : " + translators);
       	}
 
       	vo.setTitle(book.get("title").toString());
@@ -105,12 +101,11 @@ public class BookInsert {
       	vo.setThumbnail(book.get("thumbnail").toString());
       	vo.setStatus(book.get("status").toString());
 
-      	if((adminDAO.getBookList(vo.getIsbn()) == null)) adminDAO.setBook(vo);
+      	if((adminDAO.getBookIsbn(vo.getIsbn()) == null)) adminDAO.setBook(vo);
 
       	vos.add(vo);
-      	System.out.println("vo : " + vo);
-
       }
+     //System.out.println("vos : " + vos);
 
     } catch (IOException e) {
         e.printStackTrace();
