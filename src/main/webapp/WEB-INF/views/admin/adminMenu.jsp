@@ -62,7 +62,7 @@
 		      </div>
 		      <div id="collapseTwo" class="collapse" data-parent="#accordion">
 		        <div class="card-body" style="margin:10px">  <!-- 판매관리로 가는 링크, 매거진 문의로 가는 링크 -->
-			        <a href="${ctp}/admin/magazine/magazineList">매거진 정보 관리</a><hr/>
+			        <a href="${ctp}/admin/magazine/magazineList">매거진 정보 관리</a>
 		        </div>
 		      </div>
 		    </div>

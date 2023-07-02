@@ -20,6 +20,8 @@ public interface AdminDAO {
 	public int bookTotRecCnt();
 	public int bookTotRecCntSearch(@Param("search") String search, @Param("searchString") String searchString2);
 	public int magazineTotRecCnt();
+	public int magazineTotRecCntWithPeriod(@Param("search") String search, @Param("searchString") String searchString, @Param("startDate") String startDate, @Param("endDate") String endDate);
+	public int magazineTypeTotRecCnt(@Param("maType") String maType);
 	
 	public ArrayList<DefaultPhotoVO> getDefaultPhoto();
 
@@ -44,6 +46,21 @@ public interface AdminDAO {
 	public void setBookDelete(@Param("bookList") List<String> bookList);
 
 	public ArrayList<MagazineVO> getMagazineList(@Param("startIndexNo") int startIndexNo, @Param("pageSize") int pageSize);
+	
+	public void setMagazineOpenUpdate(@Param("idx") int idx, @Param("maOpen") String maOpen);
+	
+	public void setMagazineDelete(@Param("magazineList") List<String> magazineList);
+	
+	public ArrayList<MagazineVO> getMagazineTypeList(@Param("startIndexNo") int startIndexNo, @Param("pageSize") int pageSize, @Param("maType") String maType);
+	
+	public int setMagazineInsert(@Param("vo") MagazineVO vo);
+	
+	public MagazineVO getMagazine(@Param("idx") int idx);
+
+	public void setMagazineUpdate(@Param("vo") MagazineVO vo);
+	
+	public ArrayList<MagazineVO> getMagazineSearchList(@Param("searchString") String searchString, @Param("search") String search, @Param("startDate") String startDate,
+			@Param("endDate") String endDate, @Param("startIndexNo") int startIndexNo, @Param("pageSize") int pageSize);
 
 
 

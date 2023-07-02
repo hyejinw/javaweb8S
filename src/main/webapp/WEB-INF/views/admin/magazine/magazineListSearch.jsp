@@ -79,7 +79,12 @@
 
 		function pageCheck() {
     	let pageSize = document.getElementById("pageSize").value;
-    	location.href = "${ctp}/admin/magazine/magazineList?pag=${pageVO.pag}&pageSize="+pageSize;
+    	/* if(${maType == null}) {
+    	}
+    	else {
+    		
+    	} */
+  		location.href = "${ctp}/admin/magazine/magazineListSearch?pag=${pageVO.pag}&pageSize="+pageSize+"&maType=${maType}&search=${search}&searchString=${searchString}&startDate=${startDate}&endDate=${endDate}";
     }
 		
 		/* 체크박스 전체선택, 전체해제 */
@@ -213,8 +218,8 @@
 					<form name="searchForm" class="text-right">
 						<div class="row mb-3">
 							<div class="col">
-				    		<input type="date" class="mr-2" name="startDate" id="startDate"/>
-				    		<input type="date" class="mr-2" name="endDate" id="endDate"/>
+				    		<input type="date" class="mr-2" name="startDate" value="${fn:substring(startDate,0,10)}"  id="startDate"/>
+				    		<input type="date" class="mr-2" name="endDate" value="${fn:substring(endDate,0,10)}" id="endDate"/>
 							
 							</div>
 						</div>
@@ -248,13 +253,13 @@
 		      <td class="text-right">
 		        <!-- 첫페이지 / 이전페이지 / (현재페이지번호/총페이지수) / 다음페이지 / 마지막페이지 -->
 		        <c:if test="${pageVO.pag > 1}">
-		          <a href="${ctp}/admin/magazine/magazineList?pageSize=${pageVO.pageSize}&pag=1" title="첫페이지로">◁◁</a>
-		          <a href="${ctp}/admin/magazine/magazineList?pageSize=${pageVO.pageSize}&pag=${pageVO.pag-1}" title="이전페이지로">◀</a>
+		          <a href="${ctp}/admin/magazine/magazineListSearch?pageSize=${pageVO.pageSize}&pag=1&maType=${maType}&search=${search}&searchString=${searchString}&startDate=${startDate}&endDate=${endDate}" title="첫페이지로">◁◁</a>
+		          <a href="${ctp}/admin/magazine/magazineListSearch?pageSize=${pageVO.pageSize}&pag=${pageVO.pag-1}&maType=${maType}&search=${search}&searchString=${searchString}&startDate=${startDate}&endDate=${endDate}" title="이전페이지로">◀</a>
 		        </c:if>
 		        ${pageVO.pag}/${pageVO.totPage}
 		        <c:if test="${pageVO.pag < pageVO.totPage}">
-		          <a href="${ctp}/admin/magazine/magazineList?pageSize=${pageVO.pageSize}&pag=${pageVO.pag+1}" title="다음페이지로">▶</a>
-		          <a href="${ctp}/admin/magazine/magazineList?pageSize=${pageVO.pageSize}&pag=${pageVO.totPage}" title="마지막페이지로">▷▷</a>
+		          <a href="${ctp}/admin/magazine/magazineListSearch?pageSize=${pageVO.pageSize}&pag=${pageVO.pag+1}&maType=${maType}&search=${search}&searchString=${searchString}&startDate=${startDate}&endDate=${endDate}" title="다음페이지로">▶</a>
+		          <a href="${ctp}/admin/magazine/magazineListSearch?pageSize=${pageVO.pageSize}&pag=${pageVO.totPage}&maType=${maType}&search=${search}&searchString=${searchString}&startDate=${startDate}&endDate=${endDate}" title="마지막페이지로">▷▷</a>
 		        </c:if>
 		      </td>
 		    </tr>
@@ -309,14 +314,14 @@
 		  <!-- 첫페이지 / 이전블록 / 1(4) 2(5) 3 / 다음블록 / 마지막페이지 -->
 		  <div class="text-center">
 			  <ul class="pagination justify-content-center">
-			    <c:if test="${pageVO.pag > 1}"><li class="page-item"><a class="page-link text-secondary" href="${ctp}/admin/magazine/magazineList?pageSize=${pageVO.pageSize}&pag=1"><i class="fa-solid fa-angles-left"></i></a></li></c:if>
-			    <c:if test="${pageVO.curBlock > 0}"><li class="page-item"><a class="page-link text-secondary" href="${ctp}/admin/magazine/magazineList?pageSize=${pageVO.pageSize}&pag=${(pageVO.curBlock-1)*pageVO.blockSize + 1}"><i class="fa-solid fa-angle-left"></i></a></li></c:if>
+			    <c:if test="${pageVO.pag > 1}"><li class="page-item"><a class="page-link text-secondary" href="${ctp}/admin/magazine/magazineListSearch?pageSize=${pageVO.pageSize}&pag=1&maType=${maType}&search=${search}&searchString=${searchString}&startDate=${startDate}&endDate=${endDate}"><i class="fa-solid fa-angles-left"></i></a></li></c:if>
+			    <c:if test="${pageVO.curBlock > 0}"><li class="page-item"><a class="page-link text-secondary" href="${ctp}/admin/magazine/magazineListSearch?pageSize=${pageVO.pageSize}&pag=${(pageVO.curBlock-1)*pageVO.blockSize + 1}&maType=${maType}&search=${search}&searchString=${searchString}&startDate=${startDate}&endDate=${endDate}"><i class="fa-solid fa-angle-left"></i></a></li></c:if>
 			    <c:forEach var="i" begin="${pageVO.curBlock*pageVO.blockSize + 1}" end="${pageVO.curBlock*pageVO.blockSize + pageVO.blockSize}" varStatus="st">
-			      <c:if test="${i <= pageVO.totPage && i == pageVO.pag}"><li class="page-item active"><a class="page-link text-white bg-secondary border-secondary" href="${ctp}/admin/magazine/magazineList?pageSize=${pageVO.pageSize}&pag=${i}">${i}</a></li></c:if>
-			      <c:if test="${i <= pageVO.totPage && i != pageVO.pag}"><li class="page-item"><a class="page-link text-secondary" href="${ctp}/admin/magazine/magazineList?pageSize=${pageVO.pageSize}&pag=${i}">${i}</a></li></c:if>
+			      <c:if test="${i <= pageVO.totPage && i == pageVO.pag}"><li class="page-item active"><a class="page-link text-white bg-secondary border-secondary" href="${ctp}/admin/magazine/magazineListSearch?pageSize=${pageVO.pageSize}&pag=${i}&maType=${maType}&search=${search}&searchString=${searchString}&startDate=${startDate}&endDate=${endDate}">${i}</a></li></c:if>
+			      <c:if test="${i <= pageVO.totPage && i != pageVO.pag}"><li class="page-item"><a class="page-link text-secondary" href="${ctp}/admin/magazine/magazineListSearch?pageSize=${pageVO.pageSize}&pag=${i}&maType=${maType}&search=${search}&searchString=${searchString}&startDate=${startDate}&endDate=${endDate}">${i}</a></li></c:if>
 			    </c:forEach>
-			    <c:if test="${pageVO.curBlock < pageVO.lastBlock}"><li class="page-item"><a class="page-link text-secondary" href="${ctp}/admin/magazine/magazineList?pageSize=${pageVO.pageSize}&pag=${(pageVO.curBlock+1)*pageVO.blockSize + 1}"><i class="fa-solid fa-angle-right"></i></a></li></c:if>
-			    <c:if test="${pageVO.pag < pageVO.totPage}"><li class="page-item"><a class="page-link text-secondary" href="${ctp}/admin/magazine/magazineList?pageSize=${pageVO.pageSize}&pag=${pageVO.totPage}"><i class="fa-solid fa-angles-right"></i></a></li></c:if>
+			    <c:if test="${pageVO.curBlock < pageVO.lastBlock}"><li class="page-item"><a class="page-link text-secondary" href="${ctp}/admin/magazine/magazineListSearch?pageSize=${pageVO.pageSize}&pag=${(pageVO.curBlock+1)*pageVO.blockSize + 1}&maType=${maType}&search=${search}&searchString=${searchString}&startDate=${startDate}&endDate=${endDate}"><i class="fa-solid fa-angle-right"></i></a></li></c:if>
+			    <c:if test="${pageVO.pag < pageVO.totPage}"><li class="page-item"><a class="page-link text-secondary" href="${ctp}/admin/magazine/magazineListSearch?pageSize=${pageVO.pageSize}&pag=${pageVO.totPage}&maType=${maType}&search=${search}&searchString=${searchString}&startDate=${startDate}&endDate=${endDate}"><i class="fa-solid fa-angles-right"></i></a></li></c:if>
 			  </ul>
 		  </div>
 		  

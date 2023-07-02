@@ -36,4 +36,19 @@ public interface AdminService {
 
 	public ArrayList<MagazineVO> getMagazineList(int startIndexNo, int pageSize);
 
+	public void setMagazineOpenUpdate(int idx, String maOpen);
+
+	public void setMagazineDelete(List<String> magazineList);
+
+	public ArrayList<MagazineVO> getMagazineTypeList(int startIndexNo, int pageSize, String maType);
+
+	public int setMagazineInsert(MultipartFile thumbnailFile, MultipartFile detailFile, MagazineVO vo);
+
+	public MagazineVO getMagazine(int idx);
+
+	public int setMagazineUpdate(MultipartFile thumbnailFile, MultipartFile detailFile, MagazineVO vo, MagazineVO originVO);
+
+	public ArrayList<MagazineVO> getMagazineSearchList(String searchString, String search, String startDate,
+			String endDate, int startIndexNo, int pageSize);
+
 }

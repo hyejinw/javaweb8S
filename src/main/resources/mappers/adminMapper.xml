@@ -42,6 +42,43 @@
 		select * from bo_magazine order by idx desc limit #{startIndexNo},#{pageSize};
 	</select>
 	
+	<select id="magazineTotRecCntWithPeriod" resultType="int">
+		<if test='searchString != "" and startDate == ""'>
+			select count(*) from bo_magazine where ${search} like concat('%',#{searchString},'%');
+		</if>
+		<if test='searchString == "" and startDate != ""'>
+			select count(*) from bo_magazine where date_format(maDate, '%Y-%m-%d') BETWEEN #{startDate} AND #{endDate};
+		</if>
+		<if test='searchString != "" and startDate != ""'>
+			select count(*) from bo_magazine where ${search} like concat('%',#{searchString},'%') and date_format(maDate, '%Y-%m-%d') BETWEEN #{startDate} AND #{endDate};
+		</if>
+	</select>
+	
+	<select id="getMagazineSearchList" resultType="com.spring.javaweb8S.vo.MagazineVO">
+		<if test='searchString != "" and startDate == ""'>
+			select * from bo_magazine where ${search} like concat('%',#{searchString},'%') order by idx desc limit #{startIndexNo},#{pageSize};
+		</if>
+		<if test='searchString == "" and startDate != ""'>
+			select * from bo_magazine where date_format(maDate, '%Y-%m-%d') BETWEEN #{startDate} AND #{endDate} order by idx desc limit #{startIndexNo},#{pageSize};
+		</if>
+		<if test='searchString != "" and startDate != ""'>
+			select * from bo_magazine where ${search} like concat('%',#{searchString},'%') and date_format(maDate, '%Y-%m-%d') BETWEEN #{startDate} AND #{endDate} order by idx desc limit #{startIndexNo},#{pageSize};
+		</if>
+	
+	</select>
+	
+	<select id="magazineTypeTotRecCnt" resultType="int">
+		select count(*) from bo_magazine where maType = #{maType};
+	</select>
+	
+	<select id="getMagazineTypeList" resultType="com.spring.javaweb8S.vo.MagazineVO">
+		select * from bo_magazine where maType = #{maType} order by idx desc limit #{startIndexNo},#{pageSize};
+	</select>
+	
+	<select id="getMagazine" resultType="com.spring.javaweb8S.vo.MagazineVO">
+		select * from bo_magazine where idx = #{idx};
+	</select>
+	
 	<insert id="memberDefaultPhotoInsert">
 		insert into bo_defaultPhoto values (default, #{vo.photoName}, #{vo.memo}, default); 
 	</insert>
@@ -54,6 +91,34 @@
 		insert into bo_book values(default,#{vo.title},#{vo.contents},#{vo.url},#{vo.isbn},#{vo.datetime},#{vo.authors},#{vo.publisher},
 		#{vo.translators},#{vo.price},#{vo.sale_price},#{vo.thumbnail},#{vo.status},default,default,default);
 	</insert>
+
+<!-- 됨 
+	<insert id="setMagazineInsert" parameterType="com.spring.javaweb8S.vo.MagazineVO">
+ 		<if test="vo.maStock eq null">
+			insert into bo_magazine values(default,#{vo.maCode},#{vo.maType},#{vo.maTitle},#{vo.maPrice},#{vo.maThumbnail},#{vo.maDetail},default,default,default,default,default);
+		</if>
+		<if test="vo.maStock neq null">
+			insert into bo_magazine values(default,#{vo.maCode},#{vo.maType},#{vo.maTitle},#{vo.maPrice},#{vo.maThumbnail},#{vo.maDetail},#{vo.maDate},#{vo.maStock},#{vo.maSaleQuantity},default,default);
+		</if> 
+	</insert>	 -->
+<!-- 	안 됨 
+ 	<insert id="setMagazineInsert" parameterType="com.spring.javaweb8S.vo.MagazineVO">
+ 		<if test="vo.maType != null and 'vo.maType.equals(정기 구독)'">
+			insert into bo_magazine values(default,#{vo.maCode},#{vo.maType},#{vo.maTitle},#{vo.maPrice},#{vo.maThumbnail},#{vo.maDetail},default,default,default,default,default);
+		</if>
+		<if test="vo.maType != null and 'vo.maType.equals(매거진)'">
+			insert into bo_magazine values(default,#{vo.maCode},#{vo.maType},#{vo.maTitle},#{vo.maPrice},#{vo.maThumbnail},#{vo.maDetail},#{vo.maDate},#{vo.maStock},#{vo.maSaleQuantity},default,default);
+		</if> 
+	</insert>	 -->
+	
+ 	<insert id="setMagazineInsert" parameterType="com.spring.javaweb8S.vo.MagazineVO">
+ 		<if test='vo.maType != null and vo.maType=="정기 구독"'>
+			insert into bo_magazine values(default,#{vo.maCode},#{vo.maType},#{vo.maTitle},#{vo.maPrice},#{vo.maThumbnail},#{vo.maDetail},default,default,default,default,default);
+		</if>
+		<if test='vo.maType != null and vo.maType=="매거진"'>
+			insert into bo_magazine values(default,#{vo.maCode},#{vo.maType},#{vo.maTitle},#{vo.maPrice},#{vo.maThumbnail},#{vo.maDetail},#{vo.maDate},#{vo.maStock},#{vo.maSaleQuantity},default,default);
+		</if> 
+	</insert>	
 	
 	<update id="setChangeMemberPhotos">
 		update bo_member set memPhoto = default where memPhoto in
@@ -64,6 +129,19 @@
 	
 	<update id="setUpdateProverb">
 		update bo_proverb set content = #{vo.content}, origin = #{vo.origin} where idx = #{vo.idx};
+	</update>
+	
+ 	<update id="setMagazineOpenUpdate">
+		update bo_magazine set maOpen = #{maOpen} where idx = #{idx};
+	</update>
+	
+	<update id="setMagazineUpdate" parameterType="com.spring.javaweb8S.vo.MagazineVO">
+		update bo_magazine set maType = #{vo.maType}, maTitle = #{vo.maTitle}, maPrice = #{vo.maPrice},  
+ 		<if test='vo.maThumbnail != null'>maThumbnail = #{vo.maThumbnail}, </if>
+ 		<if test='vo.maDetail != null'>maDetail = #{vo.maDetail}, </if>
+ 		<if test='vo.maType != null and vo.maType=="정기 구독"'>maDate = default, </if>
+		<if test='vo.maType != null and vo.maType=="매거진"'>maDate = #{vo.maDate}, </if> 
+		maStock = #{vo.maStock} where idx = #{vo.idx};
 	</update>
 	
 	<delete id="memberDefaultPhotoDelete">
@@ -85,6 +163,13 @@
 		delete from bo_book where idx in
     <foreach collection="bookList" item="bookList" open="(" close=")" separator=",">
    		#{bookList}
+    </foreach>
+	</delete>
+
+	<delete id="setMagazineDelete">
+		delete from bo_magazine where idx in
+    <foreach collection="magazineList" item="magazineList" open="(" close=")" separator=",">
+   		#{magazineList}
     </foreach>
 	</delete>
 	

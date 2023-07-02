@@ -59,7 +59,6 @@ public class AdminController {
 		return "admin/member/memberPhoto";
 	}
 	
-	
   // 회원 기본 프로필 사진 업로드
   @RequestMapping(value = "/member/memberDefaultPhotoInsert", method = RequestMethod.POST) 
   public String memberDefaultPhotoInsertPost(MultipartFile file, DefaultPhotoVO vo) { 
@@ -251,7 +250,107 @@ public class AdminController {
 		return "admin/magazine/magazineList";
 	}
 	
+	// 매거진 관리 검색
+	@RequestMapping(value = "/magazine/magazineListSearch", method = RequestMethod.GET)
+	public String magazineListSearchGet(Model model,
+			@RequestParam(name="maType", defaultValue = "", required = false) String maType,
+			@RequestParam(name="searchString", defaultValue = "", required = false) String searchString,
+			@RequestParam(name="search", defaultValue = "", required = false) String search,
+			@RequestParam(name="startDate", defaultValue = "", required = false) String startDate,
+			@RequestParam(name="endDate", defaultValue = "", required = false) String endDate,
+			@RequestParam(name="pag", defaultValue = "1", required = false) int pag,
+			@RequestParam(name="pageSize", defaultValue = "10", required = false) int pageSize) {
+		
+		PageVO pageVO = new PageVO();
+		ArrayList<MagazineVO> vos = new ArrayList<MagazineVO>();
+		
+		// 정기구독 상품만
+		if(!maType.equals("")) {
+			pageVO = pageProcess.totRecCnt(pag, pageSize, "adminMagazineType", maType, "");
+			vos =	adminService.getMagazineTypeList(pageVO.getStartIndexNo(), pageSize, maType);
 	
+			model.addAttribute("maType", maType);
+		}
+		// 매거진 검색
+		else {                                    
+			pageVO = pageProcess.totRecCntWithPeriod(pag, pageSize, "adminMagazine", search, searchString, startDate, endDate);
+			vos =	adminService.getMagazineSearchList(searchString, search, startDate, endDate, pageVO.getStartIndexNo(), pageSize);
+			
+			model.addAttribute("search", search);
+			model.addAttribute("searchString", searchString);
+			model.addAttribute("startDate", startDate);
+			model.addAttribute("endDate", endDate);
+		}
+		
+		model.addAttribute("vos", vos);
+		model.addAttribute("pageVO", pageVO);
+		
+		return "admin/magazine/magazineListSearch";
+	}
 	
+	// 매거진 공개 변경
+	@ResponseBody
+	@RequestMapping(value = "/magazine/magazineOpenUpdate", method = RequestMethod.POST)
+	public String magazineOpenUpdatePost(String maOpen, int idx) {
+		
+		if(maOpen.equals("공개")) maOpen = "비공개";
+		else maOpen = "공개";
+		
+		adminService.setMagazineOpenUpdate(idx, maOpen);
+		
+		return "1";
+	}
+	
+	// 매거진 삭제
+	@ResponseBody
+	@RequestMapping(value = "/magazine/magazineDelete", method = RequestMethod.POST)
+	public String magazineDeletePost(String checkRow) {
+		
+		List<String> magazineList = new ArrayList<String>();
+		String[] checkedMagazineIdx = checkRow.split(",");
+		
+		for(int i=0; i < checkedMagazineIdx.length; i++){
+			magazineList.add(checkedMagazineIdx[i].toString());
+		}
+		adminService.setMagazineDelete(magazineList);
+		
+		return "1";
+	}
+	
+	// 매거진 등록 창
+	@RequestMapping(value = "/magazine/magazineInsert", method = RequestMethod.GET)
+	public String magazineInsertGet() {
+		return "admin/magazine/magazineInsert";
+	}
+	
+	// 매거진 등록
+	@RequestMapping(value = "/magazine/magazineInsert", method = RequestMethod.POST)
+	public String magazineInsertPost(MultipartFile thumbnailFile, MultipartFile detailFile, MagazineVO vo) {
+		
+		int res = adminService.setMagazineInsert(thumbnailFile, detailFile, vo);
+		if(res == 1) return "redirect:/message/magazineInsertOk";
+		else return "redirect:/message/magazineInsertNo";
+	}
+	
+	// 매거진 수정 창
+	@RequestMapping(value = "/magazine/magazineUpdate", method = RequestMethod.GET)
+	public String magazineUpdateGet(int idx, Model model) {
+		
+		MagazineVO vo = adminService.getMagazine(idx);
+		model.addAttribute("vo", vo);
 
+		return "admin/magazine/magazineUpdate";
+	}
+	
+	// 매거진 수정
+	@RequestMapping(value = "/magazine/magazineUpdate", method = RequestMethod.POST)
+	public String magazineUpdatePost(MultipartFile thumbnailFile, MultipartFile detailFile, MagazineVO vo) {
+		MagazineVO originVO = adminService.getMagazine(vo.getIdx());
+		
+		int res = adminService.setMagazineUpdate(thumbnailFile, detailFile, vo, originVO);
+		if(res == 1) return "redirect:/message/magazineUpdateOk";
+		else return "redirect:/message/magazineUpdateNo?idx="+vo.getIdx();
+	}
+	
+	
 }

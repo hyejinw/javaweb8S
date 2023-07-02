@@ -13,6 +13,7 @@ public class MessageController {
 	@RequestMapping(value = "/message/{msgFlag}", method = RequestMethod.GET)
 	public String listGet(@PathVariable String msgFlag,
 			@RequestParam(name="mid", defaultValue = "", required=false) String mid,
+			@RequestParam(name="idx", defaultValue = "1", required=false) int idx,
 			Model model) {
 		
 		if(msgFlag.equals("memberJoinOk")) {
@@ -44,8 +45,24 @@ public class MessageController {
 			model.addAttribute("url", "/admin/member/memberPhoto");
 		}
 		else if(msgFlag.equals("memberDefaultPhotoInsertNo")) {
-			model.addAttribute("msg", "업로드 실패하였습니다. 재시도부탁드립니다.");
+			model.addAttribute("msg", "업로드 실패하였습니다. 재시도 부탁드립니다.");
 			model.addAttribute("url", "/admin/member/memberPhoto");
+		}
+		else if(msgFlag.equals("magazineInsertOk")) {
+			model.addAttribute("msg", "매거진이 성공적으로 등록되었습니다.");
+			model.addAttribute("url", "/admin/magazine/magazineInsert");
+		}
+		else if(msgFlag.equals("magazineInsertNo")) {
+			model.addAttribute("msg", "매거진 등록에 실패하였습니다. 재시도 부탁드립니다.");
+			model.addAttribute("url", "/admin/magazine/magazineInsert");
+		}
+		else if(msgFlag.equals("magazineUpdateOk")) {
+			model.addAttribute("msg", "매거진이 성공적으로 수정되었습니다.");
+			model.addAttribute("url", "/admin/magazine/magazineList");
+		}
+		else if(msgFlag.equals("magazineUpdateNo")) {
+			model.addAttribute("msg", "매거진 수정에 실패하였습니다. 재시도 부탁드립니다.");
+			model.addAttribute("url", "/admin/magazine/magazineUpdate?idx="+idx);
 		}
 		
 		
