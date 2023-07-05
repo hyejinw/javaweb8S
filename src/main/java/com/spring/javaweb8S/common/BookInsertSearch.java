@@ -71,11 +71,13 @@ public class BookInsertSearch {
       	JSONArray authorsArray = (JSONArray) parser.parse(authorsStr);
       	String authors = "";
 
-      	for (Object element2 : authorsArray) {
-      	  authors += element2.toString() + "/";
+      	if(authorsArray.size() != 0) {
+	      	for (Object element2 : authorsArray) {
+	      	  authors += element2.toString() + "/";
+	      	}
+	      	authors = authors.substring(0, authors.lastIndexOf("/"));
       	}
-      	authors = authors.substring(0, authors.lastIndexOf("/"));
-
+      	
       	// 2) 번역자
       	String translatorsStr = book.get("translators").toString();
       	JSONArray translatorsArray = (JSONArray) parser.parse(translatorsStr);

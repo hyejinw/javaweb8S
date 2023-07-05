@@ -6,7 +6,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>관리자 창</title>
+  <title>책(의)세계</title>
   <jsp:include page="/WEB-INF/views/include/bs4.jsp" />
 </head>
 <body class="w3-light-grey">

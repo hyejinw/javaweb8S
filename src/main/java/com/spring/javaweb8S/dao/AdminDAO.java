@@ -5,6 +5,7 @@ import java.util.List;
 import org.apache.ibatis.annotations.Param;
 
 import com.spring.javaweb8S.vo.BookVO;
+import com.spring.javaweb8S.vo.CollectionVO;
 import com.spring.javaweb8S.vo.DefaultPhotoVO;
 import com.spring.javaweb8S.vo.MagazineVO;
 import com.spring.javaweb8S.vo.ProverbVO;
@@ -22,6 +23,7 @@ public interface AdminDAO {
 	public int magazineTotRecCnt();
 	public int magazineTotRecCntWithPeriod(@Param("search") String search, @Param("searchString") String searchString, @Param("startDate") String startDate, @Param("endDate") String endDate);
 	public int magazineTypeTotRecCnt(@Param("maType") String maType);
+	public int colCategoryTotRecCnt();
 	
 	public ArrayList<DefaultPhotoVO> getDefaultPhoto();
 
@@ -61,6 +63,22 @@ public interface AdminDAO {
 	
 	public ArrayList<MagazineVO> getMagazineSearchList(@Param("searchString") String searchString, @Param("search") String search, @Param("startDate") String startDate,
 			@Param("endDate") String endDate, @Param("startIndexNo") int startIndexNo, @Param("pageSize") int pageSize);
+	
+	public List<MagazineVO> getMagazinePhotoName(@Param("magazineList") List<String> magazineList);
+
+	public int setColCategoryInsert(@Param("vo") CollectionVO vo);
+	
+	public ArrayList<CollectionVO> getColCategoryList(@Param("startIndexNo") int startIndexNo, @Param("pageSize") int pageSize);
+	
+	public void setColCategoryDelete(@Param("colCategoryList") List<String> colCategoryList);
+	
+	public void setColCategoryOpenUpdate(@Param("idx") int idx, @Param("colOpen") String colOpen);
+	
+	public void setUpdateColCategory(@Param("vo") CollectionVO vo);
+	
+	public void setColCategorythumbUpdate(@Param("vo") CollectionVO vo);
+	
+
 
 
 

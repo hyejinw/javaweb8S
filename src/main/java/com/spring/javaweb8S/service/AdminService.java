@@ -6,6 +6,7 @@ import java.util.List;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.spring.javaweb8S.vo.BookVO;
+import com.spring.javaweb8S.vo.CollectionVO;
 import com.spring.javaweb8S.vo.DefaultPhotoVO;
 import com.spring.javaweb8S.vo.MagazineVO;
 import com.spring.javaweb8S.vo.ProverbVO;
@@ -50,5 +51,19 @@ public interface AdminService {
 
 	public ArrayList<MagazineVO> getMagazineSearchList(String searchString, String search, String startDate,
 			String endDate, int startIndexNo, int pageSize);
+
+	public List<MagazineVO> getMagazinePhotoName(List<String> magazineList);
+
+	public int setColCategoryInsert(MultipartFile thumbnailFile, CollectionVO vo);
+
+	public ArrayList<CollectionVO> getColCategoryList(int startIndexNo, int pageSize);
+
+	public void setColCategoryDelete(List<String> colCategoryList);
+
+	public void setColCategoryOpenUpdate(int idx, String colOpen);
+
+	public void setUpdateColCategory(CollectionVO vo);
+
+	public int setColCategorythumbUpdate(MultipartFile thumbnailFile, CollectionVO vo);
 
 }

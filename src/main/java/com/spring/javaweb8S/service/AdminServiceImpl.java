@@ -17,6 +17,7 @@ import org.springframework.web.multipart.MultipartFile;
 import com.spring.javaweb8S.common.JavawebProvide;
 import com.spring.javaweb8S.dao.AdminDAO;
 import com.spring.javaweb8S.vo.BookVO;
+import com.spring.javaweb8S.vo.CollectionVO;
 import com.spring.javaweb8S.vo.DefaultPhotoVO;
 import com.spring.javaweb8S.vo.MagazineVO;
 import com.spring.javaweb8S.vo.ProverbVO;
@@ -51,7 +52,6 @@ public class AdminServiceImpl implements AdminService {
   	return adminDAO.memberDefaultPhotoInsert(vo); 
   }
  
-	
   // 책 명언 리스트
 	@Override
 	public ArrayList<ProverbVO> getProverb(int startIndexNo, int pageSize) {
@@ -62,7 +62,6 @@ public class AdminServiceImpl implements AdminService {
 	@Override
 	public void setProverb(ProverbVO vo) {
 		adminDAO.setProverb(vo);
-		
 	}
 
 	// 기본 이미지 삭제
@@ -87,7 +86,6 @@ public class AdminServiceImpl implements AdminService {
 	@Override
 	public void setUpdateProverb(ProverbVO vo) {
 		adminDAO.setUpdateProverb(vo);
-		
 	}
 
 	// DB 저장된 책 리스트 가져오기
@@ -106,7 +104,6 @@ public class AdminServiceImpl implements AdminService {
 	@Override
 	public void setBookDelete(List<String> bookList) {
 		adminDAO.setBookDelete(bookList);
-		
 	}
 
 	// 매거진 리스트 가져오기
@@ -127,6 +124,12 @@ public class AdminServiceImpl implements AdminService {
 		adminDAO.setMagazineDelete(magazineList);
 	}
 
+	// 매거진 삭제 전, 서버 삭제용 매거진 이름 가져오기
+	@Override
+	public List<MagazineVO> getMagazinePhotoName(List<String> magazineList) {
+		return adminDAO.getMagazinePhotoName(magazineList);
+	}
+
 	// 정기구독만 보기
 	@Override
 	public ArrayList<MagazineVO> getMagazineTypeList(int startIndexNo, int pageSize, String maType) {
@@ -142,8 +145,8 @@ public class AdminServiceImpl implements AdminService {
   		String detailFileName = detailFile.getOriginalFilename(); 
   		
   		JavawebProvide jp = new JavawebProvide();
-  		jp.writeFile(thumbnailFile,thumbnailFileName,"admin/magazine");
-  		jp.writeFile(detailFile,detailFileName,"admin/magazine");
+  		jp.writeFile(thumbnailFile,thumbnailFileName,"magazine");
+  		jp.writeFile(detailFile,detailFileName,"magazine");
   		
   		vo.setMaThumbnail(thumbnailFileName);
   		vo.setMaDetail(detailFileName);
@@ -177,7 +180,7 @@ public class AdminServiceImpl implements AdminService {
 			// 공백이 아닐 경우 변경 처리
 			if(!thumbnailFileName.equals("") && !detailFileName.equals("")) {
 				HttpServletRequest request = ((ServletRequestAttributes)RequestContextHolder.currentRequestAttributes()).getRequest();
-				String realPath = request.getSession().getServletContext().getRealPath("/resources/data/admin/magazine/");
+				String realPath = request.getSession().getServletContext().getRealPath("/resources/data/magazine/");
 				
 				// 기존에 존재하는 파일은 삭제처리
 				File thumbnailFileDelete = new File(realPath + originVO.getMaThumbnail());
@@ -187,8 +190,8 @@ public class AdminServiceImpl implements AdminService {
 				
 				// 새로운 파일 업로드
 				JavawebProvide jp = new JavawebProvide();
-				jp.writeFile(thumbnailFile,thumbnailFileName,"admin/magazine");
-				jp.writeFile(detailFile,detailFileName,"admin/magazine");
+				jp.writeFile(thumbnailFile,thumbnailFileName,"magazine");
+				jp.writeFile(detailFile,detailFileName,"magazine");
 
 				// 새로운 파일명 set
 				vo.setMaThumbnail(thumbnailFileName);
@@ -208,6 +211,82 @@ public class AdminServiceImpl implements AdminService {
 	@Override
 	public ArrayList<MagazineVO> getMagazineSearchList(String searchString, String search, String startDate, String endDate, int startIndexNo, int pageSize) {
 		return adminDAO.getMagazineSearchList(searchString, search, startDate, endDate, startIndexNo, pageSize);
+	}
+
+	// 컬렉션 카테고리 등록
+	@Override
+	public int setColCategoryInsert(MultipartFile thumbnailFile, CollectionVO vo) {
+
+  	try { 
+  		String thumbnailFileName = thumbnailFile.getOriginalFilename(); 
+  		
+  		JavawebProvide jp = new JavawebProvide();
+  		jp.writeFile(thumbnailFile,thumbnailFileName,"collection");
+  		
+  		vo.setColThumbnail(thumbnailFileName);
+  
+  	} catch (IOException e) { 
+  		e.printStackTrace(); 
+  	} 
+		return adminDAO.setColCategoryInsert(vo);
+	}
+
+	// 컬렉션 카테고리 리스트 가져오기
+	@Override
+	public ArrayList<CollectionVO> getColCategoryList(int startIndexNo, int pageSize) {
+		return adminDAO.getColCategoryList(startIndexNo, pageSize);
+	}
+
+	// 컬렉션 삭제
+	@Override
+	public void setColCategoryDelete(List<String> colCategoryList) {
+		adminDAO.setColCategoryDelete(colCategoryList);
+	}
+
+	// 컬렉션 카테고리 공개/비공개 처리
+	@Override
+	public void setColCategoryOpenUpdate(int idx, String colOpen) {
+		adminDAO.setColCategoryOpenUpdate(idx, colOpen);
+	}
+
+	// 컬렉션 카테고리 수정
+	@Override
+	public void setUpdateColCategory(CollectionVO vo) {
+		adminDAO.setUpdateColCategory(vo);
+	}
+
+	// 컬렉션 카테고리 썸네일 수정
+	@Override
+	public int setColCategorythumbUpdate(MultipartFile thumbnailFile, CollectionVO vo) {
+int res = 0;
+		
+		try { 
+			String thumbnailFileName = thumbnailFile.getOriginalFilename(); 
+			
+			// 공백이 아닐 경우 변경 처리
+			if(!thumbnailFileName.equals("")) {
+				HttpServletRequest request = ((ServletRequestAttributes)RequestContextHolder.currentRequestAttributes()).getRequest();
+				String realPath = request.getSession().getServletContext().getRealPath("/resources/data/collection/");
+				
+				// 기존에 존재하는 파일은 삭제처리
+				File thumbnailFileDelete = new File(realPath + vo.getColThumbnail());
+				thumbnailFileDelete.delete();
+				
+				// 새로운 파일 업로드
+				JavawebProvide jp = new JavawebProvide();
+				jp.writeFile(thumbnailFile,thumbnailFileName,"collection");
+
+				// 새로운 파일명 set
+				vo.setColThumbnail(thumbnailFileName);
+			}
+			
+  		adminDAO.setColCategorythumbUpdate(vo);
+			res = 1;
+  
+  	} catch (IOException e) { 
+  		e.printStackTrace(); 
+  	} 
+		return res;
 	}
 
 			

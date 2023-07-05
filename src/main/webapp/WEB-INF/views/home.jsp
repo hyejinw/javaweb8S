@@ -1,5 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=utf-8" pageEncoding="utf-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
 <c:set var="ctp" value="${pageContext.request.contextPath}"/>
 <!DOCTYPE html>
 <html>
@@ -8,6 +9,10 @@
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<jsp:include page="/WEB-INF/views/include/bs4.jsp"/>
+	<link rel="stylesheet" href="${ctp}/css/owl.carousel.min.css">
+	<link rel="stylesheet" href="${ctp}/css/owl.theme.default.min.css">
+	<script src="${ctp}/js/owl.carousel.js"></script> 
+	<script src="${ctp}/js/owl.carousel.min.js"></script>
 	<style>
 		body,h1,h2,h3,h4,h5,h6 {font-family: 'Noto Sans KR', sans-serif;}
 		
@@ -31,7 +36,6 @@
 		.w3-bar .w3-button {
 		  padding: 16px;
 		}
-		
 		
 		#back-to-top {
 		  display: inline-block;
@@ -69,10 +73,66 @@
 		  opacity: 1;
 		  visibility: visible;
 		}
+		.item {
+			width: 500px;
+			margin: 5px;
+		}
+		.item:hover {
+			transform: scale(1.05);
+			transition: transform 0.15s ease 0s;
+		}
+		.owl-carousel {
+			z-index: 0;
+		}
+		.updown {
+    	border: 1px solid white;
+      width: 0.1px;
+      height: 600px;
+		  margin-left : auto;
+		  margin-right : auto;
+		  padding: 0px;
+    }
+    #OLRBookTitle a {
+    	text-decoration-line: none;
+    }
+    #OLRBookTitle b:hover {
+    	color: gray;
+    }
+    #OLRBox {
+    	border: 2px solid white;
+    	border-radius: 20px;
+    	width: 100%;
+    	max-width: 600px;
+    	height: 100%;
+    	max-height: 200px;
+    	box-sizing: border-box;
+    	background-color: white;
+    	overflow: auto;
+    }
+    #subscribeBox {
+    	border: 2px solid #282828;
+    	width: 100%;
+    	max-width: 600px;
+    	height: 100%;
+    	max-height: 500px;
+    	box-sizing: border-box;
+    	background-color: white;
+    	overflow: auto;
+    	margin: 0 auto;
+    	padding: 30px 50px;
+    }
+    #indexBox {
+	    margin-bottom:-50px; 
+	    border: 2px solid #FFF4D2;
+/* 	    background-color: #FFF4D2; */
+	    background-color: white;
+	    z-index: 1;
+		  position: relative;
+		  top: 2px;
+		  border-radius: 30px
+    }
 	</style>
-	
 </head>
-<%-- <body  style="background-image:url('${ctp}/resources/images/background.jpeg')"> --%>
 <body>
 <a id="back-to-top"></a>
 <jsp:include page="/WEB-INF/views/include/nav.jsp" />
@@ -81,8 +141,8 @@
 	 	<div class="w3-display-container mySlides">
 		  <img src="${ctp}/resources/images/main_banner1.jpg" style="width:100%">
 		  <div class="w3-display-bottomright w3-container">
-		    <p style="margin:0px 30px 100px 0px;"><b>
-		    	첵(의)세계에서 발행하는 책Chaeg은<br/>
+		    <p style="margin:0px 50px 100px 0px; font-size:17px"><b>
+		    	책(의)세계에서 발행하는 책Chaeg은<br/>
 		    	책을 좋아하는 사람들이 만든 책과 문화에 관한 월간지입니다.<br/><br/></b>
 		    	책을 많이 읽는 사람만을 위한 잡지는 아닙니다.<br/>
 		    	굳이 많이 읽지 않아도 책을 좋아하거나, 즐겨 사거나,<br/>
@@ -93,7 +153,7 @@
 	 	<div class="w3-display-container mySlides">
 		  <img src="${ctp}/resources/images/main_banner2.jpg" style="width:100%">
 		  <div class="w3-display-bottomright w3-container">
-		    <p style="margin:0px 30px 100px 0px;"><b>
+		    <p style="margin:0px 50px 100px 0px; font-size:17px"><b>
 		    	'3개의 책'은 책(의)세계에서 운영하는 도서 커뮤니티 입니다.<br/><br/></b>
 				  세상은 나와 너, 우리로 만들어진 '3개의 책' 이란 테마 안에서,<br/> 
 		    	매일 새로운 이야기와 물음으로 책의 안팎과 주변의 세계를 살피고 있습니다.<br/>
@@ -105,7 +165,7 @@
 	 	<div class="w3-display-container mySlides">
 		  <img src="${ctp}/resources/images/main_banner3.jpg" style="width:100%">
 		  <div class="w3-display-bottomright w3-container">
-		    <p style="margin:0px 30px 100px 0px;"><b>
+		    <p style="margin:0px 50px 100px 0px; font-size:17px"><b>
 		    	책의 세계는 가볍고 즐거워야 합니다.<br/><br/></b>
 		    	책(의)세계는 ‘책을 읽자’ ‘더 똑똑해지자’식의 계몽을 위한 공간이 아닙니다.<br/>
 		    	다만 맛있는 음식이 넘쳐나는 잔치에 더 많은 사람들을<br/>
@@ -123,376 +183,397 @@
 	  </div>
 	</div>
 	
-	
-	
-	<!-- Header with full-height image -->
-	<header class="bgimg-1 w3-display-container w3-grayscale-min" id="home">
-	  <div class="w3-display-left w3-text-white" style="padding:48px">
-	    <span class="w3-jumbo w3-hide-small">Start something that matters</span><br>
-	    <span class="w3-xxlarge w3-hide-large w3-hide-medium">Start something that matters</span><br>
-	    <span class="w3-large">Stop wasting valuable time with projects that just isn't you.</span>
-	    <p><a href="#about" class="w3-button w3-white w3-padding-large w3-large w3-margin-top w3-opacity w3-hover-opacity-off">Learn more and start today</a></p>
-	  </div> 
-	  <div class="w3-display-bottomleft w3-text-grey w3-large" style="padding:24px 48px">
-	    <i class="fa fa-facebook-official w3-hover-opacity"></i>
-	    <i class="fa fa-instagram w3-hover-opacity"></i>
-	    <i class="fa fa-snapchat w3-hover-opacity"></i>
-	    <i class="fa fa-pinterest-p w3-hover-opacity"></i>
-	    <i class="fa fa-twitter w3-hover-opacity"></i>
-	    <i class="fa fa-linkedin w3-hover-opacity"></i>
-	  </div>
-	</header>
-	
-	<!-- About Section -->
-	<div class="w3-container" style="padding:128px 16px" id="about">
-	  <h3 class="w3-center">ABOUT THE COMPANY</h3>
-	  <p class="w3-center w3-large">Key features of our company</p>
-	  <div class="w3-row-padding w3-center" style="margin-top:64px">
-	    <div class="w3-quarter">
-	      <i class="fa fa-desktop w3-margin-bottom w3-jumbo w3-center"></i>
-	      <p class="w3-large">Responsive</p>
-	      <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore.</p>
-	    </div>
-	    <div class="w3-quarter">
-	      <i class="fa fa-heart w3-margin-bottom w3-jumbo"></i>
-	      <p class="w3-large">Passion</p>
-	      <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore.</p>
-	    </div>
-	    <div class="w3-quarter">
-	      <i class="fa fa-diamond w3-margin-bottom w3-jumbo"></i>
-	      <p class="w3-large">Design</p>
-	      <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore.</p>
-	    </div>
-	    <div class="w3-quarter">
-	      <i class="fa fa-cog w3-margin-bottom w3-jumbo"></i>
-	      <p class="w3-large">Support</p>
-	      <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore.</p>
-	    </div>
-	  </div>
+	<!-- 최신 매거진 20개 -->
+	<div class="container-fluid" style="margin: 150px 0px">
+		<div class="text-center" style="margin-bottom:50px">
+			<div class="text-center"><span style="font-size:18px;">오직 당신만을 위한 매거진</span><hr style="background-color:#9BA4B5; width:50%; height: 1px; margin:20px auto;"/></div>
+			<h2 class="text-center" style="margin:0px auto; font-size:35px; font-weight:bold; padding:20px 0px">책 Chaeg</h2>
+			<span style="margin:0px auto; font-size:18px; font-style:italic;"><i class="fa-solid fa-quote-left"></i>&nbsp;&nbsp;&nbsp;책 세계 함께 다다르기(differeach)&nbsp;&nbsp;&nbsp;<i class="fa-solid fa-quote-right"></i><br/>
+				<span class="w3-text w3-tag"  style="margin:0px auto; font-size:14px; font-style:italic;"><b>우리는 다 다르고, 그래서 서로에게 다다를 수 있어요.</b></span>
+			</span>
+		</div>
+		<div class="owl-carousel owl-theme">
+			<c:forEach var="magazineVO" items="${magazineVOS}">
+		    <div class="item"><a href="${ctp}/magazine/maProduct?idx=${magazineVO.idx}"><img src="${ctp}/magazine/${magazineVO.maThumbnail}" /></a></div>
+	    </c:forEach>
+		</div>
 	</div>
 	
-	<!-- Promo Section - "We know design" -->
-	<div class="w3-container w3-light-grey" style="padding:128px 16px">
-	  <div class="w3-row-padding">
-	    <div class="w3-col m6">
-	      <h3>We know design.</h3>
-	      <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod<br>tempor incididunt ut labore et dolore.</p>
-	      <p><a href="#work" class="w3-button w3-black"><i class="fa fa-th"> </i> View Our Works</a></p>
-	    </div>
-	    <div class="w3-col m6">
-	      <img class="w3-image w3-round-large" src="/w3images/phone_buildings.jpg" alt="Buildings" width="700" height="394">
-	    </div>
-	  </div>
+<!-- 	<div class="container-fluid" style="background-color:#E1ECC8; margin:150px 0px; color:#282828; padding:30px"> -->
+	<div class="" style="margin-top:150px; ">
+		<div class="text-center"><span style="font-size:18px;">우리를 위한 책 커뮤니티</span><hr style="background-color:#9BA4B5; width:50%; height: 1px; margin:20px auto;"/></div>
+	</div>
+	<div class="container text-center" id="indexBox">
+		<h2 class="text-center" style="margin:0px auto; font-size:35px; font-weight:bold; padding:20px 0px">3개의 책</h2>
 	</div>
 	
-	<!-- Team Section -->
-	<div class="w3-container" style="padding:128px 16px" id="team">
-	  <h3 class="w3-center">THE TEAM</h3>
-	  <p class="w3-center w3-large">The ones who runs this company</p>
-	  <div class="w3-row-padding w3-grayscale" style="margin-top:64px">
-	    <div class="w3-col l3 m6 w3-margin-bottom">
-	      <div class="w3-card">
-	        <img src="/w3images/team2.jpg" alt="John" style="width:100%">
-	        <div class="w3-container">
-	          <h3>John Doe</h3>
-	          <p class="w3-opacity">CEO & Founder</p>
-	          <p>Phasellus eget enim eu lectus faucibus vestibulum. Suspendisse sodales pellentesque elementum.</p>
-	          <p><button class="w3-button w3-light-grey w3-block"><i class="fa fa-envelope"></i> Contact</button></p>
-	        </div>
-	      </div>
-	    </div>
-	    <div class="w3-col l3 m6 w3-margin-bottom">
-	      <div class="w3-card">
-	        <img src="/w3images/team1.jpg" alt="Jane" style="width:100%">
-	        <div class="w3-container">
-	          <h3>Anja Doe</h3>
-	          <p class="w3-opacity">Art Director</p>
-	          <p>Phasellus eget enim eu lectus faucibus vestibulum. Suspendisse sodales pellentesque elementum.</p>
-	          <p><button class="w3-button w3-light-grey w3-block"><i class="fa fa-envelope"></i> Contact</button></p>
-	        </div>
-	      </div>
-	    </div>
-	    <div class="w3-col l3 m6 w3-margin-bottom">
-	      <div class="w3-card">
-	        <img src="/w3images/team3.jpg" alt="Mike" style="width:100%">
-	        <div class="w3-container">
-	          <h3>Mike Ross</h3>
-	          <p class="w3-opacity">Web Designer</p>
-	          <p>Phasellus eget enim eu lectus faucibus vestibulum. Suspendisse sodales pellentesque elementum.</p>
-	          <p><button class="w3-button w3-light-grey w3-block"><i class="fa fa-envelope"></i> Contact</button></p>
-	        </div>
-	      </div>
-	    </div>
-	    <div class="w3-col l3 m6 w3-margin-bottom">
-	      <div class="w3-card">
-	        <img src="/w3images/team4.jpg" alt="Dan" style="width:100%">
-	        <div class="w3-container">
-	          <h3>Dan Star</h3>
-	          <p class="w3-opacity">Designer</p>
-	          <p>Phasellus eget enim eu lectus faucibus vestibulum. Suspendisse sodales pellentesque elementum.</p>
-	          <p><button class="w3-button w3-light-grey w3-block"><i class="fa fa-envelope"></i> Contact</button></p>
-	        </div>
-	      </div>
-	    </div>
-	  </div>
+<!-- 	<div class="container-fluid" style="background-color:white; margin-bottom:150px; color:#282828; padding:30px; z-index: 2; border: 1px solid #282828;"> -->
+	<div class="container-fluid" style="background-color:#F5EBE0; margin-bottom:150px; color:#282828; padding:30px; z-index: 2;">
+		<div class="row" style="padding-top:50px">
+			<div class="col-5" style="padding-left:50px">
+  	  	<br/><div class="container text-center">
+					<div class="text-center" style="border-radius:10px; margin:0px auto; font-size:30px; font-weight:bold; padding:20px 0px; background-color:white; color:#282828;">
+						<div class="row">
+							<div class="col-3"></div>
+							<div class="col-6">랜덤 도서 추출기</div>
+							<div class="col-3 text-left"><button type="button" class="btn btn-warning" onclick="randomBook()">랜덤 추출</button></div>
+						</div>
+						<hr style="background-color:#9BA4B5; width:50%; height: 1px; margin:5px auto;"/>
+						<p class="w3-text w3-tag" style="margin:0px auto; font-size:15px; font-style:italic;">랜덤 도서 찾기로 인생책을 만나볼까요?</p>
+					</div>
+  	  	</div>
+  	  	<div id="bookDemo"></div>
+			</div>
+			
+			<div class="col-2"><div class="updown"></div></div>
+			
+			<div class="col-5"  style="padding-right:50px">
+		    <br/>
+		    <div class="container text-center">
+					<div class="text-center" style="border-radius:10px; margin:0px auto; font-size:30px; font-weight:bold; padding:20px 0px; background-color:white; color:#282828;">
+						<div class="row">
+							<div class="col-3"></div>
+							<div class="col-6">한 줄 독서 미리보기</div>                                         <!-- 다른 한 줄 독서 가져오기 -->
+							<div class="col-3 text-left"><button type="button" class="btn btn-success" onclick="randomOLR()">더보기</button></div>
+						</div>
+		  	  	
+						<hr style="background-color:#9BA4B5; width:50%; height: 1px; margin:5px auto;"/>
+						<p class="w3-text w3-tag" style="margin:0px auto; font-size:15px; font-style:italic;">에디터와 회원이 직접 선정한 구절을 소개합니다.</p>
+					</div>
+		  	</div>
+		  	<div id="OLRDemo"></div><!-- 여기에 넣을 예정! -->
+
+				<br/><br/>
+				<div class="row" style="padding:20px">
+					<div class="col-4 text-center">
+						<div class="row">
+							<div class="col-10">
+								<a href="https://search.daum.net/search?w=bookpage&bookId=1371704&q=%EB%88%84%EA%B5%B0%EA%B0%80%EC%97%90%EA%B2%8C+%EB%AC%B4%EC%97%87%EC%9D%B4+%EB%90%98%EC%96%B4" target="_blank">
+									<img src="https://search1.kakaocdn.net/thumb/R120x174.q85/?fname=http%3A%2F%2Ft1.daumcdn.net%2Flbook%2Fimage%2F1371704%3Ftimestamp%3D20221025124858" style="width:100%; max-width:300px" />
+								</a>
+							</div>
+							<div class="col-2" style="padding:0px">
+								<button onclick="bookSave()" style="border:0px; background-color:transparent;">
+									<c:if test="${empty bookSaveVO}"><i class="fa-solid fa-solid fa-heart-circle-plus" style="font-size:30px" title="관심 책 등록"></i></c:if>
+									<c:if test="${!empty bookSaveVO}"><i class="fa-solid fa-solid fa-heart-circle-minus" style="font-size:30px; color:#8D8DAA" title="관심 책 등록해제"></i></c:if>
+								</button>
+							</div>				
+						</div>
+					</div>
+					<div class="col-8 text-center">
+						<div class="row">
+							<div class="col" id="OLRBookTitle">                    <!-- OLRBookVO 로! -->
+								<a href="#" id="bookDetail" data-toggle="modal" data-target="#bookModal" 
+			        		onclick="javascript:bookDetail('${OLRBookVO.idx}','${OLRBookVO.title}','${fn:replace(OLRBookVO.contents,'\'', '\\\'')}','${OLRBookVO.url}','${OLRBookVO.isbn}','${OLRBookVO.datetime}','${OLRBookVO.authors}','${OLRBookVO.publisher}','${OLRBookVO.translators}','${OLRBookVO.price}','${OLRBookVO.sale_price}','${OLRBookVO.thumbnail}','${OLRBookVO.status}','${OLRBookVO.bookRate}','${OLRBookVO.save}','${OLRBookVO.bookUpdate}')">
+								<b style="font-size:18px">누군가에게 무엇이 되어</b></a>
+								&nbsp;&nbsp;&nbsp;&nbsp;   <!-- 작성 상세페이지로 -->
+								<button onclick="location.href='${ctp}/community';" style="border:0px; background-color:transparent;">
+									<i class="fa-solid fa-magnifying-glass-plus" style="font-size:25px" title="자세히"></i>
+								</button>
+							</div>
+						</div>
+						<div class="row"><div class="col">예반&nbsp;&nbsp; | &nbsp;&nbsp;토파즈</div></div>
+						<div class="row m-3">
+							<div class="col">
+								<div id="OLRBox">
+									이 시집 「누군가에게 잊혀지지 않는 무엇이 되어」는 잔잔한 감흥과 아름다운 시어로 많은 이들에게 오래도록 기억되고 있는 예반의 대표작으로 마음 한구석에 잠들어 있는 인간의 본성을 자극하고, 우리의 일상에서 소홀하기 쉬운 존재의 소중함과 타인과의 관계, 자아의식 등을 진지하면서도 자유롭게 표현해내고 있다. 그리고 간결한 시행과 시행 사이를 넘나들며 시인이 전해주고자 하는 의미는 씹을수록 부드러워지고, 초록빛 향기가 나고, 바람에 묻어오는 피리소리처럼...
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			
+			
+			</div>
+		</div>
 	</div>
 	
-	<!-- Promo Section "Statistics" -->
-	<div class="w3-container w3-row w3-center w3-dark-grey w3-padding-64">
-	  <div class="w3-quarter">
-	    <span class="w3-xxlarge">14+</span>
-	    <br>Partners
-	  </div>
-	  <div class="w3-quarter">
-	    <span class="w3-xxlarge">55+</span>
-	    <br>Projects Done
-	  </div>
-	  <div class="w3-quarter">
-	    <span class="w3-xxlarge">89+</span>
-	    <br>Happy Clients
-	  </div>
-	  <div class="w3-quarter">
-	    <span class="w3-xxlarge">150+</span>
-	    <br>Meetings
-	  </div>
+<!-- 	정기구독
+	<div class="container text-center" style="margin-bottom:150px">
+		<div id="subscribeBox">
+			<div><i class="fa-solid fa-diagram-next" style="font-size:30px"></i></div><br/>
+			<div style="font-size:25px"><b>정기구독문의</b></div>
+			<button type="button" class="btn btn-outline-danger">온라인 신청 바로가기</button><br/><br/>
+			<div>
+				예금주 : 주식회사 책(의)세계<br/>
+				하나은행 298-910034-05304<br/>	
+				이메일 : info@chaeg.co.kr<br/>	
+				전화번호 : 02-6228-5589<br/>
+			</div>
+		</div>
+	</div> -->
+	
+	<!-- 뉴스레터 -->
+	<div class="container text-center" style="margin-bottom:150px">
+		<div id="subscribeBox">
+			<div><i class="fa-solid fa-envelope-open-text" style="font-size:30px"></i></div><br/>
+			<div style="font-size:25px"><b>뉴스레터</b></div><br/>
+			<form>
+				<div class="input-group">
+					<input type="text" name="email" id="email" placeholder="뉴스레터를 수신할 이메일을 적어주세요." class="form-control"/>
+					<div class="input-group-append">
+						<input type="button" class="btn btn-outline-danger" value="구독"/>
+					</div>
+				</div>
+			</form>
+			<br/>
+			<div>
+				<span style="font-size:15px;"><i class="fa-solid fa-circle-exclamation" style="color: #491f51; font-size:20px;"></i>&nbsp;&nbsp;&nbsp;<b>2주에 한 번, 책(의)편지가 찾아갑니다.</b></span><br/>
+				<br/>
+				이메일 : info@chaeg.co.kr<br/>	
+				전화번호 : 02-6228-5589<br/>
+			</div>
+		</div>
 	</div>
 	
-	<!-- Work Section -->
-	<div class="w3-container" style="padding:128px 16px" id="work">
-	  <h3 class="w3-center">OUR WORK</h3>
-	  <p class="w3-center w3-large">What we've done for people</p>
-	
-	  <div class="w3-row-padding" style="margin-top:64px">
-	    <div class="w3-col l3 m6">
-	      <img src="/w3images/tech_mic.jpg" style="width:100%" onclick="onClick(this)" class="w3-hover-opacity" alt="A microphone">
-	    </div>
-	    <div class="w3-col l3 m6">
-	      <img src="/w3images/tech_phone.jpg" style="width:100%" onclick="onClick(this)" class="w3-hover-opacity" alt="A phone">
-	    </div>
-	    <div class="w3-col l3 m6">
-	      <img src="/w3images/tech_drone.jpg" style="width:100%" onclick="onClick(this)" class="w3-hover-opacity" alt="A drone">
-	    </div>
-	    <div class="w3-col l3 m6">
-	      <img src="/w3images/tech_sound.jpg" style="width:100%" onclick="onClick(this)" class="w3-hover-opacity" alt="Soundbox">
-	    </div>
-	  </div>
-	
-	  <div class="w3-row-padding w3-section">
-	    <div class="w3-col l3 m6">
-	      <img src="/w3images/tech_tablet.jpg" style="width:100%" onclick="onClick(this)" class="w3-hover-opacity" alt="A tablet">
-	    </div>
-	    <div class="w3-col l3 m6">
-	      <img src="/w3images/tech_camera.jpg" style="width:100%" onclick="onClick(this)" class="w3-hover-opacity" alt="A camera">
-	    </div>
-	    <div class="w3-col l3 m6">
-	      <img src="/w3images/tech_typewriter.jpg" style="width:100%" onclick="onClick(this)" class="w3-hover-opacity" alt="A typewriter">
-	    </div>
-	    <div class="w3-col l3 m6">
-	      <img src="/w3images/tech_tableturner.jpg" style="width:100%" onclick="onClick(this)" class="w3-hover-opacity" alt="A tableturner">
-	    </div>
-	  </div>
-	</div>
-	
-	<!-- Modal for full size images on click-->
-	<div id="modal01" class="w3-modal w3-black" onclick="this.style.display='none'">
-	  <span class="w3-button w3-xxlarge w3-black w3-padding-large w3-display-topright" title="Close Modal Image">×</span>
-	  <div class="w3-modal-content w3-animate-zoom w3-center w3-transparent w3-padding-64">
-	    <img id="img01" class="w3-image">
-	    <p id="caption" class="w3-opacity w3-large"></p>
-	  </div>
-	</div>
-	
-	<!-- Skills Section -->
-	<div class="w3-container w3-light-grey w3-padding-64">
-	  <div class="w3-row-padding">
-	    <div class="w3-col m6">
-	      <h3>Our Skills.</h3>
-	      <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod<br>
-	      tempor incididunt ut labore et dolore.</p>
-	      <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod<br>
-	      tempor incididunt ut labore et dolore.</p>
-	    </div>
-	    <div class="w3-col m6">
-	      <p class="w3-wide"><i class="fa fa-camera w3-margin-right"></i>Photography</p>
-	      <div class="w3-grey">
-	        <div class="w3-container w3-dark-grey w3-center" style="width:90%">90%</div>
-	      </div>
-	      <p class="w3-wide"><i class="fa fa-desktop w3-margin-right"></i>Web Design</p>
-	      <div class="w3-grey">
-	        <div class="w3-container w3-dark-grey w3-center" style="width:85%">85%</div>
-	      </div>
-	      <p class="w3-wide"><i class="fa fa-photo w3-margin-right"></i>Photoshop</p>
-	      <div class="w3-grey">
-	        <div class="w3-container w3-dark-grey w3-center" style="width:75%">75%</div>
-	      </div>
-	    </div>
-	  </div>
-	</div>
-	
-	<!-- Pricing Section -->
-	<div class="w3-container w3-center w3-dark-grey" style="padding:128px 16px" id="pricing">
-	  <h3>PRICING</h3>
-	  <p class="w3-large">Choose a pricing plan that fits your needs.</p>
-	  <div class="w3-row-padding" style="margin-top:64px">
-	    <div class="w3-third w3-section">
-	      <ul class="w3-ul w3-white w3-hover-shadow">
-	        <li class="w3-black w3-xlarge w3-padding-32">Basic</li>
-	        <li class="w3-padding-16"><b>10GB</b> Storage</li>
-	        <li class="w3-padding-16"><b>10</b> Emails</li>
-	        <li class="w3-padding-16"><b>10</b> Domains</li>
-	        <li class="w3-padding-16"><b>Endless</b> Support</li>
-	        <li class="w3-padding-16">
-	          <h2 class="w3-wide">$ 10</h2>
-	          <span class="w3-opacity">per month</span>
-	        </li>
-	        <li class="w3-light-grey w3-padding-24">
-	          <button class="w3-button w3-black w3-padding-large">Sign Up</button>
-	        </li>
-	      </ul>
-	    </div>
-	    <div class="w3-third">
-	      <ul class="w3-ul w3-white w3-hover-shadow">
-	        <li class="w3-red w3-xlarge w3-padding-48">Pro</li>
-	        <li class="w3-padding-16"><b>25GB</b> Storage</li>
-	        <li class="w3-padding-16"><b>25</b> Emails</li>
-	        <li class="w3-padding-16"><b>25</b> Domains</li>
-	        <li class="w3-padding-16"><b>Endless</b> Support</li>
-	        <li class="w3-padding-16">
-	          <h2 class="w3-wide">$ 25</h2>
-	          <span class="w3-opacity">per month</span>
-	        </li>
-	        <li class="w3-light-grey w3-padding-24">
-	          <button class="w3-button w3-black w3-padding-large">Sign Up</button>
-	        </li>
-	      </ul>
-	    </div>
-	    <div class="w3-third w3-section">
-	      <ul class="w3-ul w3-white w3-hover-shadow">
-	        <li class="w3-black w3-xlarge w3-padding-32">Premium</li>
-	        <li class="w3-padding-16"><b>50GB</b> Storage</li>
-	        <li class="w3-padding-16"><b>50</b> Emails</li>
-	        <li class="w3-padding-16"><b>50</b> Domains</li>
-	        <li class="w3-padding-16"><b>Endless</b> Support</li>
-	        <li class="w3-padding-16">
-	          <h2 class="w3-wide">$ 50</h2>
-	          <span class="w3-opacity">per month</span>
-	        </li>
-	        <li class="w3-light-grey w3-padding-24">
-	          <button class="w3-button w3-black w3-padding-large">Sign Up</button>
-	        </li>
-	      </ul>
-	    </div>
-	  </div>
-	</div>
-	
-	<!-- Contact Section -->
-	<div class="w3-container w3-light-grey" style="padding:128px 16px" id="contact">
-	  <h3 class="w3-center">CONTACT</h3>
-	  <p class="w3-center w3-large">Lets get in touch. Send us a message:</p>
-	  <div style="margin-top:48px">
-	    <p><i class="fa fa-map-marker fa-fw w3-xxlarge w3-margin-right"></i> Chicago, US</p>
-	    <p><i class="fa fa-phone fa-fw w3-xxlarge w3-margin-right"></i> Phone: +00 151515</p>
-	    <p><i class="fa fa-envelope fa-fw w3-xxlarge w3-margin-right"> </i> Email: mail@mail.com</p>
-	    <br>
-	    <form action="/action_page.php" target="_blank">
-	      <p><input class="w3-input w3-border" type="text" placeholder="Name" required name="Name"></p>
-	      <p><input class="w3-input w3-border" type="text" placeholder="Email" required name="Email"></p>
-	      <p><input class="w3-input w3-border" type="text" placeholder="Subject" required name="Subject"></p>
-	      <p><input class="w3-input w3-border" type="text" placeholder="Message" required name="Message"></p>
-	      <p>
-	        <button class="w3-button w3-black" type="submit">
-	          <i class="fa fa-paper-plane"></i> SEND MESSAGE
-	        </button>
-	      </p>
-	    </form>
-	    <!-- Image of location/map -->
-	    <img src="/w3images/map.jpg" class="w3-image w3-greyscale" style="width:100%;margin-top:48px">
-	  </div>
-	</div>
-	
-	<!-- Footer -->
-	<footer class="w3-center w3-black w3-padding-64">
-	  <a href="#home" class="w3-button w3-light-grey"><i class="fa fa-arrow-up w3-margin-right"></i>To the top</a>
-	  <div class="w3-xlarge w3-section">
-	    <i class="fa fa-facebook-official w3-hover-opacity"></i>
-	    <i class="fa fa-instagram w3-hover-opacity"></i>
-	    <i class="fa fa-snapchat w3-hover-opacity"></i>
-	    <i class="fa fa-pinterest-p w3-hover-opacity"></i>
-	    <i class="fa fa-twitter w3-hover-opacity"></i>
-	    <i class="fa fa-linkedin w3-hover-opacity"></i>
-	  </div>
-	  <p>Powered by <a href="https://www.w3schools.com/w3css/default.asp" title="W3.CSS" target="_blank" class="w3-hover-text-green">w3.css</a></p>
+	<!-- 책 상세내용 -->
+ 	<!-- The Modal -->
+  <div class="modal fade" id="bookModal">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+      <div class="modal-content">
+      
+        <!-- Modal Header -->
+        <div class="modal-header">
+          <h4 class="modal-title"></h4>
+          <button type="button" class="close" data-dismiss="modal">&times;</button>
+        </div>
+        
+        <!-- Modal body -->
+        <div class="modal-body">
+					<div style="text-align:center">
+						<a id="bookDetailUrl1" href="#" target="_blank">
+							<span id="bookDetailTitle" class="text-center" style="font-size:20px; text-align:center; font-weight:bolder"></span>
+						</a>
+					</div>
+					<div style="text-align:center; margin-bottom:40px"><span class="text-center" style="font-size:15px; text-align:center; font-weight:300;">
+						<span id="bookDetailAuthors"></span>&nbsp;&nbsp;|&nbsp;&nbsp;<span id="bookDetailPublisher"></span>&nbsp;&nbsp;|&nbsp;&nbsp;<span id="bookDetailTranslators"></span>
+						<br/><span id="bookDetailIsbn"></span>
+						<br/><span id="bookDetailDatetime"></span>&nbsp;&nbsp;|&nbsp;&nbsp;<span id="bookDetailPrice"></span>&nbsp;&nbsp;|&nbsp;&nbsp;<span id="bookDetailStatus"></span>
+					</span></div>
+			    
+			    <div class="row">
+		  			<div class="col-3 text-center">
+		  				<a id="bookDetailUrl2" href="#" target="_blank"><img src="#" id="bookDetailThumbnail"/></a>
+		  			</div>
+		  			<div class="col-9 text-center">
+		  				<div class="row"><div class="col"><span id="bookDetailBookRate"></span>&nbsp;&nbsp;|&nbsp;&nbsp;<span id="bookDetailSave"></span></div></div>
+		  				<div class="row"><div class="col" id="bookDetailBookUpdate"></div></div>
+		  				<div class="row m-3"><div class="col" id="bookDetailContents"></div></div>
+		  			</div>
+		  		</div>
+        </div>
+        
+        <!-- Modal footer -->
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        </div>
+        
+      </div>
+    </div>
+  </div>	
+  
+	<footer>
+		<jsp:include page="/WEB-INF/views/include/footer.jsp" />
 	</footer>
-	 
-	<script>
-		var slideIndex = 1;
-		showDivs(slideIndex);
-	
-		function plusDivs(n) {
-		  showDivs(slideIndex += n);
-		}
-	
-		function currentDiv(n) {
-		  showDivs(slideIndex = n);
-		}
-	
-		function showDivs(n) {
-		  var i;
-		  var x = document.getElementsByClassName("mySlides");
-		  var dots = document.getElementsByClassName("demo");
-		  if (n > x.length) {slideIndex = 1}
-		  if (n < 1) {slideIndex = x.length}
-		  for (i = 0; i < x.length; i++) {
-		    x[i].style.display = "none";  
-		  }
-		  for (i = 0; i < dots.length; i++) {
-		    dots[i].className = dots[i].className.replace(" w3-white", "");
-		  }
-		  x[slideIndex-1].style.display = "block";  
-		  dots[slideIndex-1].className += " w3-white";
-		}
-		
-		
-		var myIndex = 0;
-		carousel();
-		
-		function carousel() {
-		  var i;
-		  var x = document.getElementsByClassName("mySlides");
-		  for (i = 0; i < x.length; i++) {
-		    x[i].style.display = "none";  
-		  }
-		  myIndex++;
-		  if (myIndex > x.length) {myIndex = 1}    
-		  x[myIndex-1].style.display = "block";  
-		  setTimeout(carousel, 15000); // Change image every 15 seconds
-		}
-	
-		// Modal Image Gallery
-		function onClick(element) {
-		  document.getElementById("img01").src = element.src;
-		  document.getElementById("modal01").style.display = "block";
-		  var captionText = document.getElementById("caption");
-		  captionText.innerHTML = element.alt;
-		}
-		
-		// 맨 위로 스크롤
-		$(function(){
-			  $('#back-to-top').on('click',function(e){
-			      e.preventDefault();
-			      $('html,body').animate({scrollTop:0},600);
-			  });
-			  
-			  $(window).scroll(function() {
-			    if ($(document).scrollTop() > 100) {
-			      $('#back-to-top').addClass('show');
-			    } else {
-			      $('#back-to-top').removeClass('show');
-			    }
-			  });
-			});
-
-	</script>
-
 </body>
+<script>
+	var slideIndex = 1;
+	showDivs(slideIndex);
+
+	function plusDivs(n) {
+	  showDivs(slideIndex += n);
+	}
+
+	function currentDiv(n) {
+	  showDivs(slideIndex = n);
+	}
+
+	function showDivs(n) {
+	  var i;
+	  var x = document.getElementsByClassName("mySlides");
+	  var dots = document.getElementsByClassName("demo");
+	  if (n > x.length) {slideIndex = 1}
+	  if (n < 1) {slideIndex = x.length}
+	  for (i = 0; i < x.length; i++) {
+	    x[i].style.display = "none";  
+	  }
+	  for (i = 0; i < dots.length; i++) {
+	    dots[i].className = dots[i].className.replace(" w3-white", "");
+	  }
+	  x[slideIndex-1].style.display = "block";  
+	  dots[slideIndex-1].className += " w3-white";
+	}
+	
+	
+	var myIndex = 0;
+	carousel();
+	
+	function carousel() {
+	  var i;
+	  var x = document.getElementsByClassName("mySlides");
+	  for (i = 0; i < x.length; i++) {
+	    x[i].style.display = "none";  
+	  }
+	  myIndex++;
+	  if (myIndex > x.length) {myIndex = 1}    
+	  x[myIndex-1].style.display = "block";  
+	  setTimeout(carousel, 15000); // Change image every 15 seconds
+	}
+
+	// Modal Image Gallery
+	function onClick(element) {
+	  document.getElementById("img01").src = element.src;
+	  document.getElementById("modal01").style.display = "block";
+	  var captionText = document.getElementById("caption");
+	  captionText.innerHTML = element.alt;
+	}
+	
+	// 맨 위로 스크롤
+	$(function(){
+	  $('#back-to-top').on('click',function(e){
+	      e.preventDefault();
+	      $('html,body').animate({scrollTop:0},600);
+	  });
+	  
+	  $(window).scroll(function() {
+	    if ($(document).scrollTop() > 100) {
+	      $('#back-to-top').addClass('show');
+	    } else {
+	      $('#back-to-top').removeClass('show');
+	    }
+	  });
+	});
+	
+	// 최신 매거진 캐러셀
+	$('.owl-carousel').owlCarousel({
+	    stagePadding: 50,
+	    loop:true,
+	    margin:0,
+	    nav:true,
+	    autoplay:true,
+	    autoplayTimeout:5000,
+	    autoplayHoverPause:true,
+	    responsive:{
+        0:{ items:1 },
+        600:{ items:1 },
+        800:{ items:2 },
+        900:{ items:2 },
+        1000:{ items:3 },
+        1200:{ items:4 }
+	    }
+	})
+
+	// 랜덤 책 추출기
+	function randomBook() {
+		
+		$.ajax({
+		  type : "post",
+		  url : "${ctp}/home/randomBook",
+		  dataType: "json",
+		  success : function(bookVO) {
+			  
+				let str = "";
+				str += '<br/><br/><div class="row" style="padding:20px">';
+				str += '<div class="col-3 text-center"><a href="'+bookVO.url+'" target="_blank"><img src="'+bookVO.thumbnail+'" style="width:100%; max-width:500px" /></a></div>';
+				str += '<div class="col-9 text-center">';
+				str += '<div class="row"><div class="col"><a href="'+bookVO.url+'" target="_blank"><b>'+bookVO.title+'</b></a></div></div>';
+				str += '<div class="row"><div class="col">'+bookVO.authors+'&nbsp;&nbsp; | &nbsp;&nbsp;'+bookVO.publisher+'</div></div>';
+				str += '<div class="row m-3"><div class="col">'+bookVO.contents+'...</div></div>';
+				str += '</div>';
+				str += '<hr/>	';
+
+				document.getElementById("bookDemo").innerHTML = str;
+			},
+			error : function() {
+				alert("전송 오류! 재시도 부탁드립니다.");
+			}
+		}); 
+	}
+	
+	function randomOLR() {
+		
+	}
+	/* // 책 저장(좋아요)
+	function bookSave() {
+		
+		if('${sNickname}' == "") {
+			alert('로그인 후 사용해주세요.');
+			location.href = "${ctp}/member/memberLogin";
+			return false;
+		}
+		
+		if('${bookSaveVO}' == "") {
+    	$.ajax({
+    		type  : "post",
+    		url   : "${ctp}/community/bookSave",
+    		data  : {
+    			bookIdx : ${OLRVO.bookIdx},
+				  memNickname  : '${sNickname}'
+				},
+    		success:function() {
+    			alert("관심 책에 추가되었습니다.");
+    			//location.reload();
+    		},
+    		error : function() {
+    			alert("전송 오류! 재시도 부탁드립니다.");
+    		}
+    	}); 
+		}
+		else {
+    	$.ajax({
+    		type  : "post",
+    		url   : "${ctp}community/bookSaveDelete",
+    		data  : {
+    			bookIdx : ${OLRVO.bookIdx},
+				  memNickname  : '${sNickname}'
+				},
+    		success:function() {
+    			alert("관심 책에서 삭제되었습니다.");
+    			//location.reload();
+    		},
+    		error : function() {
+    			alert("전송 오류! 재시도 부탁드립니다.");
+    		}
+    	}); 
+		}
+	} */
+	
+	function bookDetail(idx,title,contents,url,isbn,datetime,authors,publisher,translators,price,sale_price,thumbnail,status,bookRate,save,bookUpdate) {
+		$("#bookDetailIdx").text(idx);
+		$("#bookDetailTitle").text(title);
+		$("#bookDetailContents").text(contents);
+		
+		if(contents != "") {
+			$("#bookDetailContents").text(contents + "...");
+		}
+		else {
+			$("#bookDetailContents").text("책 상세내용이 없습니다");
+		}
+
+		document.getElementById('bookDetailUrl1').setAttribute('href', url);
+		document.getElementById('bookDetailUrl2').setAttribute('href', url);
+		document.getElementById('bookDetailThumbnail').setAttribute('src', thumbnail);
+		
+		$("#bookDetailIsbn").text("isbn : " + isbn);
+		
+		$("#bookDetailDatetime").text('출판일 : ' + datetime.substring(0,9));
+		
+		$("#bookDetailAuthors").text('저자 : ' + authors);
+		$("#bookDetailPublisher").text(publisher);
+		
+		if(translators != "") {
+			$("#bookDetailTranslators").text('번역 : ' + translators);
+		}
+	
+		$("#bookDetailPrice").text(price + "원");
+		$("#bookDetailSale_price").text(sale_price);
+		
+		$("#bookDetailStatus").text(status);
+		$("#bookDetailBookRate").text("평점 : " + bookRate);
+		$("#bookDetailSave").text("저장 수 : " + save);
+		$("#bookDetailBookUpdate").text("저장일 : " + bookUpdate.substring(0,19));
+		
+		
+	} 
+</script>
 </html>

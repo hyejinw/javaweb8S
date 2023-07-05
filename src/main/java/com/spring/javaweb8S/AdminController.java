@@ -21,6 +21,7 @@ import com.spring.javaweb8S.pagination.PageProcess;
 import com.spring.javaweb8S.pagination.PageVO;
 import com.spring.javaweb8S.service.AdminService;
 import com.spring.javaweb8S.vo.BookVO;
+import com.spring.javaweb8S.vo.CollectionVO;
 import com.spring.javaweb8S.vo.DefaultPhotoVO;
 import com.spring.javaweb8S.vo.MagazineVO;
 import com.spring.javaweb8S.vo.ProverbVO;
@@ -304,7 +305,7 @@ public class AdminController {
 	// 매거진 삭제
 	@ResponseBody
 	@RequestMapping(value = "/magazine/magazineDelete", method = RequestMethod.POST)
-	public String magazineDeletePost(String checkRow) {
+	public String magazineDeletePost(String checkRow,	HttpServletRequest request) {
 		
 		List<String> magazineList = new ArrayList<String>();
 		String[] checkedMagazineIdx = checkRow.split(",");
@@ -312,6 +313,20 @@ public class AdminController {
 		for(int i=0; i < checkedMagazineIdx.length; i++){
 			magazineList.add(checkedMagazineIdx[i].toString());
 		}
+		
+		// 서버 사진 삭제
+		List<MagazineVO> magazinePhotoName = adminService.getMagazinePhotoName(magazineList);
+		
+		String realPath = request.getSession().getServletContext().getRealPath("/resources/data/magazine/");
+		
+		for(int i=0; i < magazinePhotoName.size(); i++){
+			File file1 = new File(realPath + magazinePhotoName.get(i).getMaThumbnail());
+			File file2 = new File(realPath + magazinePhotoName.get(i).getMaDetail());
+			
+			if(file1.exists()) file1.delete();
+			if(file2.exists()) file2.delete();
+		}
+		// DB에서 삭제
 		adminService.setMagazineDelete(magazineList);
 		
 		return "1";
@@ -323,9 +338,10 @@ public class AdminController {
 		return "admin/magazine/magazineInsert";
 	}
 	
-	// 매거진 등록
+	// 매거진 등록 (여기 정기구독 부분 오류있음 400)
 	@RequestMapping(value = "/magazine/magazineInsert", method = RequestMethod.POST)
 	public String magazineInsertPost(MultipartFile thumbnailFile, MultipartFile detailFile, MagazineVO vo) {
+		System.out.println("vo : " + vo);
 		
 		int res = adminService.setMagazineInsert(thumbnailFile, detailFile, vo);
 		if(res == 1) return "redirect:/message/magazineInsertOk";
@@ -352,5 +368,84 @@ public class AdminController {
 		else return "redirect:/message/magazineUpdateNo?idx="+vo.getIdx();
 	}
 	
+	// 컬렉션 카테고리 등록 창 및 리스트
+	@RequestMapping(value = "/collection/colCategoryList", method = RequestMethod.GET)
+	public String colCategoryInsertGet(Model model,
+			@RequestParam(name="pag", defaultValue = "1", required = false) int pag,
+			@RequestParam(name="pageSize", defaultValue = "10", required = false) int pageSize) {
+		
+		PageVO pageVO = pageProcess.totRecCnt(pag, pageSize, "adminColCategory", "", "");
+		ArrayList<CollectionVO> vos = adminService.getColCategoryList(pageVO.getStartIndexNo(), pageSize);
+
+		model.addAttribute("vos", vos);
+		model.addAttribute("pageVO", pageVO);
+		
+		return "admin/collection/colCategoryList";
+	}
 	
+	// 컬렉션 카테고리 등록
+	@RequestMapping(value = "/collection/colCategoryList", method = RequestMethod.POST)
+	public String colCategoryInsertPost(MultipartFile thumbnailFile, CollectionVO vo) {
+		
+		int res = adminService.setColCategoryInsert(thumbnailFile, vo);
+		if(res == 1) return "redirect:/message/colCategoryInsertOk";
+		else return "redirect:/message/colCategoryInsertNo";
+	}
+	
+	// 컬렉션 카테고리 삭제
+	@ResponseBody
+	@RequestMapping(value = "/collection/colCategoryDelete", method = RequestMethod.POST)
+	public String colCategoryDeletePost(String checkRow,	HttpServletRequest request) {
+		
+		List<String> colCategoryList = new ArrayList<String>();
+		String[] checkedcolCategoryThumbnail = checkRow.split(",");
+		
+		for(int i=0; i < checkedcolCategoryThumbnail.length; i++){
+			colCategoryList.add(checkedcolCategoryThumbnail[i].toString());
+		}
+		
+		// 서버 사진 삭제
+		String realPath = request.getSession().getServletContext().getRealPath("/resources/data/collection/");
+		
+		for(int i=0; i < colCategoryList.size(); i++){
+			File file = new File(realPath + colCategoryList.get(i));
+			
+			if(file.exists()) file.delete();
+		}
+		// DB에서 삭제
+		adminService.setColCategoryDelete(colCategoryList);
+		
+		return "1";
+	}
+
+	
+	// 컬렉션 카테고리 공개 변경 + 관련 상품 전부 똑같이 처리
+	@ResponseBody
+	@RequestMapping(value = "/collection/colCategoryOpenUpdate", method = RequestMethod.POST)
+	public String colCategoryOpenUpdatePost(String colOpen, int idx) {
+		
+		if(colOpen.equals("공개")) colOpen = "비공개";
+		else colOpen = "공개";
+		adminService.setColCategoryOpenUpdate(idx, colOpen);
+		
+		return "1";
+	}
+	
+	// 컬렉션 카테고리 수정
+	@ResponseBody
+	@RequestMapping(value = "/collection/colCategoryUpdate", method = RequestMethod.POST)
+	public String colCategoryUpdatePost(CollectionVO vo) {
+		adminService.setUpdateColCategory(vo);
+		
+		return "1";
+	}
+	
+	// 컬렉션 카테고리 썸네일 수정
+	@RequestMapping(value = "/collection/colCategorythumbUpdate", method = RequestMethod.POST)
+	public String colCategorythumbUpdatePost(MultipartFile thumbnailFile, CollectionVO vo) {
+		
+		int res = adminService.setColCategorythumbUpdate(thumbnailFile, vo);
+		if(res == 1) return "redirect:/message/colCategorythumbUpdateOk";
+		else return "redirect:/message/colCategorythumbUpdateNo";
+	}
 }

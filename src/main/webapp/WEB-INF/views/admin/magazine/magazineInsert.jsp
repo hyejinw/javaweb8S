@@ -8,7 +8,7 @@
 <head>
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
-	<title>매거진 등록</title>
+	<title>책(의)세계</title>
 	<jsp:include page="/WEB-INF/views/include/bs4.jsp" />
 	  <style>
 	  .head {
@@ -129,6 +129,7 @@
 			let thumbnailExt = maThumbnail.substring(maThumbnail.lastIndexOf(".")+1).toUpperCase();
 			let detailExt = maDetail.substring(maDetail.lastIndexOf(".")+1).toUpperCase();
 			let maxSize = 1024 * 1024 * 20; // 업로드 가능 파일은 20MByte까지
+			alert("maType : " +maType);
 			
 			if(maType == "" || maTitle == "" || maPrice == "" || maThumbnail == "" || maDetail == "") {
 				alert('필수 입력을 완성해주세요.');
@@ -150,7 +151,7 @@
 				alert("업로드 파일의 최대용량은 20MByte 입니다.");
 				return false;
 			}
-			//magazineInsertForm.submit();
+			magazineInsertForm.submit();
 		}
 	</script>
 </head>
@@ -174,46 +175,48 @@
 			
 		  <div style="background-color:white; padding:20px">
 		  	<form name="magazineInsertForm" method="post" enctype="multipart/form-data">
-					<table class="table text-left">
-			      <tr>
-			        <th>상품 타입 <span class="must">*</span></th>
-			        <td>
-								<label for="type1"><input type="radio" name="maType" id="type1" value="매거진" checked>&nbsp;&nbsp;매거진</label>
-								<label for="type2"><input type="radio" name="maType" id="type2" value="정기 구독" class="ml-4">&nbsp;&nbsp;정기 구독</label>
-			        </td>
-			      </tr>
-			      <tr>
-			        <th>제목 <span class="must">*</span></th>
-			        <td><input type="text" name="maTitle" id="maTitle" class="form-control"/></td>
-			      </tr>
-			      <tr>
-			        <th>가격 <span class="must">*</span></th>
-			        <td><input type="number" name="maPrice" id="maPrice" class="form-control"/></td>
-			      </tr>
-			      <tr>
-			        <th>상품 썸네일 <span class="must">*</span></th>
-			        <td><input type="file" name="thumbnailFile" id="maThumbnail" onchange="thumbnailCheck(this)" class="form-control-file border form-control"/></td>
-			      </tr>
-			      <tr>
-			        <th>상품 상세설명 <span class="must">*</span></th>
-			        <td><input type="file" name="detailFile" id="maDetail" onchange="detailCheck(this)" class="form-control-file border form-control"/></td>
-			      </tr>
-			      <tr>
-			        <th>발행일  <span class="must">* (정기구독 제외)</span></th>
-			        <td><input type="date" name="maDate" id="maDate" class="form-control"/></td>
-			      </tr>
-			      <tr>
-			        <th>재고 수량  <span class="must">* (정기구독 제외)</span></th>
-			        <td><input type="number" name="maStock" id="maStock" class="form-control"/></td>
-			      </tr>
-			      <tr>
-			        <td colspan="2" class="text-center">
-				        <div style="margin-top:20px">
-									<button type="button" onclick="magazineInsert()" class="btn2" style="background-color:#F5EBE0; font-size: 0.9em; border-color:#282828; color:black">등록</button>
-				        </div>
-			        </td>
-			      </tr>
-				  </table>
+					<div class="table-responsive">
+						<table class="table text-left">
+				      <tr>
+				        <th>상품 타입 <span class="must">*</span></th>
+				        <td>
+									<label for="type1"><input type="radio" name="maType" id="type1" value="매거진" checked>&nbsp;&nbsp;매거진</label>
+									<label for="type2"><input type="radio" name="maType" id="type2" value="정기 구독" class="ml-4">&nbsp;&nbsp;정기 구독</label>
+				        </td>
+				      </tr>
+				      <tr>
+				        <th>제목 <span class="must">*</span></th>
+				        <td><input type="text" name="maTitle" id="maTitle" class="form-control"/></td>
+				      </tr>
+				      <tr>
+				        <th>가격 <span class="must">*</span></th>
+				        <td><input type="number" name="maPrice" id="maPrice" class="form-control"/></td>
+				      </tr>
+				      <tr>
+				        <th>상품 썸네일 <span class="must">*</span></th>
+				        <td><input type="file" name="thumbnailFile" id="maThumbnail" onchange="thumbnailCheck(this)" class="form-control-file border form-control"/></td>
+				      </tr>
+				      <tr>
+				        <th>상품 상세설명 <span class="must">*</span></th>
+				        <td><input type="file" name="detailFile" id="maDetail" onchange="detailCheck(this)" class="form-control-file border form-control"/></td>
+				      </tr>
+				      <tr>
+				        <th>발행일  <span class="must">* (정기구독 제외)</span></th>
+				        <td><input type="date" name="maDate" id="maDate" class="form-control"/></td>
+				      </tr>
+				      <tr>
+				        <th>재고 수량  <span class="must">* (정기구독 제외)</span></th>
+				        <td><input type="number" name="maStock" id="maStock" class="form-control"/></td>
+				      </tr>
+				      <tr>
+				        <td colspan="2" class="text-center">
+					        <div style="margin-top:20px">
+										<button type="button" onclick="magazineInsert()" class="btn2" style="background-color:#F5EBE0; font-size: 0.9em; border-color:#282828; color:black">등록</button>
+					        </div>
+				        </td>
+				      </tr>
+					  </table>
+					</div>
 		  	</form>
 			  
 			  <div class="row text-center">

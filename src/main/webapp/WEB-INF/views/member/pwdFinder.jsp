@@ -6,7 +6,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>비밀번호 찾기</title>
+  <title>책(의)세계</title>
   <jsp:include page="/WEB-INF/views/include/bs4.jsp" />
   <style>
 		#container {font-size: 1.2em;}
@@ -78,7 +78,7 @@
 	<div id="container" style="margin-top:100px">
 		<div class="container-xl p-5 my-5">
 			<h2 class="text-center" style="margin:0px auto;">비밀번호 찾기  <font size="3px" color="#FFDB7E"><span id="emailSpinner" class="spinner-border" style="display:none"></span></font></h2>
-			<div class="text-center mt-2" style="font-size:0.7em"><i class="fa-solid fa-triangle-exclamation"></i>&nbsp;회원가입 정보와 동일하게 입력해주세요.<br/><font color="red">이메일로 임시비밀번호를 보내드립니다.</font></div>
+			<div class="text-center mt-2" style="font-size:0.8em"><i class="fa-solid fa-triangle-exclamation"></i>&nbsp;회원가입 정보와 동일하게 입력해주세요.<br/><font color="red">이메일로 임시비밀번호를 보내드립니다.</font></div>
 			<form name="myform" method="post" style="margin-top:50px">
 				<div class="form-group" style="margin:0px auto; padding-top:30px; width:60%"> <!-- 이 부분 추후에 반응형 사이즈로 재조절 필요 -->
 					<div class="row" style="margin-bottom:30px">

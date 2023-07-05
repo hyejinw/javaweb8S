@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.spring.javaweb8S.dao.HomeDAO">
+
+	<select id="getNewMagazines" resultType="com.spring.javaweb8S.vo.MagazineVO">
+		select * from bo_magazine order by idx desc limit 0,20;
+	</select>
+	
+</mapper>

@@ -8,7 +8,7 @@
 <head>
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
-	<title>책 명언 관리</title>
+	<title>책(의)세계</title>
 	<jsp:include page="/WEB-INF/views/include/bs4.jsp" />
 	  <style>
 	  .head {
@@ -189,32 +189,34 @@
 		    </tr>
 		  </table>
 		  
-			<table class="table text-center">
-		    <thead class="thead-dark">
-		      <tr>
-		        <th><input type="checkbox" name="checkAll" id="th_checkAll" onclick="checkAll();"/><label for="th_checkAll">&nbsp;&nbsp;&nbsp;&nbsp;번호</label></th>
-		        <th>내용</th>
-		        <th>작성자</th>
-		        <th>비고</th>
-		      </tr>
-		    </thead>
-		    <tbody>
-		    	<c:set var="curScrStartNo" value="${pageVO.curScrStartNo}" />
- 		    	<c:forEach var="vo" items="${vos}" varStatus="st">
+		  <div class="table-responsive">
+				<table class="table text-center">
+			    <thead class="thead-dark">
 			      <tr>
-			        <td><label for="chk${vo.idx}"><input type="checkbox" name="checkRow" id="chk${vo.idx}" class="form-check-input chkGrp" value="${vo.idx}" />&nbsp;&nbsp;&nbsp;&nbsp;${curScrStartNo}</label></td>
-			        <td><textarea id="content${vo.idx}" cols="60" rows="3" disabled style="border: none">${fn:replace(vo.content, newLine, "<br/>")}</textarea></td>
-			        <td><input type="text" id="origin${vo.idx}" value="${vo.origin}" class="text-center" disabled style="border: none"/></td>
-			        <td>
-			        	<button class="btn btn-warning btn-sm" id="update${vo.idx}" onclick="proverbUpdate('${vo.idx}')">수정</button>
-			        	<button class="btn btn-dark btn-sm" id="confirm${vo.idx}" onclick="proverbConfirm('${vo.idx}')" style="display:none;">종료</button>
-		        	</td>
+			        <th><input type="checkbox" name="checkAll" id="th_checkAll" onclick="checkAll();"/><label for="th_checkAll">&nbsp;&nbsp;&nbsp;&nbsp;번호</label></th>
+			        <th>내용</th>
+			        <th>작성자</th>
+			        <th>비고</th>
 			      </tr>
-			    	<c:set var="curScrStartNo" value="${curScrStartNo - 1}"/>
-		    	</c:forEach>
-		    	<tr><td colspan="4"></td></tr> 
-		    </tbody>
-		  </table>
+			    </thead>
+			    <tbody>
+			    	<c:set var="curScrStartNo" value="${pageVO.curScrStartNo}" />
+	 		    	<c:forEach var="vo" items="${vos}" varStatus="st">
+				      <tr>
+				        <td><label for="chk${vo.idx}"><input type="checkbox" name="checkRow" id="chk${vo.idx}" class="form-check-input chkGrp" value="${vo.idx}" />&nbsp;&nbsp;&nbsp;&nbsp;${curScrStartNo}</label></td>
+				        <td><textarea id="content${vo.idx}" cols="60" rows="3" disabled style="border: none">${fn:replace(vo.content, "<br/>", newLine)}</textarea></td>
+				        <td><input type="text" id="origin${vo.idx}" value="${vo.origin}" class="text-center" disabled style="border: none"/></td>
+				        <td>
+				        	<button class="btn btn-warning btn-sm" id="update${vo.idx}" onclick="proverbUpdate('${vo.idx}')">수정</button>
+				        	<button class="btn btn-dark btn-sm" id="confirm${vo.idx}" onclick="proverbConfirm('${vo.idx}')" style="display:none;">종료</button>
+			        	</td>
+				      </tr>
+				    	<c:set var="curScrStartNo" value="${curScrStartNo - 1}"/>
+			    	</c:forEach>
+			    	<tr><td colspan="4"></td></tr> 
+			    </tbody>
+			  </table>
+		  </div>
 		  
 		  <!-- 4페이지(1블록)에서 0블록으로 가게되면 현재페이지는 1페이지가 블록의 시작페이지가 된다. -->
 		  <!-- 첫페이지 / 이전블록 / 1(4) 2(5) 3 / 다음블록 / 마지막페이지 -->

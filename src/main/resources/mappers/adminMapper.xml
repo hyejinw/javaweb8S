@@ -54,18 +54,6 @@
 		</if>
 	</select>
 	
-	<select id="getMagazineSearchList" resultType="com.spring.javaweb8S.vo.MagazineVO">
-		<if test='searchString != "" and startDate == ""'>
-			select * from bo_magazine where ${search} like concat('%',#{searchString},'%') order by idx desc limit #{startIndexNo},#{pageSize};
-		</if>
-		<if test='searchString == "" and startDate != ""'>
-			select * from bo_magazine where date_format(maDate, '%Y-%m-%d') BETWEEN #{startDate} AND #{endDate} order by idx desc limit #{startIndexNo},#{pageSize};
-		</if>
-		<if test='searchString != "" and startDate != ""'>
-			select * from bo_magazine where ${search} like concat('%',#{searchString},'%') and date_format(maDate, '%Y-%m-%d') BETWEEN #{startDate} AND #{endDate} order by idx desc limit #{startIndexNo},#{pageSize};
-		</if>
-	
-	</select>
 	
 	<select id="magazineTypeTotRecCnt" resultType="int">
 		select count(*) from bo_magazine where maType = #{maType};
@@ -77,6 +65,21 @@
 	
 	<select id="getMagazine" resultType="com.spring.javaweb8S.vo.MagazineVO">
 		select * from bo_magazine where idx = #{idx};
+	</select>
+	
+	<select id="getMagazinePhotoName" resultType="com.spring.javaweb8S.vo.MagazineVO">
+		select maDetail,maThumbnail from bo_magazine where idx in
+   	<foreach collection="magazineList" item="magazineList" open="(" close=")" separator=",">
+   		#{magazineList}
+    </foreach>
+	</select>
+	
+	<select id="colCategoryTotRecCnt" resultType="int">
+		select count(*) from bo_collection;
+	</select>
+	
+	<select id="getColCategoryList" resultType="com.spring.javaweb8S.vo.CollectionVO">
+		select * from bo_collection order by idx desc limit #{startIndexNo},#{pageSize};
 	</select>
 	
 	<insert id="memberDefaultPhotoInsert">
@@ -120,6 +123,10 @@
 		</if> 
 	</insert>	
 	
+	<insert id="setColCategoryInsert">
+		insert into bo_collection values(default,#{vo.colName},#{vo.colDetail},#{vo.colThumbnail},default,default);
+	</insert>
+	
 	<update id="setChangeMemberPhotos">
 		update bo_member set memPhoto = default where memPhoto in
    	<foreach collection="defaultPhotoList" item="defaultPhotoList" open="(" close=")" separator=",">
@@ -142,6 +149,18 @@
  		<if test='vo.maType != null and vo.maType=="정기 구독"'>maDate = default, </if>
 		<if test='vo.maType != null and vo.maType=="매거진"'>maDate = #{vo.maDate}, </if> 
 		maStock = #{vo.maStock} where idx = #{vo.idx};
+	</update>
+	
+ 	<update id="setColCategoryOpenUpdate">
+		update bo_collection set colOpen = #{colOpen} where idx = #{idx};
+	</update>
+	
+	<update id="setUpdateColCategory">
+		update bo_collection set colName = #{vo.colName}, colDetail = #{vo.colDetail}, colDate = #{vo.colDate} where idx = #{vo.idx};
+	</update>
+	
+	<update id="setColCategorythumbUpdate">
+		update bo_collection set colThumbnail = #{vo.colThumbnail} where idx = #{vo.idx};
 	</update>
 	
 	<delete id="memberDefaultPhotoDelete">
@@ -170,6 +189,13 @@
 		delete from bo_magazine where idx in
     <foreach collection="magazineList" item="magazineList" open="(" close=")" separator=",">
    		#{magazineList}
+    </foreach>
+	</delete>
+	
+	<delete id="setColCategoryDelete">
+		delete from bo_collection where colThumbnail in
+    <foreach collection="colCategoryList" item="colCategoryList" open="(" close=")" separator=",">
+   		#{colCategoryList}
     </foreach>
 	</delete>
 	

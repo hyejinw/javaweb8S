@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.spring.javaweb8S.dao.MagazineDAO">
+
+	<select id="magazineListTotRecCnt" resultType="int">
+		<if test='search != null and search == "최신순"'>
+			select count(*) from bo_magazine 
+			<if test='maDate != null and maDate != ""'>where date_format(maDate, '%Y') = #{maDate} </if>
+			order by idx desc;
+		</if>
+		<if test='search != null and search == "상품명"'>
+			select count(*) from bo_magazine 
+			<if test='maDate != null and maDate != ""'>where date_format(maDate, '%Y') = #{maDate} </if>
+			order by idx asc;
+		</if>
+		<if test='search != null and search == "낮은 가격순"'>
+			select count(*) from bo_magazine 
+			<if test='maDate != null and maDate != ""'>where date_format(maDate, '%Y') = #{maDate} </if>
+			order by maPrice asc, idx desc;
+		</if>
+		<if test='search != null and search == "높은 가격순"'>
+			select count(*) from bo_magazine  
+			<if test='maDate != null and maDate != ""'>where date_format(maDate, '%Y') = #{maDate} </if>
+			order by maPrice desc, idx desc;
+		</if>
+	</select>
+	
+	<select id="getMagazineList" resultType="com.spring.javaweb8S.vo.MagazineVO">
+		<if test='search != null and search == "최신순"'>
+			select * from bo_magazine 
+			<if test='maDate != null and maDate != ""'>where date_format(maDate, '%Y') = #{maDate} </if>
+			order by idx desc limit #{startIndexNo},#{pageSize};
+		</if>
+		<if test='search != null and search == "상품명"'>
+			select * from bo_magazine 
+			<if test='maDate != null and maDate != ""'>where date_format(maDate, '%Y') = #{maDate} </if>
+			order by idx asc limit #{startIndexNo},#{pageSize};
+		</if>
+		<if test='search != null and search == "낮은 가격순"'>
+			select * from bo_magazine 
+			<if test='maDate != null and maDate != ""'>where date_format(maDate, '%Y') = #{maDate} </if>
+			order by maPrice asc, idx desc limit #{startIndexNo},#{pageSize};
+		</if>
+		<if test='search != null and search == "높은 가격순"'>
+			select * from bo_magazine 
+			<if test='maDate != null and maDate != ""'>where date_format(maDate, '%Y') = #{maDate} </if>
+			order by maPrice desc, idx desc limit #{startIndexNo},#{pageSize};
+		</if>
+	</select>
+	
+	<select id="getMaDate" resultType="String">
+		select distinct YEAR(maDate) from bo_magazine order by maDate desc; 
+	</select>
+	
+	<select id="getMagazineProduct" resultType="com.spring.javaweb8S.vo.MagazineVO">
+		select * from bo_magazine where idx = #{idx};
+	</select>
+	
+	<select id="getMagazineSave" resultType="com.spring.javaweb8S.vo.SaveVO">
+		select * from bo_save where memNickname = #{nickname} and maIdx = #{idx};
+	</select>
+
+	<select id="getMagazineCartSearch" resultType="com.spring.javaweb8S.vo.CartVO">
+		select * from bo_cart where memNickname = #{nickname} and maIdx = #{idx};
+	</select>
+	
+	<insert id="setMagazineSave">
+		insert into bo_save(idx,memNickname,type,maIdx,prodName,prodPrice,prodThumbnail) 
+		values (default,#{vo.memNickname},#{vo.type},#{vo.maIdx},#{vo.prodName},#{vo.prodPrice},#{vo.prodThumbnail});
+	</insert>
+	
+	<insert id="setMagazineCartInsert">
+		insert into bo_cart(idx,memNickname,type,maIdx,prodName,prodPrice,prodThumbnail,num,totalPrice,cartDate) 
+		values (default,#{vo.memNickname},#{vo.type},#{vo.maIdx},#{vo.prodName},#{vo.prodPrice},#{vo.prodThumbnail},#{vo.num},#{vo.totalPrice},default);
+	</insert>
+	
+	<update id="setMagazineCartUpdate">
+		update bo_cart set num = num + #{vo.num}, totalPrice = totalPrice + #{vo.totalPrice} where memNickname = #{vo.memNickname} and maIdx = #{vo.maIdx};
+	</update>
+	
+	<delete id="setMagazineSaveDelete">
+		delete from bo_save where memNickname = #{memNickname} and maIdx = #{maIdx};
+	</delete>
+	
+</mapper>

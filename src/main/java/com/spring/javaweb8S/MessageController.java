@@ -64,6 +64,22 @@ public class MessageController {
 			model.addAttribute("msg", "매거진 수정에 실패하였습니다. 재시도 부탁드립니다.");
 			model.addAttribute("url", "/admin/magazine/magazineUpdate?idx="+idx);
 		}
+		else if(msgFlag.equals("colCategoryInsertOk")) {
+			model.addAttribute("msg", "컬렉션 카테고리에 성공적으로 등록되었습니다.");
+			model.addAttribute("url", "/admin/collection/colCategoryList");
+		}
+		else if(msgFlag.equals("colCategoryInsertNo")) {
+			model.addAttribute("msg", "컬렉션 카테고리 등록에 실패하였습니다. 재시도 부탁드립니다.");
+			model.addAttribute("url", "/admin/collection/colCategoryList");
+		}
+		else if(msgFlag.equals("colCategorythumbUpdateOk")) {
+			model.addAttribute("msg", "컬렉션 카테고리 썸네일이 변경되었습니다.");
+			model.addAttribute("url", "/admin/collection/colCategoryList");
+		}
+		else if(msgFlag.equals("colCategorythumbUpdateNo")) {
+			model.addAttribute("msg", "컬렉션 카테고리 썸네일 변경에 실패했습니다. 재시도 부탁드립니다.");
+			model.addAttribute("url", "/admin/collection/colCategoryList");
+		}
 		
 		
 		return "include/message";

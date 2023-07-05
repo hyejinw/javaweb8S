@@ -4,12 +4,16 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.spring.javaweb8S.dao.AdminDAO;
+import com.spring.javaweb8S.dao.MagazineDAO;
 
 @Service
 public class PageProcess {
 
 	@Autowired
 	AdminDAO adminDAO;
+	
+	@Autowired
+	MagazineDAO magazineDAO;
 	
 	
 	public PageVO totRecCnt(int pag, int pageSize, String section, String search, String searchString) {
@@ -27,6 +31,11 @@ public class PageProcess {
 		else if(section.equals("adminMagazine")) totRecCnt = adminDAO.magazineTotRecCnt();
 		
 		else if(section.equals("adminMagazineType")) totRecCnt = adminDAO.magazineTypeTotRecCnt(search);
+		else if(section.equals("magazineList")) {
+			totRecCnt = magazineDAO.magazineListTotRecCnt(search, searchString);
+		}
+		else if(section.equals("adminColCategory")) totRecCnt = adminDAO.colCategoryTotRecCnt();
+		
 //		else if(section.equals("board")) {
 //			if(part.equals("")) totRecCnt = boardDAO.totRecCnt();
 //			else {

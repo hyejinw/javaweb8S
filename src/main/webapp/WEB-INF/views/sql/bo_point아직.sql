@@ -3,7 +3,7 @@ show tables;
 
 desc bo_point;
 drop table bo_point;
-ALTER TABLE bo_point AUTO_INCREMENT = 0;
+ALTER TABLE bo_point AUTO_INCREMENT = 1;
 	
 create table bo_point (
 	idx int not null auto_increment,         /* 적립금 고유번호 */

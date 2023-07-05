@@ -3,12 +3,38 @@
 <c:set var="ctp" value="${pageContext.request.contextPath}"/>
 
 <!-- Footer -->
-<footer class="w3-container w3-padding-64 w3-center w3-opacity w3-light-grey w3-xlarge">
-  <i class="fa fa-facebook-official w3-hover-opacity"></i>
-  <i class="fa fa-instagram w3-hover-opacity"></i>
-  <i class="fa fa-snapchat w3-hover-opacity"></i>
-  <i class="fa fa-pinterest-p w3-hover-opacity"></i>
-  <i class="fa fa-twitter w3-hover-opacity"></i>
-  <i class="fa fa-linkedin w3-hover-opacity"></i>
-  <p class="w3-medium">Powered by <a href="https://www.w3schools.com/w3css/default.asp" target="_blank">w3.css</a></p>
+<footer class="w3-container" style="background-color:#282828; color:#DDDDDD">
+	<div class="row" style="margin-top: 20px">
+		<div class="col text-center">
+			<a href="/"><span style="font-size:20px; font-weight:bold">책(의)세계란</span></a>
+		</div>
+		<div class="col text-center">
+			<a href="/"><span style="font-size:20px; font-weight:bold">책 Chaeg 매거진</span></a>
+		</div>
+		<div class="col text-center">
+			<a href="/"><span style="font-size:20px; font-weight:bold">3개의 책</span></a>
+		</div>
+		<div class="col text-center">
+			<a href="/"><span style="font-size:20px; font-weight:bold">게임</span></a>
+		</div>
+	</div>
+	<hr/>
+	<div class="row" style="margin:50px 200px">
+		<div class="col-8">
+			법인명(상호) : 주식회사 책(의)세계 | 대표자(성명) : 우혜진<br/>
+			사업자 등록번호 안내 : [105-88-09681]<br/>
+			통신판매업 신고 : 제2019-서울종로-0831호[사업자정보확인]<br/>
+			전화 : 02-6228-5589 | 팩스 : 02-6442-5589<br/>
+			주소 : 03015 서울특별시 종로구 세검정로 243 (신영동) 2층 (신영동 176-24)<br/>
+			이메일 : info@chaeg.co.kr | info@chaeg.co.kr 개인정보보호책임자 : 우혜진(info@chaeg.co.kr)<br/><br/>
+			Copyright © 책(의)세계 chaegshop. All rights reserved.
+		</div>
+		<div class="col-4">
+			<span style="font-size:23px; font-weight:bold">고객센터<br/>
+			02-6228-5589</span><br/><br/>
+			월-금 09:30~18:30 | 첫째,둘째 금요일 휴무 <br/>
+			토, 일, 공휴일 휴무 | 점심시간 12:00~13:00<br/>
+			하나은행 298-910034-05304 [ 주식회사 책(의)세계 ]<br/>
+		</div>
+	</div>
 </footer>

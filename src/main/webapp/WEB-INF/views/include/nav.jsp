@@ -48,6 +48,7 @@
 </script>
 
 <div class="topNav">
+<!-- 	<div class="w3-panel w3-round-xlarge" style="margin:0px; background-color:#E1ECC8"> -->
 	<div class="w3-panel w3-round-xlarge" style="margin:0px; background-color:#F5EBE0">
 		<span onclick="this.parentElement.style.display='none'" class="w3-button w3-round-xlarge w3-large w3-display-topright popup-dismiss">X</span>
 		<div class="notice">
@@ -82,7 +83,7 @@
 		      </div>
 		    </div>
 		    
-	      <a href="#about" class="w3-bar-item w3-button w3-hover-white w3-round-xxlarge navContent"><b><span class="detailContent">매거진</span></b></a>
+	      <a href="${ctp}/magazine/magazineList" class="w3-bar-item w3-button w3-hover-white w3-round-xxlarge navContent"><b><span class="detailContent">매거진</span></b></a>
 	      
 	      <div class="w3-dropdown-hover w3-white" style="padding:16px">
 		      <!-- <a href="#team" class="w3-bar-item w3-button w3-hover-white w3-round-xxlarge navContent">책(의)세계란</a> -->

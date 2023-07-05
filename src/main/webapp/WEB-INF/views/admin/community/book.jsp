@@ -8,7 +8,7 @@
 <head>
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
-	<title>등록 책 관리</title>
+	<title>책(의)세계</title>
 	<jsp:include page="/WEB-INF/views/include/bs4.jsp" />
 	  <style>
 	  .head {
@@ -169,7 +169,6 @@
 		} */
 		
  		function bookDetail(idx,title,contents,url,isbn,datetime,authors,publisher,translators,price,sale_price,thumbnail,status,bookRate,save,bookUpdate) {
-			
 			$("#bookDetailIdx").text(idx);
 			$("#bookDetailTitle").text(title);
 			$("#bookDetailContents").text(contents);
@@ -286,39 +285,41 @@
 		    </tr>
 		  </table>
 		  
-			<table class="table text-center">
-		    <thead class="thead-dark">
-		      <tr>
-		        <th><input type="checkbox" name="checkAll" id="th_checkAll" onclick="checkAll();"/><label for="th_checkAll">&nbsp;&nbsp;&nbsp;&nbsp;번호</label></th>
-		        <th>제목</th>
-		        <th>출판날짜</th>
-		        <th>저자</th>
-		        <th>평점</th>
-		        <th>저장 등록 수</th>
-		        <th>저장 날짜</th>
-		      </tr>
-		    </thead>
-		    <tbody>
-		    	<c:set var="curScrStartNo" value="${pageVO.curScrStartNo}" />
- 		    	<c:forEach var="vo" items="${vos}" varStatus="st">
+		  <div class="table-responsive">
+				<table class="table text-center">
+			    <thead class="thead-dark">
 			      <tr>
-			        <td><label for="chk${vo.idx}"><input type="checkbox" name="checkRow" id="chk${vo.idx}" class="form-check-input chkGrp" value="${vo.idx}" />&nbsp;&nbsp;&nbsp;&nbsp;${curScrStartNo}</label></td>
-			        <td>
-			        	<a href="#" id="bookDetail" data-toggle="modal" data-target="#bookModal" 
-			        		onclick="javascript:bookDetail('${vo.idx}','${vo.title}','${vo.contents}','${vo.url}','${vo.isbn}','${vo.datetime}','${vo.authors}','${vo.publisher}','${vo.translators}','${vo.price}','${vo.sale_price}','${vo.thumbnail}','${vo.status}','${vo.bookRate}','${vo.save}','${vo.bookUpdate}')">
-			        	${vo.title}</a>
-			        </td>
-			        <td>${fn:substring(vo.datetime,0,9)}</td>
-			        <td>${vo.authors}</td>
-			        <td>${vo.bookRate}</td>
-			        <td>${vo.save}</td>
-			        <td>${fn:substring(vo.bookUpdate,0,19)}</td>
+			        <th><input type="checkbox" name="checkAll" id="th_checkAll" onclick="checkAll();"/><label for="th_checkAll">&nbsp;&nbsp;&nbsp;&nbsp;번호</label></th>
+			        <th>제목</th>
+			        <th>출판날짜</th>
+			        <th>저자</th>
+			        <th>평점</th>
+			        <th>저장 등록 수</th>
+			        <th>저장 날짜</th>
 			      </tr>
-			    	<c:set var="curScrStartNo" value="${curScrStartNo - 1}"/>
-		    	</c:forEach>
-		    	<tr><td colspan="7"></td></tr> 
-		    </tbody>
-		  </table>
+			    </thead>
+			    <tbody>
+			    	<c:set var="curScrStartNo" value="${pageVO.curScrStartNo}" />
+	 		    	<c:forEach var="vo" items="${vos}" varStatus="st">
+				      <tr>
+				        <td><label for="chk${vo.idx}"><input type="checkbox" name="checkRow" id="chk${vo.idx}" class="form-check-input chkGrp" value="${vo.idx}" />&nbsp;&nbsp;&nbsp;&nbsp;${curScrStartNo}</label></td>
+				        <td>
+				        	<a href="#" id="bookDetail" data-toggle="modal" data-target="#bookModal" 
+				        		onclick="javascript:bookDetail('${vo.idx}','${vo.title}','${fn:replace(vo.contents,'\'', '\\\'')}','${vo.url}','${vo.isbn}','${vo.datetime}','${vo.authors}','${vo.publisher}','${vo.translators}','${vo.price}','${vo.sale_price}','${vo.thumbnail}','${vo.status}','${vo.bookRate}','${vo.save}','${vo.bookUpdate}')">
+				        	${vo.title}</a>
+				        </td>
+				        <td>${fn:substring(vo.datetime,0,9)}</td>
+				        <td>${vo.authors}</td>
+				        <td>${vo.bookRate}</td>
+				        <td>${vo.save}</td>
+				        <td>${fn:substring(vo.bookUpdate,0,19)}</td>
+				      </tr>
+				    	<c:set var="curScrStartNo" value="${curScrStartNo - 1}"/>
+			    	</c:forEach>
+			    	<tr><td colspan="7"></td></tr> 
+			    </tbody>
+			  </table>
+		  </div>
 		  
 		  <!-- 4페이지(1블록)에서 0블록으로 가게되면 현재페이지는 1페이지가 블록의 시작페이지가 된다. -->
 		  <!-- 첫페이지 / 이전블록 / 1(4) 2(5) 3 / 다음블록 / 마지막페이지 -->
@@ -410,10 +411,10 @@
 			  	  <c:if test="${!empty bookVOS}">
 				  	  <c:forEach var="bookVO" items="${bookVOS}">
 			  	  		<div class="row">
-			  	  			<div class="col-3 text-center"><a href="${bookVO.url}"><img src="${bookVO.thumbnail}"/></a></div>
+			  	  			<div class="col-3 text-center"><a href="${bookVO.url}" target="_blank"><img src="${bookVO.thumbnail}"/></a></div>
 			  	  			<div class="col-9 text-center">
-			  	  				<div class="row"><div class="col"><a href="${bookVO.url}"><b>${bookVO.title}</b></a></div></div>
-			  	  				<div class="row"><div class="col">${bookVO.publisher}</div></div>
+			  	  				<div class="row"><div class="col"><a href="${bookVO.url}" target="_blank"><b>${bookVO.title}</b></a></div></div>
+			  	  				<div class="row"><div class="col">${bookVO.authors}&nbsp;&nbsp; | &nbsp;&nbsp;${bookVO.publisher}</div></div>
 			  	  				<div class="row m-3"><div class="col">${bookVO.contents}...</div></div>
 			  	  			</div>
 			  	  		</div>

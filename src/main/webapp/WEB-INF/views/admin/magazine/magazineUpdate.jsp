@@ -6,11 +6,11 @@
 <!DOCTYPE html>
 <html>
 <head>
+	<title>책(의)세계</title>
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
-	<title>매거진 정보 수정</title>
 	<jsp:include page="/WEB-INF/views/include/bs4.jsp" />
-	  <style>
+  <style>
 	  .head {
 	 		font-size: 20px;
 	  }
@@ -79,9 +79,61 @@
 	    padding: 15px;
 	    border-radius:500px; 
 		}
+		#back-to-top {
+		  display: inline-block;
+		  background-color: #282828;
+		  width: 50px;
+		  height: 50px;
+		  text-align: center;
+		  border-radius: 4px;
+		  position: fixed;
+		  bottom: 30px;
+		  right: 30px;
+		  transition: background-color .3s, opacity .5s, visibility .5s;
+		  opacity: 0;
+		  visibility: hidden;
+		  z-index: 1000;
+		}
+		#back-to-top::after {
+		  content: "\f077";
+		  font-family: FontAwesome;
+		  font-weight: normal;
+		  font-style: normal;
+		  font-size: 2em;
+		  line-height: 50px;
+		  color: #fff;
+		}
+		#back-to-top:hover {
+		  cursor: pointer;
+		  text-decoration: none;
+		  background-color: #333;
+		}
+		#back-to-top:active {
+		  background-color: #555;
+		}
+		#back-to-top.show {
+		  opacity: 1;
+		  visibility: visible;
+		}
 	</style>
 	<script>
 		'use strict';
+		
+		// 맨 위로 스크롤
+		$(function(){
+		  $('#back-to-top').on('click',function(e){
+		      e.preventDefault();
+		      $('html,body').animate({scrollTop:0},600);
+		  });
+		  
+		  $(window).scroll(function() {
+		    if ($(document).scrollTop() > 100) {
+		      $('#back-to-top').addClass('show');
+		    } else {
+		      $('#back-to-top').removeClass('show');
+		    }
+		  });
+		});
 		
 		// 썸네일 이미지 1장 미리보기
 		function thumbnailCheck(input) {
@@ -194,7 +246,8 @@
 	</script>
 </head>
 <body class="w3-light-grey">
-  <jsp:include page="/WEB-INF/views/admin/adminMenu.jsp" />
+<a id="back-to-top"></a>
+<jsp:include page="/WEB-INF/views/admin/adminMenu.jsp" />
 	
 	<div class="w3-main" style="margin-left:300px; margin-top:43px; padding-top:50px">
 
@@ -213,69 +266,71 @@
 			
 		  <div style="background-color:white; padding:20px">
 		  	<form name="magazineUpdateForm" method="post" enctype="multipart/form-data">
-					<table class="table text-left">
-			      <tr>
-			        <th>상품 코드</th>
-			        <td><input type="text" name="maCode" id="maCode" value="${vo.maCode}" readonly class="form-control"/></td>
-			      </tr>
-			      <tr>
-			        <th>상품 타입 <span class="must">*</span></th>
-			        <td>
-								<label for="type1"><input type="radio" name="maType" id="type1" value="매거진" <c:if test="${vo.maType == '매거진'}">checked</c:if>>&nbsp;&nbsp;매거진</label>
-								<label for="type2"><input type="radio" name="maType" id="type2" value="정기 구독" class="ml-4" <c:if test="${vo.maType == '정기 구독'}">checked</c:if>>&nbsp;&nbsp;정기 구독</label>
-			        </td>
-			      </tr>
-			      <tr>
-			        <th>제목 <span class="must">*</span></th>
-			        <td><input type="text" name="maTitle" id="maTitle" value="${vo.maTitle}" class="form-control"/></td>
-			      </tr>
-			      <tr>
-			        <th>가격 <span class="must">*</span></th>
-			        <td><input type="number" name="maPrice" id="maPrice" value="${vo.maPrice}" class="form-control"/></td>
-			      </tr>
-			      <tr>
-			        <th>상품 썸네일</th>
-			        <td><input type="file" name="thumbnailFile" id="maThumbnail" onchange="thumbnailCheck(this)" class="form-control-file border form-control"/></td>
-			      </tr>
-			      <tr>
-			        <th>상품 상세설명</th>
-			        <td><input type="file" name="detailFile" id="maDetail" onchange="detailCheck(this)" class="form-control-file border form-control"/></td>
-			      </tr>
-			      <tr>
-			        <th>발행일  <span class="must">* (정기구독 제외)</span></th>
-			        <td><input type="date" name="maDate" id="maDate" value="${fn:substring(vo.maDate,0,10)}" class="form-control"/></td>
-			      </tr>
-			      <tr>
-			        <th>재고 수량  <span class="must">* (정기구독 제외)</span></th>
-			        <td><input type="number" name="maStock" id="maStock" value="${vo.maStock}" class="form-control"/></td>
-			      </tr>
-			      <tr>
-			        <th>판매 수량</th>
-			        <td><input type="number" name="maSaleQuantity" id="maSaleQuantity" value="${vo.maSaleQuantity}" readonly class="form-control"/></td>
-			      </tr>
-			      <tr>
-			        <th>저장 등록 수</th>
-			        <td><input type="number" name="maSave" id="maSave" value="${vo.maSave}" readonly class="form-control"/></td>
-			      </tr>
-			      <tr>
-			        <th>공개 유무</th>
-			        <td>
-			        	<div class="wrapper">
-								  <input type="checkbox" class="switch" id="switch${vo.idx}" onchange="javascript:openChange('${vo.idx}', '${vo.maOpen}');" <c:if test="${vo.maOpen=='공개'}">checked</c:if>>
-								  <label for="switch${vo.idx}" class="switch_label">
-								    <span class="onf_btn"></span>
-								  </label>
-								</div>
-			        </td>
-			      </tr>
-			      <tr>
-			        <td colspan="2" class="text-center">
-				        <div style="margin-top:20px">
-									<button type="button" onclick="magazineInsert()" class="btn2" style="background-color:#F5EBE0; font-size: 0.9em; border-color:#282828; color:black">등록</button>
-				        </div>
-			        </td>
-			      </tr>
-				  </table>
+					<div class="table-responsive">
+						<table class="table text-left">
+				      <tr>
+				        <th>상품 코드</th>
+				        <td><input type="text" name="maCode" id="maCode" value="${vo.maCode}" readonly class="form-control"/></td>
+				      </tr>
+				      <tr>
+				        <th>상품 타입 <span class="must">*</span></th>
+				        <td>
+									<label for="type1"><input type="radio" name="maType" id="type1" value="매거진" <c:if test="${vo.maType == '매거진'}">checked</c:if>>&nbsp;&nbsp;매거진</label>
+									<label for="type2"><input type="radio" name="maType" id="type2" value="정기 구독" class="ml-4" <c:if test="${vo.maType == '정기 구독'}">checked</c:if>>&nbsp;&nbsp;정기 구독</label>
+				        </td>
+				      </tr>
+				      <tr>
+				        <th>제목 <span class="must">*</span></th>
+				        <td><input type="text" name="maTitle" id="maTitle" value="${vo.maTitle}" class="form-control"/></td>
+				      </tr>
+				      <tr>
+				        <th>가격 <span class="must">*</span></th>
+				        <td><input type="number" name="maPrice" id="maPrice" value="${vo.maPrice}" class="form-control"/></td>
+				      </tr>
+				      <tr>
+				        <th>상품 썸네일</th>
+				        <td><input type="file" name="thumbnailFile" id="maThumbnail" onchange="thumbnailCheck(this)" class="form-control-file border form-control"/></td>
+				      </tr>
+				      <tr>
+				        <th>상품 상세설명</th>
+				        <td><input type="file" name="detailFile" id="maDetail" onchange="detailCheck(this)" class="form-control-file border form-control"/></td>
+				      </tr>
+				      <tr>
+				        <th>발행일  <span class="must">* (정기구독 제외)</span></th>
+				        <td><input type="date" name="maDate" id="maDate" value="${fn:substring(vo.maDate,0,10)}" class="form-control"/></td>
+				      </tr>
+				      <tr>
+				        <th>재고 수량  <span class="must">* (정기구독 제외)</span></th>
+				        <td><input type="number" name="maStock" id="maStock" value="${vo.maStock}" class="form-control"/></td>
+				      </tr>
+				      <tr>
+				        <th>판매 수량</th>
+				        <td><input type="number" name="maSaleQuantity" id="maSaleQuantity" value="${vo.maSaleQuantity}" readonly class="form-control"/></td>
+				      </tr>
+				      <tr>
+				        <th>저장 등록 수</th>
+				        <td><input type="number" name="maSave" id="maSave" value="${vo.maSave}" readonly class="form-control"/></td>
+				      </tr>
+				      <tr>
+				        <th>공개 유무</th>
+				        <td>
+				        	<div class="wrapper">
+									  <input type="checkbox" class="switch" id="switch${vo.idx}" onchange="javascript:openChange('${vo.idx}', '${vo.maOpen}');" <c:if test="${vo.maOpen=='공개'}">checked</c:if>>
+									  <label for="switch${vo.idx}" class="switch_label">
+									    <span class="onf_btn"></span>
+									  </label>
+									</div>
+				        </td>
+				      </tr>
+				      <tr>
+				        <td colspan="2" class="text-center">
+					        <div style="margin-top:20px">
+										<button type="button" onclick="magazineInsert()" class="btn2" style="background-color:#F5EBE0; font-size: 0.9em; border-color:#282828; color:black">등록</button>
+					        </div>
+				        </td>
+				      </tr>
+					  </table>
+					</div>
 				  <input type="hidden" name="idx" value="${vo.idx}"/>
 		  	</form>
 			  
@@ -285,17 +340,16 @@
 			  </div>
 			  <hr/>
 			  <div class="row text-center"><div class="col">기존 이미지</div></div>
-			 <%--  <div class="row text-center">  <!-- 이미지가 안 나온당ㅜㅜ -->
-					<div class="col-4"><img src="${ctp}/admin/magazine/${vo.maThumbnail}" width="300px"/></div>			  
- 					<div class="col-8"><img src="${ctp}/resources/data/admin/magazine/${vo.maDetail}" width="600px"/></div>	
-			  </div> --%>
+			  <div class="row text-center">  <!-- 이미지가 안 나온당ㅜㅜ -->
+					<div class="col-4"><img src="${ctp}/magazine/${vo.maThumbnail}" width="300px"/></div>			  
+ 					<div class="col-8"><img src="${ctp}/magazine/${vo.maDetail}" width="600px"/></div>	
+			  </div>
 		  </div>
 		  
 		  
 		</div>
 	</div>
 	
-
 
 </body>
 </html>
