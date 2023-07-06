@@ -35,6 +35,7 @@ public class PageProcess {
 			totRecCnt = magazineDAO.magazineListTotRecCnt(search, searchString);
 		}
 		else if(section.equals("adminColCategory")) totRecCnt = adminDAO.colCategoryTotRecCnt();
+		else if(section.equals("adminColProduct")) totRecCnt = adminDAO.colProductTotRecCnt();
 		
 //		else if(section.equals("board")) {
 //			if(part.equals("")) totRecCnt = boardDAO.totRecCnt();

@@ -9,6 +9,8 @@ import com.spring.javaweb8S.vo.BookVO;
 import com.spring.javaweb8S.vo.CollectionVO;
 import com.spring.javaweb8S.vo.DefaultPhotoVO;
 import com.spring.javaweb8S.vo.MagazineVO;
+import com.spring.javaweb8S.vo.OptionVO;
+import com.spring.javaweb8S.vo.ProductVO;
 import com.spring.javaweb8S.vo.ProverbVO;
 
 public interface AdminService {
@@ -65,5 +67,23 @@ public interface AdminService {
 	public void setUpdateColCategory(CollectionVO vo);
 
 	public int setColCategorythumbUpdate(MultipartFile thumbnailFile, CollectionVO vo);
+
+	public ArrayList<CollectionVO> getColCategories();
+
+	public int setProdInsert(MultipartFile thumbnailFile, MultipartFile detailFile, ProductVO vo);
+
+	public int setProdOpInsert(ArrayList<OptionVO> optionList, String prodName);
+
+	public String getProdCode(int colIdx, String prodName, int prodPrice);
+
+	public ArrayList<ProductVO> getColProductList(int startIndexNo, int pageSize);
+
+	public void setColProdOpenUpdate(int idx, String prodOpen);
+
+	public ProductVO getProductInfo(int idx);
+
+	public ArrayList<OptionVO> getProdOption(int idx);
+
+
 
 }

@@ -14,7 +14,6 @@ create table bo_product (
 	prodThumbnail varchar(250) not null,  /* 상품 썸네일 */
 	prodDetail varchar(250) not null,     /* 상품 상세설명 */
 	prodDate datetime not null default now(),  /* 등록일 */
-	prodStock int not null default 100,        /* 재고 수량 */
 	prodSaleQuantity int not null default 0,   /* 판매 수량 */
 	prodSave int not null default 0,           /* 저장 등록 수 */
 	prodOpen char(5) default '공개',             /* 공개 유무 */
@@ -40,7 +39,8 @@ create table bo_option (
 	prodIdx int not null,                 /* 상품 고유번호호 */
 	opName varchar(50) not null,       	  /* 옵션명 */
 	opPrice int not null,                 /* 옵션 가격 */
-	 
+	opStock int default 0 not null,       /* 재고 수량 */
+	
 	primary key(idx),
 	
 	foreign key(prodIdx) references bo_product(idx)        /* 외래키 설정: 반드시 고유한 키여야만 한다. */

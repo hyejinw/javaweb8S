@@ -80,6 +80,14 @@ public class MessageController {
 			model.addAttribute("msg", "컬렉션 카테고리 썸네일 변경에 실패했습니다. 재시도 부탁드립니다.");
 			model.addAttribute("url", "/admin/collection/colCategoryList");
 		}
+		else if(msgFlag.equals("colProdInsertOk")) {
+			model.addAttribute("msg", "컬렉션 상품이 등록되었습니다.");
+			model.addAttribute("url", "/admin/collection/colProdList");
+		}
+		else if(msgFlag.equals("colProdInsertNo")) {
+			model.addAttribute("msg", "컬렉션 상품 등록에 실패했습니다. 재시도 부탁드립니다.");
+			model.addAttribute("url", "/admin/collection/colProdInsert");
+		}
 		
 		
 		return "include/message";

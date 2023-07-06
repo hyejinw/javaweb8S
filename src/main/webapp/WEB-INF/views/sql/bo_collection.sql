@@ -6,7 +6,7 @@ create table bo_collection (
 	colDetail text not null,                        /* 컬렉션 설명 */
 	colThumbnail varchar(250) not null,             /* 컬렉션 썸네일 */
 	colDate datetime not null default now(),        /* 발행일 */
-	colOpen char(5) default '공개',                  /* 공개 유무 */
+	colOpen char(5) default '비공개',                  /* 공개 유무 */
 	
 	primary key(idx)
 );

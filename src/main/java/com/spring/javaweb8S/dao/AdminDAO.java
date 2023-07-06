@@ -8,6 +8,8 @@ import com.spring.javaweb8S.vo.BookVO;
 import com.spring.javaweb8S.vo.CollectionVO;
 import com.spring.javaweb8S.vo.DefaultPhotoVO;
 import com.spring.javaweb8S.vo.MagazineVO;
+import com.spring.javaweb8S.vo.OptionVO;
+import com.spring.javaweb8S.vo.ProductVO;
 import com.spring.javaweb8S.vo.ProverbVO;
 
 public interface AdminDAO {
@@ -24,6 +26,7 @@ public interface AdminDAO {
 	public int magazineTotRecCntWithPeriod(@Param("search") String search, @Param("searchString") String searchString, @Param("startDate") String startDate, @Param("endDate") String endDate);
 	public int magazineTypeTotRecCnt(@Param("maType") String maType);
 	public int colCategoryTotRecCnt();
+	public int colProductTotRecCnt();
 	
 	public ArrayList<DefaultPhotoVO> getDefaultPhoto();
 
@@ -77,6 +80,24 @@ public interface AdminDAO {
 	public void setUpdateColCategory(@Param("vo") CollectionVO vo);
 	
 	public void setColCategorythumbUpdate(@Param("vo") CollectionVO vo);
+	
+	public ArrayList<CollectionVO> getColCategories();
+	
+	public int setProdInsert(@Param("vo") ProductVO vo);
+	
+	public int setProdOpInsert(@Param("optionList") ArrayList<OptionVO> optionList, @Param("prodCode") String prodCode);
+	
+	public String getProdCode(@Param("colIdx") int colIdx, @Param("prodName") String prodName, @Param("prodPrice") int prodPrice);
+	
+	public ArrayList<ProductVO> getColProductList(@Param("startIndexNo") int startIndexNo, @Param("pageSize") int pageSize);
+	
+	public void setColProdOpenUpdate(@Param("idx") int idx, @Param("prodOpen") String prodOpen);
+	
+	public ProductVO getProductInfo(@Param("idx") int idx);
+	
+	public ArrayList<OptionVO> getProdOption(@Param("idx") int idx);
+
+	
 	
 
 

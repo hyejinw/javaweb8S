@@ -82,6 +82,30 @@
 		select * from bo_collection order by idx desc limit #{startIndexNo},#{pageSize};
 	</select>
 	
+	<select id="getColCategories" resultType="com.spring.javaweb8S.vo.CollectionVO">
+		select * from bo_collection order by idx desc;
+	</select>
+	
+	<select id="getProdCode" resultType="String">
+		select prodCode from bo_product where colIdx = #{colIdx} and prodName = #{prodName} and prodPrice = #{prodPrice};
+	</select>
+	
+	<select id="colProductTotRecCnt" resultType="int">
+		select count(*) from bo_product;
+	</select>
+	
+	<select id="getColProductList" resultType="com.spring.javaweb8S.vo.ProductVO">
+		select p.*, c.colName from bo_product as p, bo_collection as c order by idx desc;
+	</select>
+	
+	<select id="getProductInfo" resultType="com.spring.javaweb8S.vo.ProductVO">
+		select * from bo_product where idx = #{idx};
+	</select>
+	
+	<select id="getProdOption" resultType="com.spring.javaweb8S.vo.OptionVO">
+		select * from bo_option where prodIdx = #{idx};
+	</select>
+	
 	<insert id="memberDefaultPhotoInsert">
 		insert into bo_defaultPhoto values (default, #{vo.photoName}, #{vo.memo}, default); 
 	</insert>
@@ -127,6 +151,22 @@
 		insert into bo_collection values(default,#{vo.colName},#{vo.colDetail},#{vo.colThumbnail},default,default);
 	</insert>
 	
+	<insert id="setProdInsert">
+		insert into bo_product values(default,#{vo.colIdx},
+		(select idx from bo_book where title = #{vo.bookTitle}),
+		#{vo.prodCode},#{vo.prodName},#{vo.prodPrice},#{vo.prodReason},#{vo.prodThumbnail},#{vo.prodDetail},default,default,default,default);
+	</insert>
+	
+	<insert id="setProdOpInsert" parameterType="java.util.ArrayList">
+		insert into bo_option values
+		<foreach item="item" index="index" collection="optionList" separator=",">
+    	(default, (select idx from bo_product where prodCode = #{prodCode}), #{item.opName}, #{item.opPrice}, #{item.opStock})       
+    </foreach>
+	</insert>
+	
+	
+	
+	
 	<update id="setChangeMemberPhotos">
 		update bo_member set memPhoto = default where memPhoto in
    	<foreach collection="defaultPhotoList" item="defaultPhotoList" open="(" close=")" separator=",">
@@ -161,6 +201,10 @@
 	
 	<update id="setColCategorythumbUpdate">
 		update bo_collection set colThumbnail = #{vo.colThumbnail} where idx = #{vo.idx};
+	</update>
+	
+	<update id="setColProdOpenUpdate">
+		update bo_product set prodOpen = #{prodOpen} where idx = #{idx};
 	</update>
 	
 	<delete id="memberDefaultPhotoDelete">

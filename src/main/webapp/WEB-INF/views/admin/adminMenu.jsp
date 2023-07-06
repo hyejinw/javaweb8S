@@ -91,7 +91,8 @@
 		      <div id="collapseFour" class="collapse" data-parent="#accordion">
 		        <div class="card-body" style="margin:10px">
 			        <a href="${ctp}/admin/collection/colCategoryList">컬렉션 카테고리 관리</a><hr/>
-			        <a href="${ctp}/admin/memberList">컬렉션 상품 관리</a>
+			        <a href="${ctp}/admin/collection/colProdList">컬렉션 상품 관리</a><hr/>
+			        <a href="${ctp}/admin/collection/colProdInsert">컬렉션 상품 등록</a>
 		        </div>
 		      </div>
 		    </div>

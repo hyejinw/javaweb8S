@@ -8,4 +8,5 @@ public class OptionVO {
 	private int prodIdx;
 	private String opName;
 	private int opPrice;
+	private int opStock;
 }

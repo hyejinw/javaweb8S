@@ -20,6 +20,8 @@ import com.spring.javaweb8S.vo.BookVO;
 import com.spring.javaweb8S.vo.CollectionVO;
 import com.spring.javaweb8S.vo.DefaultPhotoVO;
 import com.spring.javaweb8S.vo.MagazineVO;
+import com.spring.javaweb8S.vo.OptionVO;
+import com.spring.javaweb8S.vo.ProductVO;
 import com.spring.javaweb8S.vo.ProverbVO;
 
 @Service
@@ -288,6 +290,75 @@ int res = 0;
   	} 
 		return res;
 	}
+
+	// 상품 등록 창, 컬렉션 리스트 가져오기
+	@Override
+	public ArrayList<CollectionVO> getColCategories() {
+		return adminDAO.getColCategories();
+	}
+
+	// 상품 등록
+	@Override
+	public int setProdInsert(MultipartFile thumbnailFile, MultipartFile detailFile, ProductVO vo) {
+		
+  	try { 
+  		String thumbnailFileName = thumbnailFile.getOriginalFilename(); 
+  		String detailFileName = detailFile.getOriginalFilename(); 
+  		
+  		JavawebProvide jp = new JavawebProvide();
+  		jp.writeFile(thumbnailFile,thumbnailFileName,"collection");
+  		jp.writeFile(detailFile,detailFileName,"collection");
+  		
+  		vo.setProdThumbnail(thumbnailFileName);
+  		vo.setProdDetail(detailFileName);
+  		
+  		// 상품 코드 제작
+  		UUID uid = UUID.randomUUID();
+  		String code = "BWP" + uid.toString().substring(0,5);
+  		vo.setProdCode(code);
+  
+  	} catch (IOException e) { 
+  		e.printStackTrace(); 
+  	} 
+		return adminDAO.setProdInsert(vo);
+	}
+
+	// 상품 옵션 등록
+	@Override
+	public int setProdOpInsert(ArrayList<OptionVO> optionList, String prodCode) {
+		return adminDAO.setProdOpInsert(optionList, prodCode);
+	}
+
+	// 상품 코드 가져오기
+	@Override
+	public String getProdCode(int colIdx, String prodName, int prodPrice) {
+		return adminDAO.getProdCode(colIdx, prodName, prodPrice);
+	}
+
+	// 상품 리스트 가져오기
+	@Override
+	public ArrayList<ProductVO> getColProductList(int startIndexNo, int pageSize) {
+		return adminDAO.getColProductList(startIndexNo, pageSize);
+	}
+
+	// 상품 공개/비공개 처리
+	@Override
+	public void setColProdOpenUpdate(int idx, String prodOpen) {
+		adminDAO.setColProdOpenUpdate(idx, prodOpen);
+	}
+
+	// 상품 정보 창
+	@Override
+	public ProductVO getProductInfo(int idx) {
+		return adminDAO.getProductInfo(idx);
+	}
+
+	// 해당 상품의 옵션들 정보
+	@Override
+	public ArrayList<OptionVO> getProdOption(int idx) {
+		return adminDAO.getProdOption(idx);
+	}
+
 
 			
 

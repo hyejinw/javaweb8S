@@ -8,6 +8,7 @@ import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.method.P;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -24,6 +25,8 @@ import com.spring.javaweb8S.vo.BookVO;
 import com.spring.javaweb8S.vo.CollectionVO;
 import com.spring.javaweb8S.vo.DefaultPhotoVO;
 import com.spring.javaweb8S.vo.MagazineVO;
+import com.spring.javaweb8S.vo.OptionVO;
+import com.spring.javaweb8S.vo.ProductVO;
 import com.spring.javaweb8S.vo.ProverbVO;
 
 @Controller
@@ -448,4 +451,140 @@ public class AdminController {
 		if(res == 1) return "redirect:/message/colCategorythumbUpdateOk";
 		else return "redirect:/message/colCategorythumbUpdateNo";
 	}
+	
+	// 컬렉션 상품 등록 창
+	@RequestMapping(value = "/collection/colProdInsert", method = RequestMethod.GET)
+	public String colProdInsertGet(Model model,
+			 @RequestParam(name="colIdx", defaultValue = "", required = false) String colIdx,
+			 @RequestParam(name="prodName", defaultValue = "", required = false) String prodName,
+			 @RequestParam(name="prodPrice", defaultValue = "", required = false) String prodPrice) {
+		
+		ArrayList<CollectionVO> colCategoryVOS = adminService.getColCategories();
+		model.addAttribute("colCategoryVOS", colCategoryVOS);
+		
+		// 책 검색 시, 사용
+		model.addAttribute("colIdx", colIdx);
+		model.addAttribute("prodName", prodName);
+		model.addAttribute("prodPrice", prodPrice);
+		
+		return "admin/collection/colProdInsert";
+	}
+	
+	// 컬렉션 상품 등록 창에서 도서 검색
+	@RequestMapping(value = "/collection/bookSelect", method = RequestMethod.GET)
+	public String bookSelectGet(String searchString, Model model,
+			 @RequestParam(name="colIdx", defaultValue = "", required = false) String colIdx,
+			 @RequestParam(name="prodName", defaultValue = "", required = false) String prodName,
+			 @RequestParam(name="prodPrice", defaultValue = "", required = false) String prodPrice) {
+		
+		ArrayList<BookVO> bookVOS = new ArrayList<BookVO>();
+		
+		try {
+			bookVOS = bookInsert.bookInsert(searchString);
+		} catch (UnsupportedEncodingException e) {
+			e.printStackTrace();
+		}
+		
+		model.addAttribute("bookVOS", bookVOS);
+		model.addAttribute("searchString", searchString);
+		
+		ArrayList<CollectionVO> colCategoryVOS = adminService.getColCategories();
+		model.addAttribute("colCategoryVOS", colCategoryVOS);
+		
+		// 책 검색 시, 사용
+		model.addAttribute("colIdx", colIdx);
+		model.addAttribute("prodName", prodName);
+		model.addAttribute("prodPrice", prodPrice);
+	
+		return "admin/collection/colProdInsert";
+	}
+	
+	// 컬렉션 상품 + 옵션 등록
+	@RequestMapping(value = "/collection/colProdInsert", method = RequestMethod.POST)
+	public String colProdInsertPost(MultipartFile thumbnailFile, MultipartFile detailFile,
+			ProductVO vo, String[] opName, int[] opPrice, int[] opStock) {
+		
+		int res = 0, res2 = 0;
+
+		// 1. 상품 등록
+		res = adminService.setProdInsert(thumbnailFile, detailFile, vo);
+		
+		// 2. 상품 옵션 등록
+		ArrayList<OptionVO> optionList = new ArrayList<OptionVO>();
+		
+		for(int i=0; i<opName.length; i++) {
+			OptionVO optionVOi = new OptionVO();
+			optionVOi.setOpName(opName[i]);
+			optionVOi.setOpPrice(opPrice[i]);
+			optionVOi.setOpStock(opStock[i]);
+			
+			optionList.add(optionVOi);
+		}
+		// 상품 코드 가져오기
+		String prodCode = adminService.getProdCode(vo.getColIdx(), vo.getProdName(), vo.getProdPrice());
+
+		//		System.out.println("optionList : " + optionList);
+// 		optionList : [OptionVO(idx=0, prodIdx=0, opName=123, opPrice=123, opStock=123), OptionVO(idx=0, prodIdx=0, opName=123, opPrice=123, opStock=123)]		
+
+		if(res == 1) res2 = adminService.setProdOpInsert(optionList, prodCode);
+		
+		if(res2 != 0) return "redirect:/message/colProdInsertOk";
+		else return "redirect:/message/colProdInsertNo";
+	}
+	
+	// 컬렉션 상품 관리 창
+	@RequestMapping(value = "/collection/colProdList", method = RequestMethod.GET)
+	public String colProdListGet(Model model,
+			@RequestParam(name="pag", defaultValue = "1", required = false) int pag,
+			@RequestParam(name="pageSize", defaultValue = "10", required = false) int pageSize) {
+		
+		PageVO pageVO = pageProcess.totRecCnt(pag, pageSize, "adminColProduct", "", "");
+		ArrayList<ProductVO> vos =	adminService.getColProductList(pageVO.getStartIndexNo(), pageSize);
+		
+		model.addAttribute("vos", vos);
+		model.addAttribute("pageVO", pageVO);
+		
+		return "admin/collection/colProdList";
+	}
+
+	// 컬렉션 상품 공개 변경
+	@ResponseBody
+	@RequestMapping(value = "/collection/colProdOpenUpdate", method = RequestMethod.POST)
+	public String colProdOpenUpdatePost(String prodOpen, int idx) {
+		
+		if(prodOpen.equals("공개")) prodOpen = "비공개";
+		else prodOpen = "공개";
+		
+		adminService.setColProdOpenUpdate(idx, prodOpen);
+		
+		return "1";
+	}
+	
+	// 컬렉션 상품 정보 창
+	@RequestMapping(value = "/collection/colProdInfo", method = RequestMethod.GET)
+	public String colProdInfoGet(Model model, int idx,
+			 @RequestParam(name="colIdx", defaultValue = "", required = false) String colIdx,
+			 @RequestParam(name="prodName", defaultValue = "", required = false) String prodName,
+			 @RequestParam(name="prodPrice", defaultValue = "", required = false) String prodPrice) {
+		
+		// 컬렉션 정보
+		ArrayList<CollectionVO> colCategoryVOS = adminService.getColCategories();
+		model.addAttribute("colCategoryVOS", colCategoryVOS);
+		
+		// 해당 상품 정보
+		ProductVO vo = adminService.getProductInfo(idx);
+		model.addAttribute("vo", vo);
+		
+		// 옵션 정보
+		ArrayList<OptionVO> optionVOS = adminService.getProdOption(idx);
+		model.addAttribute("optionVOS", optionVOS);
+		
+		// 책 검색 시, 사용
+		model.addAttribute("colIdx", colIdx);
+		model.addAttribute("prodName", prodName);
+		model.addAttribute("prodPrice", prodPrice);
+		
+		return "admin/collection/colProdInfo";
+	}
+	
 }
