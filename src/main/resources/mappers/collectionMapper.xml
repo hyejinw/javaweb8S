@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.spring.javaweb8S.dao.CollectionDAO">
+	
+	<select id="collectionTotRecCnt" resultType="int">
+		<if test='search != null and search == "최신순"'>
+			select count(*) from bo_collection where colOpen = '공개' order by idx desc;
+		</if>
+		<if test='search != null and search == "상품명"'>
+			select count(*) from bo_collection where colOpen = '공개' order by binary(colName), idx desc;
+		</if>
+		<if test='search != null and search == "낮은 가격순"'>
+			select count(*) from bo_collection where colOpen = '공개' order by idx desc;
+		</if>
+		<if test='search != null and search == "높은 가격순"'>
+			select count(*) from bo_collection where colOpen = '공개' order by idx desc;
+		</if>
+	</select>
+	
+	<select id="getCollectionList" resultType="com.spring.javaweb8S.vo.CollectionVO">
+		<if test='search != null and search == "최신순"'>
+			select *, (select count(*) from bo_product where colIdx = c.idx and prodOpen = '공개') as colProdNum  
+			from bo_collection c where colOpen = '공개' order by idx desc limit #{startIndexNo},#{pageSize};
+		</if>
+		<if test='search != null and search == "상품명"'>
+			select *, (select count(*) from bo_product where colIdx = c.idx and prodOpen = '공개') as colProdNum 
+			from bo_collection c where colOpen = '공개' order by binary(colName), idx desc limit #{startIndexNo},#{pageSize};
+		</if>
+		<if test='search != null and search == "낮은 가격순"'>
+			select *, (select count(*) from bo_product where colIdx = c.idx and prodOpen = '공개') as colProdNum 
+			from bo_collection c where colOpen = '공개' order by idx desc limit #{startIndexNo},#{pageSize};
+		</if>
+		<if test='search != null and search == "높은 가격순"'>
+			select *, (select count(*) from bo_product where colIdx = c.idx and prodOpen = '공개') as colProdNum  
+			from bo_collection c where colOpen = '공개' order by idx desc limit #{startIndexNo},#{pageSize};
+		</if>
+	</select>
+	
+	<select id="productTotRecCnt" resultType="int">
+		<if test='search != null and search == "최신순"'>
+			select count(*) from bo_product where prodOpen = '공개' 
+			<if test='searchString != null and searchString != "0"'>
+				and colIdx = #{searchString} 
+			</if>
+			 order by idx desc;
+		</if>
+		<if test='search != null and search == "상품명"'>
+			select count(*) from bo_product where prodOpen = '공개' 
+			<if test='searchString != null and searchString != "0"'>
+				and colIdx = #{searchString} 
+			</if>
+			order by binary(prodName), idx desc;
+		</if>
+		<if test='search != null and search == "낮은 가격순"'>
+			select count(*) from bo_product where prodOpen = '공개' 
+			<if test='searchString != null and searchString != "0"'>
+				and colIdx = #{searchString} 
+			</if>
+			order by prodPrice asc;
+		</if>
+		<if test='search != null and search == "높은 가격순"'>
+			select count(*) from bo_product where prodOpen = '공개'
+			<if test='searchString != null and searchString != "0"'>
+				and colIdx = #{searchString} 
+			</if>
+			order by prodPrice desc;
+		</if>
+	</select>
+	
+	<select id="getProductList" resultType="com.spring.javaweb8S.vo.ProductVO">
+		<if test='search != null and search == "최신순"'>
+			select p.*, c.colName from bo_product as p, bo_collection as c where prodOpen = '공개' 
+			<if test='colIdx != null and colIdx != "0"'>
+				and colIdx = #{colIdx} 
+			</if>
+			order by idx desc limit #{startIndexNo},#{pageSize};
+		</if>
+		<if test='search != null and search == "상품명"'>
+			select p.*, c.colName from bo_product as p, bo_collection as c where prodOpen = '공개' 
+			<if test='colIdx != null and colIdx != "0"'>
+				and colIdx = #{colIdx} 
+			</if>
+			order by binary(prodName), idx desc limit #{startIndexNo},#{pageSize};
+		</if>
+		<if test='search != null and search == "낮은 가격순"'>
+			select p.*, c.colName from bo_product as p, bo_collection as c where prodOpen = '공개' 
+			<if test='colIdx != null and colIdx != "0"'>
+				and colIdx = #{colIdx} 
+			</if>
+			order by prodPrice asc limit #{startIndexNo},#{pageSize};
+		</if>
+		<if test='search != null and search == "높은 가격순"'>
+			select p.*, c.colName from bo_product as p, bo_collection as c where prodOpen = '공개' 
+			<if test='colIdx != null and colIdx != "0"'>
+				and colIdx = #{colIdx} 
+			</if>
+			order by prodPrice desc limit #{startIndexNo},#{pageSize};
+		</if>
+	</select>
+	
+	
+</mapper>

@@ -6,6 +6,7 @@ create table bo_product (
 	
 	colIdx int not null,                  /* 컬렉션 고유번호 */
 	bookIdx int,              					  /* 도서 고유번호 */
+	bookTitle varchar(200) not null,		  /* 도서 제목 */
 	
 	prodCode varchar(20) not null,        /* 상품 코드 */
 	prodName varchar(100) not null,       /* 상품명 */
@@ -16,6 +17,7 @@ create table bo_product (
 	prodDate datetime not null default now(),  /* 등록일 */
 	prodSaleQuantity int not null default 0,   /* 판매 수량 */
 	prodSave int not null default 0,           /* 저장 등록 수 */
+	prodStatus char(5) default '판매',           /* 상품 상태 */
 	prodOpen char(5) default '공개',             /* 공개 유무 */
 	 
 	primary key(idx),

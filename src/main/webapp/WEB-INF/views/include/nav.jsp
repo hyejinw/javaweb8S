@@ -95,7 +95,7 @@
 		    </div>
 		    
 		    
-	      <a href="#work" class="w3-bar-item w3-button w3-hover-white w3-round-xxlarge navContent"><span class="detailContent">컬렉션</span></a>
+	      <a href="${ctp}/collection/collectionList" class="w3-bar-item w3-button w3-hover-white w3-round-xxlarge navContent"><span class="detailContent">컬렉션</span></a>
 	      <a href="#pricing" class="w3-bar-item w3-button w3-hover-white w3-round-xxlarge navContent"><span class="detailContent">독립서점</span></a>
 	      <a href="#contact" class="w3-bar-item w3-button w3-hover-white w3-round-xxlarge navContent"><span class="detailContent">게임</span></a>
 	      <c:if test="${memType == ''}">

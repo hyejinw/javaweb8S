@@ -260,7 +260,7 @@ public class AdminServiceImpl implements AdminService {
 	// 컬렉션 카테고리 썸네일 수정
 	@Override
 	public int setColCategorythumbUpdate(MultipartFile thumbnailFile, CollectionVO vo) {
-int res = 0;
+		int res = 0;
 		
 		try { 
 			String thumbnailFileName = thumbnailFile.getOriginalFilename(); 
@@ -359,6 +359,74 @@ int res = 0;
 		return adminDAO.getProdOption(idx);
 	}
 
+	// 컬렉션 상품 정보 수정 창에서, 기존 옵션 삭제
+	@Override
+	public void setProdOptionDelete(int idx) {
+		adminDAO.setProdOptionDelete(idx);
+	}
+
+	// 컬렉션 상품 정보 수정
+	@Override
+	public int setProdUpdate(MultipartFile thumbnailFile, MultipartFile detailFile, ProductVO vo, ProductVO originVO) {
+		int res = 0;
+		
+		try { 
+			String thumbnailFileName = thumbnailFile.getOriginalFilename(); 
+			String detailFileName = detailFile.getOriginalFilename(); 
+			
+			// 공백이 아닐 경우 변경 처리
+			if(!thumbnailFileName.equals("") && !detailFileName.equals("")) {
+				HttpServletRequest request = ((ServletRequestAttributes)RequestContextHolder.currentRequestAttributes()).getRequest();
+				String realPath = request.getSession().getServletContext().getRealPath("/resources/data/collection/");
+				
+				// 기존에 존재하는 파일은 삭제처리
+				File thumbnailFileDelete = new File(realPath + originVO.getProdThumbnail());
+				File detailFileDelete = new File(realPath + originVO.getProdDetail());
+				thumbnailFileDelete.delete();
+				detailFileDelete.delete();
+				
+				// 새로운 파일 업로드
+				JavawebProvide jp = new JavawebProvide();
+				jp.writeFile(thumbnailFile,thumbnailFileName,"collection");
+				jp.writeFile(detailFile,detailFileName,"collection");
+
+				// 새로운 파일명 set
+				vo.setProdThumbnail(thumbnailFileName);
+				vo.setProdDetail(detailFileName);
+			}
+			
+  		adminDAO.setProdUpdate(vo);
+			res = 1;
+  
+  	} catch (IOException e) { 
+  		e.printStackTrace(); 
+  	} 
+		return res;
+	}
+
+	// 기존 상품 옵션 수정
+	@Override
+	public int setProdOpUpdate(ArrayList<OptionVO> optionList) {
+		return adminDAO.setProdOpUpdate(optionList);
+	}
+
+	// 상품 이미지 삭제를 위해 파일명 가져오기
+	@Override
+	public List<ProductVO> getProductPhotoName(List<String> colProdList) {
+		return adminDAO.getProductPhotoName(colProdList);
+	}
+
+	// 상품 삭제
+	@Override
+	public void setColProdDelete(List<String> colProdList) {
+		adminDAO.setColProdDelete(colProdList);
+	}
+
+	// 상품 상태 '품절'로 변경
+	@Override
+	public void setProdStatusUpdate(int idx, String prodStatus) {
+		adminDAO.setProdStatusUpdate(idx, prodStatus);
+	}
 
 			
 

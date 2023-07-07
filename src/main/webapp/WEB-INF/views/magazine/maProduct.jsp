@@ -94,6 +94,9 @@
 			background-color:#282828;
 			color:white;
 		}
+		.save:hover {
+			cursor: pointer;
+		}
 	</style>
 	<script>
 		'use strict';
@@ -277,8 +280,8 @@
 					<div class="row">
 						<div class="col-10"><div style="font-size:25px; font-weight:bold">${vo.maTitle}</div></div>
 						<div class="col-2"><span style="font-size:25px">
-							<c:if test="${empty saveVO}"><i class="fa-solid fa-heart-circle-plus" title="관심등록되지 않은 매거진입니다"></i></c:if>
-							<c:if test="${!empty saveVO}"><i class="fa-solid fa-heart-circle-minus" title="관심등록된 매거진" style="color:#8D8DAA"></i></c:if>
+							<c:if test="${empty saveVO}"><i class="fa-regular fa-bookmark save" onclick="save()" title="관심등록되지 않은 매거진입니다"></i></c:if>
+							<c:if test="${!empty saveVO}"><i class="fa-solid fa-bookmark save" onclick="save()" title="관심등록된 매거진"></i></c:if>
 							</span>
 						</div>
 					</div>
@@ -319,7 +322,7 @@
 				  	<div class="col"><button type="button" onclick="cart()" <c:if test="${vo.maStock == 0 && vo.maType == '매거진'}">disabled</c:if> class="btn2">장바구니</button></div>
 				  	<div class="col">
 				  		<button type="button" onclick="save()" class="btn2">
-				  		<c:if test="${empty saveVO}">관심상품 추가</c:if>
+				  		<c:if test="${empty saveVO}">관심상품</c:if>
 				  		<c:if test="${!empty saveVO}">관심상품 취소</c:if>
 				  		</button>
 			  		</div>

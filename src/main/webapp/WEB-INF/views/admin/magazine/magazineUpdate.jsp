@@ -166,7 +166,7 @@
 		}
 		
 		// 매거진 등록
-		function magazineInsert() {
+		function magazineUpdate() {
 			let regex1 = /^[0-9a-zA-Zㄱ-ㅎ가-힣\s]+$/;  // (제목)한글,영문,숫자,공백 1자 이상
 			let regex2 = /^[0-9]+$/;  // (가격, 재고 수량)숫자 1자 이상
 			
@@ -209,7 +209,6 @@
 					alert("업로드 파일의 최대용량은 20MByte 입니다.");
 					return false;
 				}
-				
 			}
 			
 			if(maDetail != "") {
@@ -325,7 +324,7 @@
 				      <tr>
 				        <td colspan="2" class="text-center">
 					        <div style="margin-top:20px">
-										<button type="button" onclick="magazineInsert()" class="btn2" style="background-color:#F5EBE0; font-size: 0.9em; border-color:#282828; color:black">등록</button>
+										<button type="button" onclick="magazineUpdate()" class="btn2" style="background-color:#F5EBE0; font-size: 0.9em; border-color:#282828; color:black">등록</button>
 					        </div>
 				        </td>
 				      </tr>
@@ -340,7 +339,7 @@
 			  </div>
 			  <hr/>
 			  <div class="row text-center"><div class="col">기존 이미지</div></div>
-			  <div class="row text-center">  <!-- 이미지가 안 나온당ㅜㅜ -->
+			  <div class="row text-center">
 					<div class="col-4"><img src="${ctp}/magazine/${vo.maThumbnail}" width="300px"/></div>			  
  					<div class="col-8"><img src="${ctp}/magazine/${vo.maDetail}" width="600px"/></div>	
 			  </div>

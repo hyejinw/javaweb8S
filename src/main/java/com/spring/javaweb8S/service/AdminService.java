@@ -84,6 +84,18 @@ public interface AdminService {
 
 	public ArrayList<OptionVO> getProdOption(int idx);
 
+	public void setProdOptionDelete(int idx);
+
+	public int setProdUpdate(MultipartFile thumbnailFile, MultipartFile detailFile, ProductVO vo, ProductVO originVO);
+
+	public int setProdOpUpdate(ArrayList<OptionVO> optionList);
+
+	public List<ProductVO> getProductPhotoName(List<String> colProdList);
+
+	public void setColProdDelete(List<String> colProdList);
+
+	public void setProdStatusUpdate(int idx, String prodStatus);
+
 
 
 }

@@ -278,7 +278,7 @@
 					 	등록과 동시에, 상품이 공개됩니다.<br/>별(*) 표시는 필수 입력입니다.
 				  </span><hr/>
 				  <span class="text-center" style="font-size:15px; text-align:center; font-weight:300; color:blue;">
-					 	※관련 도서를 먼저 선택해주세요.※
+					 	※관련 도서를 먼저 선택해주세요.※<br/>관련 도서는 등록 후, 변경이 불가합니다.
 				  </span>
 			  </div>
 	 		</div>

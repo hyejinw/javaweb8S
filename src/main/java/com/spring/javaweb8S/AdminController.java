@@ -3,6 +3,7 @@ package com.spring.javaweb8S;
 import java.io.File;
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
@@ -507,6 +508,18 @@ public class AdminController {
 		int res = 0, res2 = 0;
 
 		// 1. 상품 등록
+		// 품절 상태 확인용
+		int totStock = 0;
+		for(int i=0; i<opStock.length; i++) {
+			totStock += opStock[i];
+		}
+		if(totStock == 0) {
+			vo.setProdStatus("품절");
+		}
+		else {
+			vo.setProdStatus("판매");
+		}
+		
 		res = adminService.setProdInsert(thumbnailFile, detailFile, vo);
 		
 		// 2. 상품 옵션 등록
@@ -520,12 +533,9 @@ public class AdminController {
 			
 			optionList.add(optionVOi);
 		}
+		
 		// 상품 코드 가져오기
 		String prodCode = adminService.getProdCode(vo.getColIdx(), vo.getProdName(), vo.getProdPrice());
-
-		//		System.out.println("optionList : " + optionList);
-// 		optionList : [OptionVO(idx=0, prodIdx=0, opName=123, opPrice=123, opStock=123), OptionVO(idx=0, prodIdx=0, opName=123, opPrice=123, opStock=123)]		
-
 		if(res == 1) res2 = adminService.setProdOpInsert(optionList, prodCode);
 		
 		if(res2 != 0) return "redirect:/message/colProdInsertOk";
@@ -549,23 +559,19 @@ public class AdminController {
 
 	// 컬렉션 상품 공개 변경
 	@ResponseBody
-	@RequestMapping(value = "/collection/colProdOpenUpdate", method = RequestMethod.POST)
+	@RequestMapping(value = "/collection/colProdOpenUpdate", method = RequestMethod.POST, produces="application/text; charset=utf-8")
 	public String colProdOpenUpdatePost(String prodOpen, int idx) {
 		
 		if(prodOpen.equals("공개")) prodOpen = "비공개";
 		else prodOpen = "공개";
 		
 		adminService.setColProdOpenUpdate(idx, prodOpen);
-		
 		return "1";
 	}
 	
 	// 컬렉션 상품 정보 창
 	@RequestMapping(value = "/collection/colProdInfo", method = RequestMethod.GET)
-	public String colProdInfoGet(Model model, int idx,
-			 @RequestParam(name="colIdx", defaultValue = "", required = false) String colIdx,
-			 @RequestParam(name="prodName", defaultValue = "", required = false) String prodName,
-			 @RequestParam(name="prodPrice", defaultValue = "", required = false) String prodPrice) {
+	public String colProdInfoGet(Model model, int idx) {
 		
 		// 컬렉션 정보
 		ArrayList<CollectionVO> colCategoryVOS = adminService.getColCategories();
@@ -578,13 +584,118 @@ public class AdminController {
 		// 옵션 정보
 		ArrayList<OptionVO> optionVOS = adminService.getProdOption(idx);
 		model.addAttribute("optionVOS", optionVOS);
-		
-		// 책 검색 시, 사용
-		model.addAttribute("colIdx", colIdx);
-		model.addAttribute("prodName", prodName);
-		model.addAttribute("prodPrice", prodPrice);
+		model.addAttribute("optionTotNum", optionVOS.size());
 		
 		return "admin/collection/colProdInfo";
 	}
+	
+	// 컬렉션 상품 정보 수정 창에서, 기존 옵션 삭제
+	@ResponseBody
+	@RequestMapping(value = "/collection/prodOptionDelete", method = RequestMethod.POST)
+	public String prodOptionDeletePost(int idx) {
+		adminService.setProdOptionDelete(idx);
+		return "";
+	}
+	
+	
+	// 컬렉션 상품 정보 수정
+	@RequestMapping(value = "/collection/colProdUpdate", method = RequestMethod.POST)
+	public String colProdUpdatePost(MultipartFile thumbnailFile, MultipartFile detailFile,
+			ProductVO vo, int[] opIdx, String[] opName, int[] opPrice, int[] opStock,
+			@RequestParam(name="newOpName", defaultValue = "", required = false) String[] newOpName,
+			@RequestParam(name="newOpPrice", defaultValue = "", required = false) int[] newOpPrice,
+			@RequestParam(name="newOpStock", defaultValue = "", required = false) int[] newOpStock) {
+		
+		int res = 0, res2 = 0;
+
+		// 1. 상품 수정
+		// 기존 정보 가져오기
+		ProductVO originVO = adminService.getProductInfo(vo.getIdx());
+		
+		res = adminService.setProdUpdate(thumbnailFile, detailFile, vo, originVO);
+		
+		// 2. 기존 상품 옵션 수정
+		ArrayList<OptionVO> optionList = new ArrayList<OptionVO>();
+		
+
+		for(int i=0; i<opName.length; i++) {
+			OptionVO optionVOi = new OptionVO();
+			optionVOi.setIdx(opIdx[i]);
+			optionVOi.setOpName(opName[i]);
+			optionVOi.setOpPrice(opPrice[i]);
+			optionVOi.setOpStock(opStock[i]);
+			
+			optionList.add(optionVOi);
+		}
+		
+		if(res == 1) res2 = adminService.setProdOpUpdate(optionList);
+
+		// 상품 새 옵션 추가
+		if(newOpName.length != 0) {
+			ArrayList<OptionVO> newOptionList = new ArrayList<OptionVO>();
+			
+			for(int i=0; i<newOpName.length; i++) {
+				OptionVO optionVOi = new OptionVO();
+				optionVOi.setOpName(newOpName[i]);
+				optionVOi.setOpPrice(newOpPrice[i]);
+				optionVOi.setOpStock(newOpStock[i]);
+				
+				newOptionList.add(optionVOi);
+			}
+
+			if(res == 1) res2 = adminService.setProdOpInsert(newOptionList, vo.getProdCode());
+		}
+		
+		// 3. 품절 상태 확인용
+		int totStock = 0;
+		for(int i=0; i<opStock.length; i++) {
+			totStock += opStock[i];
+		}
+		if(newOpStock.length != 0) {
+			for(int i=0; i<newOpStock.length; i++) {
+				totStock += newOpStock[i];
+			}
+		}
+		if(totStock == 0) {
+			adminService.setProdStatusUpdate(vo.getIdx(), "품절");
+		}
+		
+		
+		if(res2 != 0) return "redirect:/message/colProdUpdateOk?idx=" + vo.getIdx();
+		else return "redirect:/message/colProdUpdateNo?idx?idx=" + vo.getIdx();
+	}
+	
+	// 상품 삭제
+	@ResponseBody
+	@RequestMapping(value = "/collection/colProdDelete", method = RequestMethod.POST)
+	public String colProdDeletePost(String checkRow,	HttpServletRequest request) {
+		
+		List<String> colProdList = new ArrayList<String>();
+		String[] checkedProductIdx = checkRow.split(",");
+		
+		for(int i=0; i < checkedProductIdx.length; i++){
+			colProdList.add(checkedProductIdx[i].toString());
+		}
+		
+		// 서버 사진 삭제
+		List<ProductVO> productPhotoName = adminService.getProductPhotoName(colProdList);
+		
+		String realPath = request.getSession().getServletContext().getRealPath("/resources/data/collection/");
+		
+		for(int i=0; i < productPhotoName.size(); i++){
+			File file1 = new File(realPath + productPhotoName.get(i).getProdThumbnail());
+			File file2 = new File(realPath + productPhotoName.get(i).getProdDetail());
+			
+			if(file1.exists()) file1.delete();
+			if(file2.exists()) file2.delete();
+		}
+		// DB에서 삭제
+		adminService.setColProdDelete(colProdList);
+		
+		return "1";
+	}
+	
+	
+	
 	
 }

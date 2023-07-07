@@ -104,7 +104,7 @@
 		    return false;
 		  }
 		 
-		  if(confirm("선택한 매거진을 삭제하시겠습니까?")) {
+		  if(confirm("선택한 상품을 삭제하시겠습니까?")) {
 		      
  	      $.ajax({
 	    	  type : "post",
@@ -112,7 +112,7 @@
 	    	  data : {checkRow : checkRow},
 	    	  success : function(res) {
 	    			if(res == "1") {
-	    				alert("선택한 매거진이 삭제되었습니다.");
+	    				alert("선택한 상품이 삭제되었습니다.");
 	    				location.reload();
 	    			}
 	    		},
@@ -161,9 +161,9 @@
     	location.href = "${ctp}/admin/collection/colProdListSearch?search="+search+"&searchString="+searchString+"&startDate="+startDate+"&endDate="+endDate;
 		}
 		
-		// 매거진 공개/비공개 변경
+		// 상품 공개/비공개 변경
 		function openChange(idx, prodOpen) {
-			if(prodOpen == '비공개') alert('컬렉션이 비공개일 경우, 공개 전환 후의 전시 상태는 동일합니다.');
+			if(prodOpen == '비공개') alert('컬렉션이 비공개일 경우, 상품 공개 전환 후의 전시 상태는 동일합니다.');
 			
 			$.ajax({
 	  	  type : "post",
@@ -307,7 +307,10 @@
 				        <td><label for="chk${vo.idx}"><input type="checkbox" name="checkRow" id="chk${vo.idx}" class="form-check-input chkGrp" value="${vo.idx}" />&nbsp;&nbsp;&nbsp;&nbsp;${curScrStartNo}</label></td>
 				        <td>${vo.colName}</td>
 				        <td>${vo.prodCode}</td>
-				        <td>${vo.prodName}</td>
+				        <td>
+				        	${vo.prodName}
+				        	<c:if test="${vo.prodStatus == '품절'}"><span class="badge badge-pill badge-dark">품절</span></c:if>
+			        	</td>
 				        <td>${vo.prodPrice}</td>
 				        <td>${fn:substring(vo.prodDate,0,10)}</td>
 				        <td>${vo.prodSaleQuantity}</td>

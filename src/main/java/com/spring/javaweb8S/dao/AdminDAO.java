@@ -96,6 +96,18 @@ public interface AdminDAO {
 	public ProductVO getProductInfo(@Param("idx") int idx);
 	
 	public ArrayList<OptionVO> getProdOption(@Param("idx") int idx);
+	
+	public void setProdOptionDelete(@Param("idx") int idx);
+	
+	public void setProdUpdate(@Param("vo") ProductVO vo);
+	
+	public int setProdOpUpdate(@Param("optionList") ArrayList<OptionVO> optionList);
+	
+	public List<ProductVO> getProductPhotoName(@Param("colProdList") List<String> colProdList);
+	
+	public void setColProdDelete(@Param("colProdList") List<String> colProdList);
+	
+	public void setProdStatusUpdate(@Param("idx") int idx, @Param("prodStatus") String prodStatus);
 
 	
 	

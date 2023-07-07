@@ -4,46 +4,46 @@
 
 	<select id="magazineListTotRecCnt" resultType="int">
 		<if test='search != null and search == "최신순"'>
-			select count(*) from bo_magazine 
-			<if test='maDate != null and maDate != ""'>where date_format(maDate, '%Y') = #{maDate} </if>
+			select count(*) from bo_magazine where maOpen = '공개' 
+			<if test='maDate != null and maDate != ""'>and date_format(maDate, '%Y') = #{maDate} </if>
 			order by idx desc;
 		</if>
 		<if test='search != null and search == "상품명"'>
-			select count(*) from bo_magazine 
-			<if test='maDate != null and maDate != ""'>where date_format(maDate, '%Y') = #{maDate} </if>
-			order by idx asc;
+			select count(*) from bo_magazine where maOpen = '공개' 
+			<if test='maDate != null and maDate != ""'>and date_format(maDate, '%Y') = #{maDate} </if>
+			order by binary(maTitle);
 		</if>
 		<if test='search != null and search == "낮은 가격순"'>
-			select count(*) from bo_magazine 
-			<if test='maDate != null and maDate != ""'>where date_format(maDate, '%Y') = #{maDate} </if>
+			select count(*) from bo_magazine where maOpen = '공개'  
+			<if test='maDate != null and maDate != ""'>and date_format(maDate, '%Y') = #{maDate} </if>
 			order by maPrice asc, idx desc;
 		</if>
 		<if test='search != null and search == "높은 가격순"'>
-			select count(*) from bo_magazine  
-			<if test='maDate != null and maDate != ""'>where date_format(maDate, '%Y') = #{maDate} </if>
+			select count(*) from bo_magazine where maOpen = '공개'   
+			<if test='maDate != null and maDate != ""'>and date_format(maDate, '%Y') = #{maDate} </if>
 			order by maPrice desc, idx desc;
 		</if>
 	</select>
 	
 	<select id="getMagazineList" resultType="com.spring.javaweb8S.vo.MagazineVO">
 		<if test='search != null and search == "최신순"'>
-			select * from bo_magazine 
-			<if test='maDate != null and maDate != ""'>where date_format(maDate, '%Y') = #{maDate} </if>
+			select * from bo_magazine where maOpen = '공개'  
+			<if test='maDate != null and maDate != ""'>and date_format(maDate, '%Y') = #{maDate} </if>
 			order by idx desc limit #{startIndexNo},#{pageSize};
 		</if>
 		<if test='search != null and search == "상품명"'>
-			select * from bo_magazine 
-			<if test='maDate != null and maDate != ""'>where date_format(maDate, '%Y') = #{maDate} </if>
-			order by idx asc limit #{startIndexNo},#{pageSize};
+			select * from bo_magazine where maOpen = '공개' 
+			<if test='maDate != null and maDate != ""'>and date_format(maDate, '%Y') = #{maDate} </if>
+			order by binary(maTitle) limit #{startIndexNo},#{pageSize};
 		</if>
 		<if test='search != null and search == "낮은 가격순"'>
-			select * from bo_magazine 
-			<if test='maDate != null and maDate != ""'>where date_format(maDate, '%Y') = #{maDate} </if>
+			select * from bo_magazine where maOpen = '공개'  
+			<if test='maDate != null and maDate != ""'>and date_format(maDate, '%Y') = #{maDate} </if>
 			order by maPrice asc, idx desc limit #{startIndexNo},#{pageSize};
 		</if>
 		<if test='search != null and search == "높은 가격순"'>
-			select * from bo_magazine 
-			<if test='maDate != null and maDate != ""'>where date_format(maDate, '%Y') = #{maDate} </if>
+			select * from bo_magazine where maOpen = '공개'  
+			<if test='maDate != null and maDate != ""'>and date_format(maDate, '%Y') = #{maDate} </if>
 			order by maPrice desc, idx desc limit #{startIndexNo},#{pageSize};
 		</if>
 	</select>
@@ -61,7 +61,7 @@
 	</select>
 
 	<select id="getMagazineCartSearch" resultType="com.spring.javaweb8S.vo.CartVO">
-		select * from bo_cart where memNickname = #{nickname} and maIdx = #{idx};
+		select * from bo_cart where memNickname = #{nickname} and maIdx = (select idx from bo_magazine where idx = #{idx} and maOpen = '공개');
 	</select>
 	
 	<insert id="setMagazineSave">

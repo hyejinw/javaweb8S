@@ -8,6 +8,7 @@ public class ProductVO {
 	private int idx;
 	private int colIdx;
 	private int bookIdx;
+	private String bookTitle;
 	private String prodCode;
 	private String prodName;
 	private int prodPrice;
@@ -17,6 +18,7 @@ public class ProductVO {
 	private String prodDate;
 	private int prodSaleQuantity;
 	private int prodSave;
+	private String prodStatus;
 	private String prodOpen;
 	
 	// 옵션
@@ -25,9 +27,6 @@ public class ProductVO {
 	private String opName;
 	private int opPrice;
 	private int opStock;
-	
-	// bookIdx 를 찾기 위해
-	private String bookTitle;
 	
 	// 컬렉션 관련
 	private String colName;

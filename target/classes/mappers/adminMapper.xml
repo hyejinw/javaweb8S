@@ -106,6 +106,15 @@
 		select * from bo_option where prodIdx = #{idx};
 	</select>
 	
+	
+	
+	<select id="getProductPhotoName" resultType="com.spring.javaweb8S.vo.ProductVO">
+		select prodDetail,prodThumbnail from bo_product where idx in
+   	<foreach collection="colProdList" item="colProdList" open="(" close=")" separator=",">
+   		#{colProdList}
+    </foreach>
+	</select>
+	
 	<insert id="memberDefaultPhotoInsert">
 		insert into bo_defaultPhoto values (default, #{vo.photoName}, #{vo.memo}, default); 
 	</insert>
@@ -151,10 +160,12 @@
 		insert into bo_collection values(default,#{vo.colName},#{vo.colDetail},#{vo.colThumbnail},default,default);
 	</insert>
 	
+	
 	<insert id="setProdInsert">
 		insert into bo_product values(default,#{vo.colIdx},
-		(select idx from bo_book where title = #{vo.bookTitle}),
-		#{vo.prodCode},#{vo.prodName},#{vo.prodPrice},#{vo.prodReason},#{vo.prodThumbnail},#{vo.prodDetail},default,default,default,default);
+		
+		(select idx from bo_book where title = #{vo.bookTitle} limit 1), #{vo.bookTitle},
+		#{vo.prodCode},#{vo.prodName},#{vo.prodPrice},#{vo.prodReason},#{vo.prodThumbnail},#{vo.prodDetail},default,default,default,#{vo.prodStatus},default);
 	</insert>
 	
 	<insert id="setProdOpInsert" parameterType="java.util.ArrayList">
@@ -207,6 +218,27 @@
 		update bo_product set prodOpen = #{prodOpen} where idx = #{idx};
 	</update>
 	
+	<update id="setProdUpdate" parameterType="com.spring.javaweb8S.vo.ProductVO">
+		update bo_product set prodName = #{vo.prodName}, prodPrice = #{vo.prodPrice}, prodReason = #{vo.prodReason}
+		<if test='vo.prodThumbnail != null'>, prodThumbnail = #{vo.prodThumbnail}</if>
+		<if test='vo.prodDetail != null'>, prodDetail = #{vo.prodDetail}</if>
+		where idx = #{vo.idx};
+	</update>
+	
+	<!-- separator="," 이 구분자가 필요하지 않다!!!!! -->
+	<update id="setProdOpUpdate" parameterType="java.util.ArrayList">
+		<foreach item="item" index="index" collection="optionList">
+			update bo_option set 
+    	opName = #{item.opName}, opPrice = #{item.opPrice}, opStock = #{item.opStock} where idx = #{item.idx};     
+    </foreach>
+	</update>
+	
+	<update id="setProdStatusUpdate">
+		update bo_product set prodStatus = #{prodStatus} where idx = #{idx};
+	</update>
+	
+	
+	
 	<delete id="memberDefaultPhotoDelete">
 		delete from bo_defaultPhoto where 1=1 and 
 		photoName in
@@ -240,6 +272,17 @@
 		delete from bo_collection where colThumbnail in
     <foreach collection="colCategoryList" item="colCategoryList" open="(" close=")" separator=",">
    		#{colCategoryList}
+    </foreach>
+	</delete>
+	
+	<delete id="setProdOptionDelete">
+		delete from bo_option where idx = #{idx};
+	</delete>
+	
+	<delete id="setColProdDelete">
+		delete from bo_product where idx in
+    <foreach collection="colProdList" item="colProdList" open="(" close=")" separator=",">
+   		#{colProdList}
     </foreach>
 	</delete>
 	
