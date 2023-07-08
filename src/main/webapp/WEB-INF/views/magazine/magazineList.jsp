@@ -119,7 +119,8 @@
 			<div class="row" style="margin-bottom:50px">
 				<div class="col-2 text-left">
 					<select class="form-control" id="maDate" onchange="maDateCheck()">
-						<option disabled selected>발행년도</option>
+						<option disabled>발행년도</option>
+						<option selected>전체</option>
 						<c:forEach var="i" items="${maDateVO}">
 							<option <c:if test="${maDate==i}">selected</c:if>>${i}</option>
 						</c:forEach>

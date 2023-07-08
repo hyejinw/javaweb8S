@@ -10,14 +10,14 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.spring.javaweb8S.pagination.PageProcess;
 import com.spring.javaweb8S.pagination.PageVO;
 import com.spring.javaweb8S.service.CollectionService;
 import com.spring.javaweb8S.vo.CartVO;
 import com.spring.javaweb8S.vo.CollectionVO;
-import com.spring.javaweb8S.vo.MagazineVO;
+import com.spring.javaweb8S.vo.OptionVO;
+import com.spring.javaweb8S.vo.ProductVO;
 import com.spring.javaweb8S.vo.SaveVO;
 
 @Controller
@@ -39,7 +39,6 @@ public class CollectionController {
 			@RequestParam(name="pageSize", defaultValue = "10", required = false) int pageSize) {
 		
 		PageVO pageVO = pageProcess.totRecCnt(pag, pageSize, "collectionList", search, "");
-		System.out.println("pageVO : " + pageVO);
 		ArrayList<CollectionVO> vos = collectionService.getCollectionList(search, pageVO.getStartIndexNo(), pageSize);
 
 		model.addAttribute("search", search);
@@ -71,28 +70,36 @@ public class CollectionController {
 		return "collection/colProductList";
 	}
 	
-//	// 매거진 상세 창
-//	@RequestMapping(value = "/colProduct", method = RequestMethod.GET)
-//	public String productGet(Model model, HttpSession session, 
-//			@RequestParam(name="idx", defaultValue = "1", required = false) int idx) {
-//		
-//		// 관심 저장 유무 확인
-//		String nickname = (String) session.getAttribute("sNickname");
-//		SaveVO saveVO = magazineService.getMagazineSave(nickname, idx);
-//
-//		// 장바구니 저장 유무 확인
-//		CartVO cartVO = magazineService.getMagazineCartSearch(nickname, idx);
-//		
-//		// 매거진 상세 내용
-//		MagazineVO vo = magazineService.getMagazineProduct(idx);
-//
-//		model.addAttribute("vo", vo);
-//		model.addAttribute("saveVO", saveVO);
-//		model.addAttribute("cartVO", cartVO);
-//		
-//		return "magazine/maProduct";
-//	}
-//	
+	// 컬렉션 상품 상세 창
+	@RequestMapping(value = "/colProduct", method = RequestMethod.GET)
+	public String productGet(Model model, HttpSession session, 
+			@RequestParam(name="idx", defaultValue = "1", required = false) int idx) {
+		System.out.println("colProduct의 idx : " +  idx);
+		
+		// 관심 저장 유무 확인
+		String nickname = (String) session.getAttribute("sNickname");
+		SaveVO saveVO = collectionService.getProductSave(nickname, idx);
+		model.addAttribute("saveVO", saveVO);
+
+		// 장바구니 저장 유무 확인
+		CartVO cartVO = collectionService.getProductCartSearch(nickname, idx);
+		model.addAttribute("cartVO", cartVO);
+		
+		// 해당 컬렉션 정보
+		CollectionVO collectionVO = collectionService.getProdCollection(idx);
+		model.addAttribute("collectionVO", collectionVO);
+		
+		// 상품 상세 내용
+		ProductVO vo = collectionService.getProductInfo(idx);
+		model.addAttribute("vo", vo);
+		
+		// 상품 옵션
+		ArrayList<OptionVO> optionVOS = collectionService.getProdOption(idx);
+		model.addAttribute("optionVOS", optionVOS);
+		
+		return "collection/colProduct";
+	}
+	
 //	// 매거진 저장
 //	@ResponseBody
 //	@RequestMapping(value = "/magazineSave", method = RequestMethod.POST)

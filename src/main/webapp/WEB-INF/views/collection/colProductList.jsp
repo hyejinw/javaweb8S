@@ -71,6 +71,34 @@
 		  opacity: 1;
 		  visibility: visible;
 		}
+		.banner_img {
+		  display:inline-block;
+		  position: relative;
+		}
+		.banner_img:hover:after {
+		  display:inline-block;
+		}
+		.banner_img:after {
+		  display:none;
+		}
+		.banner_img:after {
+		  content:'';
+ 		  position: absolute;
+		  top: 0;
+		  right: 0;
+		  bottom: 0;
+		  left: 0;
+		  background: rgba(0, 0, 0, 0.3);
+		  z-index: 10;
+		}
+		.banner_img {
+		  overflow: hidden;
+		}
+		.banner_img:hover img{
+		  transform: scale(1.1);
+		  transition: 1.4s;
+		}
+
 	</style>
 	<script>
 		'use strict';
@@ -123,7 +151,7 @@
 					총 ${pageVO.totRecCnt}개의 상품이 존재합니다.
 				</div>
 			</div>
-			<div class="row" style="margin-bottom:50px">
+			<div class="row" style="margin-bottom:100px">
 				<div class="col-2 text-left">
 					<select class="form-control" id="sort" onchange="sortCheck()">
 						<option <c:if test="${sort == '컬렉션'}">selected</c:if>>컬렉션</option>
@@ -144,11 +172,13 @@
 			<div class="row" style="margin-bottom:100px">
 			<c:set var="cnt" 	value="${0}"/>
 			<c:forEach var="vo" items="${vos}" varStatus="st">
-				<div class="col" <c:if test="${cnt % 2 != 0}">style="margin-left:80px"</c:if>>
-					<a href="${ctp}/collection/colProduct?idx=${vo.idx}"  class="productHover">
-						<img src="${ctp}/collection/${vo.prodThumbnail}" style="width:100%; max-width:1000px; margin-bottom:10px"/>
-						<div class="text-center">
-							<span style="font-size:20px; font-weight:bold">${vo.prodName}</span>
+				<div class="col text-center" <c:if test="${cnt % 3 != 0}">style="margin-left:80px"</c:if>>
+					<a href="${ctp}/collection/colProduct?idx=${vo.idx}" class="banner_img">
+						<img src="${ctp}/collection/${vo.prodThumbnail}" style="width:100%; max-width:500px;"/>
+					</a>
+					<a href="${ctp}/collection/colProduct?idx=${vo.idx}" class="productHover">
+						<div class="text-center" style="margin-top:20px;">
+							<span style="font-size:19px; font-weight:bold">${vo.prodName}</span>
 							<span style="font-size:17px;"><br/><fmt:formatNumber value="${vo.prodPrice}" pattern="#,###"/>원</span>
 							<c:if test="${vo.prodStatus == '품절'}">
 								<br/><span class="badge badge-pill badge-dark" style="font-size:18px; margin-top:10px; width:60px">품절</span>
@@ -157,13 +187,17 @@
 					</a>
 				</div>
 				<c:set var="cnt" value="${cnt + 1}"/>
-				<c:if test="${cnt % 2 == 0}">
+				<c:if test="${cnt % 3 == 0}">
 					</div>
 					<div class="row" style="margin-bottom:100px">
 				</c:if>
 			</c:forEach>
-			<c:if test="${cnt % 2 != 0}">
-				<div class="col" style="margin-right:80px"></div>
+			<c:if test="${cnt % 3 == 1}">
+				<div class="col" style="margin-left:80px"></div>
+				<div class="col" style="margin-left:80px"></div>
+			</c:if>
+			<c:if test="${cnt % 3 == 2}">
+				<div class="col" style="margin-left:80px"></div>
 			</c:if>
 			</div>
 			

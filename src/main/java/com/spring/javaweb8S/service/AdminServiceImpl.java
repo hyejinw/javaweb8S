@@ -428,6 +428,14 @@ public class AdminServiceImpl implements AdminService {
 		adminDAO.setProdStatusUpdate(idx, prodStatus);
 	}
 
+	// 상품 검색
+	@Override
+	public ArrayList<ProductVO> getColProdSearchList(String sort, String search, String searchString, String startDate,
+			String endDate, int startIndexNo, int pageSize) {
+		return adminDAO.getColProdSearchList(sort, search, searchString, startDate,
+				endDate, startIndexNo, pageSize);
+	}
+
 			
 
 	 

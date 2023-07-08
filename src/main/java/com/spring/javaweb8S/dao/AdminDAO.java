@@ -27,6 +27,8 @@ public interface AdminDAO {
 	public int magazineTypeTotRecCnt(@Param("maType") String maType);
 	public int colCategoryTotRecCnt();
 	public int colProductTotRecCnt();
+	public int colProdTotRecCntWithPeriod(@Param("sort") String sort, @Param("search") String search, @Param("searchString") String searchString, @Param("startDate") String startDate,
+			@Param("endDate") String endDate);
 	
 	public ArrayList<DefaultPhotoVO> getDefaultPhoto();
 
@@ -108,9 +110,9 @@ public interface AdminDAO {
 	public void setColProdDelete(@Param("colProdList") List<String> colProdList);
 	
 	public void setProdStatusUpdate(@Param("idx") int idx, @Param("prodStatus") String prodStatus);
-
 	
-	
+	public ArrayList<ProductVO> getColProdSearchList(@Param("sort") String sort, @Param("search") String search, @Param("searchString") String searchString, @Param("startDate") String startDate,
+			@Param("endDate") String endDate, @Param("startIndexNo") int startIndexNo, @Param("pageSize") int pageSize);
 
 
 

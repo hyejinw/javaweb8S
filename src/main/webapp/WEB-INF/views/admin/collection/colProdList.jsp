@@ -123,12 +123,13 @@
 		  }
 		}
 		
-		// 매거진 검색(날짜 기간으로도 가능)
+		// 상품 검색(날짜 기간으로도 가능)
 		function searchCheck() {
 			let searchString = $("#searchString").val();
 			let search = $("#search").val();
 			let startDate = $("#startDate").val();
 			let endDate = $("#endDate").val();
+			let sort = $("#sort").val();
 	    	
     	if((startDate.trim() != "" && endDate.trim() == "") || (startDate.trim() == "" && endDate.trim() != "") || (startDate.trim() > endDate.trim())) {
     		alert("시작날짜와 종료날짜를 알맞게 입력해주세요.");
@@ -144,7 +145,7 @@
     	let todayString = year + '-' + month  + '-' + day;
     	
     	if(endDate.trim() > todayString) {
-    		alert("발행일은 오늘보다 빠를 수 없습니다.");
+    		alert("등록일은 오늘보다 빠를 수 없습니다.");
     		searchForm.searchString.focus();
     		return false;
     	}
@@ -158,8 +159,39 @@
     		searchForm.searchString.focus();
     		return false;
     	}
-    	location.href = "${ctp}/admin/collection/colProdListSearch?search="+search+"&searchString="+searchString+"&startDate="+startDate+"&endDate="+endDate;
+    	location.href = "${ctp}/admin/collection/colProdListSearch?search="+search+"&searchString="+searchString+"&startDate="+startDate+"&endDate="+endDate+"&sort="+sort;
 		}
+		
+		// 분류 검색
+		function sortCheck() {
+			let searchString = $("#searchString").val();
+			let search = $("#search").val();
+			let startDate = $("#startDate").val();
+			let endDate = $("#endDate").val();
+			let sort = $("#sort").val();
+	    	
+    	if((startDate.trim() != "" && endDate.trim() == "") || (startDate.trim() == "" && endDate.trim() != "") || (startDate.trim() > endDate.trim())) {
+    		alert("시작날짜와 종료날짜를 알맞게 입력해주세요.");
+    		searchForm.searchString.focus();
+    		return false;
+    	}
+    	// 오늘 날짜
+    	let today = new Date();
+
+    	let year = today.getFullYear();
+    	let month = ('0' + (today.getMonth() + 1)).slice(-2);
+    	let day = ('0' + today.getDate()).slice(-2);
+    	let todayString = year + '-' + month  + '-' + day;
+    	
+    	if(endDate.trim() > todayString) {
+    		alert("등록일은 오늘보다 빠를 수 없습니다.");
+    		searchForm.searchString.focus();
+    		return false;
+    	}
+    	location.href = "${ctp}/admin/collection/colProdListSearch?search="+search+"&searchString="+searchString+"&startDate="+startDate+"&endDate="+endDate+"&sort="+sort;
+		}
+		
+		
 		
 		// 상품 공개/비공개 변경
 		function openChange(idx, prodOpen) {
@@ -191,7 +223,7 @@
 	 		<div style="background-color:white; padding:20px; margin-bottom:30px">
 	 			<div class="row">
 	 				<div class="col text-left">
-						<a class="btn btn-dark mb-4" href="${ctp}/admin/collection/colProdList" style="margin-left:20px;">새로고침</a>
+						<a class="btn btn-dark mb-4" href="${ctp}/admin/collection/colProdList" style="margin-left:20px;"><i class="fa-solid fa-arrows-rotate"></i></a>
 	 				</div>
 	 				<div class="col text-right">
 					  <a class="btn btn-warning" href="${ctp}/admin/collection/colProdInsert" style="margin-right:20px;">상품 등록</a>
@@ -206,26 +238,16 @@
 	 		</div>
 			<div class="row">
 				<div class="col-7 text-left">
-					<div class="row">
-						<div class="col-4">
-							<a class="btn btn-dark mr-3 mb-4" href="javascript:deleteAction()">선택 삭제</a>
-							<a class="btn btn-secondary mr-3 mb-4" href="${ctp}/">상품 문의</a>
-						</div>
-						<div class="col-5">
-				      	<!-- 여기 해야 한다!!!!!!!!!!!!!!!!! -->
-							<form name="sortForm">
-								<select name="sort" id="sort"  class="mr-2 form-control" class="form-control" style="width:150px">
-									<option selected disabled>선택</option>
-					        <option <c:if test="${sort == 'maTitle'}">selected</c:if> value="maTitle">품절</option>
-					        <option <c:if test="${sort == 'maCode'}">selected</c:if> value="maCode">공개</option>
-					        <option <c:if test="${sort == 'maCode'}">selected</c:if> value="maCode">비공개</option>
-					      </select>
-							</form>
-						</div>
-						<div class="col-3"></div>
-					</div>
-			
-		      
+					<!-- 여기 해야 한다!!!!!!!!!!!!!!!!! -->
+					<select name="sort" id="sort" class="form-control mb-3" style="width:150px;" onchange="sortCheck()">
+		        <option <c:if test="${sort == '전체'}">selected</c:if> value="전체">전체</option>
+		        <option <c:if test="${sort == '판매'}">selected</c:if> value="판매">판매</option>
+		        <option <c:if test="${sort == '품절'}">selected</c:if> value="품절">품절</option>
+		        <option <c:if test="${sort == '공개'}">selected</c:if> value="공개">공개</option>
+		        <option <c:if test="${sort == '비공개'}">selected</c:if> value="비공개">비공개</option>
+		      </select>
+					<a class="btn btn-dark mr-3 mb-4" href="javascript:deleteAction()">선택 삭제</a>
+					<a class="btn btn-secondary mr-3 mb-4" href="${ctp}/">상품 문의</a>
 				</div>
 				<div class="col-5 text-right">
 					<form name="searchForm" class="text-right">
@@ -245,8 +267,9 @@
 			    	<div class="input-group">
 				    	<div class="mr-3">
 				        <select name="search" id="search" class="form-control">
-				          <option <c:if test="${search == 'maTitle'}">selected</c:if> value="maTitle">제목</option>
-				          <option <c:if test="${search == 'maCode'}">selected</c:if> value="maCode">상품 코드</option>
+				          <option <c:if test="${search == 'prodName'}">selected</c:if> value="prodName">상품명</option>
+				          <option <c:if test="${search == 'prodCode'}">selected</c:if> value="prodCode">상품 코드</option>
+				          <option <c:if test="${search == 'colName'}">selected</c:if> value="colName">컬렉션</option>
 				        </select>
 				    	</div>
 				      <input type="text" name="searchString" id="searchString" value="${searchString}" class="form-control mr-sm-2" autofocus placeholder="검색어를 입력해주세요"/>

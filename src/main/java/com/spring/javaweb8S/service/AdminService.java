@@ -96,6 +96,9 @@ public interface AdminService {
 
 	public void setProdStatusUpdate(int idx, String prodStatus);
 
+	public ArrayList<ProductVO> getColProdSearchList(String sort, String search, String searchString, String startDate,
+			String endDate, int startIndexNo, int pageSize);
+
 
 
 }

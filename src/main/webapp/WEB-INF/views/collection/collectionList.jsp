@@ -168,7 +168,7 @@
 					총 ${pageVO.totRecCnt}개의 상품이 존재합니다.
 				</div>
 			</div>
-			<div class="row" style="margin-bottom:50px">
+			<div class="row" style="margin-bottom:100px">
 				<div class="col-2 text-left">
 					<select class="form-control" id="sort" onchange="sortCheck()">
 						<option <c:if test="${sort == '컬렉션'}">selected</c:if>>컬렉션</option>
@@ -191,11 +191,11 @@
 			<c:forEach var="vo" items="${vos}" varStatus="st">
 				<div class="col" <c:if test="${cnt % 2 != 0}">style="margin-left:80px"</c:if>>
 					<a href="${ctp}/collection/colProductList?idx=${vo.idx}" class="banner_img">
-						<img src="${ctp}/collection/${vo.colThumbnail}" style="width:100%; max-width:1000px; margin-bottom:10px"/>
+						<img src="${ctp}/collection/${vo.colThumbnail}" style="width:100%; max-width:1000px;"/>
 						<div class="text-center hover_text">${fn:replace(vo.colDetail, "<br/>", newLine)}</div>
 					</a>
 					<a href="${ctp}/collection/colProductList?colIdx=${vo.idx}" class="collectionHover">
-						<div class="text-center">
+						<div class="text-center" style=" margin-top:10px">
 							<span style="font-size:20px; font-weight:bold">${vo.colName}</span>
 							<span style="font-size:17px;"><br/>${fn:substring(vo.colDate,0,10)}</span>
 							<br/><span class="badge badge-pill badge-dark" style="font-size:18px; margin-top:10px; width:60px"><i class="fa-solid fa-gift"></i>&nbsp;&nbsp;&nbsp;${vo.colProdNum}</span>

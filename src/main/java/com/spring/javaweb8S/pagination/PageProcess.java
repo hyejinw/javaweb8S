@@ -104,4 +104,37 @@ public class PageProcess {
 		return pageVO;
 	}
 
+	// 기간과 상품 상태까지 함께 검색
+	public PageVO totRecCntWithPeriodAndSort(int pag, int pageSize, String section, String sort, String search,
+			String searchString, String startDate, String endDate) {
+
+		PageVO pageVO = new PageVO();
+		int totRecCnt = 0;
+		
+		if(section.equals("adminColProduct")) totRecCnt = adminDAO.colProdTotRecCntWithPeriod(sort, search, searchString, startDate, endDate);
+		
+			
+		int totPage = (totRecCnt % pageSize)==0 ? totRecCnt /pageSize : (totRecCnt / pageSize) + 1;
+		int startIndexNo = (pag - 1) * pageSize;
+		int curScrStartNo = totRecCnt - startIndexNo;
+		
+		int blockSize = 3;
+		int curBlock = (pag - 1) / blockSize;
+		int lastBlock = (totPage - 1) / blockSize;
+		
+		pageVO.setPag(pag);
+		pageVO.setPageSize(pageSize);
+		pageVO.setTotRecCnt(totRecCnt);
+		pageVO.setTotPage(totPage);
+		pageVO.setStartIndexNo(startIndexNo);
+		pageVO.setCurScrStartNo(curScrStartNo);
+		pageVO.setCurBlock(curBlock);
+		pageVO.setBlockSize(blockSize);
+		pageVO.setLastBlock(lastBlock);
+		pageVO.setSearch(search);
+		pageVO.setSearchString(searchString);
+		
+		return pageVO;
+	}
+
 }

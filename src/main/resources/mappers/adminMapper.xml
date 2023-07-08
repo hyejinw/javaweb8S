@@ -54,6 +54,21 @@
 		</if>
 	</select>
 	
+	<select id="getMagazineSearchList" resultType="com.spring.javaweb8S.vo.MagazineVO">
+		<if test='searchString != "" and startDate == ""'>
+			select * from bo_magazine where ${search} like concat('%',#{searchString},'%') 
+			order by idx desc limit #{startIndexNo},#{pageSize};
+		</if>
+		<if test='searchString == "" and startDate != ""'>
+			select * from bo_magazine where date_format(maDate, '%Y-%m-%d') BETWEEN #{startDate} AND #{endDate} 
+			order by idx desc limit #{startIndexNo},#{pageSize};
+		</if>
+		<if test='searchString != "" and startDate != ""'>
+			select * from bo_magazine where ${search} like concat('%',#{searchString},'%') and date_format(maDate, '%Y-%m-%d') BETWEEN #{startDate} AND #{endDate} 
+			order by idx desc limit #{startIndexNo},#{pageSize};
+		</if>
+	</select>
+	
 	
 	<select id="magazineTypeTotRecCnt" resultType="int">
 		select count(*) from bo_magazine where maType = #{maType};
@@ -106,14 +121,119 @@
 		select * from bo_option where prodIdx = #{idx};
 	</select>
 	
-	
-	
 	<select id="getProductPhotoName" resultType="com.spring.javaweb8S.vo.ProductVO">
 		select prodDetail,prodThumbnail from bo_product where idx in
    	<foreach collection="colProdList" item="colProdList" open="(" close=")" separator=",">
    		#{colProdList}
     </foreach>
 	</select>
+	
+	<select id="colProdTotRecCntWithPeriod" resultType="int">
+		<if test='searchString == "" and startDate == ""'>
+			select count(*) from bo_product 
+			
+			<if test='sort != "" and (sort == "판매" or sort == "품절")'>
+				where prodStatus = #{sort}
+			</if>
+			<if test='sort != "" and (sort == "공개" or sort == "비공개")'>
+				where prodOpen = #{sort}
+			</if>
+			;
+		</if>
+		<if test='searchString != "" and startDate == ""'>
+			select count(*) from bo_product where 
+			
+			<if test='sort != "" and (sort == "판매" or sort == "품절")'>
+				prodStatus = #{sort} and 
+			</if>
+			<if test='sort != "" and (sort == "공개" or sort == "비공개")'>
+				prodOpen = #{sort} and 
+			</if>
+			
+			${search} like concat('%',#{searchString},'%');
+		</if>
+		<if test='searchString == "" and startDate != ""'>
+			select count(*) from bo_product where
+			
+			<if test='sort != "" and (sort == "판매" or sort == "품절")'>
+				prodStatus = #{sort} and 
+			</if>
+			<if test='sort != "" and (sort == "공개" or sort == "비공개")'>
+				prodOpen = #{sort} and 
+			</if> 
+			
+			date_format(prodDate, '%Y-%m-%d') BETWEEN #{startDate} AND #{endDate};
+		</if>
+		<if test='searchString != "" and startDate != ""'>
+			select count(*) from bo_product where 
+			
+			<if test='sort != "" and (sort == "판매" or sort == "품절")'>
+				prodStatus = #{sort} and 
+			</if>
+			<if test='sort != "" and (sort == "공개" or sort == "비공개")'>
+				prodOpen = #{sort} and 
+			</if>
+			
+			${search} like concat('%',#{searchString},'%') and date_format(prodDate, '%Y-%m-%d') BETWEEN #{startDate} AND #{endDate};
+		</if>
+	</select>
+	
+	
+	<select id="getColProdSearchList" resultType="com.spring.javaweb8S.vo.ProductVO">
+		<if test='searchString == "" and startDate == ""'>
+			select * from bo_product 
+			
+			<if test='sort != "" and (sort == "판매" or sort == "품절")'>
+				where prodStatus = #{sort}
+			</if>
+			<if test='sort != "" and (sort == "공개" or sort == "비공개")'>
+				where prodOpen = #{sort}
+			</if>
+			
+			order by idx desc limit #{startIndexNo},#{pageSize};
+		</if>
+		<if test='searchString != "" and startDate == ""'>
+			select * from bo_product where 
+			
+			<if test='sort != "" and (sort == "판매" or sort == "품절")'>
+				prodStatus = #{sort} and 
+			</if>
+			<if test='sort != "" and (sort == "공개" or sort == "비공개")'>
+				prodOpen = #{sort} and 
+			</if>
+			
+			${search} like concat('%',#{searchString},'%')
+			order by idx desc limit #{startIndexNo},#{pageSize};
+		</if>
+		<if test='searchString == "" and startDate != ""'>
+			select * from bo_product where 
+			
+			<if test='sort != "" and (sort == "판매" or sort == "품절")'>
+				prodStatus = #{sort} and 
+			</if>
+			<if test='sort != "" and (sort == "공개" or sort == "비공개")'>
+				prodOpen = #{sort} and 
+			</if>
+			
+			date_format(prodDate, '%Y-%m-%d') BETWEEN #{startDate} AND #{endDate}
+			order by idx desc limit #{startIndexNo},#{pageSize};
+		</if>
+		<if test='searchString != "" and startDate != ""'>
+			select * from bo_product where 
+			
+			<if test='sort != "" and (sort == "판매" or sort == "품절")'>
+				prodStatus = #{sort} and 
+			</if>
+			<if test='sort != "" and (sort == "공개" or sort == "비공개")'>
+				prodOpen = #{sort} and 
+			</if>			
+			
+			${search} like concat('%',#{searchString},'%') and date_format(prodDate, '%Y-%m-%d') BETWEEN #{startDate} AND #{endDate}
+			order by idx desc limit #{startIndexNo},#{pageSize};
+		</if>
+	</select>
+	
+	
 	
 	<insert id="memberDefaultPhotoInsert">
 		insert into bo_defaultPhoto values (default, #{vo.photoName}, #{vo.memo}, default); 

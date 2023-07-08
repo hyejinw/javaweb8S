@@ -35,31 +35,37 @@
 			from bo_collection c where colOpen = '공개' order by idx desc limit #{startIndexNo},#{pageSize};
 		</if>
 	</select>
+
+ 
 	
 	<select id="productTotRecCnt" resultType="int">
 		<if test='search != null and search == "최신순"'>
-			select count(*) from bo_product where prodOpen = '공개' 
+			select count(*) from bo_product as p left join bo_collection as c on p.colIdx = c.idx 
+			where c.colOpen = "공개" and p.prodOpen = "공개" 
 			<if test='searchString != null and searchString != "0"'>
 				and colIdx = #{searchString} 
 			</if>
-			 order by idx desc;
+			 order by p.idx desc;
 		</if>
 		<if test='search != null and search == "상품명"'>
-			select count(*) from bo_product where prodOpen = '공개' 
+			select count(*) from bo_product as p left join bo_collection as c on p.colIdx = c.idx 
+			where c.colOpen = "공개" and p.prodOpen = "공개" 
 			<if test='searchString != null and searchString != "0"'>
 				and colIdx = #{searchString} 
 			</if>
-			order by binary(prodName), idx desc;
+			order by binary(prodName), p.idx desc;
 		</if>
 		<if test='search != null and search == "낮은 가격순"'>
-			select count(*) from bo_product where prodOpen = '공개' 
+			select count(*) from bo_product as p left join bo_collection as c on p.colIdx = c.idx 
+			where c.colOpen = "공개" and p.prodOpen = "공개" 
 			<if test='searchString != null and searchString != "0"'>
 				and colIdx = #{searchString} 
 			</if>
 			order by prodPrice asc;
 		</if>
 		<if test='search != null and search == "높은 가격순"'>
-			select count(*) from bo_product where prodOpen = '공개'
+			select count(*) from bo_product as p left join bo_collection as c on p.colIdx = c.idx 
+			where c.colOpen = "공개" and p.prodOpen = "공개" 
 			<if test='searchString != null and searchString != "0"'>
 				and colIdx = #{searchString} 
 			</if>
@@ -69,28 +75,40 @@
 	
 	<select id="getProductList" resultType="com.spring.javaweb8S.vo.ProductVO">
 		<if test='search != null and search == "최신순"'>
-			select p.*, c.colName from bo_product as p, bo_collection as c where prodOpen = '공개' 
+			select p.*, c.colName 
+			from bo_product as p left join bo_collection as c 
+			on p.colIdx = c.idx
+			where c.colOpen = "공개" and p.prodOpen = "공개"	
 			<if test='colIdx != null and colIdx != "0"'>
 				and colIdx = #{colIdx} 
 			</if>
-			order by idx desc limit #{startIndexNo},#{pageSize};
+			order by p.idx desc limit #{startIndexNo},#{pageSize};
 		</if>
 		<if test='search != null and search == "상품명"'>
-			select p.*, c.colName from bo_product as p, bo_collection as c where prodOpen = '공개' 
+			select p.*, c.colName 
+			from bo_product as p left join bo_collection as c 
+			on p.colIdx = c.idx
+			where c.colOpen = "공개" and p.prodOpen = "공개"	
 			<if test='colIdx != null and colIdx != "0"'>
 				and colIdx = #{colIdx} 
 			</if>
-			order by binary(prodName), idx desc limit #{startIndexNo},#{pageSize};
+			order by binary(prodName), p.idx desc limit #{startIndexNo},#{pageSize};
 		</if>
 		<if test='search != null and search == "낮은 가격순"'>
-			select p.*, c.colName from bo_product as p, bo_collection as c where prodOpen = '공개' 
+			select p.*, c.colName 
+			from bo_product as p left join bo_collection as c 
+			on p.colIdx = c.idx
+			where c.colOpen = "공개" and p.prodOpen = "공개"	 
 			<if test='colIdx != null and colIdx != "0"'>
 				and colIdx = #{colIdx} 
 			</if>
 			order by prodPrice asc limit #{startIndexNo},#{pageSize};
 		</if>
 		<if test='search != null and search == "높은 가격순"'>
-			select p.*, c.colName from bo_product as p, bo_collection as c where prodOpen = '공개' 
+			select p.*, c.colName 
+			from bo_product as p left join bo_collection as c 
+			on p.colIdx = c.idx
+			where c.colOpen = "공개" and p.prodOpen = "공개"	
 			<if test='colIdx != null and colIdx != "0"'>
 				and colIdx = #{colIdx} 
 			</if>
@@ -98,5 +116,24 @@
 		</if>
 	</select>
 	
+	<select id="getProductSave" resultType="com.spring.javaweb8S.vo.SaveVO">
+		select * from bo_save where memNickname = #{nickname} and prodIdx = #{idx};
+	</select>
+	
+	<select id="getProductCartSearch" resultType="com.spring.javaweb8S.vo.CartVO">
+		select * from bo_cart where memNickname = #{nickname} and prodIdx = #{idx};
+	</select>
+	
+	<select id="getProdCollection" resultType="com.spring.javaweb8S.vo.CollectionVO">
+		select * from bo_collection where idx = (select colIdx from bo_product where idx = #{idx});
+	</select>
+	
+	<select id="getProductInfo" resultType="com.spring.javaweb8S.vo.ProductVO">
+		select * from bo_product where idx = #{idx};
+	</select>
+	
+	<select id="getProdOption" resultType="com.spring.javaweb8S.vo.OptionVO">
+		select * from bo_option where prodIdx = #{idx};
+	</select>
 	
 </mapper>

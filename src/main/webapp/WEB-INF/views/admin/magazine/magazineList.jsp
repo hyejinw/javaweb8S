@@ -189,7 +189,7 @@
 	 		<div style="background-color:white; padding:20px; margin-bottom:30px">
 	 			<div class="row">
 	 				<div class="col text-left">
-						<a class="btn btn-dark mb-4" href="${ctp}/admin/magazine/magazineList" style="margin-left:20px;">새로고침</a>
+						<a class="btn btn-dark mb-4" href="${ctp}/admin/magazine/magazineList" style="margin-left:20px;"><i class="fa-solid fa-arrows-rotate"></i></a>
 	 				</div>
 	 				<div class="col text-right">
 					  <a class="btn btn-warning" href="${ctp}/admin/magazine/magazineInsert" style="margin-right:20px;">매거진 등록</a>

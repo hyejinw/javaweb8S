@@ -33,7 +33,7 @@ public class MagazineController {
 	@RequestMapping(value = "/magazineList", method = RequestMethod.GET)
 	public String magazineListGet(Model model,
 			@RequestParam(name="search", defaultValue = "최신순", required = false) String search,
-			@RequestParam(name="maDate", defaultValue = "", required = false) String maDate,
+			@RequestParam(name="maDate", defaultValue = "전체", required = false) String maDate,
 			@RequestParam(name="pag", defaultValue = "1", required = false) int pag,
 			@RequestParam(name="pageSize", defaultValue = "24", required = false) int pageSize) {
 		
