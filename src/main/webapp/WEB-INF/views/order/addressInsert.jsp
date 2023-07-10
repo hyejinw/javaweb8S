@@ -44,7 +44,7 @@
 			let detailAddress = addressForm.detailAddress.value;
 			let extraAddress = addressForm.extraAddress.value;
 			
-			
+			/* 여기부터 하면 된당 내일의 혜진앙! */
 			
 			window.close();
 		}
