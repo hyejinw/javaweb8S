@@ -142,7 +142,7 @@
 	    	location.href = "${ctp}/collection/collectionList?pag=${pageVO.pag}&pageSize=${pageVO.pageSize}&search=${search}&sort="+sort;
     	}
     	else {
-	    	location.href = "${ctp}/collection/colProductList?search=${search}&colIdx=0&sort="+sort;
+    		location.href = "${ctp}/collection/colProductList?search=${search}&colIdx=0&sort="+sort+"&flag=All";
     	}
 		}
 	</script>
@@ -165,14 +165,14 @@
 		
 			<div class="row" style="margin:50px 0px 10px 0px">
 				<div class="col text-left" style="padding:0px">
-					총 ${pageVO.totRecCnt}개의 상품이 존재합니다.
+					총 ${pageVO.totRecCnt}개의 컬렉션이 존재합니다.
 				</div>
 			</div>
 			<div class="row" style="margin-bottom:100px">
 				<div class="col-2 text-left">
 					<select class="form-control" id="sort" onchange="sortCheck()">
 						<option <c:if test="${sort == '컬렉션'}">selected</c:if>>컬렉션</option>
-						<option <c:if test="${sort == '상품'}">selected</c:if>>상품</option>
+						<option <c:if test="${sort == '상품 전체'}">selected</c:if>>상품 전체</option>
 					</select>
 				</div>
 				<div class="col-10 text-right">
@@ -190,7 +190,7 @@
 			<c:set var="cnt" 	value="${0}"/>
 			<c:forEach var="vo" items="${vos}" varStatus="st">
 				<div class="col" <c:if test="${cnt % 2 != 0}">style="margin-left:80px"</c:if>>
-					<a href="${ctp}/collection/colProductList?idx=${vo.idx}" class="banner_img">
+					<a href="${ctp}/collection/colProductList?colIdx=${vo.idx}" class="banner_img">
 						<img src="${ctp}/collection/${vo.colThumbnail}" style="width:100%; max-width:1000px;"/>
 						<div class="text-center hover_text">${fn:replace(vo.colDetail, "<br/>", newLine)}</div>
 					</a>

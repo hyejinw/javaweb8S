@@ -345,7 +345,6 @@ public class AdminController {
 	// 매거진 등록 (여기 정기구독 부분 오류있음 400)
 	@RequestMapping(value = "/magazine/magazineInsert", method = RequestMethod.POST)
 	public String magazineInsertPost(MultipartFile thumbnailFile, MultipartFile detailFile, MagazineVO vo) {
-		System.out.println("vo : " + vo);
 		
 		int res = adminService.setMagazineInsert(thumbnailFile, detailFile, vo);
 		if(res == 1) return "redirect:/message/magazineInsertOk";
@@ -616,7 +615,6 @@ public class AdminController {
 		
 		// 2. 기존 상품 옵션 수정
 		ArrayList<OptionVO> optionList = new ArrayList<OptionVO>();
-		
 
 		for(int i=0; i<opName.length; i++) {
 			OptionVO optionVOi = new OptionVO();

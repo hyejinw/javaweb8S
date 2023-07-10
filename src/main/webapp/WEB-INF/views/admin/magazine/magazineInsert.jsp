@@ -129,14 +129,9 @@
 			let thumbnailExt = maThumbnail.substring(maThumbnail.lastIndexOf(".")+1).toUpperCase();
 			let detailExt = maDetail.substring(maDetail.lastIndexOf(".")+1).toUpperCase();
 			let maxSize = 1024 * 1024 * 20; // 업로드 가능 파일은 20MByte까지
-			alert("maType : " +maType);
 			
-			if(maType == "" || maTitle == "" || maPrice == "" || maThumbnail == "" || maDetail == "") {
+			if(maType == "" || maTitle == "" || maPrice == "" || maThumbnail == "" || maDetail == "" || maDate == "" || maStock == "") {
 				alert('필수 입력을 완성해주세요.');
-				return false;
-			}
-			if(maType == "매거진" && (maDate == "" || maStock == "")) {
-				alert('매거진은 발행일과 재고 수량을 필수로 입력해야 합니다.');
 				return false;
 			}
 			if((thumbnailExt != "JPG" && thumbnailExt != "PNG" && thumbnailExt != "JPEG") || (detailExt != "JPG" && detailExt != "PNG" && detailExt != "JPEG")) {
@@ -201,11 +196,11 @@
 				        <td><input type="file" name="detailFile" id="maDetail" onchange="detailCheck(this)" class="form-control-file border form-control"/></td>
 				      </tr>
 				      <tr>
-				        <th>발행일  <span class="must">* (정기구독 제외)</span></th>
+				        <th>발행일  <span class="must">*</span></th>
 				        <td><input type="date" name="maDate" id="maDate" class="form-control"/></td>
 				      </tr>
 				      <tr>
-				        <th>재고 수량  <span class="must">* (정기구독 제외)</span></th>
+				        <th>재고 수량  <span class="must">* (정기구독, 재고 0으로 작성)</span></th>
 				        <td><input type="number" name="maStock" id="maStock" class="form-control"/></td>
 				      </tr>
 				      <tr>

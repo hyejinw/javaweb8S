@@ -119,9 +119,9 @@
 		
 		function plus(price) {
 			let num = document.getElementById("num").value;
-			if(num >= 999) {
-				alert('최대 주문수량은 999개 입니다.');
-				num = 999;
+			if(num >= 99) {
+				alert('최대 주문수량은 99개 입니다.');
+				num = 99;
 			}
 			else {
 				document.getElementById("num").value++;		
@@ -240,7 +240,7 @@
 					totalPrice : totalPrice
     		}, 
     		success:function() {
-    			let ans2 = confirm('장바구니에 추가되었습니다.\n확인하시겠습니까?');
+    			let ans2 = confirm('장바구니에 담겼습니다.\n확인하시겠습니까?');
     			if(ans2) location.href = "${ctp}/order/cart";
     			else location.reload();
     		},

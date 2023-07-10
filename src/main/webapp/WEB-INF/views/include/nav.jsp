@@ -42,7 +42,7 @@
 			location.href = '${ctp}/member/memberPage';
 		}
 		else if(flag == 'cart') {
-			location.href = '${ctp}/member/memberCart';
+			location.href = '${ctp}/order/cart';
 		}
 	}
 </script>

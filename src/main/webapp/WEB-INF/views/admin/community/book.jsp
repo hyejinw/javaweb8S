@@ -129,44 +129,6 @@
     	
     	location.href = "${ctp}/admin/community/bookDB?search="+search+"&searchString="+searchString;
 		}
-/* 		
-		function searchCheck() {
-			let searchString = $("#searchString").val();
-	    	
-    	if(searchString.trim() == "") {
-    		alert("검색어를 입력해주세요.");
-    		searchForm.searchString.focus();
-    		return false;
-    	}
-    	
-		  let values = [];
-		  
-			$.ajax({
-    	  type : "post",
-    	  url : "${ctp}/admin/community/bookInsert",
-    	  datatype : "json",
-    	  data : {searchString : searchString},
-    	  success : function(res) {
-    		  
-    		  let str = JSON.stringify(res);
-    		  alert(str); 
-    		  
-    		  $.each(res, function(index, item) { // 데이터 =item
-						console.log(index + " "); // index가 끝날때까지 
-						console.log(item.title + " ");
-						console.log(item.contents + " ");
-						console.log(item.url + " ");
-						console.log(item.isbn + " ");
-					});
-	    		  
-					$('#demo').css("display","block");
-					
-    		},
-    		error : function() {
-    			alert("전송 오류! 재시도 부탁드립니다.");
-    		}
-    	});
-		} */
 		
  		function bookDetail(idx,title,contents,url,isbn,datetime,authors,publisher,translators,price,sale_price,thumbnail,status,bookRate,save,bookUpdate) {
 			$("#bookDetailIdx").text(idx);
@@ -180,17 +142,6 @@
 				$("#bookDetailContents").text("책 상세내용이 없습니다");
 			}
 			
-			//document.getElementById("bookDetailUrl").innerHTML = '<a href='+url+'></a>';
-			
-			//$(".bookDetailUrl").append('<a href='+url+'></a>');
-			
-		/* 	let bookDetailUrl = document.createElement("a");
-			bookDetailUrl.setAttribute("href",url);
-			bookDetailUrl.setAttribute("id","bookDetailUrl");
-			bookDetailUrl.setAttribute("class","btn btn-primary");		
-			bookDetailUrl.setAttribute("value","상세보기");		
-			
-			document.querySelector(".bookDetailUrlDemo").appendChild(bookDetailUrl); */
 			document.getElementById('bookDetailUrl1').setAttribute('href', url);
 			document.getElementById('bookDetailUrl2').setAttribute('href', url);
 			document.getElementById('bookDetailThumbnail').setAttribute('src', thumbnail);
@@ -213,8 +164,6 @@
 			$("#bookDetailBookRate").text("평점 : " + bookRate);
 			$("#bookDetailSave").text("저장 수 : " + save);
 			$("#bookDetailBookUpdate").text("저장일 : " + bookUpdate.substring(0,19));
-			
-			
 		} 
 	</script>
 </head>

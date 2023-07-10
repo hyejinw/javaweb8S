@@ -22,4 +22,12 @@ public class CartVO {
 	private int num;
 	private int totalPrice;
 	private String cartDate;
+	
+	// 컬렉션 정보 (장바구니용)
+	private String colName;
+	private int colIdx;
+	private String colDetail;
+	
+	// 저장 정보 (장바구니용)
+	private int saveIdx;
 }

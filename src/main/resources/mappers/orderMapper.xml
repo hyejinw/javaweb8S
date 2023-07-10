@@ -6,5 +6,90 @@
 		select * from bo_member where nickname = #{memNickname};
 	</select>
 
+	<select id="getProductCartList" resultType="com.spring.javaweb8S.vo.CartVO">
+		select cart.*, c.colName as colName, c.idx as colIdx, c.colDetail as colDetail, s.idx as saveIdx    
+		from bo_cart cart 
+		
+		left join bo_product p 
+			on cart.prodIdx = p.idx 
+			
+		left join bo_collection c 
+			on p.colIdx = c.idx
+			
+		left join bo_save s 
+			on cart.prodIdx = s.prodIdx  
+			
+		where c.colOpen = "공개" and p.prodOpen = "공개"	 
+		and cart.memNickname = #{memNickname} and cart.type = "컬렉션 상품" 
+		
+		order by prodIdx desc, cartDate desc, idx desc;
+	</select>
+	
+	<select id="getMagazineCartList" resultType="com.spring.javaweb8S.vo.CartVO">
+		select cart.*, s.idx as saveIdx 
+		from bo_cart cart 
+		
+		left join bo_save s 
+			on cart.maIdx = s.maIdx 
+			
+		where cart.memNickname = #{memNickname} and cart.type = "매거진";
+	</select>
+	
+	
+	<select id="getSubscribeCartList" resultType="com.spring.javaweb8S.vo.CartVO">
+		select cart.*, s.idx as saveIdx 
+		from bo_cart cart 
+		
+		left join bo_save s 
+			on cart.maIdx = s.maIdx 
+			
+		where cart.memNickname = #{memNickname} and cart.type = "정기 구독";
+	</select>
+	
+	<select id="getCartList" resultType="com.spring.javaweb8S.vo.CartVO">
+		select * from bo_cart where memNickname = #{memNickname} and idx in 
+		<foreach collection="cartIdxList" item="cartIdxList" open="(" close=")" separator=",">
+   		#{cartIdxList}
+    </foreach>
+	</select>
+	
+	<select id="getDefaultAddress" resultType="com.spring.javaweb8S.vo.AddressVO">
+		select * from bo_address where memNickname = #{memNickname} and defaultAddress = 0;
+	</select>
+	
+	<select id="getAddressList" resultType="com.spring.javaweb8S.vo.AddressVO">
+		select * from bo_address where memNickname = #{memNickname} and addressDel != "삭제";
+	</select>
+	
+	<insert id="setSaveInsertPost" parameterType="com.spring.javaweb8S.vo.SaveVO">
+		<if test='vo.type != null and (vo.type=="매거진" or vo.type=="정기 구독")'>
+			insert into bo_save(idx,memNickname,type,maIdx,prodName,prodPrice,prodThumbnail) 
+			values (default,#{vo.memNickname},#{vo.type},#{vo.prodIdx},#{vo.prodName},#{vo.prodPrice},#{vo.prodThumbnail});
+		</if>
+		<if test='vo.type != null and vo.type=="컬렉션 상품"'>
+			insert into bo_save(idx,memNickname,type,prodIdx,prodName,prodPrice,prodThumbnail) 
+			values (default,#{vo.memNickname},#{vo.type},#{vo.prodIdx},#{vo.prodName},#{vo.prodPrice},#{vo.prodThumbnail});
+		</if>
+	</insert>
+	
+	<update id="setCartProdNumUpdate">
+		update bo_cart set 
+   	num = #{vo.num}, totalPrice = #{vo.totalPrice} where idx = #{vo.idx};     
+	</update>
+	
+	<delete id="setCartIdxesDelete">
+		delete from bo_cart where idx in
+    <foreach collection="cartIdxList" item="cartIdxList" open="(" close=")" separator=",">
+   		#{cartIdxList}
+    </foreach>
+	</delete>
+	
+	<delete id="setCartIdxDelete">
+		delete from bo_cart where idx = #{idx};
+	</delete>	
+	
+	<delete id="setSaveDelete">
+		delete from bo_save where idx = #{idx};
+	</delete>
 	
 </mapper>

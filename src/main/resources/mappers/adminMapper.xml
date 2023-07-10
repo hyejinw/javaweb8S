@@ -83,7 +83,7 @@
 	</select>
 	
 	<select id="getMagazinePhotoName" resultType="com.spring.javaweb8S.vo.MagazineVO">
-		select maDetail,maThumbnail from bo_magazine where idx in
+		select maDetail,maThumbnail from bo_magazine where idx in 
    	<foreach collection="magazineList" item="magazineList" open="(" close=")" separator=",">
    		#{magazineList}
     </foreach>

@@ -186,16 +186,12 @@
 			console.log("maDate: " + maDate);
 			console.log("maStock: " + maStock);
 			
-			if(maType == "" || maTitle == "" || maPrice == "") {
+			if(maType == "" || maTitle == "" || maPrice == "" || maDate == "" || maStock == "") {
 				alert('필수 입력을 완성해주세요.');
 				return false;
 			}
  			if((maThumbnail == "" && maDetail != "") || (maThumbnail != "" && maDetail == "")) {
 				alert('썸네일과 상세설명 파일은 단독 수정이 불가능합니다.\n모두 변경해주세요.');
-				return false;
-			} 
-		  if(maType == "매거진" && (maDate == "" || maStock == "")) {
-				alert('매거진은 발행일과 재고 수량을 필수로 입력해야 합니다.');
 				return false;
 			} 
 			if(maThumbnail != "") {
@@ -295,11 +291,11 @@
 				        <td><input type="file" name="detailFile" id="maDetail" onchange="detailCheck(this)" class="form-control-file border form-control"/></td>
 				      </tr>
 				      <tr>
-				        <th>발행일  <span class="must">* (정기구독 제외)</span></th>
+				        <th>발행일  <span class="must">*</span></th>
 				        <td><input type="date" name="maDate" id="maDate" value="${fn:substring(vo.maDate,0,10)}" class="form-control"/></td>
 				      </tr>
 				      <tr>
-				        <th>재고 수량  <span class="must">* (정기구독 제외)</span></th>
+				        <th>재고 수량  <span class="must">* (정기구독, 재고 0으로 작성)</span></th>
 				        <td><input type="number" name="maStock" id="maStock" value="${vo.maStock}" class="form-control"/></td>
 				      </tr>
 				      <tr>
