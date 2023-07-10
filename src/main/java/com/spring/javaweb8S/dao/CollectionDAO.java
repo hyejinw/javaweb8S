@@ -29,6 +29,16 @@ public interface CollectionDAO {
 	public ProductVO getProductInfo(@Param("idx") int idx);
 	
 	public ArrayList<OptionVO> getProdOption(@Param("idx") int idx);
+	
+	public void setProductSave(@Param("vo") SaveVO vo);
+	
+	public void setProductSaveDelete(@Param("memNickname") String memNickname, @Param("prodIdx") int prodIdx);
+	
+	public ArrayList<Integer> getProductOpCartSearch(@Param("memNickname") String memNickname, @Param("prodIdx") int prodIdx, @Param("optionList") ArrayList<CartVO> optionList);
+	
+	public void setProductOpCartUpdate(@Param("vo") CartVO vo, @Param("updateOption") ArrayList<CartVO> updateOption);
+	
+	public void setProductOpCartInsert(@Param("vo") CartVO vo, @Param("insertOption") ArrayList<CartVO> insertOption);
 
 
 }

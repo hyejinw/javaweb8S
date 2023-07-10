@@ -6,5 +6,26 @@
 		select * from bo_member where nickname = #{memNickname};
 	</select>
 
+	<select id="getProductCartList" resultType="com.spring.javaweb8S.vo.CartVO">
+		select cart.*, c.colName as colName, c.idx as colIdx, c.colDetail as colDetail  
+		from bo_cart cart 
+		left join bo_product p 
+			on cart.prodIdx = p.idx 
+		left join bo_collection c 
+			on p.colIdx = c.idx
+		where c.colOpen = "공개" and p.prodOpen = "공개"	 
+		and cart.memNickname = #{memNickname} and cart.type = "컬렉션 상품"
+		
+		order by prodIdx desc, cartDate desc, idx desc;
+	</select>
+	
+	<select id="getMagazineCartList" resultType="com.spring.javaweb8S.vo.CartVO">
+		select * from bo_cart where memNickname = #{memNickname} and type = "매거진";
+	</select>
+	
+	<select id="getSubscribeCartList" resultType="com.spring.javaweb8S.vo.CartVO">
+		select * from bo_cart where memNickname = #{memNickname} and type = "정기 구독";
+	</select>
+	
 	
 </mapper>

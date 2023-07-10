@@ -34,9 +34,6 @@
 			let totPriceInput = document.getElementById("totPriceInput");
 			let resPrice = '';
 			
-/* 			pointUsage.innerHTML = "- <fmt:formatNumber value="+point+" pattern='#,###' />원"; */
-/* 			pointUsage.innerHTML = "- <fmt:formatNumber value='"+point+"' pattern='#,###' />원"; */
-/* 			$('#pointUsage').append("- <fmt:formatNumber value='"+point+"' pattern='#,###' />원"); */
 		  resPrice = totalPrice - 4800;
 		  totPriceInput.innerHTML = resPrice+"원";
 		}

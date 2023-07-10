@@ -240,7 +240,7 @@
 					totalPrice : totalPrice
     		}, 
     		success:function() {
-    			let ans2 = confirm('장바구니에 추가되었습니다.\n확인하시겠습니까?');
+    			let ans2 = confirm('장바구니에 담겼습니다.\n확인하시겠습니까?');
     			if(ans2) location.href = "${ctp}/order/cart";
     			else location.reload();
     		},

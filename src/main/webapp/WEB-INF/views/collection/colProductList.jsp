@@ -125,7 +125,7 @@
 	    	location.href = "${ctp}/collection/collectionList?sort="+sort;
     	}
     	else {
-	    	location.href = "${ctp}/collection/colProductList?search=${search}&colIdx=0&sort="+sort;
+	    	location.href = "${ctp}/collection/colProductList?search=${search}&colIdx=0&sort="+sort+"&flag=All";
     	}
 		}
 	</script>
@@ -140,14 +140,13 @@
 				<span style="margin:0px auto; font-size:18px; font-style:italic;"><i class="fa-solid fa-quote-left"></i>&nbsp;&nbsp;&nbsp;책 세계 함께 다다르기(differeach)&nbsp;&nbsp;&nbsp;<i class="fa-solid fa-quote-right"></i><br/>
 					<span class="w3-text w3-tag"  style="margin:0px auto; font-size:14px; font-style:italic;"><b>우리는 다 다르고, 그래서 서로에게 다다를 수 있어요.</b></span>
 				</span>
-<!-- 				<span class="w3-tooltip" style="margin:0px auto; font-size:18px; font-style:italic;"><i class="fa-solid fa-quote-left"></i>&nbsp;&nbsp;&nbsp;책 세계 쉽게 다다르기(differeach)&nbsp;&nbsp;&nbsp;<i class="fa-solid fa-quote-right"></i><br/>
-					<span class="w3-text w3-tag"  style="margin:0px auto; font-size:14px; font-style:italic;"><b>우리는 다 다르고, 서로에게 다다를 수 있어요.</b></span>
-				</span> -->
 			</div>
 		
 		
 			<div class="row" style="margin:50px 0px 10px 0px">
 				<div class="col text-left" style="padding:0px">
+					<c:if test="${empty flag}"><span style="font-size:20px; font-weight:bold">${vos[0].colName}</span> 컬렉션<br/></c:if>
+					<c:if test="${!empty flag}"><span style="font-size:20px; font-weight:bold">전체</span> 컬렉션<br/></c:if>
 					총 ${pageVO.totRecCnt}개의 상품이 존재합니다.
 				</div>
 			</div>
@@ -155,7 +154,8 @@
 				<div class="col-2 text-left">
 					<select class="form-control" id="sort" onchange="sortCheck()">
 						<option <c:if test="${sort == '컬렉션'}">selected</c:if>>컬렉션</option>
-						<option <c:if test="${sort == '상품'}">selected</c:if>>상품</option>
+						<option <c:if test="${sort == '상품'}">selected</c:if> disabled>상품</option>
+						<option <c:if test="${sort == '상품 전체'}">selected</c:if>>상품 전체</option>
 					</select>
 				</div>
 				<div class="col-10 text-right">

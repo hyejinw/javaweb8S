@@ -49,8 +49,11 @@
 	</select>
 	
 	<select id="getMaDate" resultType="String">
-		select distinct YEAR(maDate) from bo_magazine order by maDate desc; 
+		select distinct YEAR(maDate) from bo_magazine; 
 	</select>
+<!-- 	<select id="getMaDate" resultType="String">
+		select distinct YEAR(maDate) from bo_magazine order by maDate desc; 
+	</select> -->
 	
 	<select id="getMagazineProduct" resultType="com.spring.javaweb8S.vo.MagazineVO">
 		select * from bo_magazine where idx = #{idx};

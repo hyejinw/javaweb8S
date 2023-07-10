@@ -59,6 +59,36 @@ public class CollectionServiceImpl implements CollectionService {
 	public ArrayList<OptionVO> getProdOption(int idx) {
 		return collectionDAO.getProdOption(idx);
 	}
+
+	// 상품 저장
+	@Override
+	public void setProductSave(SaveVO vo) {
+		collectionDAO.setProductSave(vo);
+	}
+
+	// 상품 저장 취소
+	@Override
+	public void setProductSaveDelete(String memNickname, int prodIdx) {
+		collectionDAO.setProductSaveDelete(memNickname, prodIdx);
+	}
+
+  // 기존 장바구니 내역 중, 같은 상품 존재 확인(닉네임, 상품 고유번호, 옵션 내용으로 검색)
+	@Override
+	public ArrayList<Integer> getProductOpCartSearch(String memNickname, int prodIdx, ArrayList<CartVO> optionList) {
+		return collectionDAO.getProductOpCartSearch(memNickname, prodIdx, optionList);
+	}
+
+	// 장바구니 상품 옵션 수량만 변경
+	@Override
+	public void setProductOpCartUpdate(CartVO vo, ArrayList<CartVO> updateOption) {
+		collectionDAO.setProductOpCartUpdate(vo, updateOption);
+	}
+
+	// 장바구니에 상품 추가
+	@Override
+	public void setProductOpCartInsert(CartVO vo, ArrayList<CartVO> insertOption) {
+		collectionDAO.setProductOpCartInsert(vo, insertOption);
+	}
 	
 	
 }

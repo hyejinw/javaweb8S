@@ -6,6 +6,7 @@ import org.springframework.stereotype.Service;
 import com.spring.javaweb8S.dao.AdminDAO;
 import com.spring.javaweb8S.dao.CollectionDAO;
 import com.spring.javaweb8S.dao.MagazineDAO;
+import com.spring.javaweb8S.dao.OrderDAO;
 
 @Service
 public class PageProcess {
@@ -18,6 +19,9 @@ public class PageProcess {
 	
 	@Autowired
 	CollectionDAO collectionDAO;
+	
+	@Autowired
+	OrderDAO orderDAO;
 	
 	public PageVO totRecCnt(int pag, int pageSize, String section, String search, String searchString) {
 		PageVO pageVO = new PageVO();

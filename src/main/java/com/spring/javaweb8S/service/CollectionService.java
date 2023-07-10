@@ -24,4 +24,14 @@ public interface CollectionService {
 
 	public ArrayList<OptionVO> getProdOption(int idx);
 
+	public void setProductSave(SaveVO vo);
+
+	public void setProductSaveDelete(String memNickname, int prodIdx);
+
+	public ArrayList<Integer> getProductOpCartSearch(String memNickname, int prodIdx, ArrayList<CartVO> optionList);
+
+	public void setProductOpCartUpdate(CartVO vo, ArrayList<CartVO> updateOption);
+
+	public void setProductOpCartInsert(CartVO vo, ArrayList<CartVO> insertOption);
+
 }

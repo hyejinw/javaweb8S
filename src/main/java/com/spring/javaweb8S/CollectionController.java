@@ -10,6 +10,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.spring.javaweb8S.pagination.PageProcess;
 import com.spring.javaweb8S.pagination.PageVO;
@@ -52,7 +53,8 @@ public class CollectionController {
 	// 상품 창
 	@RequestMapping(value = "/colProductList", method = RequestMethod.GET)
 	public String colProductListGet(Model model,
-			@RequestParam(name="colIdx", defaultValue = "0", required = false) String colIdx,
+			@RequestParam(name="flag", defaultValue = "", required = false) String flag,
+			@RequestParam(name="colIdx", defaultValue = "", required = false) String colIdx,
 			@RequestParam(name="search", defaultValue = "최신순", required = false) String search,
 			@RequestParam(name="sort", defaultValue = "상품", required = false) String sort,
 			@RequestParam(name="pag", defaultValue = "1", required = false) int pag,
@@ -67,6 +69,9 @@ public class CollectionController {
 		model.addAttribute("vos", vos);
 		model.addAttribute("pageVO", pageVO);
 		
+		// 상품 전체
+		if(!flag.equals("")) model.addAttribute("flag", "All");
+		
 		return "collection/colProductList";
 	}
 	
@@ -74,7 +79,6 @@ public class CollectionController {
 	@RequestMapping(value = "/colProduct", method = RequestMethod.GET)
 	public String productGet(Model model, HttpSession session, 
 			@RequestParam(name="idx", defaultValue = "1", required = false) int idx) {
-		System.out.println("colProduct의 idx : " +  idx);
 		
 		// 관심 저장 유무 확인
 		String nickname = (String) session.getAttribute("sNickname");
@@ -100,39 +104,84 @@ public class CollectionController {
 		return "collection/colProduct";
 	}
 	
-//	// 매거진 저장
-//	@ResponseBody
-//	@RequestMapping(value = "/magazineSave", method = RequestMethod.POST)
-//	public String magazineSavePost(SaveVO vo) {
-//		magazineService.setMagazineSave(vo);
-//		return "";
-//	}
-//	
-//	// 매거진 저장 취소
-//	@ResponseBody
-//	@RequestMapping(value = "/magazineSaveDelete", method = RequestMethod.POST)
-//	public String magazineSaveDeletePost(SaveVO vo) {
-//		magazineService.setMagazineSaveDelete(vo.getMemNickname(), vo.getMaIdx());
-//		return "";
-//	}
-//	
-//	// 매거진 장바구니 저장
-//	@ResponseBody
-//	@RequestMapping(value = "/magazineCartInsert", method = RequestMethod.POST)
-//	public String magazineCartInsertPost(CartVO vo) {
-//		
-//		// 기존 장바구니 내역 중, 같은 상품 존재 확인
-//		CartVO previousVO = magazineService.getMagazineCartSearch(vo.getMemNickname(), vo.getMaIdx());
-//		
-//		// 같은 매거진 존재
-//		if(previousVO != null) {
-//			magazineService.setMagazineCartUpdate(vo);
-//		}
-//		else {
-//			magazineService.setMagazineCartInsert(vo);
-//		}
-//		return "";
-//	}
+	// 상품 저장
+	@ResponseBody
+	@RequestMapping(value = "/productSave", method = RequestMethod.POST)
+	public String productSavePost(SaveVO vo) {
+		collectionService.setProductSave(vo);
+		return "";
+	}
+	
+	// 상품 저장 취소
+	@ResponseBody
+	@RequestMapping(value = "/productSaveDelete", method = RequestMethod.POST)
+	public String productSaveDeletePost(SaveVO vo) {
+		collectionService.setProductSaveDelete(vo.getMemNickname(), vo.getProdIdx());
+		return "";
+	}
+	
+	// 상품 장바구니 저장
+	@ResponseBody
+	@RequestMapping(value = "/productCartInsert", method = RequestMethod.POST)
+	public String productCartInsertPost(CartVO vo, 
+			int[] opIdx, String[] opName, int[] opPrice, int[] num) {
+		
+		System.out.println("아아~~~~~ 알립니다. 여긴 장바구니에 담는 productCartInsert입니다. 혹시 오류가 뜨면 여기로 오세요. 망치.들고.");
+		
+		System.out.println("vo : " + vo);
+		System.out.println("opIdx[0] : " + opIdx[0]);
+		System.out.println("opName : " + opName);
+		System.out.println("opPrice : " + opPrice);
+		System.out.println("num : " + num);
+		
+		// 옵션 정보 담기
+		ArrayList<CartVO> optionList = new ArrayList<CartVO>();
+
+		for(int i=0; i<opName.length; i++) {
+			CartVO optionVOi = new CartVO();
+			optionVOi.setOpIdx(opIdx[i]);
+			optionVOi.setOpName(opName[i]);
+			optionVOi.setOpPrice(opPrice[i]);
+			optionVOi.setNum(num[i]);
+			optionVOi.setTotalPrice(opPrice[i] * num[i]);
+			
+			optionList.add(optionVOi);
+		}
+		
+		// 기존 장바구니 내역 중, 같은 상품 존재 확인(닉네임, 상품 고유번호, 옵션 고유번호로 검색)
+		ArrayList<Integer> reservedProdOpIdxes = collectionService.getProductOpCartSearch(vo.getMemNickname(), vo.getProdIdx(), optionList);
+		System.out.println("reservedProdOpIdxes : " + reservedProdOpIdxes);
+		
+		// 수량만 업데이트할 옵션
+		ArrayList<CartVO> updateOption = new ArrayList<CartVO>();
+		
+		// 새로 장바구니에 담을 옵션
+		ArrayList<CartVO> insertOption = new ArrayList<CartVO>();
+		
+		
+		for(int i=0; i<optionList.size(); i++) {
+			// 수량만 업데이트
+			if(reservedProdOpIdxes.contains(optionList.get(i).getOpIdx())) {
+				updateOption.add(optionList.get(i));
+			}
+			// 새로 추가
+			else {
+				insertOption.add(optionList.get(i));
+			}
+		}
+		
+		System.out.println("updateOption : " + updateOption);
+		System.out.println("insertOption : " + insertOption);
+		
+		
+		// 실제 처리
+		if(updateOption.size() != 0) collectionService.setProductOpCartUpdate(vo, updateOption);
+		if(insertOption.size() != 0) collectionService.setProductOpCartInsert(vo, insertOption);
+		
+		System.out.println("끝났니?");
+		
+		return "";
+	}
 	
 	
 	

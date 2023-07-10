@@ -2,6 +2,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.spring.javaweb8S.dao.CollectionDAO">
 	
+	<!-- 컬렉션 리스트 -->
 	<select id="collectionTotRecCnt" resultType="int">
 		<if test='search != null and search == "최신순"'>
 			select count(*) from bo_collection where colOpen = '공개' order by idx desc;
@@ -35,9 +36,8 @@
 			from bo_collection c where colOpen = '공개' order by idx desc limit #{startIndexNo},#{pageSize};
 		</if>
 	</select>
-
  
-	
+	<!-- 컬렉션의 상품 리스트 -->
 	<select id="productTotRecCnt" resultType="int">
 		<if test='search != null and search == "최신순"'>
 			select count(*) from bo_product as p left join bo_collection as c on p.colIdx = c.idx 
@@ -121,7 +121,7 @@
 	</select>
 	
 	<select id="getProductCartSearch" resultType="com.spring.javaweb8S.vo.CartVO">
-		select * from bo_cart where memNickname = #{nickname} and prodIdx = #{idx};
+		select * from bo_cart where memNickname = #{nickname} and prodIdx = #{idx} limit 1;
 	</select>
 	
 	<select id="getProdCollection" resultType="com.spring.javaweb8S.vo.CollectionVO">
@@ -135,5 +135,38 @@
 	<select id="getProdOption" resultType="com.spring.javaweb8S.vo.OptionVO">
 		select * from bo_option where prodIdx = #{idx};
 	</select>
+	
+	<select id="getProductOpCartSearch" resultType="Integer">
+		select opIdx from bo_cart where memNickname = #{memNickname} and prodIdx = #{prodIdx} and opIdx in
+		<foreach collection="optionList" index="index" item="item" open="(" close=")" separator=",">
+   		#{item.opIdx}
+    </foreach>
+	</select>
+	
+	
+	<insert id="setProductSave">
+		insert into bo_save(idx,memNickname,type,prodIdx,prodName,prodPrice,prodThumbnail) 
+		values (default,#{vo.memNickname},#{vo.type},#{vo.prodIdx},#{vo.prodName},#{vo.prodPrice},#{vo.prodThumbnail});
+	</insert>
+	
+	<insert id="setProductOpCartInsert" parameterType="java.util.ArrayList">
+		<foreach item="item" index="index" collection="insertOption" separator=";">
+			insert into bo_cart(idx,memNickname,type,prodIdx,opIdx,prodName,prodPrice,prodThumbnail,opName,opPrice,num,totalPrice,cartDate) values 
+    	(default,#{vo.memNickname},#{vo.type},#{vo.prodIdx},#{item.opIdx},#{vo.prodName},#{vo.prodPrice},#{vo.prodThumbnail},#{item.opName},#{item.opPrice},#{item.num},#{item.totalPrice},default)
+   	</foreach>
+	</insert>
+	
+	
+	<update id="setProductOpCartUpdate">
+		<foreach item="item" index="index" collection="updateOption">
+			update bo_cart set 
+    	num = num + #{item.num}, totalPrice = totalPrice + #{item.totalPrice} where memNickname = #{vo.memNickname} and prodIdx = #{vo.prodIdx} and opIdx = #{item.opIdx};     
+    </foreach>
+	</update>
+	
+	
+	<delete id="setProductSaveDelete">
+		delete from bo_save where memNickname = #{memNickname} and prodIdx = #{prodIdx};
+	</delete>
 	
 </mapper>
