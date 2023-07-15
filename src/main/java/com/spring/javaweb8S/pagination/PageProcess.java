@@ -1,5 +1,7 @@
 package com.spring.javaweb8S.pagination;
 
+import java.util.ArrayList;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -7,6 +9,7 @@ import com.spring.javaweb8S.dao.AdminDAO;
 import com.spring.javaweb8S.dao.CollectionDAO;
 import com.spring.javaweb8S.dao.MagazineDAO;
 import com.spring.javaweb8S.dao.OrderDAO;
+import com.spring.javaweb8S.vo.OrderVO;
 
 @Service
 public class PageProcess {
@@ -39,6 +42,7 @@ public class PageProcess {
 		else if(section.equals("adminMagazineType")) totRecCnt = adminDAO.magazineTypeTotRecCnt(search);
 		else if(section.equals("adminColCategory")) totRecCnt = adminDAO.colCategoryTotRecCnt();
 		else if(section.equals("adminColProduct")) totRecCnt = adminDAO.colProductTotRecCnt();
+		else if(section.equals("adminOrder")) totRecCnt = adminDAO.orderTotRecCnt();
 
 		else if(section.equals("magazineList")) totRecCnt = magazineDAO.magazineListTotRecCnt(search, searchString);
 		else if(section.equals("collectionList")) totRecCnt = collectionDAO.collectionTotRecCnt(search);
@@ -116,7 +120,12 @@ public class PageProcess {
 		int totRecCnt = 0;
 		
 		if(section.equals("adminColProduct")) totRecCnt = adminDAO.colProdTotRecCntWithPeriod(sort, search, searchString, startDate, endDate);
-		
+		if(section.equals("adminColNameProduct")) totRecCnt = adminDAO.colProdColNameTotRecCntWithPeriod(sort, search, searchString, startDate, endDate);
+		if(section.equals("adminOrder")) totRecCnt = adminDAO.orderTotRecCntWithPeriod(sort, search, searchString, startDate, endDate);
+		if(section.equals("adminOrderWithInvoice")) {
+			ArrayList<OrderVO> temp = adminDAO.orderWithInvoiceTotRecCntWithPeriod(sort, search, searchString, startDate, endDate);
+			totRecCnt = temp.size();
+		}
 			
 		int totPage = (totRecCnt % pageSize)==0 ? totRecCnt /pageSize : (totRecCnt / pageSize) + 1;
 		int startIndexNo = (pag - 1) * pageSize;

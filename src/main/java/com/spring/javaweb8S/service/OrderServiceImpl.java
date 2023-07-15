@@ -10,6 +10,7 @@ import com.spring.javaweb8S.dao.OrderDAO;
 import com.spring.javaweb8S.vo.AddressVO;
 import com.spring.javaweb8S.vo.CartVO;
 import com.spring.javaweb8S.vo.MemberVO;
+import com.spring.javaweb8S.vo.OrderVO;
 import com.spring.javaweb8S.vo.SaveVO;
 
 @Service
@@ -85,6 +86,102 @@ public class OrderServiceImpl implements OrderService {
 	@Override
 	public ArrayList<AddressVO> getAddressList(String memNickname) {
 		return orderDAO.getAddressList(memNickname);
+	}
+
+  // 기본주소로 설정 시, 기존 기본주소가 있다면 해당 주소를 일반으로 변경
+	@Override
+	public void setDefaultAddressReset(String memNickname) {
+		orderDAO.setDefaultAddressReset(memNickname);
+	}
+
+	// 주소 등록
+	@Override
+	public void setAddressInsert(AddressVO vo) {
+		orderDAO.setAddressInsert(vo);
+	}
+	
+  // 주문창, 주소록 삭제
+	@Override
+	public void setAddressIdxesDelete(List<String> addressIdxList) {
+		orderDAO.setAddressIdxesDelete(addressIdxList);
+	}
+	
+	// 주문창, 주소록 수정 창에서 해당 주소정보 가져오기
+	@Override
+	public AddressVO getAddressInfo(int idx) {
+		return orderDAO.getAddressInfo(idx);
+	}
+
+	// 주문창, 주소록 수정
+	@Override
+	public void setAddressUpdate(AddressVO vo) {
+		orderDAO.setAddressUpdate(vo);
+	}
+
+	// 주문 내역 추가
+	@Override
+	public void setOrderInsert(ArrayList<OrderVO> orderVOS) {
+		orderDAO.setOrderInsert(orderVOS);
+	}
+
+	// 배송 데이터 추가
+	@Override
+	public void setDeliveryInsert(ArrayList<OrderVO> orderVOS) {
+		orderDAO.setDeliveryInsert(orderVOS);
+	}
+
+	// 바로 주문하기 임시
+	@Override
+	public String getCartIdx(CartVO cartVO) {
+		return orderDAO.getCartIdx(cartVO);
+	}
+
+	// 매거진 정기 구독 처리
+	@Override
+	public void setSubscribeInsert(ArrayList<OrderVO> subVOS) {
+		orderDAO.setSubscribeInsert(subVOS);
+	}
+
+	// 적립금 사용 테이블 처리
+	@Override
+	public void setPointUseInsert(ArrayList<OrderVO> pointUseVOS) {
+		orderDAO.setPointUseInsert(pointUseVOS);
+	}
+
+	// 회원 테이블 포인트, 적립금 사용액 만큼 빼기 
+	@Override
+	public void setMemberPointUpdate(int totalUsedPoint, String memNickname) {
+		orderDAO.setMemberPointUpdate(totalUsedPoint, memNickname);
+	}
+
+	// 상품 옵션 재고 변경
+	@Override
+	public void setProdOpStockUpdate(ArrayList<OrderVO> prodOrderVOS) {
+		orderDAO.setProdOpStockUpdate(prodOrderVOS);
+	}
+	
+	// 현 재고 0인 상품 고유번호 가져오기
+	@Override
+	public ArrayList<String> getProdStockUpdateIdx() {
+		return orderDAO.getProdStockUpdateIdx();
+	}
+
+	// 현 재고 0인 상품 품절로 상태 변경
+	@Override
+	public void setProdStockUpdate(ArrayList<String> prodStockUpdateIdx) {
+		orderDAO.setProdStockUpdate(prodStockUpdateIdx);
+	}
+
+	// 매거진 재고 변경
+	@Override
+	public void setMaStockUpdate(ArrayList<OrderVO> maOrderVOS) {
+		orderDAO.setMaStockUpdate(maOrderVOS);
+	}
+
+	// 상품 판매 수량 변경
+	@Override
+	public void setProdSaleQuantityUpdate(ArrayList<OrderVO> prodOrderVOS) {
+		orderDAO.setProdSaleQuantityUpdate(prodOrderVOS);
 	}
 	
 }

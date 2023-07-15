@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.spring.javaweb8S.dao.AboutDAO">
+	
+	<select id="getNicknameListFromEmail" resultType="String">
+		select nickname from bo_member where email = #{email};
+	</select>
+	
+	<select id="getNicknameListWithEmail" resultType="String">
+		select nickname from bo_member where email = #{email};
+	</select>
+	
+	<select id="getBooksletterCheck" resultType="String">
+		select booksletterDate from bo_booksletter where email = #{email} and memNickname = #{memNickname};
+	</select>
+	
+	<insert id="getBooksletterInsert" >
+		<if test='memNickname == ""'>
+			insert into bo_booksletter(idx,email,booksletterDate,sendNum,booksletterStatus) values
+			(default, #{email}, default, default, default);
+		</if>
+		<if test='memNickname != ""'>
+			insert into bo_booksletter values
+			(default, #{memNickname}, #{email}, default, default, default);
+		</if>
+	</insert>
+	
+</mapper>

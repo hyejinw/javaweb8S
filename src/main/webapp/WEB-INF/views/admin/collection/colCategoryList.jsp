@@ -380,7 +380,7 @@
 				        <td>
 				        	<button class="btn btn-warning btn-sm" id="update${vo.idx}" onclick="colCateUpdate('${vo.idx}')">수정</button>
 				        	<button class="btn btn-dark btn-sm" id="confirm${vo.idx}" onclick="colCateConfirm('${vo.idx}')" style="display:none;">종료</button>
-				        	<hr style="background:#343a40; height:1px; border:0;"/><button class="btn btn-success btn-sm" onclick="location.href='${ctp}/admin/collection/';">상품보기</button>
+				        	<hr style="background:#343a40; height:1px; border:0;"/><button class="btn btn-success btn-sm" onclick="location.href='${ctp}/admin/collection/colProdListSearch?search=colName&searchString=${vo.colName}';">상품보기</button>
 			        	</td>
 				      </tr>
 				    	<c:set var="curScrStartNo" value="${curScrStartNo - 1}"/>

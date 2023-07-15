@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.spring.javaweb8S.pagination.PageProcess;
 import com.spring.javaweb8S.pagination.PageVO;
 import com.spring.javaweb8S.service.MagazineService;
+import com.spring.javaweb8S.service.OrderService;
 import com.spring.javaweb8S.vo.CartVO;
 import com.spring.javaweb8S.vo.MagazineVO;
 import com.spring.javaweb8S.vo.SaveVO;
@@ -27,16 +28,25 @@ public class MagazineController {
 	MagazineService magazineService;
 	
 	@Autowired
+	OrderService orderService;
+	
+	@Autowired
 	PageProcess pageProcess;
 
 	// 매거진 창
 	@RequestMapping(value = "/magazineList", method = RequestMethod.GET)
-	public String magazineListGet(Model model,
+	public String magazineListGet(Model model, HttpSession session,
 			@RequestParam(name="search", defaultValue = "최신순", required = false) String search,
 			@RequestParam(name="maDate", defaultValue = "전체", required = false) String maDate,
 			@RequestParam(name="pag", defaultValue = "1", required = false) int pag,
 			@RequestParam(name="pageSize", defaultValue = "24", required = false) int pageSize) {
 		
+		// 바로 주문하기로 장바구니에 저장된 상품이 있다면 session에 저장된 값 지워주기
+		if((String)session.getAttribute("sTempCartIdx") != null) {
+			orderService.setCartIdxDelete(Integer.parseInt((String)session.getAttribute("sTempCartIdx")));
+			session.removeAttribute("sTempCartIdx");
+		}
+	
 		PageVO pageVO = pageProcess.totRecCnt(pag, pageSize, "magazineList", search, maDate);
 		ArrayList<MagazineVO> vos = magazineService.getMagazineList(search, maDate, pageVO.getStartIndexNo(), pageSize);
 		ArrayList<String> maDateVO = magazineService.getMaDate();
@@ -54,6 +64,12 @@ public class MagazineController {
 	@RequestMapping(value = "/maProduct", method = RequestMethod.GET)
 	public String productGet(Model model, HttpSession session, 
 			@RequestParam(name="idx", defaultValue = "1", required = false) int idx) {
+		
+		// 바로 주문하기로 장바구니에 저장된 상품이 있다면 session에 저장된 값 지워주기
+		if((String)session.getAttribute("sTempCartIdx") != null) {
+			orderService.setCartIdxDelete(Integer.parseInt((String)session.getAttribute("sTempCartIdx")));
+			session.removeAttribute("sTempCartIdx");
+		}
 		
 		// 관심 저장 유무 확인
 		String nickname = (String) session.getAttribute("sNickname");
@@ -76,7 +92,13 @@ public class MagazineController {
 	@ResponseBody
 	@RequestMapping(value = "/magazineSave", method = RequestMethod.POST)
 	public String magazineSavePost(SaveVO vo) {
+		
+		// 상품 저장 테이블
 		magazineService.setMagazineSave(vo);
+		
+		// 매거진 테이블 저장 등록 수 변경
+		magazineService.setMaSaveNumUpdate(vo.getMaIdx(), 1);
+		
 		return "";
 	}
 	
@@ -84,7 +106,11 @@ public class MagazineController {
 	@ResponseBody
 	@RequestMapping(value = "/magazineSaveDelete", method = RequestMethod.POST)
 	public String magazineSaveDeletePost(SaveVO vo) {
+		// 상품 저장 테이블
 		magazineService.setMagazineSaveDelete(vo.getMemNickname(), vo.getMaIdx());
+		
+		// 매거진 테이블 저장 등록 수 변경
+		magazineService.setMaSaveNumUpdate(vo.getMaIdx(), -1);
 		return "";
 	}
 	

@@ -3,93 +3,231 @@
 <mapper namespace="com.spring.javaweb8S.dao.OrderDAO">
 
 	<select id="getMemberInfo" resultType="com.spring.javaweb8S.vo.MemberVO">
-		select * from bo_member where nickname = #{memNickname};
+		SELECT * FROM bo_member WHERE nickname = #{memNickname};
 	</select>
 
 	<select id="getProductCartList" resultType="com.spring.javaweb8S.vo.CartVO">
-		select cart.*, c.colName as colName, c.idx as colIdx, c.colDetail as colDetail, s.idx as saveIdx    
-		from bo_cart cart 
+		SELECT cart.*, c.colName AS colName, c.idx AS colIdx, c.colDetail AS colDetail, 
+		s.idx AS saveIdx, o.opStock AS stock 
+		FROM bo_cart cart 
 		
-		left join bo_product p 
-			on cart.prodIdx = p.idx 
+		LEFT JOIN bo_product p 
+			ON cart.prodIdx = p.idx 
 			
-		left join bo_collection c 
-			on p.colIdx = c.idx
+		LEFT JOIN bo_collection c 
+			ON p.colIdx = c.idx
 			
-		left join bo_save s 
-			on cart.prodIdx = s.prodIdx  
+		LEFT JOIN bo_save s 
+			ON cart.prodIdx = s.prodIdx  
 			
-		where c.colOpen = "공개" and p.prodOpen = "공개"	 
-		and cart.memNickname = #{memNickname} and cart.type = "컬렉션 상품" 
+		LEFT JOIN bo_option o 
+			ON cart.opIdx = o.idx   
+			
+		WHERE c.colOpen = "공개" AND p.prodOpen = "공개"	 
+		AND cart.memNickname = #{memNickname} AND cart.type = "컬렉션 상품" 
 		
-		order by prodIdx desc, cartDate desc, idx desc;
+		ORDER BY prodIdx DESC, cartDate DESC, idx DESC;
 	</select>
 	
 	<select id="getMagazineCartList" resultType="com.spring.javaweb8S.vo.CartVO">
-		select cart.*, s.idx as saveIdx 
-		from bo_cart cart 
+		SELECT cart.*, s.idx AS saveIdx, m.maStock AS stock 
+		FROM bo_cart cart 
 		
-		left join bo_save s 
-			on cart.maIdx = s.maIdx 
+		LEFT JOIN bo_save s 
+			ON cart.maIdx = s.maIdx 
 			
-		where cart.memNickname = #{memNickname} and cart.type = "매거진";
+		LEFT JOIN bo_magazine m 
+			ON cart.maIdx = m.idx 
+			
+		WHERE cart.memNickname = #{memNickname} AND cart.type = "매거진";
 	</select>
 	
-	
 	<select id="getSubscribeCartList" resultType="com.spring.javaweb8S.vo.CartVO">
-		select cart.*, s.idx as saveIdx 
-		from bo_cart cart 
+		SELECT cart.*, s.idx AS saveIdx 
+		FROM bo_cart cart 
 		
-		left join bo_save s 
-			on cart.maIdx = s.maIdx 
+		LEFT JOIN bo_save s 
+			ON cart.maIdx = s.maIdx 
 			
-		where cart.memNickname = #{memNickname} and cart.type = "정기 구독";
+		WHERE cart.memNickname = #{memNickname} AND cart.type = "정기 구독";
 	</select>
 	
 	<select id="getCartList" resultType="com.spring.javaweb8S.vo.CartVO">
-		select * from bo_cart where memNickname = #{memNickname} and idx in 
+		SELECT * FROM bo_cart WHERE memNickname = #{memNickname} AND idx IN  
 		<foreach collection="cartIdxList" item="cartIdxList" open="(" close=")" separator=",">
    		#{cartIdxList}
     </foreach>
 	</select>
 	
 	<select id="getDefaultAddress" resultType="com.spring.javaweb8S.vo.AddressVO">
-		select * from bo_address where memNickname = #{memNickname} and defaultAddress = 0;
+		SELECT * FROM bo_address WHERE memNickname = #{memNickname} AND defaultAddress = 0 AND addressDel != "삭제";
 	</select>
 	
 	<select id="getAddressList" resultType="com.spring.javaweb8S.vo.AddressVO">
-		select * from bo_address where memNickname = #{memNickname} and addressDel != "삭제";
+		SELECT * FROM bo_address WHERE memNickname = #{memNickname} AND addressDel != "삭제";
+	</select>
+	
+	<select id="getAddressInfo" resultType="com.spring.javaweb8S.vo.AddressVO">
+		SELECT * FROM bo_address WHERE idx = #{idx};
+	</select>
+	
+	<select id="getCartIdx" resultType="String" parameterType="com.spring.javaweb8S.vo.CartVO"> 
+		SELECT idx FROM bo_cart WHERE memNickname = #{cartVO.memNickname} AND 
+		<if test='cartVO.type != null and (cartVO.type=="매거진" or cartVO.type=="정기 구독")'>
+			maIdx = #{cartVO.maIdx} AND num = #{cartVO.num} limit 1;
+		</if>
+		<if test='cartVO.type != null and cartVO.type=="컬렉션 상품"'>
+			prodIdx = #{cartVO.prodIdx} AND opIdx = #{cartVO.opIdx} AND num = #{cartVO.num} LIMIT 1;
+		</if>
+	</select>
+	
+	<select id="getProdStockUpdateIdx" resultType="String">
+		SELECT prodIdx FROM bo_option GROUP BY prodIdx HAVING sum(opStock) = 0;
 	</select>
 	
 	<insert id="setSaveInsertPost" parameterType="com.spring.javaweb8S.vo.SaveVO">
 		<if test='vo.type != null and (vo.type=="매거진" or vo.type=="정기 구독")'>
-			insert into bo_save(idx,memNickname,type,maIdx,prodName,prodPrice,prodThumbnail) 
-			values (default,#{vo.memNickname},#{vo.type},#{vo.prodIdx},#{vo.prodName},#{vo.prodPrice},#{vo.prodThumbnail});
+			INSERT INTO bo_save(idx,memNickname,type,maIdx,prodName,prodPrice,prodThumbnail) 
+			VALUES (default,#{vo.memNickname},#{vo.type},#{vo.prodIdx},#{vo.prodName},#{vo.prodPrice},#{vo.prodThumbnail});
 		</if>
 		<if test='vo.type != null and vo.type=="컬렉션 상품"'>
-			insert into bo_save(idx,memNickname,type,prodIdx,prodName,prodPrice,prodThumbnail) 
-			values (default,#{vo.memNickname},#{vo.type},#{vo.prodIdx},#{vo.prodName},#{vo.prodPrice},#{vo.prodThumbnail});
+			INSERT INTO bo_save(idx,memNickname,type,prodIdx,prodName,prodPrice,prodThumbnail) 
+			VALUES (default,#{vo.memNickname},#{vo.type},#{vo.prodIdx},#{vo.prodName},#{vo.prodPrice},#{vo.prodThumbnail});
 		</if>
 	</insert>
 	
+	<insert id="setAddressInsert">
+		INSERT INTO bo_address VALUES 
+		(default,#{vo.memNickname},#{vo.defaultAddress},#{vo.addressName},#{vo.name},#{vo.tel},#{vo.addressMsg},
+		#{vo.postcode},#{vo.roadAddress},#{vo.detailAddress},#{vo.extraAddress},default,default);
+	</insert>
+	
+	<insert id="setOrderInsert" parameterType="java.util.ArrayList">
+		<foreach item="item" index="index" collection="orderVOS">
+			<if test="item.type != null and (item.type == '매거진' or item.type == '정기 구독')">
+				INSERT INTO bo_order (idx,memNickname,type,orderCode,addressIdx,maIdx,prodName,prodPrice,prodThumbnail,num,
+				totalPrice,paidPrice,usedPoint,orderDate,orderStatus,manageDate) 
+				VALUES 
+	    	(default,#{item.memNickname},#{item.type},#{item.orderCode},#{item.addressIdx},#{item.maIdx},
+	    	#{item.prodName},#{item.prodPrice},#{item.prodThumbnail},#{item.num},#{item.totalPrice},
+	    	#{item.paidPrice},#{item.usedPoint},default,"결제완료",default);       
+			</if>
+			<if test="item.type != null and item.type == '컬렉션 상품'">
+				INSERT INTO bo_order (idx,memNickname,type,orderCode,addressIdx,prodIdx,opIdx,prodName,prodPrice,prodThumbnail,
+				opName,opPrice,num,totalPrice,paidPrice,usedPoint,orderDate,orderStatus,manageDate) 
+				VALUES 
+	    	(default,#{item.memNickname},#{item.type},#{item.orderCode},#{item.addressIdx},#{item.prodIdx},#{item.opIdx},
+	    	#{item.prodName},#{item.prodPrice},#{item.prodThumbnail},#{item.opName},#{item.opPrice},#{item.num},#{item.totalPrice},
+	    	#{item.paidPrice},#{item.usedPoint},default,"결제완료",default);       
+			</if>
+    </foreach>
+	</insert>
+	
+	<insert id="setDeliveryInsert" parameterType="java.util.ArrayList">
+		<foreach item="item" index="index" collection="orderVOS">
+			INSERT INTO bo_delivery (idx,memNickname,orderIdx,addressIdx,deliveryStatus,deliveryDate,deliveryReason)
+			VALUES 
+			(default,#{item.memNickname},
+			(SELECT idx FROM bo_order WHERE memNickname = #{item.memNickname} AND orderCode = #{item.orderCode}),
+			#{item.addressIdx},"결제완료",default,"상품구매");
+		</foreach>
+	</insert>
+	
+	<insert id="setSubscribeInsert">
+		<foreach item="item" index="index" collection="subVOS">
+			INSERT INTO bo_subscribe (idx,memNickname,orderIdx,subStartDate,subExpireDate,subSendNum,subStatus)
+			VALUES
+			(default,#{item.memNickname},
+			(SELECT idx FROM bo_order WHERE memNickname = #{item.memNickname} AND orderCode = #{item.orderCode}),
+			default,(select date_add(now(),INTERVAL 
+			<if test="item.prodName != null and item.prodName == '월간 Chaeg 잡지 6개월 정기구독권'">
+				6 MONTH) from dual), 6,
+			</if>
+			<if test="item.prodName != null and item.prodName == '월간 Chaeg 잡지 1년 정기구독권'">
+				12 MONTH) from dual), 12,
+			</if>
+			 default);
+		</foreach>
+	</insert>
+	
+	<insert id="setPointUseInsert">
+		<foreach item="item" index="index" collection="pointUseVOS">
+			INSERT INTO bo_pointUse VALUES 
+			(default,#{item.memNickname},
+			(SELECT idx FROM bo_order WHERE memNickname = #{item.memNickname} AND orderCode = #{item.orderCode}),
+			#{item.usedPoint},default);
+		</foreach>
+	</insert>
+	
+	
 	<update id="setCartProdNumUpdate">
-		update bo_cart set 
-   	num = #{vo.num}, totalPrice = #{vo.totalPrice} where idx = #{vo.idx};     
+		UPDATE bo_cart SET 
+   	num = #{vo.num}, totalPrice = #{vo.totalPrice} WHERE idx = #{vo.idx};     
+	</update>
+	
+	<update id="setDefaultAddressReset">
+		UPDATE bo_address SET defaultAddress = 1 WHERE memNickname = #{memNickname} AND defaultAddress = 0 AND addressDel != "삭제";     
+	</update>
+	
+	<update id="setAddressIdxesDelete">
+		UPDATE bo_address SET addressDel = "삭제" WHERE idx IN 
+    <foreach collection="addressIdxList" item="addressIdxList" open="(" close=")" separator=",">
+   		#{addressIdxList}
+    </foreach>
+	</update>
+	
+	<update id="setAddressUpdate">
+		UPDATE bo_address SET 
+		defaultAddress = #{vo.defaultAddress},addressName = #{vo.addressName},name = #{vo.name},tel = #{vo.tel},addressMsg = #{vo.addressMsg},
+		postcode = #{vo.postcode},roadAddress = #{vo.roadAddress},detailAddress = #{vo.detailAddress},extraAddress = #{vo.extraAddress} 
+		WHERE memNickname = #{vo.memNickname} AND idx = #{vo.idx};
+	</update>
+	
+	<update id="setMemberPointUpdate">
+		UPDATE bo_member SET point = point - #{totalUsedPoint} WHERE nickname = #{memNickname};
+	</update>
+	
+	<update id="setProdOpStockUpdate">
+		<foreach collection="prodOrderVOS" item="item">
+			UPDATE bo_option SET opStock = opStock - #{item.num} WHERE idx = #{item.opIdx};
+		</foreach>
+	</update>
+	
+	<update id="setProdStockUpdate">
+		UPDATE bo_product SET prodStatus = "품절" WHERE idx IN 
+		<foreach collection="prodStockUpdateIdx" item="prodStockUpdateIdx" open="(" close=")" separator=",">
+			 #{prodStockUpdateIdx}
+		</foreach>;
+	</update>
+	
+	<update id="setMaStockUpdate">
+		<foreach collection="maOrderVOS" item="item">
+			UPDATE bo_magazine SET maStock = maStock - #{item.num}, maSaleQuantity = maSaleQuantity + #{item.num}
+			WHERE idx = #{item.maIdx};
+		</foreach>
+	</update>
+	
+	<update id="setProdSaleQuantityUpdate">
+		<foreach collection="prodOrderVOS" item="item">
+			UPDATE bo_product SET prodSaleQuantity = prodSaleQuantity + #{item.num} WHERE idx = #{item.prodIdx};
+		</foreach>
 	</update>
 	
 	<delete id="setCartIdxesDelete">
-		delete from bo_cart where idx in
+		DELETE FROM bo_cart WHERE idx IN
     <foreach collection="cartIdxList" item="cartIdxList" open="(" close=")" separator=",">
    		#{cartIdxList}
     </foreach>
 	</delete>
 	
 	<delete id="setCartIdxDelete">
-		delete from bo_cart where idx = #{idx};
+		DELETE FROM bo_cart WHERE idx = #{idx};
 	</delete>	
 	
 	<delete id="setSaveDelete">
-		delete from bo_save where idx = #{idx};
+		DELETE FROM bo_save WHERE idx = #{idx};
 	</delete>
+	
+	
 	
 </mapper>

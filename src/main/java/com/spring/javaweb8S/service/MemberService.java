@@ -1,6 +1,7 @@
 package com.spring.javaweb8S.service;
 
 import com.spring.javaweb8S.vo.MemberVO;
+import com.spring.javaweb8S.vo.ProverbVO;
 
 public interface MemberService {
 
@@ -19,5 +20,17 @@ public interface MemberService {
 	public String getPwdFinder(String mid, String email);
 
 	public void setMemberPwdUpdate(String mid, String encode);
+
+	public void setRecoMidPointInsert(String recoMid, int point, String pointReason);
+
+	public void setPointInsert(String nickname, int point, String pointReason);
+
+	public String getBooksletterCheck(String email);
+
+	public void setBooksletterInsert(String booksletterIdx, String nickname);
+
+	public int getProverbTotalNum();
+
+	public ProverbVO getRandomProverb(int randomNum);
 
 }

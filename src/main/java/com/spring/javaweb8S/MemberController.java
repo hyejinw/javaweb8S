@@ -13,11 +13,12 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.io.FileSystemResource;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -25,6 +26,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.spring.javaweb8S.service.MemberService;
 import com.spring.javaweb8S.vo.MemberVO;
+import com.spring.javaweb8S.vo.ProverbVO;
 
 @Controller
 @RequestMapping("/member")
@@ -32,7 +34,7 @@ public class MemberController {
 	
 	@Autowired
 	MemberService memberService;
-	
+
 	@Autowired
 	BCryptPasswordEncoder passwordEncoder;
 
@@ -46,7 +48,7 @@ public class MemberController {
 		if(cookies != null) {
 			for(int i=0; i<cookies.length; i++) {
 				if(cookies[i].getName().equals("cMid")) {
-					request.setAttribute("mid", cookies[i].getValue());
+					request.setAttribute("cMid", cookies[i].getValue());
 					break;
 				}
 			}
@@ -55,7 +57,7 @@ public class MemberController {
 	}
 	
 	// 로그인
-	@RequestMapping(value = "/memberLogin", method = RequestMethod.POST)
+	@RequestMapping(value = "/memberLogin", method = RequestMethod.POST, produces="application/text; charset=utf-8")
 	public String memberLoginPost(HttpServletRequest request, HttpServletResponse response,
 			@RequestParam(name="mid", defaultValue = "", required=false) String mid,
 			@RequestParam(name="pwd", defaultValue = "", required=false) String pwd,
@@ -101,12 +103,21 @@ public class MemberController {
 
 		// 로그인한 사용자의 총 방문 수, 오늘 방문 수, 마지막 방문일을 변경
 		memberService.setMemberLoginProcess(vo);
-		return "redirect:/message/memberLoginOk?mid="+mid;
+		return "redirect:/message/memberLoginOk?nickname="+vo.getMid();
 	}
 	
 	// 회원가입 창
 	@RequestMapping(value = "/memberJoin", method = RequestMethod.GET)
-	public String memberJoinGet() {
+	public String memberJoinGet(Model model) {
+		
+		int proverbNum = memberService.getProverbTotalNum();
+		System.out.println("proverbNum : " + proverbNum);
+		
+		// 1 ~ 명언 총 개수 사이의 랜덤한 정수를 얻는다.
+		int randomNum = (int) ((Math.random() * proverbNum) + 1);
+		ProverbVO proverbVO = memberService.getRandomProverb(randomNum - 1);
+		
+		model.addAttribute("proverbVO", proverbVO);
 		return "member/memberJoin";
 	}
 	
@@ -168,7 +179,7 @@ public class MemberController {
 		String content = "";
 		
 		// 메세지 보관함의 내용(content)에 필요한 정보를 추가로 담아서 전송
-		content += "<p><img src=\"cid:navLogo.png\" width='300px'></p>";
+		content += "<p><img src=\"cid:logo.png\" width='300px'></p>";
 		content += "<br><h4>안녕하세요. 책(의)세계입니다.<br>이메일 인증코드를 보내드립니다.</h4><br>";
 		content += "<br><hr><h2><font color='blue'>"+emailAuth+"</font></h2><br>";
 		content += "<br><h4>위 인증코드를 입력해주세요!</h4>";
@@ -189,12 +200,13 @@ public class MemberController {
 	}
 	
 	// 로그아웃
-	@RequestMapping(value = "/memberLogout", method = RequestMethod.GET)
+	@RequestMapping(value = "/memberLogout", method = RequestMethod.GET, produces="application/text; charset=utf-8")
 	public String memberLogoutGet(HttpSession session) {
+		//String nickname = (String) session.getAttribute("sNickname");
 		String mid = (String) session.getAttribute("sMid");
 		
 		session.invalidate();
-		return "redirect:/message/memberLogout?mid="+mid;
+		return "redirect:/message/memberLogout?nickname="+mid;
 	}
 	
 	// 아이디 찾기 창
@@ -268,7 +280,7 @@ public class MemberController {
 		String content = "";
 		
 		// 메세지 보관함의 내용(content)에 필요한 정보를 추가로 담아서 전송
-		content += "<p><img src=\"cid:navLogo.png\" width='300px'></p>";
+		content += "<p><img src=\"cid:logo.png\" width='300px'></p>";
 		content += "<br><h4>안녕하세요. 책(의)세계입니다.<br>임시 비밀번호를 보내드립니다.</h4><br>";
 		content += "<br><hr><h2><font color='blue'>"+tempPwd+"</font></h2><br>";
 		content += "<br><h4>로그인 후, 마이페이지에서 비밀번호를 변경해주세요!</h4>";
@@ -288,28 +300,42 @@ public class MemberController {
 	
 
 	// 회원가입
+	@Transactional
 	@RequestMapping(value = "/memberJoin", method = RequestMethod.POST)
 	public String memberJoinPost(MemberVO vo,
 			@RequestParam(name="recoMid", defaultValue = "", required=false) String recoMid) {
 		
 		if(memberService.getMidCheck(recoMid) != null) {
 			vo.setPoint(10000);
+			
+			// 추천인 포인트 증가
 			memberService.setMemberPoint(recoMid, 5000);
-			
-			// point 테이블 추가 처리 필요
-			
+			// 추천인 point 테이블 처리
+			memberService.setRecoMidPointInsert(recoMid, 5000, "추천인 가입");
 		}
-		else {
-			vo.setPoint(5000);
-		}
+		else vo.setPoint(5000);
+		
 		vo.setPwd(passwordEncoder.encode(vo.getPwd()));  // 비밀번호 암호화
 		
-		int res = memberService.setMember(vo);
+		int res = memberService.setMember(vo);   // 회원 가입
+		
+		
+		// 뉴스레터 비회원 구독 중인지 확인
+		String booksletterIdx = memberService.getBooksletterCheck(vo.getEmail());
+		
+		// 맞다면, 회원 별명 추가
+		if(booksletterIdx != null) memberService.setBooksletterInsert(booksletterIdx, vo.getNickname());
+			
+		
+		// 회원 포인트 적립
+		if(memberService.getMidCheck(recoMid) != null) memberService.setPointInsert(vo.getNickname(), 10000, "가입 축하포인트 + 추천인 가입");
+		else memberService.setPointInsert(vo.getNickname(), 5000, "가입 축하포인트");
 		
 		if(res == 1) return "redirect:/message/memberJoinOk";
 		else return "redirect:/message/memberJoinNo";
 	}
 	
+	// 회원 마이페이지
 	@RequestMapping(value = "/memberPage", method = RequestMethod.GET)
 	public String memberPageGet() {
 		

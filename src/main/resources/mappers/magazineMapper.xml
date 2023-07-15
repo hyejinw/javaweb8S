@@ -85,6 +85,11 @@
 		update bo_cart set num = num + #{vo.num}, totalPrice = totalPrice + #{vo.totalPrice} where memNickname = #{vo.memNickname} and maIdx = #{vo.maIdx};
 	</update>
 	
+	<update id="setMaSaveNumUpdate">
+		update bo_magazine set maSave = maSave + #{maSaveNum} where idx = #{maIdx};
+	</update>
+	
+	
 	<delete id="setMagazineSaveDelete">
 		delete from bo_save where memNickname = #{memNickname} and maIdx = #{maIdx};
 	</delete>

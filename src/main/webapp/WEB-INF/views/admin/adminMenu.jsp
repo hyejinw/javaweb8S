@@ -105,8 +105,9 @@
 		      </div>
 		      <div id="collapseFive" class="collapse" data-parent="#accordion">
 		        <div class="card-body" style="margin:10px">
-			        <a href="${ctp}/admin/memberList">통합 주문 관리</a><hr/>
-			        <a href="${ctp}/admin/memberList">배송 처리 관리</a><hr/>
+			        <a href="${ctp}/admin/order/orderList">통합 주문 관리</a><hr/>
+			        <a href="${ctp}/admin/memberList">통합 배송 관리(뺄 가능성 높음)</a><hr/>
+			        <a href="${ctp}/admin/memberList">환불 관리</a>
 		        </div>
 		      </div>
 		    </div>

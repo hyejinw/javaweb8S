@@ -226,23 +226,37 @@
     function addOption() {
     	let strOption = "";
     	let test = "t" + cnt; 
-
-    	strOption += '<div id="'+test+'">';
-    	strOption += '<hr size="5px"/>';
-    	strOption += '<tr>';
-    	strOption += '<th>옵션명 <span class="must">*</span>&nbsp;&nbsp;&nbsp;';
-    	strOption += '<input type="button" value="옵션삭제" class="btn btn-outline-danger btn-sm" onclick="removeOption('+test+')"></th>';
-    	strOption += '<td><input type="text" name="opName" id="opName'+cnt+'" class="form-control"/></td>';
-    	strOption += '</tr>';
     	
-    	strOption += '<tr>';
-    	strOption += '<th>옵션 가격 <span class="must">*</span></th>';
-    	strOption += '<td><input type="number" name="opPrice" id="opPrice'+cnt+'" class="form-control"/></td>';
-    	strOption += '</tr>';
-    	strOption += '<tr>';
-    	strOption += '<th>재고 수량 <span class="must">*</span></th>';
-    	strOption += '<td><input type="number" name="opStock" id="opStock'+cnt+'" class="form-control"/></td>';
-    	strOption += '</tr>';
+    	strOption += '<div id="'+test+'">';
+    	strOption += '<div class="row">';
+    	strOption += '<div class="col-4" class="text-left">';
+    	strOption += '<b>옵션명 <span class="must">*</span>&nbsp;&nbsp;&nbsp;</b>';
+    	strOption += '<input type="button" value="옵션삭제" class="btn btn-outline-danger btn-sm" onclick="removeOption('+test+')">';
+    	strOption += '</div>';
+    	strOption += '<div class="col-8" class="text-right">';
+    	strOption += '<input type="text" name="opName" id="opName'+cnt+'" class="form-control"/>';
+    	strOption += '</div>';
+    	strOption += '</div>';
+    	
+    	strOption += '<div class="row">';
+    	strOption += '<div class="col-4">';
+    	strOption += '<b>옵션 가격 <span class="must">*</span></b>';
+    	strOption += '</div>';
+    	strOption += '<div class="col-8">';
+    	strOption += '<input type="number" name="opPrice" id="opPrice'+cnt+'" class="form-control"/>';
+    	strOption += '</div>';
+    	strOption += '</div>';
+
+    	strOption += '<div class="row">';
+    	strOption += '<div class="col-4">';
+    	strOption += '<b>재고 수량 <span class="must">*</span></b>';
+    	strOption += '</div>';
+    	strOption += '<div class="col-8">';
+    	strOption += '<input type="number" name="opStock" id="opStock'+cnt+'" class="form-control"/>';
+    	strOption += '</div>';
+    	strOption += '</div>';
+    	
+    	strOption += '<hr/>';
     	strOption += '</div>';
     	
     	
@@ -326,38 +340,44 @@
 				        <th>상품 상세설명 <span class="must">*</span></th>
 				        <td><input type="file" name="detailFile" id="prodDetail" onchange="detailCheck(this)" class="form-control-file border form-control"/></td>
 				      </tr>
-				      
-				      <!-- 옵션 등록 -->
-				      <tr><td colspan="2" class="text-center"><br/><br/><span style="font-size:25px">옵션 등록</span></td></tr>
-				      <tr>
-				        <th>
-				        	옵션명 <span class="must">*</span>
-				        	&nbsp;&nbsp;&nbsp;<button type="button" class="btn btn-success btn-sm" onclick="addOption()">추가</button>
-		        		</th>
-				        <td><input type="text" name="opName" id="opName" class="form-control"/></td>
-				      </tr>
-				      <tr>
-				        <th>옵션 가격 <span class="must">*</span></th>
-				        <td><input type="number" name="opPrice" id="opPrice" class="form-control"/></td>
-				      </tr>
-				      <tr>
-				        <th>재고 수량 <span class="must">*</span></th>
-				        <td><input type="number" name="opStock" id="opStock" class="form-control"/></td>
-				      </tr>
-				      <tr>
-				      	<td colspan="2"> <!-- 옵션추가 -->
-					      	<div id="optionType"></div>
-				      	</td>
-				      </tr>
-				      <tr>
-				        <td colspan="2" class="text-center">
-					        <div style="margin-top:20px">
-										<button type="button" onclick="colProdInsert()" class="btn2" style="background-color:#F5EBE0; font-size: 0.9em; border-color:#282828; color:black">등록</button>
-					        </div>
-				        </td>
-				      </tr>
+				      <!-- 옵션 -->
+				      <tr><td colspan="2" class="text-center"><br/><br/><span style="font-size:25px">옵션</span>
+				      &nbsp;&nbsp;&nbsp;<button type="button" class="btn btn-success btn-sm addBtn" onclick="addOption()">추가</button></td></tr>
 					  </table>
-					</div>
+				      
+			      <!-- 옵션 등록 -->
+	     			<div class="row">
+	     				<div class="col-4" class="text-left">
+	     					<b>옵션명 <span class="must">*</span></b>
+	     				</div>
+	     				<div class="col-8" class="text-right">
+	     					<input type="text" name="opName" id="opName" class="form-control"/>
+	     				</div>
+	     			</div>
+	     			<div class="row">
+	     				<div class="col-4">
+	     					<b>옵션 가격 <span class="must">*</span></b>
+	     				</div>
+	     				<div class="col-8">
+	     					<input type="number" name="opPrice" id="opPrice" class="form-control"/>
+	     				</div>
+	     			</div>
+	     			<div class="row">
+	     				<div class="col-4">
+	     					<b>재고 수량 <span class="must">*</span></b>
+	     				</div>
+	     				<div class="col-8">
+	     					<input type="number" name="opStock" id="opStock" class="form-control"/>
+	     				</div>
+	     			</div>
+			      <hr/>
+			     	<!-- 옵션추가 -->
+		      	<div id="optionType"></div>
+		      </div>
+	      	
+	        <div style="margin-top:20px" class="text-center">
+	      	 <button type="button" onclick="colProdInsert()" class="btn2" style="background-color:#F5EBE0; font-size: 0.9em; border-color:#282828; color:black">등록</button>
+	        </div>
 		  	</form>
 			  
 			  <div class="row text-center">

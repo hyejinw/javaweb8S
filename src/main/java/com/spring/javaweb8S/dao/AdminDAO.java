@@ -4,13 +4,18 @@ import java.util.List;
 
 import org.apache.ibatis.annotations.Param;
 
+import com.spring.javaweb8S.vo.AddressVO;
 import com.spring.javaweb8S.vo.BookVO;
 import com.spring.javaweb8S.vo.CollectionVO;
 import com.spring.javaweb8S.vo.DefaultPhotoVO;
+import com.spring.javaweb8S.vo.DeliveryVO;
 import com.spring.javaweb8S.vo.MagazineVO;
+import com.spring.javaweb8S.vo.MemberVO;
 import com.spring.javaweb8S.vo.OptionVO;
+import com.spring.javaweb8S.vo.OrderVO;
 import com.spring.javaweb8S.vo.ProductVO;
 import com.spring.javaweb8S.vo.ProverbVO;
+import com.spring.javaweb8S.vo.SubscribeVO;
 
 public interface AdminDAO {
 
@@ -28,6 +33,13 @@ public interface AdminDAO {
 	public int colCategoryTotRecCnt();
 	public int colProductTotRecCnt();
 	public int colProdTotRecCntWithPeriod(@Param("sort") String sort, @Param("search") String search, @Param("searchString") String searchString, @Param("startDate") String startDate,
+			@Param("endDate") String endDate);
+	public int colProdColNameTotRecCntWithPeriod(@Param("sort") String sort, @Param("search") String search, @Param("searchString") String searchString, @Param("startDate") String startDate,
+			@Param("endDate") String endDate);
+	public int orderTotRecCnt();
+	public int orderTotRecCntWithPeriod(@Param("sort") String sort, @Param("search") String search, @Param("searchString") String searchString, @Param("startDate") String startDate,
+			@Param("endDate") String endDate);
+	public ArrayList<OrderVO> orderWithInvoiceTotRecCntWithPeriod(@Param("sort") String sort, @Param("search") String search, @Param("searchString") String searchString, @Param("startDate") String startDate,
 			@Param("endDate") String endDate);
 	
 	public ArrayList<DefaultPhotoVO> getDefaultPhoto();
@@ -113,6 +125,31 @@ public interface AdminDAO {
 	
 	public ArrayList<ProductVO> getColProdSearchList(@Param("sort") String sort, @Param("search") String search, @Param("searchString") String searchString, @Param("startDate") String startDate,
 			@Param("endDate") String endDate, @Param("startIndexNo") int startIndexNo, @Param("pageSize") int pageSize);
+	
+	public ArrayList<ProductVO> getColNameProdSearchList(@Param("sort") String sort, @Param("search") String search, @Param("searchString") String searchString, @Param("startDate") String startDate,
+			@Param("endDate") String endDate, @Param("startIndexNo") int startIndexNo, @Param("pageSize") int pageSize);
+	
+	public ArrayList<OrderVO> getOrderList(@Param("startIndexNo") int startIndexNo, @Param("pageSize") int pageSize);
+	
+	public OrderVO getOrderInfo(@Param("idx") int idx);
+	
+	public DeliveryVO getDeliveryInfo(@Param("idx") int idx);
+	
+	public MemberVO getMemberInfo(@Param("memNickname") String memNickname);
+	
+	public AddressVO getAddressInfo(@Param("addressIdx") int addressIdx);
+	
+	public ArrayList<OrderVO> getOrderSearchList(@Param("sort") String sort, @Param("search") String search, @Param("searchString") String searchString, @Param("startDate") String startDate,
+			@Param("endDate") String endDate, @Param("startIndexNo") int startIndexNo, @Param("pageSize") int pageSize);
+	
+	public ArrayList<DeliveryVO> getSubDeliveryInfo(@Param("idx") int idx);
+	
+	public SubscribeVO getSubscribeInfo(@Param("idx") int idx);
+	
+	public ArrayList<OrderVO> getOrderWithInvoiceSearchList(@Param("sort") String sort, @Param("search") String search, @Param("searchString") String searchString, @Param("startDate") String startDate,
+			@Param("endDate") String endDate, @Param("startIndexNo") int startIndexNo, @Param("pageSize") int pageSize);
+
+	
 
 
 

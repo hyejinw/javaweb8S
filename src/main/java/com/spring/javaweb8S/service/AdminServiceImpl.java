@@ -9,6 +9,7 @@ import java.util.UUID;
 import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
@@ -16,20 +17,25 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.spring.javaweb8S.common.JavawebProvide;
 import com.spring.javaweb8S.dao.AdminDAO;
+import com.spring.javaweb8S.vo.AddressVO;
 import com.spring.javaweb8S.vo.BookVO;
 import com.spring.javaweb8S.vo.CollectionVO;
 import com.spring.javaweb8S.vo.DefaultPhotoVO;
+import com.spring.javaweb8S.vo.DeliveryVO;
 import com.spring.javaweb8S.vo.MagazineVO;
+import com.spring.javaweb8S.vo.MemberVO;
 import com.spring.javaweb8S.vo.OptionVO;
+import com.spring.javaweb8S.vo.OrderVO;
 import com.spring.javaweb8S.vo.ProductVO;
 import com.spring.javaweb8S.vo.ProverbVO;
+import com.spring.javaweb8S.vo.SubscribeVO;
 
 @Service
 public class AdminServiceImpl implements AdminService {
 	
 	@Autowired
 	AdminDAO adminDAO;
-
+	
 	// 프로필 기본 사진 가져오기
 	@Override
 	public ArrayList<DefaultPhotoVO> getDefaultPhoto() {
@@ -434,6 +440,70 @@ public class AdminServiceImpl implements AdminService {
 			String endDate, int startIndexNo, int pageSize) {
 		return adminDAO.getColProdSearchList(sort, search, searchString, startDate,
 				endDate, startIndexNo, pageSize);
+	}
+
+	// 상품 검색(컬렉션 명으로)
+	@Override
+	public ArrayList<ProductVO> getColNameProdSearchList(String sort, String search, String searchString,
+			String startDate, String endDate, int startIndexNo, int pageSize) {
+		return adminDAO.getColNameProdSearchList(sort, search, searchString, startDate,
+				endDate, startIndexNo, pageSize);
+	}
+
+	// 주문 리스트
+	@Override
+	public ArrayList<OrderVO> getOrderList(int startIndexNo, int pageSize) {
+		return adminDAO.getOrderList(startIndexNo, pageSize);
+	}
+
+	// 주문 관리창, 주문 상세 정보
+	@Override
+	public OrderVO getOrderInfo(int idx) {
+		return adminDAO.getOrderInfo(idx);
+	}
+
+	// 주문 관리창, 배송 상세 정보
+	@Override
+	public DeliveryVO getDeliveryInfo(int idx) {
+		return adminDAO.getDeliveryInfo(idx);
+	}
+
+	// 주문 관리창, 회원 상세 정보
+	@Override
+	public MemberVO getMemberInfo(String memNickname) {
+		return adminDAO.getMemberInfo(memNickname);
+	}
+	
+  // 주문 관리창, 배송지 상세 정보
+	@Override
+	public AddressVO getAddressInfo(int addressIdx) {
+		return adminDAO.getAddressInfo(addressIdx);
+	}
+
+	// 주문 관리창, 주문 검색
+	@Override
+	public ArrayList<OrderVO> getOrderSearchList(String sort, String search, String searchString, String startDate,
+			String endDate, int startIndexNo, int pageSize) {
+		return adminDAO.getOrderSearchList(sort, search, searchString, startDate, endDate, startIndexNo, pageSize);
+	}
+
+  // 주문 관리창, 배송 상세 정보 (정기 구독)
+	@Override
+	public ArrayList<DeliveryVO> getSubDeliveryInfo(int idx) {
+		return adminDAO.getSubDeliveryInfo(idx);
+	}
+
+	// 주문 관리창, 정기 구독 상세 정보
+	@Override
+	public SubscribeVO getSubscribeInfo(int idx) {
+		return adminDAO.getSubscribeInfo(idx);
+	}
+
+	// 주문 관리창, 송장으로 검색
+	@Override
+	public ArrayList<OrderVO> getOrderWithInvoiceSearchList(String sort, String search, String searchString,
+			String startDate, String endDate, int startIndexNo, int pageSize) {
+		return adminDAO.getOrderWithInvoiceSearchList(sort, search, searchString, startDate, endDate, startIndexNo, pageSize);
 	}
 
 			

@@ -39,6 +39,8 @@ public interface CollectionDAO {
 	public void setProductOpCartUpdate(@Param("vo") CartVO vo, @Param("updateOption") ArrayList<CartVO> updateOption);
 	
 	public void setProductOpCartInsert(@Param("vo") CartVO vo, @Param("insertOption") ArrayList<CartVO> insertOption);
+	
+	public void setProdSaveNumUpdate(@Param("prodIdx") int prodIdx, @Param("prodSaveNum") int prodSaveNum);
 
 
 }

@@ -31,5 +31,7 @@ public interface MagazineDAO {
 
 	public void setMagazineCartInsert(@Param("vo") CartVO vo);
 
+	public void setMaSaveNumUpdate(@Param("maIdx") int maIdx, @Param("maSaveNum") int maSaveNum);
+
 
 }

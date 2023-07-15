@@ -28,6 +28,10 @@ public class CartVO {
 	private int colIdx;
 	private String colDetail;
 	
+	
 	// 저장 정보 (장바구니용)
 	private int saveIdx;
+	
+	// 상품&매거진 재고
+	private int stock;
 }

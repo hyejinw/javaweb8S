@@ -123,7 +123,7 @@
     }
     #indexBox {
 	    margin-bottom:-50px; 
-	    border: 2px solid #FFF4D2;
+	    border: 2px solid #E3F4F4;
 /* 	    background-color: #FFF4D2; */
 	    background-color: white;
 	    z-index: 1;
@@ -208,7 +208,7 @@
 	</div>
 	
 <!-- 	<div class="container-fluid" style="background-color:white; margin-bottom:150px; color:#282828; padding:30px; z-index: 2; border: 1px solid #282828;"> -->
-	<div class="container-fluid" style="background-color:#F5EBE0; margin-bottom:150px; color:#282828; padding:30px; z-index: 2;">
+	<div class="container-fluid" style="background-color:#E3F4F4; margin-bottom:150px; color:#282828; padding:30px; z-index: 2;">
 		<div class="row" style="padding-top:50px">
 			<div class="col-5" style="padding-left:50px">
   	  	<br/><div class="container text-center">
@@ -304,21 +304,24 @@
 	</div> -->
 	
 	<!-- 뉴스레터 -->
-	<div class="container text-center" style="margin-bottom:150px">
+	<div class="container text-center" style="margin-bottom:180px">
 		<div id="subscribeBox">
 			<div><i class="fa-solid fa-envelope-open-text" style="font-size:30px"></i></div><br/>
 			<div style="font-size:25px"><b>뉴스레터</b></div><br/>
-			<form>
+			<form name="booksletterForm" method="post">
 				<div class="input-group">
 					<input type="text" name="email" id="email" placeholder="뉴스레터를 수신할 이메일을 적어주세요." class="form-control"/>
 					<div class="input-group-append">
-						<input type="button" class="btn btn-outline-danger" value="구독"/>
+						<input type="button" id="booksletterBtn" onclick="booksletterCheck()" class="btn btn-outline-danger" value="구독"/>
+						<input type="button" id="booksletterBtnMem" onclick="booksletterCheckMem()" class="btn btn-outline-warning" value="구독" style="display:none"/>
 					</div>
 				</div>
+				<div id="demo" class="mt-3"></div>
 			</form>
 			<br/>
 			<div>
-				<span style="font-size:15px;"><i class="fa-solid fa-circle-exclamation" style="color: #491f51; font-size:20px;"></i>&nbsp;&nbsp;&nbsp;<b>2주에 한 번, 책(의)편지가 찾아갑니다.</b></span><br/>
+				<span style="font-size:15px;"><i class="fa-solid fa-circle-exclamation" style="color: #491f51; font-size:20px;"></i>&nbsp;&nbsp;&nbsp;<b>매주 책(의)편지가 찾아갑니다.</b></span><br/>
+				<span style="font-size:15px;">&nbsp;&nbsp;&nbsp;<b>월요일 오후 3시, 메일함에서 책(의)편지를 확인해보세요.</b></span><br/>
 				<br/>
 				이메일 : info@chaeg.co.kr<br/>	
 				전화번호 : 02-6228-5589<br/>
@@ -572,8 +575,183 @@
 		$("#bookDetailBookRate").text("평점 : " + bookRate);
 		$("#bookDetailSave").text("저장 수 : " + save);
 		$("#bookDetailBookUpdate").text("저장일 : " + bookUpdate.substring(0,19));
-		
-		
 	} 
+	
+	// 회원일 경우 해당 이메일에 달린 별명 배열
+	let memNicknameArray = new Array();
+	
+	// 1. 뉴스레터 (비회원 + 회원)
+	function booksletterCheck() {
+		let email = document.getElementById('email').value;
+		let regex1 = /^[a-zA-Z0-9+-\_.]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$/;  // 이메일 정규식
+		
+		if(email == "") {
+			alert('책(의)편지를 수신할 이메일을 작성해주세요.');
+			document.getElementById('email').focus();
+			return false;
+		}
+		if(!regex1.test(email)) {
+			alert('책(의)편지를 수신할 이메일을 올바르게 작성해주세요.');
+			document.getElementById('email').focus();
+			return false;
+		}
+		
+		if('${sNickname}' == "") {
+			
+			$.ajax({
+				type : "post",
+				url : "${ctp}/about/booksletterEmailCheck",
+				data : {email : email},
+				success : function(res) {
+					
+					// 회원
+					if(res != "") {
+						
+						for(let i=0; i<res.length; i++) memNicknameArray.push(res[i]);
+						
+						alert('회원이시군요! 회원 별명을 추가로 입력해주세요.');
+						let str = '<input type="text" name="memNickname" id="memNickname" placeholder="회원 별명을 입력해주세요." class="form-control"/>';
+						document.getElementById('demo').innerHTML = str;
+						document.getElementById('memNickname').focus();
+						
+						$("#email").prop("readonly",true);
+						$('#booksletterBtnMem').css('display','inline-block');
+						$('#booksletterBtn').css('display','none');
+					}
+					// 비회원
+					else{
+						// 이미 구독 중인 이메일인지 확인
+						booksletterSubCheckNoneMem(email);
+					}
+				},error : function() {
+					alert('전송 오류! 재시도 부탁드립니다.');
+				}
+			});
+		}
+		// 로그인한 회원
+		else {
+			booksletterSubCheckMem(email, '${sNickname}');
+		}
+		
+	}
+	
+	// 2-1. 뉴스레터 (회원)
+	function booksletterCheckMem() {
+		let email = document.getElementById('email').value;
+		let memNickname = document.getElementById('memNickname').value;
+		
+		let regex1 = /^[a-zA-Z0-9+-\_.]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$/;  // 이메일 정규식
+		let regex2 = /^[가-힣0-9]+$/; //(별명)한글,영문,숫자만 적어도 1자이상 
+
+		
+		if(email == "") {
+			alert('책(의)편지를 수신할 이메일을 작성해주세요.');
+			document.getElementById('email').focus();
+			return false;
+		}
+		if(!regex1.test(email)) {
+			alert('책(의)편지를 수신할 이메일을 올바르게 작성해주세요.');
+			document.getElementById('email').focus();
+			return false;
+		}
+		if(memNickname == "") {
+			alert('회원 별명을 이메일을 작성해주세요.');
+			document.getElementById('memNickname').focus();
+			return false;
+		}
+		if(!regex2.test(memNickname)) {
+			alert('회원 별명을 올바르게 작성해주세요.');
+			document.getElementById('memNickname').focus();
+			return false;
+		}
+		
+		// 해당 이메일에 맞는 별명인지 확인
+		if(!memNicknameArray.includes(memNickname)) {
+			alert('해당 별명은 이메일과 일치하지 않습니다.');
+			document.getElementById('memNickname').focus();
+			return false;
+		}
+		booksletterSubCheckMem(email, memNickname);
+	}
+	
+	// 2-2. 뉴스레터 (비회원, 이미 구독 중인지 확인)
+	function booksletterSubCheckNoneMem(email) {
+		
+		$.ajax({
+			type : "post",
+			url : "${ctp}/about/booksletterCheck",
+			data : {email : email},
+			success : function(res) {
+				if(res != "") {
+					alert('해당 이메일로 '+res + ' 부터 책(의)편지를 구독 중입니다.');
+					return false;
+				}
+				else {
+					booksletterInsert('none');
+				}
+			}, error : function() {
+				alert('전송 오류! 재시도 부탁드립니다.');
+			}
+			
+		});
+	}
+	
+	// 2-3. 뉴스레터 (회원, 이미 구독 중인지 확인)
+	function booksletterSubCheckMem(email, memNickname) {
+		
+		$.ajax({
+			type : "post",
+			url : "${ctp}/about/booksletterCheck",
+			data : {
+				email : email,
+				memNickname : memNickname
+				},
+			success : function(res) {
+				if(res != "") {
+					alert('해당 이메일로 '+res + ' 부터 책(의)편지를 구독 중입니다.');
+					return false;
+				}
+				else {
+					if('${sNickname}' != "") booksletterInsert('none');
+					else booksletterInsert('check');
+				}
+			}, error : function() {
+				alert('전송 오류! 재시도 부탁드립니다.');
+			}
+		});
+	}
+	
+	// 3. 뉴스레터 수신에 추가
+	function booksletterInsert(flag) {
+		let email = document.getElementById('email').value;
+		let memNickname = "";
+		
+		// 로그인하지 않고 사용하는 회원
+		if(flag == 'check') {
+			memNickname = document.getElementById('memNickname').value;
+		}
+		
+		// 로그인 후 사용하는 회원
+		if('${sNickname}' != "") {
+			memNickname = '${sNickname}';
+		}
+		
+		$.ajax({
+			type : "post",
+			url : "${ctp}/about/booksletterInsert",
+			data : {
+				email : email, 
+				memNickname : memNickname
+			},
+			success : function(res) {
+				alert('매주 월요일 오후 3시, 메일함에서 책(의)편지를 찾아주세요.');
+				location.reload();
+				
+			},
+			error : function() {
+				alert('전송 오류! 재시도 부탁드립니다.');
+			}
+		});
+	}
 </script>
 </html>

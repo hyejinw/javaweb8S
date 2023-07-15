@@ -34,4 +34,6 @@ public interface CollectionService {
 
 	public void setProductOpCartInsert(CartVO vo, ArrayList<CartVO> insertOption);
 
+	public void setProdSaveNumUpdate(int prodIdx, int prodSaveNum);
+
 }

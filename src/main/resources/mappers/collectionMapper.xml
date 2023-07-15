@@ -164,6 +164,9 @@
     </foreach>
 	</update>
 	
+	<update id="setProdSaveNumUpdate">
+		update bo_product set prodSave = prodSave + #{prodSaveNum} where idx = #{prodIdx};
+	</update>
 	
 	<delete id="setProductSaveDelete">
 		delete from bo_save where memNickname = #{memNickname} and prodIdx = #{prodIdx};

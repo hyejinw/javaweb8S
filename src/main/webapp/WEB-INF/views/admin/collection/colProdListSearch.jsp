@@ -255,10 +255,10 @@
 								<div class="row">
 									<div class="col"></div>
 					        <div class="col">
-						    		<input type="date" class="mr-2 form-control" name="startDate" id="startDate"/>
+						    		<input type="date" class="mr-2 form-control" value="${startDate}" name="startDate" id="startDate"/>
 					        </div>
 					        <div class="col">
-						    		<input type="date" class="mr-2 form-control" name="endDate" id="endDate"/>
+						    		<input type="date" class="mr-2 form-control" value="${endDate}" name="endDate" id="endDate"/>
 					        </div>
 								</div>
 							</div>

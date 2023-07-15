@@ -71,5 +71,11 @@ public class MagazineServiceImpl implements MagazineService {
 		magazineDAO.setMagazineCartUpdate(vo);
 	}
 
+	// 매거진 테이블 저장 등록 수 변경
+	@Override
+	public void setMaSaveNumUpdate(int maIdx, int maSaveNum) {
+		magazineDAO.setMaSaveNumUpdate(maIdx, maSaveNum);
+	}
+
 	
 }

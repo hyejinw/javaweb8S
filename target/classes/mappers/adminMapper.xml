@@ -69,7 +69,6 @@
 		</if>
 	</select>
 	
-	
 	<select id="magazineTypeTotRecCnt" resultType="int">
 		select count(*) from bo_magazine where maType = #{maType};
 	</select>
@@ -178,7 +177,6 @@
 		</if>
 	</select>
 	
-	
 	<select id="getColProdSearchList" resultType="com.spring.javaweb8S.vo.ProductVO">
 		<if test='searchString == "" and startDate == ""'>
 			select * from bo_product 
@@ -232,6 +230,338 @@
 			order by idx desc limit #{startIndexNo},#{pageSize};
 		</if>
 	</select>
+	
+	<!-- 컬렉션 명으로 검색 -->
+	<select id="colProdColNameTotRecCntWithPeriod" resultType="int">
+		<if test='searchString == "" and startDate == ""'>
+			select count(*) from bo_product 
+			
+			<if test='sort != "" and (sort == "판매" or sort == "품절")'>
+				where prodStatus = #{sort}
+			</if>
+			<if test='sort != "" and (sort == "공개" or sort == "비공개")'>
+				where prodOpen = #{sort}
+			</if>
+			;
+		</if>
+		<if test='searchString != "" and startDate == ""'>
+			select count(*) 
+			from bo_product p 
+			left join bo_collection c 
+			on p.colIdx = c.idx where 
+			<if test='sort != "" and (sort == "판매" or sort == "품절")'>
+				p.prodStatus = #{sort} and 
+			</if>
+			<if test='sort != "" and (sort == "공개" or sort == "비공개")'>
+				p.prodOpen = #{sort} and 
+			</if>
+			
+			c.${search} like concat('%',#{searchString},'%');
+		</if>
+		<if test='searchString == "" and startDate != ""'>
+			select count(*) from bo_product where
+			
+			<if test='sort != "" and (sort == "판매" or sort == "품절")'>
+				prodStatus = #{sort} and 
+			</if>
+			<if test='sort != "" and (sort == "공개" or sort == "비공개")'>
+				prodOpen = #{sort} and 
+			</if> 
+			
+			date_format(prodDate, '%Y-%m-%d') BETWEEN #{startDate} AND #{endDate};
+		</if>
+		<if test='searchString != "" and startDate != ""'>
+			select count(*) 
+			from bo_product p 
+			left join bo_collection c 
+			on p.colIdx = c.idx where 
+			
+			<if test='sort != "" and (sort == "판매" or sort == "품절")'>
+				p.prodStatus = #{sort} and 
+			</if>
+			<if test='sort != "" and (sort == "공개" or sort == "비공개")'>
+				p.prodOpen = #{sort} and 
+			</if>
+			
+			c.${search} like concat('%',#{searchString},'%') and date_format(p.prodDate, '%Y-%m-%d') BETWEEN #{startDate} AND #{endDate};
+		</if>
+	</select>
+	
+		
+	<select id="getColNameProdSearchList" resultType="com.spring.javaweb8S.vo.ProductVO">
+		<if test='searchString == "" and startDate == ""'>
+			select * from bo_product 
+			
+			<if test='sort != "" and (sort == "판매" or sort == "품절")'>
+				where prodStatus = #{sort}
+			</if>
+			<if test='sort != "" and (sort == "공개" or sort == "비공개")'>
+				where prodOpen = #{sort}
+			</if>
+			
+			order by idx desc limit #{startIndexNo},#{pageSize};
+		</if>
+		<if test='searchString != "" and startDate == ""'>
+			select * 
+			from bo_product p 
+			left join bo_collection c 
+			on p.colIdx = c.idx where 
+			
+			<if test='sort != "" and (sort == "판매" or sort == "품절")'>
+				p.prodStatus = #{sort} and 
+			</if>
+			<if test='sort != "" and (sort == "공개" or sort == "비공개")'>
+				p.prodOpen = #{sort} and 
+			</if>
+			
+			c.${search} like concat('%',#{searchString},'%')
+			order by p.idx desc limit #{startIndexNo},#{pageSize};
+		</if>
+		<if test='searchString == "" and startDate != ""'>
+			select * from bo_product where 
+			
+			<if test='sort != "" and (sort == "판매" or sort == "품절")'>
+				prodStatus = #{sort} and 
+			</if>
+			<if test='sort != "" and (sort == "공개" or sort == "비공개")'>
+				prodOpen = #{sort} and 
+			</if>
+			
+			date_format(prodDate, '%Y-%m-%d') BETWEEN #{startDate} AND #{endDate}
+			order by idx desc limit #{startIndexNo},#{pageSize};
+		</if>
+		<if test='searchString != "" and startDate != ""'>
+			select * 
+			from bo_product p 
+			left join bo_collection c 
+			on p.colIdx = c.idx where
+			
+			<if test='sort != "" and (sort == "판매" or sort == "품절")'>
+				p.prodStatus = #{sort} and 
+			</if>
+			<if test='sort != "" and (sort == "공개" or sort == "비공개")'>
+				p.prodOpen = #{sort} and 
+			</if>			
+			
+			c.${search} like concat('%',#{searchString},'%') and date_format(p.prodDate, '%Y-%m-%d') BETWEEN #{startDate} AND #{endDate}
+			order by p.idx desc limit #{startIndexNo},#{pageSize};
+		</if>
+	</select>
+	
+	<select id="orderTotRecCnt" resultType="int">
+		select count(*) from bo_order;
+	</select>
+	
+	<select id="getOrderList" resultType="com.spring.javaweb8S.vo.OrderVO">
+		select * from bo_order order by idx desc limit #{startIndexNo},#{pageSize};
+	</select>
+	
+	<select id="getOrderInfo" resultType="com.spring.javaweb8S.vo.OrderVO">
+		select * from bo_order where idx = #{idx};
+	</select>
+	
+	<select id="getDeliveryInfo" resultType="com.spring.javaweb8S.vo.DeliveryVO">
+		select * from bo_delivery where orderIdx = #{idx};
+	</select>
+	
+	<select id="getMemberInfo" resultType="com.spring.javaweb8S.vo.MemberVO">
+		select * from bo_member where nickname = #{memNickname};
+	</select>
+	
+	<select id="getAddressInfo" resultType="com.spring.javaweb8S.vo.AddressVO">
+		select * from bo_address where idx = #{addressIdx};
+	</select>
+	
+	<select id="getSubDeliveryInfo" resultType="com.spring.javaweb8S.vo.DeliveryVO">
+		select * from bo_delivery where orderIdx = #{idx};
+	</select>
+	
+	<select id="getSubscribeInfo" resultType="com.spring.javaweb8S.vo.SubscribeVO">
+		select * from bo_subscribe where orderIdx = #{idx};
+	</select>
+	
+	<select id="orderTotRecCntWithPeriod" resultType="int">
+		<if test='searchString == "" and startDate == ""'>
+			select count(*) from bo_order 
+			
+			<if test='sort != "" and sort != "전체"'>
+				where orderStatus = #{sort}
+			</if>
+			;
+		</if>
+		<if test='searchString != "" and startDate == ""'>
+			select count(*) from bo_order where 
+			
+			<if test='sort != "" and sort != "전체"'>
+				orderStatus = #{sort} and 
+			</if>
+			
+			${search} like concat('%',#{searchString},'%');
+		</if>
+		<if test='searchString == "" and startDate != ""'>
+			select count(*) from bo_order where
+			
+			<if test='sort != "" and sort != "전체"'>
+				orderStatus = #{sort} and 
+			</if> 
+			
+			date_format(orderDate, '%Y-%m-%d') BETWEEN #{startDate} AND #{endDate};
+		</if>
+		<if test='searchString != "" and startDate != ""'>
+			select count(*) from bo_order where 
+			
+			<if test='sort != "" and sort != "전체"'>
+				orderStatus = #{sort} and 
+			</if>
+			
+			${search} like concat('%',#{searchString},'%') and date_format(orderDate, '%Y-%m-%d') BETWEEN #{startDate} AND #{endDate};
+		</if>
+	</select>
+	
+	<select id="getOrderSearchList" resultType="com.spring.javaweb8S.vo.OrderVO">
+		<if test='searchString == "" and startDate == ""'>
+			select * from bo_order 
+			
+			<if test='sort != "" and sort != "전체"'>
+				where orderStatus = #{sort}
+			</if>
+			order by idx desc limit #{startIndexNo},#{pageSize};
+		</if>
+		<if test='searchString != "" and startDate == ""'>
+			select * from bo_order where 
+			
+			<if test='sort != "" and sort != "전체"'>
+				orderStatus = #{sort} and 
+			</if>
+			
+			${search} like concat('%',#{searchString},'%')
+			order by idx desc limit #{startIndexNo},#{pageSize};
+		</if>
+		<if test='searchString == "" and startDate != ""'>
+			select * from bo_order where
+			
+			<if test='sort != "" and sort != "전체"'>
+				orderStatus = #{sort} and 
+			</if> 
+			
+			date_format(orderDate, '%Y-%m-%d') BETWEEN #{startDate} AND #{endDate}
+			order by idx desc limit #{startIndexNo},#{pageSize};
+		</if>
+		<if test='searchString != "" and startDate != ""'>
+			select * from bo_order where 
+			
+			<if test='sort != "" and sort != "전체"'>
+				orderStatus = #{sort} and 
+			</if>
+			
+			${search} like concat('%',#{searchString},'%') and date_format(orderDate, '%Y-%m-%d') BETWEEN #{startDate} AND #{endDate}
+			order by idx desc limit #{startIndexNo},#{pageSize};
+		</if>
+	</select>
+	
+	<!-- 송장으로 검색 -->
+	<select id="orderWithInvoiceTotRecCntWithPeriod" resultType="com.spring.javaweb8S.vo.OrderVO">
+<if test='searchString == "" and startDate == ""'>
+			select * from bo_order 
+			
+			<if test='sort != "" and sort != "전체"'>
+				where orderStatus = #{sort}
+			</if>
+			group by orderCode;
+		</if>
+		<if test='searchString != "" and startDate == ""'>
+			select *   
+			from bo_order o
+			left join bo_delivery d
+			on o.idx = d.orderIdx
+			where 
+			<if test='sort != "" and sort != "전체"'>
+				o.orderStatus = #{sort} and 
+			</if>
+			
+			d.${search} like concat('%',#{searchString},'%')
+			group by o.orderCode;
+		</if>
+		<if test='searchString == "" and startDate != ""'>
+			select * from bo_order where
+			
+			<if test='sort != "" and sort != "전체"'>
+				orderStatus = #{sort} and 
+			</if> 
+			
+			date_format(orderDate, '%Y-%m-%d') BETWEEN #{startDate} AND #{endDate}
+			group by orderCode;
+		</if>
+		<if test='searchString != "" and startDate != ""'>
+			select *  
+			from bo_order o
+			left join bo_delivery d
+			on o.idx = d.orderIdx
+			where  
+			
+			<if test='sort != "" and sort != "전체"'>
+				o.orderStatus = #{sort} and 
+			</if>
+			
+			d.${search} like concat('%',#{searchString},'%') and date_format(o.orderDate, '%Y-%m-%d') BETWEEN #{startDate} AND #{endDate}
+			group by o.orderCode;
+		</if>
+	</select>
+	
+	<select id="getOrderWithInvoiceSearchList" resultType="com.spring.javaweb8S.vo.OrderVO">
+		<if test='searchString == "" and startDate == ""'>
+			select * from bo_order 
+			
+			<if test='sort != "" and sort != "전체"'>
+				where orderStatus = #{sort}
+			</if>
+			group by orderCode
+			order by idx desc limit #{startIndexNo},#{pageSize};
+		</if>
+		<if test='searchString != "" and startDate == ""'>
+			select *   
+			from bo_order o
+			left join bo_delivery d
+			on o.idx = d.orderIdx
+			where 
+			<if test='sort != "" and sort != "전체"'>
+				o.orderStatus = #{sort} and 
+			</if>
+			
+			d.${search} like concat('%',#{searchString},'%')
+			group by o.orderCode 
+			order by o.idx desc limit #{startIndexNo},#{pageSize};
+		</if>
+		<if test='searchString == "" and startDate != ""'>
+			select * from bo_order where
+			
+			<if test='sort != "" and sort != "전체"'>
+				orderStatus = #{sort} and 
+			</if> 
+			
+			date_format(orderDate, '%Y-%m-%d') BETWEEN #{startDate} AND #{endDate}
+			group by orderCode
+			order by idx desc limit #{startIndexNo},#{pageSize};
+		</if>
+		<if test='searchString != "" and startDate != ""'>
+			select *  
+			from bo_order o
+			left join bo_delivery d
+			on o.idx = d.orderIdx
+			where  
+			
+			<if test='sort != "" and sort != "전체"'>
+				o.orderStatus = #{sort} and 
+			</if>
+			
+			d.${search} like concat('%',#{searchString},'%') and date_format(o.orderDate, '%Y-%m-%d') BETWEEN #{startDate} AND #{endDate}
+			group by o.orderCode
+			order by o.idx desc limit #{startIndexNo},#{pageSize};
+		</if>
+	</select>
+	
+	
+	
 	
 	
 	

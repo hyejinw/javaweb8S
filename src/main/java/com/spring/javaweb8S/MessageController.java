@@ -10,9 +10,9 @@ import org.springframework.web.bind.annotation.RequestParam;
 @Controller
 public class MessageController {
 	
-	@RequestMapping(value = "/message/{msgFlag}", method = RequestMethod.GET)
-	public String listGet(@PathVariable String msgFlag,
-			@RequestParam(name="mid", defaultValue = "", required=false) String mid,
+	@RequestMapping(value = "/message/{msgFlag}", method = RequestMethod.GET, produces="application/text; charset=utf-8")
+	public String listGet(@PathVariable String msgFlag, 
+			@RequestParam(name="nickname", defaultValue = "", required=false) String nickname,
 			@RequestParam(name="idx", defaultValue = "1", required=false) int idx,
 			Model model) {
 		
@@ -33,11 +33,11 @@ public class MessageController {
 			model.addAttribute("url", "/member/memberLogin");
 		}
 		else if(msgFlag.equals("memberLoginOk")) {
-			model.addAttribute("msg", mid+"님 다시 만나 반갑습니다.");
+			model.addAttribute("msg", nickname+"님 다시 만나 반갑습니다.");
 			model.addAttribute("url", "/");
 		}
 		else if(msgFlag.equals("memberLogout")) {
-			model.addAttribute("msg", mid+"님 로그아웃 되었습니다.");
+			model.addAttribute("msg", nickname+"님 로그아웃 되었습니다.");
 			model.addAttribute("url", "/");
 		}
 		else if(msgFlag.equals("memberDefaultPhotoInsertOk")) {

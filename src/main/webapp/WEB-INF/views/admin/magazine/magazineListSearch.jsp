@@ -218,8 +218,8 @@
 					<form name="searchForm" class="text-right">
 						<div class="row mb-3">
 							<div class="col">
-				    		<input type="date" class="mr-2" name="startDate" value="${fn:substring(startDate,0,10)}"  id="startDate"/>
-				    		<input type="date" class="mr-2" name="endDate" value="${fn:substring(endDate,0,10)}" id="endDate"/>
+				    		<input type="date" class="mr-2" name="startDate" value="${startDate}"  id="startDate"/>
+				    		<input type="date" class="mr-2" name="endDate" value="${endDate}" id="endDate"/>
 							
 							</div>
 						</div>

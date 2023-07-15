@@ -6,7 +6,7 @@ import lombok.Data;
 public class AddressVO {
 	private int idx;
 	private String memNickname;
-	private String defaultAddress;
+	private int defaultAddress;
 	private String addressName;
 	private String name;
 	private String tel;

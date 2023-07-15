@@ -127,6 +127,7 @@
 			let opIdx = option.split(',')[0];
 			let opName = option.split(',')[1];
 			let opPrice = option.split(',')[2];
+			let opStock = option.split(',')[3];
 			let commaOpPrice = numberWithCommas(opPrice);			// 콤마 붙인 옵션 가격
 			
 			
@@ -145,7 +146,7 @@
 				str += '<div class="col text-right">';
 				str += '<button type="button" class="btn btn-sm btn-outline-secondary" onclick="numMinusChange('+opPrice+','+opIdx+')"><i class="fa-solid fa-minus"></i></button>';
 				str += '<input type="text" class="text-center opNum num" name="num" id="num'+opIdx+'" value="1" readonly style="width:50px;"/>';
-				str += '<button type="button" class="btn btn-sm btn-outline-secondary" onclick="numPlusChange('+opPrice+','+opIdx+')"><i class="fa-solid fa-plus"></i></button>';
+				str += '<button type="button" class="btn btn-sm btn-outline-secondary" onclick="numPlusChange('+opPrice+','+opIdx+','+opStock+')"><i class="fa-solid fa-plus"></i></button>';
 				str += '</div>';
 				
 				str += '<div class="col">';
@@ -184,10 +185,15 @@
     	document.getElementById("price"+opIdx).value = price;
     	onTotal();
     }
-	 // 수량 변경 시 처리하는 함수(plus)
-    function numPlusChange(opPrice, opIdx) {
+		// 수량 변경 시 처리하는 함수(plus)
+    function numPlusChange(opPrice, opIdx, opStock) {
 			let num = document.getElementById("num"+opIdx).value;
-			if(num >= 99) {
+			
+			if(num >= opStock) {
+				alert('현 상품의 재고 수량은 '+opStock+'개 입니다.');
+				num = opStock;
+			}
+			else if(num >= 99) {
 				alert('최대 주문수량은 99개 입니다.');
 				num = 99;
 			}
@@ -397,8 +403,9 @@
 					<select id="option" class="form-control" onchange="optionSelect()">
 						<option selected disabled>옵션 선택</option>
 						<c:forEach var="optionVO" items="${optionVOS}">
-							<option value="${optionVO.idx},${optionVO.opName},${optionVO.opPrice}" <c:if test="${optionVO.opStock == 0}">disabled</c:if>>
+							<option value="${optionVO.idx},${optionVO.opName},${optionVO.opPrice},${optionVO.opStock}" <c:if test="${optionVO.opStock == 0}">disabled</c:if>>
 								${optionVO.opName}&nbsp;&nbsp;&nbsp;(<fmt:formatNumber value="${optionVO.opPrice}" pattern="#,###"/>원)
+								<c:if test="${(optionVO.opStock != 0) && (optionVO.opStock <= 20)}">&nbsp;&nbsp;&nbsp;[품절임박]</c:if>
 								<c:if test="${optionVO.opStock == 0}">&nbsp;&nbsp;&nbsp;[품절]</c:if>
 							</option>						
 						</c:forEach>

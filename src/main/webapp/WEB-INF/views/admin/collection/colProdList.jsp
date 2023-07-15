@@ -187,7 +187,7 @@
     		alert("등록일은 오늘보다 빠를 수 없습니다.");
     		searchForm.searchString.focus();
     		return false;
-    	}
+    	}  
     	location.href = "${ctp}/admin/collection/colProdListSearch?search="+search+"&searchString="+searchString+"&startDate="+startDate+"&endDate="+endDate+"&sort="+sort;
 		}
 		
@@ -238,7 +238,6 @@
 	 		</div>
 			<div class="row">
 				<div class="col-7 text-left">
-					<!-- 여기 해야 한다!!!!!!!!!!!!!!!!! -->
 					<select name="sort" id="sort" class="form-control mb-3" style="width:150px;" onchange="sortCheck()">
 		        <option <c:if test="${sort == '전체'}">selected</c:if> value="전체">전체</option>
 		        <option <c:if test="${sort == '판매'}">selected</c:if> value="판매">판매</option>

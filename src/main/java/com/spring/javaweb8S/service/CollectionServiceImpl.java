@@ -89,6 +89,12 @@ public class CollectionServiceImpl implements CollectionService {
 	public void setProductOpCartInsert(CartVO vo, ArrayList<CartVO> insertOption) {
 		collectionDAO.setProductOpCartInsert(vo, insertOption);
 	}
+
+	// 상품 테이블 저장 등록 수 변경
+	@Override
+	public void setProdSaveNumUpdate(int prodIdx, int prodSaveNum) {
+		collectionDAO.setProdSaveNumUpdate(prodIdx, prodSaveNum);
+	}
 	
 	
 }

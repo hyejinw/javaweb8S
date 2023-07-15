@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.spring.javaweb8S.pagination.PageProcess;
 import com.spring.javaweb8S.pagination.PageVO;
 import com.spring.javaweb8S.service.CollectionService;
+import com.spring.javaweb8S.service.OrderService;
 import com.spring.javaweb8S.vo.CartVO;
 import com.spring.javaweb8S.vo.CollectionVO;
 import com.spring.javaweb8S.vo.OptionVO;
@@ -27,6 +28,9 @@ public class CollectionController {
 	
 	@Autowired
 	CollectionService collectionService;
+	
+	@Autowired
+	OrderService orderService;
 	
 	@Autowired
 	PageProcess pageProcess;
@@ -52,7 +56,7 @@ public class CollectionController {
 	
 	// 상품 창
 	@RequestMapping(value = "/colProductList", method = RequestMethod.GET)
-	public String colProductListGet(Model model,
+	public String colProductListGet(Model model, HttpSession session,
 			@RequestParam(name="flag", defaultValue = "", required = false) String flag,
 			@RequestParam(name="colIdx", defaultValue = "", required = false) String colIdx,
 			@RequestParam(name="search", defaultValue = "최신순", required = false) String search,
@@ -62,6 +66,12 @@ public class CollectionController {
 		
 		PageVO pageVO = pageProcess.totRecCnt(pag, pageSize, "colProductList", search, colIdx);
 		ArrayList<CollectionVO>	vos = collectionService.getProductList(search, colIdx, pageVO.getStartIndexNo(), pageSize);
+		
+		// 바로 주문하기로 장바구니에 저장된 상품이 있다면 session에 저장된 값 지워주기
+		if((String)session.getAttribute("sTempCartIdx") != null) {
+			orderService.setCartIdxDelete(Integer.parseInt((String)session.getAttribute("sTempCartIdx")));
+			session.removeAttribute("sTempCartIdx");
+		}
 		
 		model.addAttribute("colIdx", colIdx);
 		model.addAttribute("search", search);
@@ -79,6 +89,12 @@ public class CollectionController {
 	@RequestMapping(value = "/colProduct", method = RequestMethod.GET)
 	public String productGet(Model model, HttpSession session, 
 			@RequestParam(name="idx", defaultValue = "1", required = false) int idx) {
+		
+		// 바로 주문하기로 장바구니에 저장된 상품이 있다면 session에 저장된 값 지워주기
+		if((String)session.getAttribute("sTempCartIdx") != null) {
+			orderService.setCartIdxDelete(Integer.parseInt((String)session.getAttribute("sTempCartIdx")));
+			session.removeAttribute("sTempCartIdx");
+		}
 		
 		// 관심 저장 유무 확인
 		String nickname = (String) session.getAttribute("sNickname");
@@ -108,7 +124,13 @@ public class CollectionController {
 	@ResponseBody
 	@RequestMapping(value = "/productSave", method = RequestMethod.POST)
 	public String productSavePost(SaveVO vo) {
+		
+		// 상품 저장 테이블
 		collectionService.setProductSave(vo);
+
+		// 상품 테이블 저장 등록 수 변경
+		collectionService.setProdSaveNumUpdate(vo.getProdIdx(), 1);
+
 		return "";
 	}
 	
@@ -116,7 +138,13 @@ public class CollectionController {
 	@ResponseBody
 	@RequestMapping(value = "/productSaveDelete", method = RequestMethod.POST)
 	public String productSaveDeletePost(SaveVO vo) {
+
+		// 상품 저장 테이블
 		collectionService.setProductSaveDelete(vo.getMemNickname(), vo.getProdIdx());
+		
+		// 상품 테이블 저장 등록 수 변경
+		collectionService.setProdSaveNumUpdate(vo.getProdIdx(), -1);
+		
 		return "";
 	}
 	

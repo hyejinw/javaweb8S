@@ -5,11 +5,15 @@
 	xmlns:context="http://www.springframework.org/schema/context"
 	xmlns:jdbc="http://www.springframework.org/schema/jdbc"
 	xmlns:mybatis-spring="http://mybatis.org/schema/mybatis-spring"
+	xmlns:task="http://www.springframework.org/schema/task"
+	xmlns:tx="http://www.springframework.org/schema/tx"
 	xsi:schemaLocation="http://www.springframework.org/schema/jdbc http://www.springframework.org/schema/jdbc/spring-jdbc-4.3.xsd
 		http://mybatis.org/schema/mybatis-spring http://mybatis.org/schema/mybatis-spring-1.2.xsd
+		http://www.springframework.org/schema/task http://www.springframework.org/schema/task/spring-task-4.3.xsd
 		http://www.springframework.org/schema/beans https://www.springframework.org/schema/beans/spring-beans.xsd
 		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.3.xsd
-		http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-4.3.xsd">
+		http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-4.3.xsd
+		http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-4.3.xsd">
 	
 	<!-- Root Context: defines shared resources visible to all other web components -->
 
@@ -36,7 +40,7 @@
   <!-- 가공처리된 매퍼의 정보를 주입하기위한 DAO객체의 위치를 설정 -->
   <mybatis-spring:scan base-package="com.spring.javaweb8S.dao"/>
   
-  <!-- 메일서비스(SMTP)에 필요한 환경설정(gmail.com) -->
+    <!-- 메일서비스(SMTP)에 필요한 환경설정(gmail.com) -->
   <bean id="mailSender" class="org.springframework.mail.javamail.JavaMailSenderImpl">
   	<property name="host" value="smtp.gmail.com" />
   	<property name="port" value="587" />
@@ -46,12 +50,24 @@
   	  <props>
   	    <prop key="mail.transport.protocol">smtp</prop>
   	    <prop key="mail.smtp.starttls.enable">true</prop>
-  	    <prop key="mail.debug">true</prop>
+  	    <!-- <prop key="mail.debug">true</prop> -->
   	    <prop key="mail.smtp.ssl.trust">smtp.gmail.com</prop>
   	    <prop key="mail.smtp.ssl.protocols">TLSv1.2</prop>
   	  </props>
   	</property>
   </bean>
   
+    
+  <!-- 트랜잭션 사용을 위한 bean 설정하기 -->
+  <bean id="transactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+  	<property name="dataSource" ref="dataSource" />
+  </bean>
+  
+  <!-- 트랜잭션이 필요한 상황에서 어노테이션을 이용하여 사용하고자 할때 처리할 내용 -->
+  <tx:annotation-driven/>
+  
+  <!-- scheduler 사용을 위해 -->
+  <task:annotation-driven />    
+  <context:component-scan base-package="com.spring.javaweb8S.common" />
   
 </beans>

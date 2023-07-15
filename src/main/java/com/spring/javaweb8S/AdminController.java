@@ -2,14 +2,14 @@ package com.spring.javaweb8S;
 
 import java.io.File;
 import java.io.UnsupportedEncodingException;
+import java.text.ParseException;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
+import javax.mail.MessagingException;
 import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.access.method.P;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -18,17 +18,23 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.spring.javaweb8S.common.AutoUpdate;
 import com.spring.javaweb8S.common.BookInsertSearch;
 import com.spring.javaweb8S.pagination.PageProcess;
 import com.spring.javaweb8S.pagination.PageVO;
 import com.spring.javaweb8S.service.AdminService;
+import com.spring.javaweb8S.vo.AddressVO;
 import com.spring.javaweb8S.vo.BookVO;
 import com.spring.javaweb8S.vo.CollectionVO;
 import com.spring.javaweb8S.vo.DefaultPhotoVO;
+import com.spring.javaweb8S.vo.DeliveryVO;
 import com.spring.javaweb8S.vo.MagazineVO;
+import com.spring.javaweb8S.vo.MemberVO;
 import com.spring.javaweb8S.vo.OptionVO;
+import com.spring.javaweb8S.vo.OrderVO;
 import com.spring.javaweb8S.vo.ProductVO;
 import com.spring.javaweb8S.vo.ProverbVO;
+import com.spring.javaweb8S.vo.SubscribeVO;
 
 @Controller
 @RequestMapping("/admin")
@@ -42,10 +48,20 @@ public class AdminController {
 	
 	@Autowired
 	BookInsertSearch bookInsert;
-
+	
+	@Autowired
+	AutoUpdate autoUpdate;
+	
+	
 	// 관리자 메인 창
 	@RequestMapping(value = "/adminPage", method = RequestMethod.GET)
-	public String adminPageGet() {
+	public String adminPageGet() throws ParseException, MessagingException {
+
+		// 아래내용은 전부 확인용으로 씀
+		//autoUpdate.subDeliAutoUpdate();
+		//autoUpdate.subAutoUpdate();
+		//autoUpdate.booksletterAutoSend();
+		
 		return "admin/adminPage";
 	}
 	
@@ -705,8 +721,18 @@ public class AdminController {
 			@RequestParam(name="pag", defaultValue = "1", required = false) int pag,
 			@RequestParam(name="pageSize", defaultValue = "10", required = false) int pageSize) {
 		
-		PageVO pageVO = pageProcess.totRecCntWithPeriodAndSort(pag, pageSize, "adminColProduct", sort, search, searchString, startDate, endDate);
-		ArrayList<ProductVO> vos = adminService.getColProdSearchList(sort, search, searchString, startDate, endDate, pageVO.getStartIndexNo(), pageSize);
+		PageVO pageVO = new PageVO();
+		ArrayList<ProductVO> vos = new ArrayList<ProductVO>();
+		
+		if(search.equals("colName")) {
+			pageVO = pageProcess.totRecCntWithPeriodAndSort(pag, pageSize, "adminColNameProduct", sort, search, searchString, startDate, endDate);
+			vos = adminService.getColNameProdSearchList(sort, search, searchString, startDate, endDate, pageVO.getStartIndexNo(), pageSize);
+		}
+		
+		else {
+			pageVO = pageProcess.totRecCntWithPeriodAndSort(pag, pageSize, "adminColProduct", sort, search, searchString, startDate, endDate);
+			vos = adminService.getColProdSearchList(sort, search, searchString, startDate, endDate, pageVO.getStartIndexNo(), pageSize);
+		}
 		
 		model.addAttribute("sort", sort);
 		model.addAttribute("search", search);
@@ -719,6 +745,95 @@ public class AdminController {
 		
 		return "admin/collection/colProdListSearch";
 	}
+	
+	
+	// 주문 관리창
+	@RequestMapping(value = "/order/orderList", method = RequestMethod.GET)
+	public String orderListGet(Model model,
+			@RequestParam(name="pag", defaultValue = "1", required = false) int pag,
+			@RequestParam(name="pageSize", defaultValue = "15", required = false) int pageSize) {
+		
+		PageVO pageVO = pageProcess.totRecCnt(pag, pageSize, "adminOrder", "", "");
+		ArrayList<OrderVO> vos =	adminService.getOrderList(pageVO.getStartIndexNo(), pageSize);
+		
+		model.addAttribute("vos", vos);
+		model.addAttribute("pageVO", pageVO);
+		
+		return "admin/order/orderList";
+	}
+	
+	// 주문 관리창, 주문 상세 정보(팝업)
+	@RequestMapping(value = "/order/orderInfo", method = RequestMethod.GET)
+	public String orderInfoGet(Model model, int idx, String memNickname) {
+
+		OrderVO vo = adminService.getOrderInfo(idx);
+		DeliveryVO deliveryVO = adminService.getDeliveryInfo(idx);
+		MemberVO memberVO = adminService.getMemberInfo(memNickname);
+		AddressVO addressVO = adminService.getAddressInfo(vo.getAddressIdx());
+		
+		model.addAttribute("vo", vo);
+		model.addAttribute("deliveryVO", deliveryVO);
+		model.addAttribute("memberVO", memberVO);
+		model.addAttribute("addressVO", addressVO);
+		
+		return "admin/order/orderInfo";
+	}
+	
+	// 주문 관리창, 정기구독 주문 상세 정보(팝업)
+	@RequestMapping(value = "/order/subOrderInfo", method = RequestMethod.GET)
+	public String subOrderInfoGet(Model model, int idx, String memNickname) {
+		
+		OrderVO vo = adminService.getOrderInfo(idx);
+		ArrayList<DeliveryVO> deliveryVOS = adminService.getSubDeliveryInfo(idx);
+		MemberVO memberVO = adminService.getMemberInfo(memNickname);
+		AddressVO addressVO = adminService.getAddressInfo(vo.getAddressIdx());
+		SubscribeVO subscribeVO = adminService.getSubscribeInfo(idx);
+		
+		model.addAttribute("vo", vo);
+		model.addAttribute("deliveryVOS", deliveryVOS);
+		model.addAttribute("memberVO", memberVO);
+		model.addAttribute("addressVO", addressVO);
+		model.addAttribute("subscribeVO", subscribeVO);
+		
+		return "admin/order/subOrderInfo";
+	}
+	
+	// 주문 검색
+	@RequestMapping(value = "/order/orderListSearch", method = RequestMethod.GET)
+	public String orderListSearchGet(Model model,
+			@RequestParam(name="sort", defaultValue = "전체", required = false) String sort,
+			@RequestParam(name="searchString", defaultValue = "", required = false) String searchString,
+			@RequestParam(name="search", defaultValue = "", required = false) String search,
+			@RequestParam(name="startDate", defaultValue = "", required = false) String startDate,
+			@RequestParam(name="endDate", defaultValue = "", required = false) String endDate,
+			@RequestParam(name="pag", defaultValue = "1", required = false) int pag,
+			@RequestParam(name="pageSize", defaultValue = "10", required = false) int pageSize) {
+		
+		
+		PageVO pageVO = new PageVO();
+		ArrayList<OrderVO> vos = new ArrayList<OrderVO>();
+		
+		if(search.equals("invoice")) {
+			pageVO = pageProcess.totRecCntWithPeriodAndSort(pag, pageSize, "adminOrderWithInvoice", sort, search, searchString, startDate, endDate);
+			vos = adminService.getOrderWithInvoiceSearchList(sort, search, searchString, startDate, endDate, pageVO.getStartIndexNo(), pageSize);
+		}
+		else {
+			pageVO = pageProcess.totRecCntWithPeriodAndSort(pag, pageSize, "adminOrder", sort, search, searchString, startDate, endDate);
+			vos = adminService.getOrderSearchList(sort, search, searchString, startDate, endDate, pageVO.getStartIndexNo(), pageSize);
+		}
+		
+		model.addAttribute("sort", sort);
+		model.addAttribute("search", search);
+		model.addAttribute("searchString", searchString);
+		model.addAttribute("startDate", startDate);
+		model.addAttribute("endDate", endDate);
+		
+		model.addAttribute("vos", vos);
+		model.addAttribute("pageVO", pageVO);
+		
+		return "admin/order/orderListSearch";
+	}
+	
 	
 	
 }

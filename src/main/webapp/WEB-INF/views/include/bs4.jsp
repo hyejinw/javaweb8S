@@ -36,7 +36,6 @@
 <meta name="theme-color" content="#ffffff">
 
 
-
 <style>
 	@font-face {
     font-family: 'SUIT-Regular';

@@ -39,6 +39,91 @@
 			
 			window.open(url, 'player', 'status=no, height=' + popupHeight  + ', width=' + popupWidth  + ', left='+ popupX + ', top='+ popupY);
 		}
+		
+		// 주소록 수정
+		function addressUpdate(idx) {
+			
+			let url = "${ctp}/order/addressUpdate?idx="+idx;
+
+			let popupWidth = 800;
+			let popupHeight = 600;
+
+			let popupX = (window.screen.width / 2) - (popupWidth / 2);
+			let popupY= (window.screen.height / 2) - (popupHeight / 2);
+			
+			window.open(url, 'player', 'status=no, height=' + popupHeight  + ', width=' + popupWidth  + ', left='+ popupX + ', top='+ popupY);
+		}
+		
+		
+		/* 체크박스 전체선택, 전체해제 */
+		function checkAll(){
+	    if( $("#th_checkAll").is(':checked') ){
+	      $("input[name=checkRow]").prop("checked", true);
+	      
+	    }else{
+	      $("input[name=checkRow]").prop("checked", false);
+	    }
+		}
+		
+		/* 개별 박스 선택할 때도 똑같이 처리 */
+		function addressCheckChange() {
+
+			// 전체 해제한 경우 '전체 선택' 체크박스도 해제시켜주기
+			if($( "input[name='checkRow']:checked" ).length == 0) {
+				$("input[name=checkAll]").prop("checked", false);
+			}
+
+			// 전체 선택한 경우 '전체 선택' 체크박스도 선택시켜주기
+			if($( "input[name='checkRow']:checked" ).length == ${addressNum} - 1) {
+				$("input[name=checkAll]").prop("checked", true);
+			}
+		}
+		
+		/* 삭제(체크박스된 것 전부) */
+		function deleteAction(){
+		  let checkRow = "";
+		  $( "input[name='checkRow']:checked" ).each (function() {
+		    checkRow = checkRow + $(this).val()+"," ;
+		  });
+		  checkRow = checkRow.substring(0,checkRow.lastIndexOf(",")); //맨 끝 콤마 지우기
+		 
+		  if(checkRow == '') {
+		    alert("삭제할 주소를 선택해주세요.");
+		    return false;
+		  }
+		 
+		  if(confirm("선택한 주소를 삭제하시겠습니까?")) {
+		      
+ 	      $.ajax({
+	    	  type : "post",
+	    	  url : "${ctp}/order/addressIdxesDelete",
+	    	  data : {checkRow : checkRow},
+	    	  success : function(res) {
+    				alert("선택한 주소가 삭제되었습니다.");
+    				location.reload();
+	    		},
+	    		error : function() {
+	    			alert("전송 오류! 재시도 부탁드립니다.");
+	    		}
+	    	}); 
+		  }
+		}
+		
+		// 배송 주소 적용
+		function addressChoose(idx,defaultAddress,addressName,name,postcode,roadAddress,detailAddress,extraAddress,addressMsg) {
+			if(defaultAddress == 0) addressName = addressName + "  (기본 배송지)";
+			
+			opener.window.document.getElementById('addressIdx').value = idx;
+			opener.window.document.getElementById('addressName').value = addressName;
+			opener.window.document.getElementById('name').value = name;
+			opener.window.document.getElementById('postcode').value = postcode;
+			opener.window.document.getElementById('roadAddress').value = roadAddress;
+			opener.window.document.getElementById('detailAddress').value = detailAddress;
+			opener.window.document.getElementById('extraAddress').value = extraAddress;
+			opener.window.document.getElementById('addressMsg').value = addressMsg;
+			
+			window.close();
+		}
 	</script>
 </head>
 <body>
@@ -49,15 +134,20 @@
 			<div style="padding:20px">
 				- 배송 주소록은 최대 5개까지 등록 가능합니다.<br/>
 	      - 기본 배송지는 1개만 저장됩니다. 다른 배송지를 기본 배송지로 설정하시면 기본 배송지가 변경됩니다.<br/>
+	      - 기본 배송지는 삭제가 불가능합니다.<br/>
 			</div>
 			</div>
 		</div>
 	</div>
+
+	<div class="row">
+		<div class="col" style="margin-left:30px"><button class="btn btn-outline-danger" onclick="deleteAction()">선택삭제</button></div>
+	</div>	
 	
-	<div class="row" style="margin:10px 0px 20px 0px">
+	<div class="row" style="margin:10px 0px 30px 0px">
 		<div class="col">
 			<div class="infoBox">
-				<table class="table text-center">
+				<table class="table text-center" style="margin-bottom:0px">
 					<thead>
 						<tr>
 							<th><input type="checkbox" name="checkAll" id="th_checkAll" onclick="checkAll();"/><label for="th_checkAll">&nbsp;&nbsp;&nbsp;&nbsp;번호</label></th>
@@ -73,12 +163,16 @@
 						<c:if test="${!empty vos}">
 							<c:forEach var="vo" items="${vos}" varStatus="st">
 								<tr>
-									<td><label for="chk${vo.idx}"><input type="checkbox" name="checkRow" id="chk${vo.idx}" class="form-check-input chkGrp" value="${vo.idx}" />&nbsp;&nbsp;&nbsp;&nbsp;${st.count}</label></td>
-									<td>${vo.addressName}
-										<c:if test="${vo.defaultAddress == 0}">&nbsp;&nbsp;&nbsp;
-											<span class="badge badge-pill badge-success">기본 주소</span>
-										</c:if>
-									</td>
+									<c:if test="${vo.defaultAddress == 0}">&nbsp;&nbsp;&nbsp;
+										<td><label for="chk${vo.idx}"><input type="checkbox" disabled class="form-check-input chkGrp" value="${vo.idx}" />&nbsp;&nbsp;&nbsp;&nbsp;${st.count}</label></td>
+										<td>${vo.addressName}
+												<span class="badge badge-pill badge-success">기본 주소</span>
+										</td>
+									</c:if>
+									<c:if test="${vo.defaultAddress != 0}">&nbsp;&nbsp;&nbsp;
+										<td><label for="chk${vo.idx}"><input type="checkbox" name="checkRow" id="chk${vo.idx}" onclick="addressCheckChange()" class="form-check-input chkGrp" value="${vo.idx}" />&nbsp;&nbsp;&nbsp;&nbsp;${st.count}</label></td>
+										<td>${vo.addressName}</td>
+									</c:if>
 									<td>${vo.name}</td>
 									<td>${vo.tel}</td>
 									<td>(${vo.postcode}) ${vo.roadAddress} ${vo.detailAddress} ${vo.extraAddress}</td>
@@ -87,8 +181,8 @@
 										<c:if test="${empty vo.addressMsg}"><i class="fa-solid fa-text-slash"></i></c:if>
 									</td>
 									<td>
-										<button class="btn btn-sm btn-warning">적용</button>
-										<button class="btn btn-sm btn-outline-secondary">수정</button>
+										<button class="btn btn-sm btn-warning mb-2" onclick="addressChoose('${vo.idx}','${vo.defaultAddress}','${vo.addressName}','${vo.name}','${vo.postcode}','${vo.roadAddress}','${vo.detailAddress}','${vo.extraAddress}','${vo.addressMsg}')">적용</button>
+										<button class="btn btn-sm btn-outline-secondary" onclick="addressUpdate(${vo.idx})">수정</button>
 									</td>
 								</tr>
 							</c:forEach>
@@ -105,7 +199,7 @@
 		</div>
 	</div>
 	
-	<div class="row text-center">
+	<div class="row text-center" style="margin-bottom:50px">
 		<div class="col">
 			<button class="btn btn-dark" onclick="addressInsert()">배송지 등록</button>
 		</div>

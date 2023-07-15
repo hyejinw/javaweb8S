@@ -5,13 +5,18 @@ import java.util.List;
 
 import org.springframework.web.multipart.MultipartFile;
 
+import com.spring.javaweb8S.vo.AddressVO;
 import com.spring.javaweb8S.vo.BookVO;
 import com.spring.javaweb8S.vo.CollectionVO;
 import com.spring.javaweb8S.vo.DefaultPhotoVO;
+import com.spring.javaweb8S.vo.DeliveryVO;
 import com.spring.javaweb8S.vo.MagazineVO;
+import com.spring.javaweb8S.vo.MemberVO;
 import com.spring.javaweb8S.vo.OptionVO;
+import com.spring.javaweb8S.vo.OrderVO;
 import com.spring.javaweb8S.vo.ProductVO;
 import com.spring.javaweb8S.vo.ProverbVO;
+import com.spring.javaweb8S.vo.SubscribeVO;
 
 public interface AdminService {
 
@@ -98,6 +103,30 @@ public interface AdminService {
 
 	public ArrayList<ProductVO> getColProdSearchList(String sort, String search, String searchString, String startDate,
 			String endDate, int startIndexNo, int pageSize);
+
+	public ArrayList<ProductVO> getColNameProdSearchList(String sort, String search, String searchString,
+			String startDate, String endDate, int startIndexNo, int pageSize);
+
+	public ArrayList<OrderVO> getOrderList(int startIndexNo, int pageSize);
+
+	public OrderVO getOrderInfo(int idx);
+
+	public DeliveryVO getDeliveryInfo(int idx);
+
+	public MemberVO getMemberInfo(String memNickname);
+
+	public AddressVO getAddressInfo(int addressIdx);
+
+	public ArrayList<OrderVO> getOrderSearchList(String sort, String search, String searchString, String startDate,
+			String endDate, int startIndexNo, int pageSize);
+
+	public ArrayList<DeliveryVO> getSubDeliveryInfo(int idx);
+
+	public SubscribeVO getSubscribeInfo(int idx);
+
+	public ArrayList<OrderVO> getOrderWithInvoiceSearchList(String sort, String search, String searchString,
+			String startDate, String endDate, int startIndexNo, int pageSize);
+
 
 
 

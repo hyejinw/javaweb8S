@@ -26,4 +26,6 @@ public interface MagazineService {
 
 	public void setMagazineCartInsert(CartVO vo);
 
+	public void setMaSaveNumUpdate(int maIdx, int maSaveNum);
+
 }

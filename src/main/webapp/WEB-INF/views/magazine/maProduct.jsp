@@ -119,7 +119,12 @@
 		
 		function plus(price) {
 			let num = document.getElementById("num").value;
-			if(num >= 99) {
+			
+			if(num >= ${vo.maStock}) {
+				alert('현 상품의 재고 수량은 '+${vo.maStock}+'개 입니다.');
+				num = ${vo.maStock};
+			}
+			else if(num >= 99) {
 				alert('최대 주문수량은 99개 입니다.');
 				num = 99;
 			}
@@ -132,6 +137,7 @@
 		
 		function minus(price) {
 			let num = document.getElementById("num").value;
+			
 			if(num <= 1) {
 				alert('최소 주문수량은 1개 입니다.');
 				num = 1;
@@ -145,6 +151,11 @@
 		
 		function numCheck(price) {
 			let num = document.getElementById("num").value;
+			
+			if(num >= ${vo.maStock}) {
+				alert('현 상품의 재고 수량은 '+${vo.maStock}+'개 입니다.');
+				num = ${vo.maStock};
+			}
 			if(num <= 1) {
 				alert('최소 주문수량은 1개 입니다.');
 				num = 1;
@@ -285,7 +296,9 @@
 							</span>
 						</div>
 					</div>
-					
+					<c:if test="${vo.maType == '정기 구독'}">
+						<div style="color:red"><br/>매달 15일 일괄 배송처리되며, 구독권 기간에 따라 6/12개월 동안 지속됩니다.</div>
+					</c:if>
 					<div style="font-size:20px; margin-bottom:50px"><br/><fmt:formatNumber value="${vo.maPrice}" pattern="#,###"/>원</div>
 					<div style="font-size:17px;">상품 코드 &nbsp;&nbsp;&nbsp;&nbsp;<span style="font-size:15px">${vo.maCode}</span></div>
 					<div style="font-size:17px;">배송비 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="font-size:15px">책(의)세계는 모두 무료배송</span></div>

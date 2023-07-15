@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.spring.javaweb8S.dao.AutoUpdateDAO">
+	
+	<select id="getAutoOrderList" resultType="com.spring.javaweb8S.vo.OrderVO">
+		select idx, orderStatus, manageDate from bo_order where type != "정기 구독" and orderStatus != "구매확정";
+	</select>
+	
+	<select id="getAutoSubList" resultType="com.spring.javaweb8S.vo.SubscribeVO">
+		select * from bo_subscribe where subStatus = "구독중";
+	</select>
+	
+	<select id="getMemberInfo" resultType="com.spring.javaweb8S.vo.SubscribeVO">
+		select s.memNickname, s.subStartDate, s.subExpireDate, m.email as email 
+		from bo_subscribe s 
+		left join bo_member m 
+		on s.memNickname = m.nickname 
+		where s.subStatus = "구독종료";
+	</select>
+	
+	<select id="getBooksletterList" resultType="com.spring.javaweb8S.vo.BooksletterVO">
+		select * from bo_booksletter where booksletterStatus = "구독중";
+	</select>
+	
+	<insert id="setDeliAutoInsert">
+   	<foreach item="item" index="index" collection="insertVOS">
+			insert into bo_delivery (idx,memNickname,orderIdx,addressIdx,invoice,deliveryStatus,deliveryDate,deliveryReason)
+			values 
+			(default,#{item.memNickname},#{item.orderIdx},
+			(select addressIdx from bo_order where idx = #{item.orderIdx}),
+			#{item.invoice},"배송중",default,"정기 구독");
+		</foreach>
+	</insert>
+	
+	<update id="setOrderAutoUpdate">
+		update bo_order set orderStatus = #{status}, manageDate = default where idx in
+   	<foreach collection="level" item="level" open="(" close=")" separator=",">
+   		#{level}
+    </foreach>;
+	</update>
+	
+	<update id="setDeliveryAutoUpdate">
+		update bo_delivery set deliveryStatus = #{status} where orderIdx in
+   	<foreach collection="level" item="level" open="(" close=")" separator=",">
+   		#{level}
+    </foreach>;
+	</update>
+	
+	<update id="setDeliveryAutoUpdateWithInvoices">
+   	<foreach collection="insertVOS" item="level">
+			update bo_delivery set invoice = #{level.invoice}, deliveryStatus = #{status}, deliveryDate = default  
+			where orderIdx = #{level.idx};
+    </foreach>;
+	</update>
+	
+	
+	<update id="setSubStatusUpdate">
+		update bo_subscribe set subStatus = "구독종료" where subSendNum = 0;
+	</update>
+	
+	<update id="setSubSendNum">
+		update bo_subscribe set subSendNum = subSendNum - 1 where subStatus = "구독중" and subSendNum != 0;
+	</update>
+	
+	<update id="setSubDeliAutoUpdate">
+		update bo_delivery set deliveryStatus = "배송완료", deliveryDate = default 
+		where deliveryReason = "정기구독" and deliveryStatus != "배송완료";
+	</update>	
+	
+	
+</mapper>

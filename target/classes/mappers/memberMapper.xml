@@ -3,44 +3,68 @@
 <mapper namespace="com.spring.javaweb8S.dao.MemberDAO">
 
 	<select id="getMidCheck" resultType="com.spring.javaweb8S.vo.MemberVO">
-		select * from bo_member where mid = #{mid};
+		SELECT * FROM bo_member WHERE mid = #{mid};
 	</select>
 
 	<select id="getNicknameCheck" resultType="com.spring.javaweb8S.vo.MemberVO">
-		select * from bo_member where nickname = #{nickname};
+		SELECT * FROM bo_member WHERE nickname = #{nickname};
 	</select>
 	
 	<select id="getMidFinder" resultType="String">
-		select mid from bo_member where name = #{name} and email = #{email};
+		SELECT mid FROM bo_member WHERE name = #{name} AND email = #{email};
 	</select>
 	
 	<select id="getPwdFinder" resultType="String">
-		select email from bo_member where mid = #{mid} and email = #{email};
+		SELECT email FROM bo_member WHERE mid = #{mid} AND email = #{email};
 	</select>
 
-
+	<select id="getBooksletterCheck" resultType="String">
+		SELECT idx FROM bo_booksletter WHERE email = #{email} AND memNickname IS NULL;
+	</select>
+	
+	<select id="getProverbTotalNum" resultType="int">
+		SELECT count(*) FROM bo_proverb;
+	</select>
+	
+	<select id="getRandomProverb" resultType="com.spring.javaweb8S.vo.ProverbVO">
+		SELECT * FROM bo_proverb ORDER BY idx DESC LIMIT #{randomNum}, 1;
+	</select>
+	
 	<insert id="setMember">
-		insert into bo_member(idx,mid,pwd,name,nickname,email,tel,memPhoto,memType,point,agreement,pwdUpdateDate,totCnt,firstVisit,memberDel) 
-		values(default,#{vo.mid},#{vo.pwd},#{vo.name},#{vo.nickname},#{vo.email},#{vo.tel},default,default,#{vo.point},default,default,default,default,default);
+		INSERT INTO bo_member(idx,mid,pwd,name,nickname,email,tel,memPhoto,memType,point,agreement,pwdUpdateDate,totCnt,firstVisit,memberDel) 
+		VALUES (default,#{vo.mid},#{vo.pwd},#{vo.name},#{vo.nickname},#{vo.email},#{vo.tel},default,default,#{vo.point},default,default,default,default,default);
 	</insert>
 	
+	<insert id="setRecoMidPointInsert">
+		INSERT INTO bo_point (idx,memNickname,point,pointReason,pointStartDate) VALUES   
+		(default, (select nickname from bo_member where mid = #{recoMid}),
+		#{point},#{pointReason},default);
+	</insert>
+	
+	<insert id="setPointInsert">
+		INSERT INTO bo_point (idx,memNickname,point,pointReason,pointStartDate) VALUES   
+		(default, #{nickname},#{point},#{pointReason},default);
+	</insert>
 	
 	<update id="setMemberPoint">
-		update bo_member set point = point + #{point};
+		UPDATE bo_member SET point = point + #{point};
 	</update>
 	
 	<update id="setMemberLoginProcess">
 		<if test="vo.todayCnt == 0">
-	  	update bo_member set totCnt = totCnt + 1, todayCnt = 1, lastVisit = now() where idx = #{vo.idx};
+	  	UPDATE bo_member SET totCnt = totCnt + 1, todayCnt = 1, lastVisit = now() WHERE idx = #{vo.idx};
 		</if>
 		<if test="vo.todayCnt != 0">
-	  	update bo_member set totCnt = totCnt + 1, todayCnt = todayCnt + 1, lastVisit = now() where idx = #{vo.idx};
+	  	UPDATE bo_member SET totCnt = totCnt + 1, todayCnt = todayCnt + 1, lastVisit = now() WHERE idx = #{vo.idx};
 		</if>
 	</update>
 	
 	<update id="setMemberPwdUpdate">
-		update bo_member set pwd = #{pwd} where mid = #{mid};
+		UPDATE bo_member SET pwd = #{pwd} WHERE mid = #{mid};
 	</update>
 	
+	<update id="setBooksletterInsert">
+		UPDATE bo_booksletter SET memNickname = #{nickname} WHERE idx = #{booksletterIdx};
+	</update>
 	
 </mapper>
