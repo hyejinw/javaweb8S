@@ -5,5 +5,9 @@
 	<select id="getNewMagazines" resultType="com.spring.javaweb8S.vo.MagazineVO">
 		select * from bo_magazine order by idx desc limit 0,20;
 	</select>
+
+	<select id="getCartNum" resultType="int">
+		select count(*) from bo_cart where memNickname = #{nickname};
+	</select>
 	
 </mapper>

@@ -154,8 +154,8 @@
 		<div class="container-xl">
 			<h2 class="text-center" style="margin:0px auto; font-size:35px; font-weight:bold; padding-bottom:20px">컬렉션</h2>
 			<div class="text-center">
-				<span style="margin:0px auto; font-size:18px; font-style:italic;"><i class="fa-solid fa-quote-left"></i>&nbsp;&nbsp;&nbsp;책 세계 함께 다다르기(differeach)&nbsp;&nbsp;&nbsp;<i class="fa-solid fa-quote-right"></i><br/>
-					<span class="w3-text w3-tag"  style="margin:0px auto; font-size:14px; font-style:italic;"><b>우리는 다 다르고, 그래서 서로에게 다다를 수 있어요.</b></span>
+				<span style="margin:0px auto; font-size:18px; font-style:italic;"><i class="fa-solid fa-quote-left"></i>&nbsp;&nbsp;&nbsp;책 세계 맘껏 즐기기&nbsp;&nbsp;&nbsp;<i class="fa-solid fa-quote-right"></i><br/>
+					<span class="w3-text w3-tag"  style="margin:0px auto; font-size:14px; font-style:italic;"><b>책의 세계는 원래 우리의 것이었다.</b></span>
 				</span>
 <!-- 				<span class="w3-tooltip" style="margin:0px auto; font-size:18px; font-style:italic;"><i class="fa-solid fa-quote-left"></i>&nbsp;&nbsp;&nbsp;책 세계 쉽게 다다르기(differeach)&nbsp;&nbsp;&nbsp;<i class="fa-solid fa-quote-right"></i><br/>
 					<span class="w3-text w3-tag"  style="margin:0px auto; font-size:14px; font-style:italic;"><b>우리는 다 다르고, 서로에게 다다를 수 있어요.</b></span>

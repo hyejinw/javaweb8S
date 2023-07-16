@@ -49,7 +49,8 @@
 
 <div class="topNav">
 <!-- 	<div class="w3-panel w3-round-xlarge" style="margin:0px; background-color:#E1ECC8"> -->
-	<div class="w3-panel w3-round-xlarge" style="margin:0px; background-color:#F5EBE0">
+<!-- 	<div class="w3-panel w3-round-xlarge" style="margin:0px; background-color:#F5EBE0"> -->
+	<div class="w3-panel w3-round-xlarge" style="margin:0px; background-color:rgba(254, 251, 232)">
 		<span onclick="this.parentElement.style.display='none'" class="w3-button w3-round-xlarge w3-large w3-display-topright popup-dismiss">X</span>
 		<div class="notice">
 			<ul class="rolling">
@@ -89,8 +90,8 @@
 		      <!-- <a href="#team" class="w3-bar-item w3-button w3-hover-white w3-round-xxlarge navContent">책(의)세계란</a> -->
 		      <a class="w3-hover-white w3-round-xxlarge navContent"><b><span class="detailContent">3개의 책</span></b>&nbsp;<i class="fa-solid fa-caret-down"></i></a>
 		      <div class="w3-dropdown-content w3-bar-block w3-card-4">
-		        <a href="#" class="w3-bar-item w3-button">입장</a>
-		        <a href="#" class="w3-bar-item w3-button">커뮤니티 가이드</a>
+		        <a href="${ctp}/community/communityMain" class="w3-bar-item w3-button">입장</a>
+		        <a href="${ctp}/community/guide" class="w3-bar-item w3-button">커뮤니티 가이드</a>
 		      </div>
 		    </div>
 		    
@@ -129,7 +130,9 @@
 	      <a href="javascript:memCheck('${memType}', 'cart')" class="w3-bar-item w3-button w3-hover-white w3-round-xxlarge navContent">
 		      <span class="detailContent"><p class="w3-tooltip"><i class="fa-solid fa-cart-shopping" style="color: #000000; font-size:25px" title="장바구니"></i>
 		      <br/>
-		      <font size="2" class="w3-center" style="font-weight:400">장바구니</font>
+		      <font size="2" class="w3-center" style="font-weight:400">장바구니
+		      	<c:if test="${cartNum != 0}"><span class="badge badge-pill badge-success">${cartNum}</span></c:if>
+	      	</font>
 		      </p></span>
 	      </a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 	    </div>

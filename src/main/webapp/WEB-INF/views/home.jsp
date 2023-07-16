@@ -123,7 +123,8 @@
     }
     #indexBox {
 	    margin-bottom:-50px; 
-	    border: 2px solid #E3F4F4;
+	    border: 2px solid rgba(254, 251, 232);
+/* 	    border: 2px solid #E3F4F4; */
 /* 	    background-color: #FFF4D2; */
 	    background-color: white;
 	    z-index: 1;
@@ -154,7 +155,7 @@
 		  <img src="${ctp}/resources/images/main_banner2.jpg" style="width:100%">
 		  <div class="w3-display-bottomright w3-container">
 		    <p style="margin:0px 50px 100px 0px; font-size:17px"><b>
-		    	'3개의 책'은 책(의)세계에서 운영하는 도서 커뮤니티 입니다.<br/><br/></b>
+		    	'3개의 책'은 책(의)세계에서 운영하는 책 커뮤니티 입니다.<br/><br/></b>
 				  세상은 나와 너, 우리로 만들어진 '3개의 책' 이란 테마 안에서,<br/> 
 		    	매일 새로운 이야기와 물음으로 책의 안팎과 주변의 세계를 살피고 있습니다.<br/>
 					다양한 목적의 의미있는 일에 기여하기를, 마침내 책에 대한 호기심으로<br/>
@@ -208,7 +209,7 @@
 	</div>
 	
 <!-- 	<div class="container-fluid" style="background-color:white; margin-bottom:150px; color:#282828; padding:30px; z-index: 2; border: 1px solid #282828;"> -->
-	<div class="container-fluid" style="background-color:#E3F4F4; margin-bottom:150px; color:#282828; padding:30px; z-index: 2;">
+	<div class="container-fluid" style="background-color:rgba(254, 251, 232); margin-bottom:150px; color:#282828; padding:30px; z-index: 2;">
 		<div class="row" style="padding-top:50px">
 			<div class="col-5" style="padding-left:50px">
   	  	<br/><div class="container text-center">

@@ -111,7 +111,6 @@ public class MemberController {
 	public String memberJoinGet(Model model) {
 		
 		int proverbNum = memberService.getProverbTotalNum();
-		System.out.println("proverbNum : " + proverbNum);
 		
 		// 1 ~ 명언 총 개수 사이의 랜덤한 정수를 얻는다.
 		int randomNum = (int) ((Math.random() * proverbNum) + 1);

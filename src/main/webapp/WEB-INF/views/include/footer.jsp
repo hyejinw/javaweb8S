@@ -27,7 +27,7 @@
 			전화 : 02-6228-5589 | 팩스 : 02-6442-5589<br/>
 			주소 : 03015 서울특별시 종로구 세검정로 243 (신영동) 2층 (신영동 176-24)<br/>
 			이메일 : info@chaeg.co.kr | info@chaeg.co.kr 개인정보보호책임자 : 우혜진(info@chaeg.co.kr)<br/><br/>
-			Copyright © 책(의)세계 chaegshop. All rights reserved.
+			Copyright © 책(의)세계. All rights reserved.
 		</div>
 		<div class="col-4">
 			<span style="font-size:23px; font-weight:bold">고객센터<br/>

@@ -3,6 +3,8 @@ package com.spring.javaweb8S;
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 
+import javax.servlet.http.HttpSession;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -25,11 +27,19 @@ public class HomeController {
 	BookInsertSearch bookInsert;
 	
 	@RequestMapping(value = "/", method = RequestMethod.GET)
-	public String home(Model model) {
+	public String home(Model model, HttpSession session) {
 		
 		// 신규 매거진 20개 
 		ArrayList<MagazineVO> magazineVOS = homeService.getNewMagazines();
 		model.addAttribute("magazineVOS", magazineVOS);
+		
+		
+		// 장바구니 제품 수 
+		String nickname = (String) session.getAttribute("sNickname");
+		if(nickname != "") {
+			int cartNum = homeService.getCartNum(nickname);
+			model.addAttribute("cartNum", cartNum);	
+		}
 		
 		return "home";
 	}

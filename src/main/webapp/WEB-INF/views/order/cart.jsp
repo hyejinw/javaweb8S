@@ -333,7 +333,7 @@
 				<div class="col">
 					<div class="infoBox">
 						책의 세계는 모두 무료배송<hr/>
-						구매 완료 시, 포인트 5%가 적립됩니다. &nbsp;&nbsp;&nbsp;&nbsp;(<span style="font-weight:bold">보유 포인트</span>&nbsp;&nbsp;<span>${memberVO.point}</span>)
+						구매 확정 후, 결제액의 5%가 포인트로 적립됩니다. &nbsp;&nbsp;&nbsp;&nbsp;(<span style="font-weight:bold">보유 포인트</span>&nbsp;&nbsp;<span>${memberVO.point}</span>)
 					</div>
 				</div>
 			</div>

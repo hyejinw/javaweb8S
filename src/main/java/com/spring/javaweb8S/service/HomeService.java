@@ -8,4 +8,6 @@ public interface HomeService {
 
 	public ArrayList<MagazineVO> getNewMagazines();
 
+	public int getCartNum(String nickname);
+
 }

@@ -16,8 +16,16 @@
 <div class="container-xl p-5 my-5"  id="top">	
 	<form name="myform" method="post" style="width:80%; margin:0px auto">
     <h2 class="text-center" style="margin-bottom:50px">JOIN</h2>
-    <h5 class="text-right">${proverbVO.content}</h5>
-    <h6 class="text-right">-${proverbVO.origin}</h6>
+    
+    <div class="row">
+    	<div class="col-4"></div>
+    	<div class="col-8">
+		    <h5 class="text-right">${proverbVO.content}</h5>
+		    <h6 class="text-right">-${proverbVO.origin}</h6>
+    	</div>
+    </div>
+    
+    
     <br/>
   	<small style="color:red; margin-top:15px">별(*) 표시는 필수 입력사항입니다.</small><br/><br/>
     <div class="form-group">

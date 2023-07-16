@@ -19,5 +19,11 @@ public class HomeServiceImpl implements HomeService {
 	public ArrayList<MagazineVO> getNewMagazines() {
 		return homeDAO.getNewMagazines();
 	}
+
+	// 장바구니 제품 수
+	@Override
+	public int getCartNum(String nickname) {
+		return homeDAO.getCartNum(nickname);
+	}
 	
 }
