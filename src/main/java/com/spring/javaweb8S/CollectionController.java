@@ -151,7 +151,7 @@ public class CollectionController {
 	// 상품 장바구니 저장  (ppt에 꼭 넣장!)
 	@ResponseBody
 	@RequestMapping(value = "/productCartInsert", method = RequestMethod.POST)
-	public String productCartInsertPost(CartVO vo, 
+	public String productCartInsertPost(CartVO vo, HttpSession session,
 			int[] opIdx, String[] opName, int[] opPrice, int[] num) {
 		
 		// 옵션 정보 담기
@@ -193,6 +193,11 @@ public class CollectionController {
 		if(updateOption.size() != 0) collectionService.setProductOpCartUpdate(vo, updateOption);
 		if(insertOption.size() != 0) collectionService.setProductOpCartInsert(vo, insertOption);
 		
+		// 장바구니 개수 session 변경
+		if(session.getAttribute("sCartNum") != null) {
+			int cartNum = (int) session.getAttribute("sCartNum");
+			session.setAttribute("sCartNum", cartNum + insertOption.size());
+		}
 		return "";
 	}
 	

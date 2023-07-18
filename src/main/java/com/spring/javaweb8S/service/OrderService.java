@@ -67,5 +67,7 @@ public interface OrderService {
 
 	public void setProdSaleQuantityUpdate(ArrayList<OrderVO> prodOrderVOS);
 
+	public void setSaveNumUpdate(SaveVO vo, int saveNum);
+
 
 }

@@ -96,6 +96,30 @@ public class MessageController {
 			model.addAttribute("msg", "컬렉션 상품 정보가 수정에 실패했습니다. 재시도 부탁드립니다.");
 			model.addAttribute("url", "/admin/collection/colProdInfo?idx="+idx);
 		}
+		else if(msgFlag.equals("reflectionInsertOk")) {
+			model.addAttribute("msg", "기록이 등록되었습니다.");
+			model.addAttribute("url", "/community/reflectionInsert");
+		}
+		else if(msgFlag.equals("reflectionInsertNo")) {
+			model.addAttribute("msg", "재시도 부탁드립니다.");
+			model.addAttribute("url", "/community/reflectionInsert");
+		}
+		else if(msgFlag.equals("refBookUpdateOk")) {
+			model.addAttribute("msg", "책이 변경되었습니다.");
+			model.addAttribute("url", "/community/reflectionUpdate?idx="+idx);
+		}
+		else if(msgFlag.equals("refBookUpdateNo")) {
+			model.addAttribute("msg", "재시도 부탁드립니다.");
+			model.addAttribute("url", "/community/reflectionUpdate?idx="+idx);
+		}
+		else if(msgFlag.equals("reflectionUpdateOk")) {
+			model.addAttribute("msg", "기록이 수정되었습니다.");
+			model.addAttribute("url", "/community/reflectionDetail?idx="+idx);
+		}
+		else if(msgFlag.equals("reflectionUpdateNo")) {
+			model.addAttribute("msg", "재시도 부탁드립니다.");
+			model.addAttribute("url", "/community/reflectionUpdate?idx="+idx);
+		}
 		
 		
 		

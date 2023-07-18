@@ -213,6 +213,15 @@
 		</foreach>
 	</update>
 	
+	<update id="setSaveNumUpdate">
+		<if test='vo.type != null and (vo.type=="매거진" or vo.type=="정기 구독")'>
+			UPDATE bo_magazine SET maSave = #{saveNum} WHERE idx = #{vo.prodIdx};
+		</if>
+		<if test='vo.type != null and vo.type=="컬렉션 상품"'>
+			UPDATE bo_product SET prodSave = #{saveNum} WHERE idx = #{vo.prodIdx};
+		</if>
+	</update>
+	
 	<delete id="setCartIdxesDelete">
 		DELETE FROM bo_cart WHERE idx IN
     <foreach collection="cartIdxList" item="cartIdxList" open="(" close=")" separator=",">

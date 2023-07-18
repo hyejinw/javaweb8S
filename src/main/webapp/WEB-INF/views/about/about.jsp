@@ -297,14 +297,6 @@
 				</span>
 			</div>
 			<br/><br/>
-			<!-- <div class="row">
-				<div class="col-4"></div>
-				<div class="col-4 text-center">
-					<hr style="border:0.5px solid gray; margin-left:175px; width:0.05px; height:180px;"/>
-				</div>
-				<div class="col-4"></div>
-			</div>
-			<br/><br/> -->
 			<div class="aniview-v4" data-av-animation="animate__fadeInUp">
 		    <div class="row" style="margin-top:100px">
 					<div class="col-5" style="font-size:16px;">

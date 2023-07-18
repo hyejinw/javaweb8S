@@ -101,7 +101,7 @@ public class OrderController {
 	// 장바구니 상품 삭제(여러 개)
 	@ResponseBody
 	@RequestMapping(value = "/cartIdxesDelete", method = RequestMethod.POST)
-	public String cartIdxesDeletePost(String checkRow) {
+	public String cartIdxesDeletePost(String checkRow, HttpSession session) {
 		
 		List<String> cartIdxList = new ArrayList<String>();
 		String[] checkedCartIdx = checkRow.split(",");
@@ -111,15 +111,27 @@ public class OrderController {
 		}
 
 		orderService.setCartIdxesDelete(cartIdxList);
+		
+		// 장바구니 개수 session 변경
+		if(session.getAttribute("sCartNum") != null) {
+			int cartNum = (int) session.getAttribute("sCartNum");
+			session.setAttribute("sCartNum", cartNum - cartIdxList.size());
+		}
 		return "";
 	}
 	
 	// 장바구니 상품 삭제(단일)
 	@ResponseBody
 	@RequestMapping(value = "/cartIdxDelete", method = RequestMethod.POST)
-	public String cartIdxDeletePost(int idx) {
+	public String cartIdxDeletePost(int idx, HttpSession session) {
 		
 		orderService.setCartIdxDelete(idx);
+		
+		// 장바구니 개수 session 변경
+		if(session.getAttribute("sCartNum") != null) {
+			int cartNum = (int) session.getAttribute("sCartNum");
+			session.setAttribute("sCartNum", cartNum - 1);
+		}
 		return "";
 	}
 	
@@ -129,15 +141,23 @@ public class OrderController {
 	public String saveInsertPost(SaveVO vo) {
 		
 		orderService.setSaveInsertPost(vo);
+		
+		// 상품 or 매거진 테이블 저장 등록 수 변경
+		orderService.setSaveNumUpdate(vo, 1);
+		
 		return "";
 	}
 	
 	// 관심 상품 취소
 	@ResponseBody
 	@RequestMapping(value = "/saveDelete", method = RequestMethod.POST)
-	public String saveDeletePost(String memNickname, int idx) {
+	public String saveDeletePost(SaveVO vo) {
 		
-		orderService.setSaveDelete(memNickname, idx);
+		orderService.setSaveDelete(vo.getMemNickname(), vo.getIdx());
+		
+		// 상품 or 매거진 테이블 저장 등록 수 변경
+		orderService.setSaveNumUpdate(vo, -1);
+		
 		return "";
 	}
 
@@ -475,8 +495,12 @@ public class OrderController {
 			orderService.setMaStockUpdate(maOrderVOS);
 		}
 		
-		// 판매수량도!
 		
+		// 장바구니 개수 session 변경
+		if(session.getAttribute("sCartNum") != null) {
+			int cartNum = (int) session.getAttribute("sCartNum");
+			session.setAttribute("sCartNum", cartNum - cartVOS.size());
+		}
 		
 		// 원래 return 할 곳은 해당 회원의 (마이페이지 안) 주문 내역
 		return "order/cart";

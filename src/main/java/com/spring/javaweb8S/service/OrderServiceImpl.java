@@ -183,5 +183,11 @@ public class OrderServiceImpl implements OrderService {
 	public void setProdSaleQuantityUpdate(ArrayList<OrderVO> prodOrderVOS) {
 		orderDAO.setProdSaleQuantityUpdate(prodOrderVOS);
 	}
+
+  // 상품 or 매거진 테이블 저장 등록 수 변경
+	@Override
+	public void setSaveNumUpdate(SaveVO vo, int saveNum) {
+		orderDAO.setSaveNumUpdate(vo, saveNum);
+	}
 	
 }

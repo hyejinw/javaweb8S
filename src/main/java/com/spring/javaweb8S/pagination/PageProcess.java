@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 
 import com.spring.javaweb8S.dao.AdminDAO;
 import com.spring.javaweb8S.dao.CollectionDAO;
+import com.spring.javaweb8S.dao.CommunityDAO;
 import com.spring.javaweb8S.dao.MagazineDAO;
 import com.spring.javaweb8S.dao.OrderDAO;
 import com.spring.javaweb8S.vo.OrderVO;
@@ -25,6 +26,9 @@ public class PageProcess {
 	
 	@Autowired
 	OrderDAO orderDAO;
+	
+	@Autowired
+	CommunityDAO communityDAO;
 	
 	public PageVO totRecCnt(int pag, int pageSize, String section, String search, String searchString) {
 		PageVO pageVO = new PageVO();
@@ -47,6 +51,8 @@ public class PageProcess {
 		else if(section.equals("magazineList")) totRecCnt = magazineDAO.magazineListTotRecCnt(search, searchString);
 		else if(section.equals("collectionList")) totRecCnt = collectionDAO.collectionTotRecCnt(search);
 		else if(section.equals("colProductList")) totRecCnt = collectionDAO.productTotRecCnt(search, searchString);
+		else if(section.equals("communityReflectionList")) totRecCnt = communityDAO.reflectionTotRecCnt();
+		else if(section.equals("communityReflectionSearch")) totRecCnt = communityDAO.reflectionSearchTotRecCnt(search, searchString);
 		
 		
 //		else if(section.equals("board")) {

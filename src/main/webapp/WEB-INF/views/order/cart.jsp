@@ -288,13 +288,15 @@
 		}
 		
 		// 관심 등록 취소
-		function saveDelete(idx) {
+		function saveDelete(idx,type,prodIdx) {
 			$.ajax({
     		type  : "post",
     		url   : "${ctp}/order/saveDelete",
     		data  : {
 				  memNickname  : '${sNickname}',
-				  idx : idx
+				  idx : idx,
+				  type : type,
+				  prodIdx : prodIdx
 				},
     		success:function() {
     			alert("관심상품이 취소되었습니다.");
@@ -453,7 +455,7 @@
 					        		<div class="mb-1"><button class="btn btn-sm btn-dark" onclick="location.href='${ctp}/order/order?checkRow=${cartProdVO.idx}';">주문하기 <i class="fa-solid fa-chevron-right"></i></button></div>
 					        	</c:if>
 					        	<c:if test="${cartProdVO.saveIdx == 0}"><div class="mb-1"><button class="btn btn-sm btn-secondary" onclick="saveInsert('${cartProdVO.type}','${cartProdVO.prodIdx}','${cartProdVO.prodName}','${cartProdVO.prodPrice}','${cartProdVO.prodThumbnail}')">관심상품 추가</button></div></c:if>
-					        	<c:if test="${cartProdVO.saveIdx != 0}"><div class="mb-1"><button class="btn btn-sm btn-outline-secondary" onclick="saveDelete(${cartProdVO.saveIdx})">관심상품 취소</button></div></c:if>
+					        	<c:if test="${cartProdVO.saveIdx != 0}"><div class="mb-1"><button class="btn btn-sm btn-outline-secondary" onclick="saveDelete('${cartProdVO.saveIdx}','${cartProdVO.type}','${cartProdVO.prodIdx}')">관심상품 취소</button></div></c:if>
 										<div><button class="btn btn-sm btn-outline-dark" onclick="deleteOne(${cartProdVO.idx})">삭제하기</button></div>
 					        </td>
 					      </tr>
@@ -532,7 +534,7 @@
 						        	<div class="mb-1"><button class="btn btn-sm btn-dark" onclick="location.href='${ctp}/order/order?checkRow=${cartMagazineVO.idx}';">주문하기 <i class="fa-solid fa-chevron-right"></i></button></div>
 					        	</c:if>
 										<c:if test="${cartMagazineVO.saveIdx == 0}"><div class="mb-1"><button class="btn btn-sm btn-secondary" onclick="saveInsert('${cartMagazineVO.type}','${cartMagazineVO.maIdx}','${cartMagazineVO.prodName}','${cartMagazineVO.prodPrice}','${cartMagazineVO.prodThumbnail}')">관심상품 추가</button></div></c:if>
-					        	<c:if test="${cartMagazineVO.saveIdx != 0}"><div class="mb-1"><button class="btn btn-sm btn-outline-secondary" onclick="saveDelete(${cartMagazineVO.saveIdx})">관심상품 취소</button></div></c:if>
+					        	<c:if test="${cartMagazineVO.saveIdx != 0}"><div class="mb-1"><button class="btn btn-sm btn-outline-secondary" onclick="saveDelete('${cartMagazineVO.saveIdx}','${cartMagazineVO.type}','${cartMagazineVO.maIdx}')">관심상품 취소</button></div></c:if>
 										<div><button class="btn btn-sm btn-outline-dark" onclick="deleteOne(${cartMagazineVO.idx})">삭제하기</button></div>
 					        </td>
 					      </tr>
@@ -598,7 +600,7 @@
 					        <td>
 					        	<div class="mb-1"><button class="btn btn-sm btn-dark" onclick="location.href='${ctp}/order/order?checkRow=${cartMagazineVO.idx}';">주문하기 <i class="fa-solid fa-chevron-right"></i></button></div>
 										<c:if test="${cartSubscribeVO.saveIdx == 0}"><div class="mb-1"><button class="btn btn-sm btn-secondary" onclick="saveInsert('${cartSubscribeVO.type}','${cartSubscribeVO.maIdx}','${cartSubscribeVO.prodName}','${cartSubscribeVO.prodPrice}','${cartSubscribeVO.prodThumbnail}')">관심상품 추가</button></div></c:if>
-					        	<c:if test="${cartSubscribeVO.saveIdx != 0}"><div class="mb-1"><button class="btn btn-sm btn-outline-secondary" onclick="saveDelete(${cartSubscribeVO.saveIdx})">관심상품 취소</button></div></c:if>
+					        	<c:if test="${cartSubscribeVO.saveIdx != 0}"><div class="mb-1"><button class="btn btn-sm btn-outline-secondary" onclick="saveDelete('${cartSubscribeVO.saveIdx}','${cartSubscribeVO.type}','${cartSubscribeVO.maIdx}')">관심상품 취소</button></div></c:if>
 										<div><button class="btn btn-sm btn-outline-dark" onclick="deleteOne(${cartSubscribeVO.idx})">삭제하기</button></div>
 					        </td>
 					      </tr>

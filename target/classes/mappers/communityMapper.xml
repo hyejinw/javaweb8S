@@ -3,7 +3,157 @@
 <mapper namespace="com.spring.javaweb8S.dao.CommunityDAO">
 	
 	<select id="getMemberInfo" resultType="com.spring.javaweb8S.vo.MemberVO">
-		select * from bo_member where nickname = #{nickname};
+		SELECT * from bo_member where nickname = #{nickname};
 	</select>
+	
+	<select id="reflectionTotRecCnt" resultType="int">
+		SELECT count(*) from bo_reflection where refDel != "삭제";
+	</select>
+	
+	<select id="getReflectionList" resultType="com.spring.javaweb8S.vo.ReflectionVO">
+		SELECT *, b.thumbnail AS thumbnail, m.memPhoto AS memPhoto, 
+		(select count(*) from bo_reply p where  r.idx = p.refIdx) AS replyNum
+		
+		FROM bo_reflection r
+		LEFT JOIN bo_book b 
+			ON r.bookIdx = b.idx 
+		LEFT JOIN bo_member m 
+			ON r.memNickname = m.nickname  
+			
+		WHERE r.refDel != "삭제"
+		
+		ORDER BY r.idx DESC LIMIT #{startIndexNo},#{pageSize};
+	</select>
+	
+	<select id="getReflectionDetail" resultType="com.spring.javaweb8S.vo.ReflectionVO">
+		SELECT r.*, b.title AS bookTitle, b.publisher AS publisher, b.authors AS authors, b.thumbnail AS thumbnail 
+		
+		FROM bo_reflection r 
+		LEFT JOIN bo_book b 
+		ON r.bookIdx = b.idx 
+		 
+		WHERE r.idx = #{idx};
+	</select>
+	
+	<select id="getReply" resultType="com.spring.javaweb8S.vo.ReplyVO">
+		SELECT r.*, m.memPhoto AS memPhoto  
+		FROM bo_reply r
+		LEFT JOIN bo_member m 
+		ON r.memNickname = m.nickname 
+		
+		WHERE r.refIdx = #{idx} AND r.replyDel != "삭제";
+	</select>
+	
+	<select id="getInspired" resultType="com.spring.javaweb8S.vo.InspiredVO">
+		SELECT *, 
+		(select idx from bo_insSave WHERE insIdx = i.idx AND memNickname = #{nickname}) AS insSaveIdx
+		FROM bo_inspired i 
+		WHERE bookIdx = #{bookIdx} AND insDel != "삭제";
+		
+		<!-- SELECT * FROM bo_inspired WHERE bookIdx = #{bookIdx} AND insDel != "삭제"; -->
+	</select>
+	
+	<select id="getRefSave" resultType="com.spring.javaweb8S.vo.RefSaveVO">
+		SELECT * FROM bo_refSave WHERE refIdx = #{idx} AND memNickname = #{nickname};
+	</select>
+	
+	<select id="getMaxGroupId" resultType="String">
+		SELECT max(groupId) FROM bo_reply WHERE refIdx = #{refIdx};
+	</select>
+	
+	<select id="reflectionSearchTotRecCnt" resultType="int">
+		SELECT count(*) FROM bo_reflection 
+		WHERE refDel != "삭제" AND ${search} like concat('%',#{searchString},'%');
+	</select>
+	
+	<select id="getReflectionSearch" resultType="com.spring.javaweb8S.vo.ReflectionVO">
+		SELECT *, b.thumbnail AS thumbnail, m.memPhoto AS memPhoto, 
+		(select count(*) from bo_reply p where  r.idx = p.refIdx) AS replyNum
+		
+		FROM bo_reflection r
+		LEFT JOIN bo_book b 
+			ON r.bookIdx = b.idx 
+		LEFT JOIN bo_member m 
+			ON r.memNickname = m.nickname  
+			
+		WHERE r.refDel != "삭제" AND r.${search} like concat('%',#{searchString},'%')
+		
+		ORDER BY r.idx DESC LIMIT #{startIndexNo},#{pageSize};
+	</select>
+	
+	<insert id="setReflectionInsert" parameterType="com.spring.javaweb8S.vo.ReflectionVO">
+ 		<if test='vo.bookTitle != null and vo.bookTitle=="없음"'>
+			INSERT INTO bo_reflection(idx, memNickname, title, content, refSave, refView, replyOpen, refDate, refHostIp, refDel)
+			VALUES
+			(default, #{vo.memNickname}, #{vo.title}, #{vo.content}, default, default, #{vo.replyOpen}, default, #{vo.refHostIp}, default);
+		</if>
+		<if test='vo.bookTitle != null and vo.bookTitle!="없음"'>
+			INSERT INTO bo_reflection	VALUES 
+			(default, (select idx from bo_book where title = #{vo.bookTitle} and publisher = #{vo.publisher} limit 1),
+			 #{vo.memNickname}, #{vo.title}, #{vo.content}, default, default, #{vo.replyOpen}, default, #{vo.refHostIp}, default);
+		</if>
+	</insert>
+	
+<!-- 	<insert id="setReplyInsert">
+		INSERT INTO bo_reply (idx,refIdx,memNickname,content,groupId,level,replyDate,replyHostIp,replyDel)
+		VALUES
+		(default,#{vo.refIdx},#{vo.memNickname},#{vo.content},#{vo.groupId},#{vo.level},default,#{vo.replyHostIp},default);
+	</insert> -->
+	<insert id="setReplyInsert">
+		INSERT INTO bo_reply VALUES
+		(default,#{vo.refIdx},#{vo.memNickname},#{vo.mentionedNickname},#{vo.content},#{vo.groupId},#{vo.level},default,#{vo.replyHostIp},default);
+	</insert>
+	
+	<insert id="setRefSave">
+		INSERT INTO bo_refSave VALUES (default,#{refIdx},#{memNickname},default);
+	</insert>
+	
+	<insert id="setInspiredInsert">
+		INSERT INTO bo_inspired VALUES 
+		(default,#{vo.bookIdx},#{vo.memNickname},#{vo.insContent},#{vo.page},#{vo.explanation},default,default,#{vo.insHostIp},default);
+	</insert>
+	
+	<insert id="setInsSave">
+		INSERT INTO bo_insSave VALUES (default,#{insIdx},#{memNickname},default);
+	</insert>
+
+	<update id="setRefSaveUpdate">
+		UPDATE bo_reflection SET refSave = refSave + #{refSaveNum} WHERE idx = #{refIdx};
+	</update>
+
+	<update id="setInsSaveUpdate">
+		UPDATE bo_inspired SET insSave = insSave + #{insSaveNum} WHERE idx = #{insIdx};
+	</update>
+	
+	<update id="setInspiredDelete">
+		UPDATE bo_inspired SET insDel = "삭제" WHERE idx = #{idx};
+	</update>
+	
+	<update id="setInspiredUpdate">
+		UPDATE bo_inspired SET insContent = #{vo.insContent}, page = #{vo.page}, explanation = #{vo.explanation} 
+		WHERE idx = #{vo.idx};
+	</update>
+	
+	<update id="setRefBookUpdate">
+		UPDATE bo_reflection SET bookIdx = (select idx from bo_book where title = #{bookTitle} and publisher = #{publisher} limit 1)
+		WHERE idx = #{idx};
+	</update>
+	
+	<update id="setReflectionUpdate">
+		UPDATE bo_reflection SET title = #{vo.title}, content = #{vo.content}, replyOpen = #{vo.replyOpen} 
+		WHERE idx = #{vo.idx};
+	</update>
+	
+	<delete id="setRefSaveDelete">
+		DELETE FROM bo_refSave WHERE refIdx = #{refIdx} AND memNickname = #{memNickname};
+	</delete>
+	
+	<delete id="setInsSaveDelete">
+		DELETE FROM bo_insSave WHERE idx = #{idx};
+	</delete>
+	
+	<delete id="setInsSaveForcedDelete">
+		DELETE FROM bo_insSave WHERE insIdx = #{idx};
+	</delete>
 	
 </mapper>

@@ -79,11 +79,6 @@
 
 		function pageCheck() {
     	let pageSize = document.getElementById("pageSize").value;
-    	/* if(${maType == null}) {
-    	}
-    	else {
-    		
-    	} */
   		location.href = "${ctp}/admin/magazine/magazineListSearch?pag=${pageVO.pag}&pageSize="+pageSize+"&maType=${maType}&search=${search}&searchString=${searchString}&startDate=${startDate}&endDate=${endDate}";
     }
 		

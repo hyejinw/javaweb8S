@@ -82,7 +82,9 @@
 	
 	<!-- Page Content -->
 	<div id="main">
-		<img src = "${ctp}/images/communityBanner.png" style="width: 100%; max-width:1700px"/>
+		<a href="${ctp}/community/communityMain">
+			<img src = "${ctp}/images/communityBanner.png" style="width: 100%; max-width:2000px"/>
+		</a>
 	
 	
 	  <!-- Header/Home -->

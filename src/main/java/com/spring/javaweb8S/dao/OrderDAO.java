@@ -69,5 +69,7 @@ public interface OrderDAO {
 
 	public void setProdSaleQuantityUpdate(@Param("prodOrderVOS") ArrayList<OrderVO> prodOrderVOS);
 
+	public void setSaveNumUpdate(@Param("vo") SaveVO vo, @Param("saveNum") int saveNum);
+
 
 }

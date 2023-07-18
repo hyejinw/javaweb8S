@@ -131,7 +131,7 @@
 		      <span class="detailContent"><p class="w3-tooltip"><i class="fa-solid fa-cart-shopping" style="color: #000000; font-size:25px" title="장바구니"></i>
 		      <br/>
 		      <font size="2" class="w3-center" style="font-weight:400">장바구니
-		      	<c:if test="${cartNum != 0}"><span class="badge badge-pill badge-success">${cartNum}</span></c:if>
+		      	<c:if test="${sCartNum != 0}"><span class="badge badge-pill badge-success">${sCartNum}</span></c:if>
 	      	</font>
 		      </p></span>
 	      </a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;

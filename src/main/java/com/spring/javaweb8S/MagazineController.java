@@ -117,7 +117,7 @@ public class MagazineController {
 	// 매거진 장바구니 저장
 	@ResponseBody
 	@RequestMapping(value = "/magazineCartInsert", method = RequestMethod.POST)
-	public String magazineCartInsertPost(CartVO vo) {
+	public String magazineCartInsertPost(CartVO vo, HttpSession session) {
 		
 		// 기존 장바구니 내역 중, 같은 상품 존재 확인
 		CartVO previousVO = magazineService.getMagazineCartSearch(vo.getMemNickname(), vo.getMaIdx());
@@ -128,6 +128,11 @@ public class MagazineController {
 		}
 		else {
 			magazineService.setMagazineCartInsert(vo);
+			
+			if(session.getAttribute("sCartNum") != null) {
+				int cartNum = (int) session.getAttribute("sCartNum");
+				session.setAttribute("sCartNum", cartNum + 1);
+			}
 		}
 		return "";
 	}
