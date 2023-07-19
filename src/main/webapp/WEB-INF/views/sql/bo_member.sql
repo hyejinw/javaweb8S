@@ -14,7 +14,8 @@ create table bo_member (
 
   agreement int default 1 not null,                    /* 약관동의 (0:미동의, 1:동의) */
   pwdUpdateDate datetime default now() not null,       /* 비밀번호 변경일 (6개월 이후, 변경 유도) */
- 	
+ 	introduction text,                                   /* 소개글(커뮤니티용) */
+  
 	totCnt int default 0 not null,                       /* 총 방문 수 */
 	todayCnt int default 0,                              /* 오늘 방문 수 */  
 	firstVisit datetime default now(),                   /* 가입일 */

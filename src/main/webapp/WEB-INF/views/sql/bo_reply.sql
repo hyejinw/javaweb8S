@@ -5,9 +5,11 @@ create table bo_reply (
 	refIdx int not null,                          /* 기록 고유번호(외래키) */
 	memNickname varchar(20) not null,             /* 작성자(회원 별명)(외래키) */
 	mentionedNickname varchar(20),                /* 멘션된 회원 */
+	originIdx int,	                              /* 원본 댓글 고유번호 */	
 	content text not null, 			    						  /* 내용 */						
-	originIdx int,                                /* 원본 댓글 고유번호 */
-	originContent text,                           /* 원본 내용 */
+	groupId int not null,                         /* 그룹 ID */
+	level int not null,                           /* 레벨 */
+	edit int not null default 0,                  /* 수정 여부 */
 	replyDate datetime default now() not null,    /* 작성 날짜 */
 	replyHostIp varchar(100) not null,            /* IP주소 */
 	replyDel char(5) default '미삭제',              /* 삭제 신청 여부 */

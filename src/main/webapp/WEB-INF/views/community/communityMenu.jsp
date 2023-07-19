@@ -25,7 +25,7 @@
   			alert('로그인 후 이용해주세요.');
   			return false;
   		}
-  		location.href = "${ctp}/";
+  		location.href = "${ctp}/community/communityMyPage?memNickname=${sNickname}";
   	}
   </script>
 </head>
@@ -38,7 +38,9 @@
 	  	비회원 입장 중입니다
 	  </c:if>
 	  <c:if test="${!empty sNickname}">
-		  <img src="${ctp}/admin/member/${sMemPhoto}" class="rounded-circle" style="width:100%; max-width:80px">
+	  	<a href="javascript:memPage('${sNickname}')">
+		  	<img src="${ctp}/admin/member/${sMemPhoto}" class="rounded-circle" style="width:100%; max-width:80px">
+		  </a>
 	  </c:if>
 	  <br/><br/>
 	  <a href="javascript:nicknameCheck()" class="w3-bar-item w3-button w3-padding-large w3-hover-sand">

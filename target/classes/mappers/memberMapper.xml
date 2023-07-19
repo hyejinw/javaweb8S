@@ -46,6 +46,13 @@
 		(default, #{nickname},#{point},#{pointReason},default);
 	</insert>
 	
+	<insert id="setBookSaveCategoryInsert">
+		INSERT INTO bo_bookSaveCategory VALUES (default, #{nickname}, "인생책");
+		INSERT INTO bo_bookSaveCategory VALUES (default, #{nickname}, "추천책");
+		INSERT INTO bo_bookSaveCategory VALUES (default, #{nickname}, "읽은책");
+		INSERT INTO bo_bookSaveCategory VALUES (default, #{nickname}, "관심책");
+	</insert>
+	
 	<update id="setMemberPoint">
 		UPDATE bo_member SET point = point + #{point};
 	</update>

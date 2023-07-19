@@ -53,6 +53,7 @@ public class PageProcess {
 		else if(section.equals("colProductList")) totRecCnt = collectionDAO.productTotRecCnt(search, searchString);
 		else if(section.equals("communityReflectionList")) totRecCnt = communityDAO.reflectionTotRecCnt();
 		else if(section.equals("communityReflectionSearch")) totRecCnt = communityDAO.reflectionSearchTotRecCnt(search, searchString);
+		else if(section.equals("communityMyPageInspired")) totRecCnt = communityDAO.myPageInspiredTotRecCnt(search);
 		
 		
 //		else if(section.equals("board")) {

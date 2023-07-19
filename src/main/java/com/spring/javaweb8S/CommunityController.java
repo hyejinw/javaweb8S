@@ -7,6 +7,7 @@ import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -17,6 +18,7 @@ import com.spring.javaweb8S.common.BookInsertSearch;
 import com.spring.javaweb8S.pagination.PageProcess;
 import com.spring.javaweb8S.pagination.PageVO;
 import com.spring.javaweb8S.service.CommunityService;
+import com.spring.javaweb8S.vo.BookSaveVO;
 import com.spring.javaweb8S.vo.BookVO;
 import com.spring.javaweb8S.vo.InsSaveVO;
 import com.spring.javaweb8S.vo.InspiredVO;
@@ -77,7 +79,6 @@ public class CommunityController {
 			vos =	communityService.getReflectionList(pageVO.getStartIndexNo(), pageSize);
 		}
 		else {
-			// 아직 안 만들었다.
 			pageVO = pageProcess.totRecCnt(pag, pageSize, "communityReflectionSearch", search, searchString);
 			vos = communityService.getReflectionSearch(pageVO.getStartIndexNo(), pageSize, search, searchString);
 			model.addAttribute("search", search);
@@ -147,17 +148,65 @@ public class CommunityController {
 		else return "redirect:/message/reflectionInsertNo";
 	}
 	
+	// (발표할 때 넣기!!!!!!!! 사랑훼 혜진앙)
 	// 기록 상세창
+	@SuppressWarnings({ "unchecked", "rawtypes" })
 	@RequestMapping(value = "/reflectionDetail", method = RequestMethod.GET)
 	public String reflectionDetailGet(int idx, HttpSession session,
 			@RequestParam(name = "bookIdx", defaultValue = "0", required = false) int bookIdx,
 			Model model) {
+		
+		// 글 조회수 1씩 증가시키기(조회수 중복방지 - 세션처리('reflection+고유번호'를 객체배열에 추가시켜준다.)
+		ArrayList<String> reflectionIdx = (ArrayList) session.getAttribute("sReflectionIdx");
+		if(reflectionIdx == null) {
+			reflectionIdx = new ArrayList<String>();
+		}
+		
+		String tempRefIdx = "reflection" + idx;
+		if(!reflectionIdx.contains(tempRefIdx)) {
+			// 조회수 증가하기	
+			communityService.setRefViewUpdate(idx);
+			reflectionIdx.add(tempRefIdx);
+		}
+		session.setAttribute("sReflectionIdx", reflectionIdx);
+		
 		
 		ReflectionVO vo = communityService.getReflectionDetail(idx);
 		model.addAttribute("vo", vo);
 		
 		// 댓글
 		ArrayList<ReplyVO> replyVOS = communityService.getReply(idx);
+		
+		// 대댓글일 경우, 처리
+		ArrayList<ReplyVO> tempReplyVOS = new ArrayList<ReplyVO>();
+		
+		for(int i=0; i<replyVOS.size(); i++) {
+			if(replyVOS.get(i).getMentionedNickname() != null) {
+				tempReplyVOS.add(replyVOS.get(i));	
+			}
+		}
+		
+		// 원본 댓글 내용 가져온다
+		ArrayList<ReplyVO> tempOriginVOS = new ArrayList<ReplyVO>();
+		
+		if(tempReplyVOS.size() != 0) {
+			tempOriginVOS = communityService.getReReplyOriginContent(tempReplyVOS);
+		}
+		
+		// 가져온 원본 댓글의 내용을 담는다
+		for(int i=0; i<tempOriginVOS.size(); i++) {
+
+			for(int j=0; j<replyVOS.size(); j++) {
+				if(replyVOS.get(j).getOriginIdx() == tempOriginVOS.get(i).getIdx()) {
+					
+					ReplyVO tempVO = new ReplyVO();
+					tempVO = replyVOS.get(j);
+					tempVO.setOriginContent(tempOriginVOS.get(i).getContent());
+					tempVO.setOriginEdit(tempOriginVOS.get(i).getEdit());
+				}
+			}
+		}
+		
 		model.addAttribute("replyVOS", replyVOS);
 		model.addAttribute("replyNum", replyVOS.size());
 		
@@ -201,6 +250,24 @@ public class CommunityController {
 		
 		vo.setLevel(vo.getLevel()+1);
 		communityService.setReplyInsert(vo);
+		return "";
+	}
+	
+	// 커뮤니티 기록 상세창에서 댓글 수정
+	@ResponseBody
+	@RequestMapping(value = "/replyUpdate", method = RequestMethod.POST)
+	public String replyUpdatePost(ReplyVO vo) {
+		
+		communityService.setReplyUpdate(vo);
+		return "";
+	}
+
+	// 커뮤니티 기록 상세창에서 댓글 삭제
+	@ResponseBody
+	@RequestMapping(value = "/replyDelete", method = RequestMethod.POST)
+	public String replyDeletePost(int idx) {
+		
+		communityService.setReplyDelete(idx);
 		return "";
 	}
 	
@@ -260,7 +327,7 @@ public class CommunityController {
 		
 		communityService.setInspiredDelete(idx);
 		
-		// 해당 문장 수집을 저장한 기록 모두 삭제
+		// 해당 문장 수집을 저장한 경우 모두 삭제
 		communityService.setInsSaveForcedDelete(idx);
 		return "";
 	}
@@ -329,6 +396,133 @@ public class CommunityController {
 		
 		if(res != 0)  return "redirect:/message/reflectionUpdateOk?idx="+vo.getIdx();
 		else return "redirect:/message/reflectionUpdateNo?idx="+vo.getIdx();
+	}
+	
+	// 커뮤니티 기록 상세창에서 기록 삭제
+	@Transactional
+	@RequestMapping(value = "/reflectionDelete", method = RequestMethod.GET)
+	public String reflectionDeleteGet(int idx) {
+		
+		// 기록에 사진이 존재한다면 서버에 있는 사진파일을 먼저 삭제처리한다.
+		ReflectionVO vo = communityService.getReflectionDetail(idx);
+		if(vo.getContent().indexOf("src=\"/") != -1) communityService.imgDelete(vo.getContent());
+		
+		// 기록 삭제
+		int res = communityService.setReflectionDelete(idx);
+		
+		// 해당 기록을 저장한 경우 모두 삭제
+		communityService.setRefSaveForcedDelete(idx);
+		
+		// 해당 기록에 달린 댓글 삭제
+		communityService.setReplyForcedDelete(idx);
+		
+		if(res != 0)  return "redirect:/message/reflectionDeleteOk";
+		else return "redirect:/message/reflectionDeleteNo?idx="+idx;
+	}
+	
+	// 커뮤니티 마이페이지 메인창(서재, 문장수집)
+	@RequestMapping(value = "/communityMyPage", method = RequestMethod.GET)
+	public String communityMyPageGet(String memNickname, Model model,
+			@RequestParam(name="searchString", defaultValue = "", required = false) String searchString,  // 책 검색용
+			@RequestParam(name="pag", defaultValue = "1", required = false) int pag,
+			@RequestParam(name="pageSize", defaultValue = "20", required = false) int pageSize) {
+		
+		// 회원정보
+		MemberVO memberVO = communityService.getMemberInfo(memNickname);
+		model.addAttribute("memberVO", memberVO);
+		
+		// (서재) 카테고리별 책 저장
+		ArrayList<BookSaveVO> bookSave1VOS = communityService.getBookSave("인생책", memNickname);
+		ArrayList<BookSaveVO> bookSave2VOS = communityService.getBookSave("추천책", memNickname);
+		ArrayList<BookSaveVO> bookSave3VOS = communityService.getBookSave("읽은책", memNickname);
+		ArrayList<BookSaveVO> bookSave4VOS = communityService.getBookSave("관심책", memNickname);
+		
+		model.addAttribute("bookSave1VOS", bookSave1VOS);
+		model.addAttribute("bookSave2VOS", bookSave2VOS);
+		model.addAttribute("bookSave3VOS", bookSave3VOS);
+		model.addAttribute("bookSave4VOS", bookSave4VOS);
+		model.addAttribute("bookSave1VOSNum", bookSave1VOS.size());
+		model.addAttribute("bookSave2VOSNum", bookSave2VOS.size());
+		model.addAttribute("bookSave3VOSNum", bookSave3VOS.size());
+		model.addAttribute("bookSave4VOSNum", bookSave4VOS.size());
+		
+		// 새 소식
+	
+		// 문장 수집
+		PageVO pageVO = pageProcess.totRecCnt(pag, pageSize, "communityMyPageInspired", memNickname, "");
+		ArrayList<InspiredVO> inspiredVO = communityService.getMemInspired(pageVO.getStartIndexNo(), pageSize, memNickname);
+		
+		model.addAttribute("pageVO", pageVO);
+		model.addAttribute("inspiredVO", inspiredVO);
+		
+		// 책 검색
+		if(!searchString.equals("")) {
+			ArrayList<BookVO> bookVOS = new ArrayList<BookVO>();
+			
+			try {
+				bookVOS = bookInsert.bookInsert(searchString);
+			} catch (UnsupportedEncodingException e) {
+				e.printStackTrace();
+			}
+			
+			model.addAttribute("bookVOS", bookVOS);
+			model.addAttribute("searchString", searchString);
+		}
+		
+		// 기록  : 이거 앞에서 함 근데 다시 봐야 한다!
+		//ArrayList<ReflectionVO> reflectionVOS = communityService.getMemReflection(memNickname);
+		//model.addAttribute("reflectionVOS", reflectionVOS);
+		
+		
+		// 댓글
+		
+		// 작성 문의
+		
+		return "community/communityMyPage";
+	}
+	
+	
+	
+	// 커뮤니티 마이페이지 메인창에서, 책 저장 추가
+	@ResponseBody
+	@RequestMapping(value = "/bookSaveInsert", method = RequestMethod.POST)
+	public String bookSaveInsertPost(BookSaveVO vo) {
+		
+		communityService.setBookSaveInsert(vo);
+		return "";
+	}
+	
+	// 커뮤니티 마이페이지 메인창에서, 책 저장 카테고리 변경
+	@ResponseBody
+	@RequestMapping(value = "/bookSaveCategoryChange", method = RequestMethod.POST)
+	public String bookSaveCategoryChangePost(BookSaveVO vo) {
+		// 책 저장 삭제
+		communityService.setBookSaveDelete(vo.getIdx());
+		// 책 저장 카테고리 변경
+		communityService.setBookSaveCategoryChange(vo);
+		return "";
+	}
+	
+	// 커뮤니티 마이페이지 메인창에서, 책 저장 삭제
+	@ResponseBody
+	@RequestMapping(value = "/bookSaveDelete", method = RequestMethod.POST)
+	public String bookSaveDeletePost(int idx) {
+		
+		communityService.setBookSaveDelete(idx);
+		return "";
+	}
+	
+	// 회원 창
+	@RequestMapping(value = "/memPage", method = RequestMethod.GET)
+	public String memPageGet(String memNickname) {
+		
+		// 서재(책 저장 카테고리별 책 가져오기: 최신)
+		
+		
+		
+		// 
+		
+		return "community/memPage";
 	}
 	
 	

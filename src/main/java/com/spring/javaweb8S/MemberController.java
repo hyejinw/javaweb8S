@@ -92,6 +92,10 @@ public class MemberController {
 				}
 			}
 		}
+		
+		// 첫 방문시, 커뮤니티 책 저장 카테고리 생성
+		if(vo.getTotCnt() == 0) memberService.setBookSaveCategoryInsert(vo.getNickname());
+		
 		Date today = new Date();
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 		String strToday = sdf.format(today);

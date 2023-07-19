@@ -187,7 +187,7 @@
 			
 			<!-- 컬렉션 리스트 : 2개씩 끊어서 뿌려야 한다.-->
 			<div class="row" style="margin-bottom:100px">
-			<c:set var="cnt" 	value="${0}"/>
+			<c:set var="cnt" value="${0}"/>
 			<c:forEach var="vo" items="${vos}" varStatus="st">
 				<div class="col" <c:if test="${cnt % 2 != 0}">style="margin-left:80px"</c:if>>
 					<a href="${ctp}/collection/colProductList?colIdx=${vo.idx}" class="banner_img">

@@ -73,6 +73,19 @@
 	   		}
 	  	});
 		});
+		
+		// 회원 페이지 열기
+  	function memPage(memNickname) {
+			let url = "${ctp}/community/memPage?memNickname="+memNickname;
+	
+			let popupWidth = 1000;
+			let popupHeight = 1200;
+	
+			let popupX = (window.screen.width / 2) - (popupWidth / 2);
+			let popupY= (window.screen.height / 2) - (popupHeight / 2);
+			
+			window.open(url, 'player', 'status=no, height=' + popupHeight  + ', width=' + popupWidth  + ', left='+ popupX + ', top='+ popupY);
+		}
   </script>
  
 </head>

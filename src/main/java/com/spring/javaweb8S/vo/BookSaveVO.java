@@ -5,8 +5,9 @@ import lombok.Data;
 @Data
 public class BookSaveVO {
 	private int idx;
-	private int bookIdx;
 	private String memNickname;
+	private String categoryName;
+	private int bookIdx;
 	
 	// bo_book 정보가 담길 예정
 	private String title;

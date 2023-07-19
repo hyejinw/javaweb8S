@@ -40,7 +40,7 @@
 	</update>
 	
 	<update id="setDeliveryAutoUpdate">
-		update bo_delivery set deliveryStatus = #{status} where orderIdx in
+		update bo_delivery set deliveryStatus = #{status}, deliveryDate = default  where orderIdx in
    	<foreach collection="level" item="level" open="(" close=")" separator=",">
    		#{level}
     </foreach>;

@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 import org.apache.ibatis.annotations.Param;
 
+import com.spring.javaweb8S.vo.BookSaveVO;
 import com.spring.javaweb8S.vo.InspiredVO;
 import com.spring.javaweb8S.vo.MemberVO;
 import com.spring.javaweb8S.vo.RefSaveVO;
@@ -15,6 +16,7 @@ public interface CommunityDAO {
 	// 페이징 처리용
 	public int reflectionTotRecCnt();
 	public int reflectionSearchTotRecCnt(@Param("search") String search, @Param("searchString") String searchString);
+	public int myPageInspiredTotRecCnt(String search);
 
 	public MemberVO getMemberInfo(@Param("nickname") String nickname);
 
@@ -60,6 +62,32 @@ public interface CommunityDAO {
 	public int setRefBookUpdate(@Param("publisher") String publisher, @Param("bookTitle") String bookTitle, @Param("idx") int idx);
 	
 	public int setReflectionUpdate(@Param("vo") ReflectionVO vo);
+	
+	public ArrayList<ReplyVO> getReReplyOriginContent(@Param("tempReplyVOS") ArrayList<ReplyVO> tempReplyVOS);
+	
+	public void setReplyUpdate(@Param("vo") ReplyVO vo);
+	
+	public void setReplyDelete(@Param("idx") int idx);
+	
+	public void setRefViewUpdate(@Param("idx") int idx);
+	
+	public int setReflectionDelete(@Param("idx") int idx);
+	
+	public void setRefSaveForcedDelete(@Param("idx") int idx);
+	
+	public void setReplyForcedDelete(@Param("idx") int idx);
+	
+	public ArrayList<BookSaveVO> getBookSave(@Param("categoryName") String categoryName, @Param("memNickname") String memNickname);
+	
+	public ArrayList<ReflectionVO> getMemReflection(@Param("memNickname") String memNickname);
+	
+	public ArrayList<InspiredVO> getMemInspired(@Param("startIndexNo") int startIndexNo, @Param("pageSize") int pageSize, @Param("memNickname") String memNickname);
+	
+	public void setBookSaveInsert(@Param("vo") BookSaveVO vo);
+	
+	public void setBookSaveDelete(@Param("idx") int idx);
+	
+	public void setBookSaveCategoryChange(@Param("vo") BookSaveVO vo);
 
 
 }

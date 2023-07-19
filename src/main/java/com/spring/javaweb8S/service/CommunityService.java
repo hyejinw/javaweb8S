@@ -2,6 +2,7 @@ package com.spring.javaweb8S.service;
 
 import java.util.ArrayList;
 
+import com.spring.javaweb8S.vo.BookSaveVO;
 import com.spring.javaweb8S.vo.InspiredVO;
 import com.spring.javaweb8S.vo.MemberVO;
 import com.spring.javaweb8S.vo.RefSaveVO;
@@ -59,6 +60,32 @@ public interface CommunityService {
 	public void imgCheckUpdate(String content);
 
 	public void imgDelete(String content);
+
+	public ArrayList<ReplyVO> getReReplyOriginContent(ArrayList<ReplyVO> tempReplyVOS);
+
+	public void setReplyUpdate(ReplyVO vo);
+
+	public void setReplyDelete(int idx);
+
+	public void setRefViewUpdate(int idx);
+
+	public int setReflectionDelete(int idx);
+
+	public void setRefSaveForcedDelete(int idx);
+
+	public void setReplyForcedDelete(int idx);
+
+	public ArrayList<BookSaveVO> getBookSave(String categoryName, String memNickname);
+
+	public ArrayList<ReflectionVO> getMemReflection(String memNickname);
+
+	public ArrayList<InspiredVO> getMemInspired(int startIndexNo, int pageSize, String memNickname);
+
+	public void setBookSaveInsert(BookSaveVO vo);
+
+	public void setBookSaveDelete(int idx);
+
+	public void setBookSaveCategoryChange(BookSaveVO vo);
 
 
 

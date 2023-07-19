@@ -116,9 +116,17 @@ public class MessageController {
 			model.addAttribute("msg", "기록이 수정되었습니다.");
 			model.addAttribute("url", "/community/reflectionDetail?idx="+idx);
 		}
-		else if(msgFlag.equals("reflectionUpdateNo")) {
+		else if(msgFlag.equals("reflectionUpdateNo")) {            
 			model.addAttribute("msg", "재시도 부탁드립니다.");
 			model.addAttribute("url", "/community/reflectionUpdate?idx="+idx);
+		}
+		else if(msgFlag.equals("reflectionDeleteOk")) {
+			model.addAttribute("msg", "기록이 삭제되었습니다.");
+			model.addAttribute("url", "/community/reflection");
+		}
+		else if(msgFlag.equals("reflectionDeleteNo")) {
+			model.addAttribute("msg", "재시도 부탁드립니다.");
+			model.addAttribute("url", "/community/reflectionDetail?idx="+idx);
 		}
 		
 		

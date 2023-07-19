@@ -214,7 +214,7 @@
 		    	<c:if test="${!empty vos}">
 			    	<c:set var="curScrStartNo" value="${pageVO.curScrStartNo}" />
 			    	<c:forEach var="vo" items="${vos}" varStatus="st">
-				      <tr>
+				      <tr <c:if test="${vo.memNickname == sNickname}">style="background-color:#F5F5F5"</c:if>>
 				      	<td class="text-center">${curScrStartNo}</td>
 				      	<td class="text-center"><!-- 책 상세 페이지 -->
 				        	<c:if test="${!empty vo.thumbnail}"><img src="${vo.thumbnail}" style="width:50px"/></c:if>

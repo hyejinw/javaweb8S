@@ -15,6 +15,7 @@ import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
 import com.spring.javaweb8S.dao.CommunityDAO;
+import com.spring.javaweb8S.vo.BookSaveVO;
 import com.spring.javaweb8S.vo.InspiredVO;
 import com.spring.javaweb8S.vo.MemberVO;
 import com.spring.javaweb8S.vo.RefSaveVO;
@@ -256,7 +257,7 @@ public class CommunityServiceImpl implements CommunityService {
 		//             01234567890123456789012345678901234567890
 		// <img alt="" src="/javawebS/data/community/230616141341_sanfran.jpg" style="height:300px; width:400px" /></p><p><img alt="" src="/javawebS/data/ckeditor/230616141353_paris.jpg" style="height:300px; width:400px" /></p>
 		
-		// content안에 그림파일이 존재한다면 그림을 /data/board/폴더로 복사처리한다. 없으면 돌려보낸다.
+		// content안에 그림파일이 존재한다면 그림을 /data/community/폴더로 복사처리한다. 없으면 돌려보낸다.
 		if(content.indexOf("src=\"/") == -1) return;
 		
 		HttpServletRequest request = ((ServletRequestAttributes)RequestContextHolder.currentRequestAttributes()).getRequest();
@@ -286,6 +287,84 @@ public class CommunityServiceImpl implements CommunityService {
 	private void fileDelete(String origFilePath) {
 		File delFile = new File(origFilePath);
 		if(delFile.exists()) delFile.delete();
+	}
+
+	// 대댓글의 원본 댓글 내용 가져오기
+	@Override
+	public ArrayList<ReplyVO> getReReplyOriginContent(ArrayList<ReplyVO> tempReplyVOS) {
+		return communityDAO.getReReplyOriginContent(tempReplyVOS);
+	}
+
+	// 커뮤니티 기록 상세창에서 댓글 수정
+	@Override
+	public void setReplyUpdate(ReplyVO vo) {
+		communityDAO.setReplyUpdate(vo);
+	}
+
+	// 커뮤니티 기록 상세창에서 댓글 삭제
+	@Override
+	public void setReplyDelete(int idx) {
+		communityDAO.setReplyDelete(idx);
+	}
+
+	// 조회수 증가하기
+	@Override
+	public void setRefViewUpdate(int idx) {
+		communityDAO.setRefViewUpdate(idx);
+	}
+
+	// 기록 삭제
+	@Override
+	public int setReflectionDelete(int idx) {
+		return communityDAO.setReflectionDelete(idx);
+	}
+
+	// 해당 기록을 저장한 경우 모두 삭제
+	@Override
+	public void setRefSaveForcedDelete(int idx) {
+		communityDAO.setRefSaveForcedDelete(idx);
+	}
+
+	// 해당 기록에 달린 댓글 삭제
+	@Override
+	public void setReplyForcedDelete(int idx) {
+		communityDAO.setReplyForcedDelete(idx);
+	}
+
+	// 커뮤니티 마이페이지, (서재) 카테고리별 책 저장
+	@Override
+	public ArrayList<BookSaveVO> getBookSave(String categoryName, String memNickname) {
+		return communityDAO.getBookSave(categoryName, memNickname);
+	}
+
+	// 커뮤니티 마이페이지, 기록
+	@Override
+	public ArrayList<ReflectionVO> getMemReflection(String memNickname) {
+		return communityDAO.getMemReflection(memNickname);
+	}
+
+	// 커뮤니티 마이페이지, 문장수집
+	@Override
+	public ArrayList<InspiredVO> getMemInspired(int startIndexNo, int pageSize, String memNickname) {
+		return communityDAO.getMemInspired(startIndexNo, pageSize, memNickname);
+	}
+
+	// 커뮤니티 마이페이지 메인창에서, 책 저장 추가
+	@Override
+	public void setBookSaveInsert(BookSaveVO vo) {
+		communityDAO.setBookSaveInsert(vo);
+	}
+
+	// 책 저장 삭제
+	@Override
+	public void setBookSaveDelete(int idx) {
+		communityDAO.setBookSaveDelete(idx);
+	}
+
+	// 책 저장 카테고리 변경
+	@Override
+	public void setBookSaveCategoryChange(BookSaveVO vo) {
+		communityDAO.setBookSaveCategoryChange(vo);
 	}
 	
 	

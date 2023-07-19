@@ -33,4 +33,6 @@ public interface MemberService {
 
 	public ProverbVO getRandomProverb(int randomNum);
 
+	public void setBookSaveCategoryInsert(String nickname);
+
 }

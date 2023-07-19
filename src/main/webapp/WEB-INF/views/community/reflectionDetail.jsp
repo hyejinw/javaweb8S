@@ -121,21 +121,13 @@
 
 			let replyHostIp = document.getElementById('replyHostIp').value; 
 			let replyContent = document.getElementById('replyContent').value; 
-			//let regex1 = /^[가-힣a-zA-Z0-9\{\}\[\]\/?.,;:|\)*~`!^\'\"\s\-_+<>@\#$%&\\\=\(]$/g; 
-			// (댓글)한글,영문,숫자,특수문자 허용
 			
 			if(replyContent == ''){
 				alert('댓글을 작성해주세요.');
 				document.getElementById('replyContent').focus();
 		    return false;
 		  }
-			
-/* 			if(!regex1.test(replyContent)){
-				alert('댓글을 알맞게 입력해주세요.(한글/영문/숫자/특수문자 허용)');
-				document.getElementById('replyContent').focus();
-		    return false;
-		  }
-			 */
+
 			$.ajax({
 				type : "post",
 				url : "${ctp}/community/replyInsert",
@@ -175,18 +167,15 @@
 			let mentionedNickname = document.getElementById('mentionedNickname').value;
 			let groupId = document.getElementById('groupId').value;
 			let level = document.getElementById('level').value;
+			let originIdx = document.getElementById('originIdx').value;
 		
-			alert(mentionedNickname);
-			alert(groupId);
-			alert(level);
-			
-			
 			$.ajax({
 				type : "post",
 				url : "${ctp}/community/reReplyInsert",
 				data : {
 					memNickname : '${sNickname}',
 					refIdx : ${vo.idx},
+					originIdx : originIdx,
 					content : replyContent,
 					replyHostIp : replyHostIp,
 					mentionedNickname : mentionedNickname,
@@ -204,7 +193,7 @@
 		}
 		
 		// 대댓글 창 열기
-		function reReply(mentionedNickname, content, groupId, level) {
+		function reReply(idx, mentionedNickname, content, groupId, level) {
 			let subStringContent = content.substring(0,20);
 			
 			let str = '';
@@ -230,10 +219,13 @@
 			str += '<input type="hidden" id="mentionedNickname" value="'+mentionedNickname+'"/>';
 			str += '<input type="hidden" id="groupId" value="'+groupId+'"/>';
 			str += '<input type="hidden" id="level" value="'+level+'"/>';
+			str += '<input type="hidden" id="originIdx" value="'+idx+'"/>';
 			str += '</div>';
 			str += '</div>';
 			
 			document.getElementById('reReplySection').innerHTML = str;
+			
+			document.getElementById('replyContent').focus();
 			
 			// 버튼 변경
 			$('#replyBtn').css('display','none');
@@ -396,21 +388,70 @@
     	});
 		}
 		
+		// 대댓글의 원본 댓글 상세창
+		function replyDetail(originIdx) {
+			document.getElementById('replyDetailContent').value = document.getElementById('content'+originIdx).value;
+		}
+		
 		// 댓글 수정창
-		function replyEditOpen(content) {
-			document.getElementById('replyEditContent').value = content;
+		function replyEditOpen(idx) {
+			document.getElementById('replyEditIdx').value = idx;
+			document.getElementById('replyEditContent').value = document.getElementById('content'+idx).value;
+		}
+		
+		// 댓글 수정
+		function replyEdit() {
+			let idx = document.getElementById('replyEditIdx').value;
+			let content = document.getElementById('replyEditContent').value;
 			
-			// 입력값 끝에 커서 주기 == 안 된다ㅜ
-			let contentValue = $('#replyEditContent').val();
-      $('#replyEditContent').focus().val('').val(contentValue);
+			if(content == '') {
+				alert('댓글을 완성해주세요.');
+				document.getElementById('replyEditContent').focus();
+		    return false;
+		  }
+			
+			$.ajax({
+				type : "post",
+				url : "${ctp}/community/replyUpdate",
+				data : {
+					idx : idx,
+					content : content
+				},
+				success : function() {
+					alert('댓글이 수정되었습니다.');
+					location.reload();
+				},
+				error : function() {
+					alert('전송 오류! 재시도 부탁드립니다.');
+				}
+			}); 
+		}
+		
+		// 댓글 삭제
+		function replyDelete(idx) {
+			let ans = confirm('삭제 후 복구 불가능합니다. 삭제하시겠습니까?');
+			if(!ans) return false;
+			
+			$.ajax({
+				type : "post",
+				url : "${ctp}/community/replyDelete",
+				data : { idx : idx },
+				success : function() {
+					alert('댓글이 삭제되었습니다.');
+					location.reload();
+				},
+				error : function() {
+					alert('전송 오류! 재시도 부탁드립니다.');
+				}
+			}); 
 		}
 		
 		// 문장 수집 수정창
-		function inspiredEditOpen(idx, insContent, page, explanation) {
+		function inspiredEditOpen(idx) {
 			document.getElementById('insEditIdx').value = idx;
-			document.getElementById('insEditContent').value = insContent;
-			document.getElementById('editPage').value = page;
-			document.getElementById('editExplanation').value = explanation;
+			document.getElementById('insEditContent').value = document.getElementById('insContent'+idx).value;
+			document.getElementById('editPage').value = document.getElementById('page'+idx).value;
+			document.getElementById('editExplanation').value = document.getElementById('explanation'+idx).value;
 		}
 		
 		// 문장 수집 수정
@@ -451,6 +492,13 @@
 			}); 
 		}
 			
+		// 기록 삭제
+		function reflectionDelete(idx) {
+			let ans = confirm('삭제 후 복구 불가능합니다. 삭제하시겠습니까?');
+			if(!ans) return false;
+			
+			location.href = "${ctp}/community/reflectionDelete?idx="+idx;
+		}
   </script>
 </head>
 <body>
@@ -492,6 +540,12 @@
 						<a href="#replySection" class="btn btn-outline-primary">댓글(${replyNum})</a>
 					</div>
 					<div class="col text-right mr-5">
+						<c:if test="${vo.memNickname == sNickname}">
+	  					<a href="javascript:reflectionDelete('${vo.idx}')">
+		  					<i class="fa-solid fa-xmark" style="font-size:32px"></i>
+		  				</a>
+		  				&nbsp;&nbsp;&nbsp;&nbsp;
+		  			</c:if>
 						<span style="font-size:28px">
 							<c:if test="${empty saveVO}"><i class="fa-regular fa-bookmark save" onclick="save()" title="관심등록되지 않은 기록입니다"></i></c:if>
 							<c:if test="${!empty saveVO}"><i class="fa-solid fa-bookmark save" onclick="save()" title="관심등록된 기록"></i></c:if>
@@ -530,7 +584,25 @@
 				  </div>
 				  
 					<c:forEach var="replyVO" items="${replyVOS}"> 
-				  	<div class="row mt-4">
+						<c:if test="${replyVO.level != 0}">
+		  				<div style="margin-left:30px">
+		  					<div style="padding:0px 16px 0px 16px; width:80%; max-width:1000px; margin-left: auto; margin-right: auto;">
+									<div class="mt-3" style="background-color:rgba(254, 251, 232); border-radius:10px; padding:10px;">
+										<a href="${ctp}/community/memPage?nickname='+mentionedNickname+'">
+										<span style="color:grey">@${replyVO.mentionedNickname}</span>
+										</a>
+										&nbsp;&nbsp;&nbsp;
+										<span>
+											<a href="#" onclick="replyDetail('${replyVO.originIdx}')" data-toggle="modal" data-target="#replyDetailModal">
+												<c:if test="${replyVO.originEdit == 1}"><span style="color:grey">(수정됨)</span></c:if>
+												${fn:substring(replyVO.originContent,0,75)}</span>
+												<c:if test="${fn:length(replyVO.originContent) > 75}">...</c:if>
+											</a>
+									</div>
+								</div>
+		  				</div>
+	  				</c:if>
+				  	<div class="row mt-4" <c:if test="${replyVO.level != 0}">style="margin:0px 0px 0px 50px"</c:if>> 
 				  		<div class="col-2 text-right">
 					  		<a href="${ctp}/community/memPage?nickname=${replyVO.memNickname}">
 					  			<img src="${ctp}/admin/member/${replyVO.memPhoto}" class="rounded-circle" style="width:30px"/>
@@ -538,26 +610,29 @@
 				  		</div>
 				  		<div class="col-8">
 				  			<a href="${ctp}/community/memPage?nickname=${replyVO.memNickname}">
-				  				<span style="color:grey">${replyVO.memNickname}</span><br/>
+				  				<span style="color:grey; font-size:17px"><b>${replyVO.memNickname}</b></span>
 				  			</a>
+				  			<c:if test="${(replyVO.memNickname == sNickname) || (sMemType == '관리자')}">
+				  				<a href="javascript:replyDelete('${replyVO.idx}')">
+				  				  &nbsp;&nbsp;
+				  					<i class="fa-solid fa-xmark" style="font-size:20px"></i>
+				  				</a>
+				  			</c:if><br/>
 				  			<p>
+				  				<c:if test="${replyVO.edit == 1}"><span style="color:grey">(수정됨)</span></c:if>
 				  				${replyVO.content}
+				  				<input type="hidden" id="content${replyVO.idx}" value="${replyVO.content}"/>
 									<c:if test="${(replyVO.memNickname == sNickname)}">&nbsp;&nbsp;
-					  				<a href="#" onclick="replyEditOpen('${replyVO.content}')" data-toggle="modal" data-target="#replyEditModal">
+					  				<a href="#" onclick="replyEditOpen('${replyVO.idx}')" data-toggle="modal" data-target="#replyEditModal">
 											<i class="fa-regular fa-pen-to-square"></i>
 										</a>			
 									</c:if>				  			
 				  			</p>
 				  		</div>
 				  		<div class="col-2">
-				  			<c:if test="${(replyVO.memNickname == sNickname) || (sMemType == '관리자')}">
-				  				<a href="javascript:replyDelete('${replyVO.idx}')">
-				  					<i class="fa-solid fa-xmark" style="font-size:23px"></i>
-				  					&nbsp;&nbsp;&nbsp;
-				  				</a>
-				  			</c:if>
-				  			<a href="javascript:reReply('${replyVO.memNickname}','${replyVO.content}','${replyVO.groupId}','${replyVO.level}')">
+				  			<a href="javascript:reReply('${replyVO.idx}','${replyVO.memNickname}','${replyVO.content}','${replyVO.groupId}','${replyVO.level}')">
 				  				<i class="fa-solid fa-comments" style="font-size:18px"></i>
+				  				<!-- <i class="fa-regular fa-comments" style="font-size:18px"></i> -->
 			  				</a>&nbsp;&nbsp;&nbsp;
 				  			<button class="btn btn-sm btn-outline-secondary">신고</button>
 				  		</div>
@@ -608,17 +683,20 @@
 					    	<div class="col-11">
 					    	
 							    <span style="font-size:80px; line-height:0.6em; opacity:0.2">❝</span>
-							    <p class="w3-xlarge" style="margin:-40px 0px 0px 0px; padding:10px"><i style="font-size:19px;">${inspiredVO.insContent}</i>
+							    <p class="w3-xlarge" style="margin:-40px 0px 0px 0px; padding:10px">
+							    	<input type="hidden" id="insContent${inspiredVO.idx}" value="${inspiredVO.insContent}"/>
+							    	<i style="font-size:19px;">${inspiredVO.insContent}</i>
+							    	
 							    	<c:if test="${(inspiredVO.memNickname == sNickname)}">&nbsp;
-						  				<a href="#" onclick="inspiredEditOpen('${inspiredVO.idx}','${inspiredVO.insContent}','${inspiredVO.page}','${inspiredVO.explanation}')" data-toggle="modal" data-target="#inspiredEditModal">
+						  				<a href="#" onclick="inspiredEditOpen('${inspiredVO.idx}')" data-toggle="modal" data-target="#inspiredEditModal">
 												<i class="fa-regular fa-pen-to-square" style="font-size:16px"></i>
 											</a>			
 									</c:if>	
 							    </p>
 					    	
 					    	</div>
-					    	<div class="col-1 mt-4 text-right">
-					    		<c:if test="${(replyVO.memNickname == sNickname) || (sMemType == '관리자')}">
+					    	<div class="col-1 mt-3 text-right">
+					    		<c:if test="${(inspiredVO.memNickname == sNickname) || (sMemType == '관리자')}">
 					  				<a href="javascript:inspiredDelete('${inspiredVO.idx}')">
 					  					<i class="fa-solid fa-xmark" style="font-size:30px"></i>
 					  					&nbsp;&nbsp;&nbsp;
@@ -628,6 +706,7 @@
 					    </div>
 					    
 				    	<p class="ml-4" style="color:grey;">『 ${vo.bookTitle} 』(${vo.authors})&nbsp;&nbsp;${inspiredVO.page}</p>
+				    	<input type="hidden" id="page${inspiredVO.idx}" value="${inspiredVO.page}"/>
 					    <hr style="margin:0px"/>
 					    <div class="row">
 					    	<div class="col">
@@ -641,11 +720,14 @@
 										    </button>
 										    <div class="dropdown-menu" style="padding:5px">
 										      <p>${inspiredVO.explanation}</p>
+										      <input type="hidden" id="explanation${inspiredVO.idx}" value="${inspiredVO.explanation}"/>
 										    </div>
 										  </span>
-							    		
-							    			
 							    	</c:if>
+							    	<c:if test="${inspiredVO.explanation == ''}">
+								      <input type="hidden" id="explanation${inspiredVO.idx}" value="${inspiredVO.explanation}"/>
+							    	</c:if>
+							    	
 							    </div>
 					    	</div>
 					    	<div class="col text-right">
@@ -689,13 +771,40 @@
         <!-- Modal body -->
         <div class="modal-body" style="padding:0px">
           <div class="w3-container w3-border" style="background-color:#eee">
-		  			<textarea rows="4" cols="10" id="replyEditContent" style="margin:15px 0px" class="form-control mt-3" placeholder="댓글을 남겨주세요." autofocus></textarea>
+		  			<textarea rows="10" cols="10" id="replyEditContent" style="margin:15px 0px" class="form-control mt-3" placeholder="댓글을 남겨주세요." autofocus></textarea>
+		  			<input type="hidden" id="replyEditIdx"/>
 				  </div>
         </div>
         
         <!-- Modal footer -->
         <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" data-dismiss="modal">수정</button>
+          <button type="button" class="btn btn-secondary" onclick="replyEdit()">수정</button>
+        </div>
+        
+      </div>
+    </div>
+  </div>
+  
+	<!-- The Modal -->
+  <div class="modal fade" id="replyDetailModal">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+      
+        <!-- Modal Header -->
+        <div class="modal-header">
+          <h4 class="modal-title">댓글 상세창</h4>
+          <button type="button" class="close" data-dismiss="modal">&times;</button>
+        </div>
+        
+        <!-- Modal body -->
+        <div class="modal-body" style="padding:0px">
+          <div class="w3-container w3-border" style="background-color:#eee">
+		  			<textarea rows="10" cols="10" id="replyDetailContent" style="margin:15px 0px" class="form-control mt-3" disabled></textarea>
+				  </div>
+        </div>
+        
+        <!-- Modal footer -->
+        <div class="modal-footer">
         </div>
         
       </div>

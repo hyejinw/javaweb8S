@@ -41,7 +41,8 @@
 		LEFT JOIN bo_member m 
 		ON r.memNickname = m.nickname 
 		
-		WHERE r.refIdx = #{idx} AND r.replyDel != "삭제";
+		WHERE r.refIdx = #{idx} AND r.replyDel != "삭제"
+		ORDER BY r.groupId, r.idx;
 	</select>
 	
 	<select id="getInspired" resultType="com.spring.javaweb8S.vo.InspiredVO">
@@ -49,8 +50,6 @@
 		(select idx from bo_insSave WHERE insIdx = i.idx AND memNickname = #{nickname}) AS insSaveIdx
 		FROM bo_inspired i 
 		WHERE bookIdx = #{bookIdx} AND insDel != "삭제";
-		
-		<!-- SELECT * FROM bo_inspired WHERE bookIdx = #{bookIdx} AND insDel != "삭제"; -->
 	</select>
 	
 	<select id="getRefSave" resultType="com.spring.javaweb8S.vo.RefSaveVO">
@@ -81,6 +80,37 @@
 		ORDER BY r.idx DESC LIMIT #{startIndexNo},#{pageSize};
 	</select>
 	
+ 	<select id="getReReplyOriginContent" resultType="com.spring.javaweb8S.vo.ReplyVO">
+		SELECT content, idx, edit FROM bo_reply WHERE idx IN
+		<foreach item="item" index="index" collection="tempReplyVOS" open="(" close=")" separator=",">
+			 #{item.originIdx}
+		</foreach>
+	</select>
+	
+	<select id="getBookSave" resultType="com.spring.javaweb8S.vo.BookSaveVO">
+		SELECT s.*, b.title, b.thumbnail
+		FROM bo_bookSave s
+		LEFT JOIN bo_book b
+		ON s.bookIdx = b.idx
+		
+		WHERE s.categoryName = #{categoryName} AND s.memNickname = #{memNickname};
+	</select>
+	
+	<select id="myPageInspiredTotRecCnt" resultType="int">
+		SELECT count(*) FROM bo_inspired WHERE memNickname = #{search} AND insDel != "삭제";
+	</select>
+	
+	<!-- SELECT *, 
+		(select idx from bo_insSave WHERE insIdx = i.idx AND memNickname = #{nickname}) AS insSaveIdx
+		FROM bo_inspired i 
+		WHERE bookIdx = #{bookIdx} AND insDel != "삭제"; -->
+	
+	<select id="getMemInspired" resultType="com.spring.javaweb8S.vo.InspiredVO">
+		SELECT * FROM bo_inspired WHERE memNickname = #{memNickname} AND insDel != "삭제" 
+		ORDER BY idx DESC LIMIT #{startIndexNo},#{pageSize};
+	</select>
+	
+	
 	<insert id="setReflectionInsert" parameterType="com.spring.javaweb8S.vo.ReflectionVO">
  		<if test='vo.bookTitle != null and vo.bookTitle=="없음"'>
 			INSERT INTO bo_reflection(idx, memNickname, title, content, refSave, refView, replyOpen, refDate, refHostIp, refDel)
@@ -94,14 +124,16 @@
 		</if>
 	</insert>
 	
-<!-- 	<insert id="setReplyInsert">
-		INSERT INTO bo_reply (idx,refIdx,memNickname,content,groupId,level,replyDate,replyHostIp,replyDel)
-		VALUES
-		(default,#{vo.refIdx},#{vo.memNickname},#{vo.content},#{vo.groupId},#{vo.level},default,#{vo.replyHostIp},default);
-	</insert> -->
-	<insert id="setReplyInsert">
-		INSERT INTO bo_reply VALUES
-		(default,#{vo.refIdx},#{vo.memNickname},#{vo.mentionedNickname},#{vo.content},#{vo.groupId},#{vo.level},default,#{vo.replyHostIp},default);
+	<insert id="setReplyInsert" parameterType="com.spring.javaweb8S.vo.ReplyVO">
+		<if test='vo.mentionedNickname != null'>
+			INSERT INTO bo_reply VALUES
+			(default,#{vo.refIdx},#{vo.memNickname},#{vo.mentionedNickname},#{vo.originIdx},#{vo.content},#{vo.groupId},#{vo.level},default,default,#{vo.replyHostIp},default);
+		</if>
+		<if test='vo.mentionedNickname == null'>
+			INSERT INTO bo_reply (idx,refIdx,memNickname,content,groupId,level,edit,replyDate,replyHostIp,replyDel) 
+			VALUES
+			(default,#{vo.refIdx},#{vo.memNickname},#{vo.content},#{vo.groupId},#{vo.level},default,default,#{vo.replyHostIp},default);
+		</if>
 	</insert>
 	
 	<insert id="setRefSave">
@@ -115,6 +147,15 @@
 	
 	<insert id="setInsSave">
 		INSERT INTO bo_insSave VALUES (default,#{insIdx},#{memNickname},default);
+	</insert>
+	
+	<insert id="setBookSaveInsert">
+		INSERT INTO bo_bookSave VALUES (default,#{vo.memNickname},#{vo.categoryName},
+		(SELECT idx FROM bo_book WHERE title = #{vo.title} AND publisher = #{vo.publisher} LIMIT 1));
+	</insert>
+	
+	<insert id="setBookSaveCategoryChange">
+		INSERT INTO bo_bookSave VALUES (default,#{vo.memNickname},#{vo.categoryName},#{vo.bookIdx});
 	</insert>
 
 	<update id="setRefSaveUpdate">
@@ -135,7 +176,7 @@
 	</update>
 	
 	<update id="setRefBookUpdate">
-		UPDATE bo_reflection SET bookIdx = (select idx from bo_book where title = #{bookTitle} and publisher = #{publisher} limit 1)
+		UPDATE bo_reflection SET bookIdx = (SELECT idx FROM bo_book WHERE title = #{bookTitle} AND publisher = #{publisher} LIMIT 1)
 		WHERE idx = #{idx};
 	</update>
 	
@@ -144,6 +185,27 @@
 		WHERE idx = #{vo.idx};
 	</update>
 	
+	<update id="setReplyUpdate">
+		UPDATE bo_reply SET content = #{vo.content}, edit = 1 WHERE idx = #{vo.idx};
+	</update>
+	
+	<update id="setReplyDelete">
+		UPDATE bo_reply SET replyDel = "삭제" WHERE idx = #{idx};
+		UPDATE bo_reply SET replyDel = "삭제" WHERE originIdx = #{idx};
+	</update>
+	
+	<update id="setRefViewUpdate">
+		UPDATE bo_reflection SET refView = refView + 1 WHERE idx = #{idx};
+	</update>
+	
+	<update id="setReflectionDelete">
+		UPDATE bo_reflection SET refDel = "삭제" WHERE idx = #{idx};
+	</update>
+	
+	<update id="setReplyForcedDelete">
+		UPDATE bo_reply SET replyDel = "삭제" WHERE refIdx = #{idx};
+	</update>
+
 	<delete id="setRefSaveDelete">
 		DELETE FROM bo_refSave WHERE refIdx = #{refIdx} AND memNickname = #{memNickname};
 	</delete>
@@ -155,5 +217,14 @@
 	<delete id="setInsSaveForcedDelete">
 		DELETE FROM bo_insSave WHERE insIdx = #{idx};
 	</delete>
+	
+	<delete id="setRefSaveForcedDelete">
+		DELETE FROM bo_refSave WHERE refIdx = #{idx};
+	</delete>
+	
+	<delete id="setBookSaveDelete">
+		DELETE FROM bo_bookSave WHERE idx = #{idx};
+	</delete>
+	
 	
 </mapper>

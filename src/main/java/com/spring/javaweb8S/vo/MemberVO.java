@@ -16,6 +16,7 @@ public class MemberVO {
 	private int point;
 	private int agreement;
 	private String pwdUpdateDate;
+	private String introduction;
 	private int totCnt;
 	private int todayCnt;
 	private String firstVisit;

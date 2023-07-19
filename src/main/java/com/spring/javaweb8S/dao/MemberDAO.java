@@ -35,4 +35,6 @@ public interface MemberDAO {
 
 	public ProverbVO getRandomProverb(@Param("randomNum") int randomNum);
 
+	public void setBookSaveCategoryInsert(@Param("nickname") String nickname);
+
 }

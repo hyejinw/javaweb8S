@@ -97,6 +97,12 @@ public class MemberServiceImpl implements MemberService {
 		return memberDAO.getRandomProverb(randomNum);
 	}
 
+	// 첫 방문시, 커뮤니티 책 저장 카테고리 생성
+	@Override
+	public void setBookSaveCategoryInsert(String nickname) {
+		memberDAO.setBookSaveCategoryInsert(nickname);
+	}
+
 
 	
 
