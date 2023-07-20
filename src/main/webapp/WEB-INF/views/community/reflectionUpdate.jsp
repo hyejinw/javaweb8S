@@ -224,6 +224,8 @@
 		        </script>
 		        
 				  <hr style="border:0px; height:1.0px; background:#41644A; margin:10px 0px"/>
+				  
+				  <input type="hidden" name="flag" value="${flag}"/>
 				</div>
 			</form>
 		</div>

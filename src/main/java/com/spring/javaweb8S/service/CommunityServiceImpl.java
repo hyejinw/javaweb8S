@@ -13,14 +13,18 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
+import org.springframework.web.multipart.MultipartFile;
 
+import com.spring.javaweb8S.common.JavawebProvide;
 import com.spring.javaweb8S.dao.CommunityDAO;
+import com.spring.javaweb8S.vo.BlockVO;
 import com.spring.javaweb8S.vo.BookSaveVO;
 import com.spring.javaweb8S.vo.InspiredVO;
 import com.spring.javaweb8S.vo.MemberVO;
 import com.spring.javaweb8S.vo.RefSaveVO;
 import com.spring.javaweb8S.vo.ReflectionVO;
 import com.spring.javaweb8S.vo.ReplyVO;
+import com.spring.javaweb8S.vo.ReportVO;
 
 @Service
 public class CommunityServiceImpl implements CommunityService {
@@ -337,16 +341,10 @@ public class CommunityServiceImpl implements CommunityService {
 		return communityDAO.getBookSave(categoryName, memNickname);
 	}
 
-	// 커뮤니티 마이페이지, 기록
-	@Override
-	public ArrayList<ReflectionVO> getMemReflection(String memNickname) {
-		return communityDAO.getMemReflection(memNickname);
-	}
-
 	// 커뮤니티 마이페이지, 문장수집
 	@Override
-	public ArrayList<InspiredVO> getMemInspired(int startIndexNo, int pageSize, String memNickname) {
-		return communityDAO.getMemInspired(startIndexNo, pageSize, memNickname);
+	public ArrayList<InspiredVO> getMemInspired(int startIndexNo, int pageSize, String memNickname, String nickname) {
+		return communityDAO.getMemInspired(startIndexNo, pageSize, memNickname, nickname);
 	}
 
 	// 커뮤니티 마이페이지 메인창에서, 책 저장 추가
@@ -365,6 +363,109 @@ public class CommunityServiceImpl implements CommunityService {
 	@Override
 	public void setBookSaveCategoryChange(BookSaveVO vo) {
 		communityDAO.setBookSaveCategoryChange(vo);
+	}
+
+	// 커뮤니티 마이페이지 메인창에서, 문장수집 추가
+	@Override
+	public void setInspiredInsertMyPage(InspiredVO vo) {
+		communityDAO.setInspiredInsertMyPage(vo);
+	}
+
+	// 커뮤니티 기록 상세창, 신고
+	@Override
+	public void setReportInsert(ReportVO vo) {
+		communityDAO.setReportInsert(vo);
+	}
+
+	// 커뮤니티 마이페이지 기록창에서 전체 리스트
+	@Override
+	public ArrayList<ReflectionVO> getMemReflectionList(int startIndexNo, int pageSize, String memNickname) {
+		return communityDAO.getMemReflectionList(startIndexNo, pageSize, memNickname);
+	}
+
+	// 커뮤니티 마이페이지 기록창에서 전체 리스트 검색
+	@Override
+	public ArrayList<ReflectionVO> getMemReflectionSearch(int startIndexNo, int pageSize, String memNickname, String search, String searchString) {
+		return communityDAO.getMemReflectionSearch(startIndexNo, pageSize, memNickname, search, searchString);
+	}
+
+	// 커뮤니티 마이페이지 댓글창
+	@Override
+	public ArrayList<ReplyVO> getMemReplyList(int startIndexNo, int pageSize, String memNickname) {
+		return communityDAO.getMemReplyList(startIndexNo, pageSize, memNickname);
+	}
+
+	// 커뮤니티 마이페이지 차단 친구
+	@Override
+	public BlockVO getBlockInfo(String nickname, String blockedNickname) {
+		return communityDAO.getBlockInfo(nickname, blockedNickname);
+	}
+
+	// 회원 차단
+	@Override
+	public void setBlockInsert(BlockVO vo) {
+		communityDAO.setBlockInsert(vo);
+	}
+
+	// 회원 차단 해제
+	@Override
+	public void setBlockDelete(BlockVO vo) {
+		communityDAO.setBlockDelete(vo);
+	}
+
+	// 커뮤니티 마이페이지 회원정보 창에서 차단 리스트
+	@Override
+	public ArrayList<BlockVO> getBlockList(String memNickname) {
+		return communityDAO.getBlockList(memNickname);
+	}
+
+	// 커뮤니티 마이페이지 회원정보 창에서 프로필 사진 변경
+	@Override
+	public int setMemPhotoUpdate(MultipartFile file, MemberVO vo) {
+		
+		// 기존에 존재하는 파일은 삭제처리 (기본 프로필 제외!)
+		if((!vo.getMemPhoto().equals("adminPhoto.png")) && (!vo.getMemPhoto().equals("defaultImage.jpg")) && (!vo.getMemPhoto().equals("defaultPhoto1.png")) && (!vo.getMemPhoto().equals("defaultPhoto2.png")) 
+				&& (!vo.getMemPhoto().equals("defaultPhoto3.png")) 	&& (!vo.getMemPhoto().equals("defaultPhoto4.png")) && (!vo.getMemPhoto().equals("defaultPhoto5.png") && (!vo.getMemPhoto().equals("defaultPhoto6.png")))) {
+			
+			HttpServletRequest request = ((ServletRequestAttributes)RequestContextHolder.currentRequestAttributes()).getRequest();
+			String realPath = request.getSession().getServletContext().getRealPath("/resources/data/admin/member/");
+			File originFileDelete = new File(realPath + vo.getMemPhoto());
+			originFileDelete.delete();
+		}
+			
+		try {
+			String memPhotoFileName = file.getOriginalFilename();
+			
+			// 새로운 파일 서버 업로드
+			JavawebProvide jp = new JavawebProvide();
+			jp.writeFile(file,memPhotoFileName,"admin/member");
+			
+			// 새로운 파일명 set
+			vo.setMemPhoto(memPhotoFileName);
+			
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		return communityDAO.setMemPhotoUpdate(vo);
+	}
+
+	
+	// 커뮤니티 마이페이지 회원정보 창에서 프로필 사진 변경 (기본 사진)
+	@Override
+	public int setMemDefaultPhotoUpdate(MemberVO vo) {
+		return communityDAO.setMemPhotoUpdate(vo);
+	}
+
+	// 커뮤니티 마이페이지 회원정보 창에서 소개글 수정
+	@Override
+	public void setIntroductionUpdate(String introduction, String nickname) {
+		communityDAO.setIntroductionUpdate(introduction, nickname);
+	}
+
+	// 커뮤니티 마이페이지 회원정보 창에서, 차단할 회원 검색
+	@Override
+	public ArrayList<MemberVO> getMemberSearchList(String searchString, String memNickname) {
+		return communityDAO.getMemberSearchList(searchString, memNickname);
 	}
 	
 	

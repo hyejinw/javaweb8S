@@ -17,4 +17,10 @@ public class InspiredVO {
 	
 	// 커뮤니티 기록 상세창
 	private int insSaveIdx;
+	
+	// 커뮤니티 마이페이지
+	private String bookTitle;
+	private String authors;
+	private String publisher;
+	
 }

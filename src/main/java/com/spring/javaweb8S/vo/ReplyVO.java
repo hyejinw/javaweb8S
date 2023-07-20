@@ -22,4 +22,6 @@ public class ReplyVO {
 	private String originContent;
 	private int originEdit;
 	
+	// 마이페이지 댓글 리스트에서 상세페이지 이동용
+	private int bookIdx;
 }

@@ -297,7 +297,7 @@
 						</div>
 					</div>
 					<c:if test="${vo.maType == '정기 구독'}">
-						<div style="color:red"><br/>매달 15일 일괄 배송처리되며, 구독권 기간에 따라 6/12개월 동안 지속됩니다.</div>
+						<div style="color:red"><br/>매달 15일 일괄 발송되며, 구독권 기간에 따라 6/12개월 동안 지속됩니다.</div>
 					</c:if>
 					<div style="font-size:20px; margin-bottom:50px"><br/><fmt:formatNumber value="${vo.maPrice}" pattern="#,###"/>원</div>
 					<div style="font-size:17px;">상품 코드 &nbsp;&nbsp;&nbsp;&nbsp;<span style="font-size:15px">${vo.maCode}</span></div>

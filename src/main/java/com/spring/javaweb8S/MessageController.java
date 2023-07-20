@@ -98,7 +98,7 @@ public class MessageController {
 		}
 		else if(msgFlag.equals("reflectionInsertOk")) {
 			model.addAttribute("msg", "기록이 등록되었습니다.");
-			model.addAttribute("url", "/community/reflectionInsert");
+			model.addAttribute("url", "/community/reflection");
 		}
 		else if(msgFlag.equals("reflectionInsertNo")) {
 			model.addAttribute("msg", "재시도 부탁드립니다.");
@@ -127,6 +127,14 @@ public class MessageController {
 		else if(msgFlag.equals("reflectionDeleteNo")) {
 			model.addAttribute("msg", "재시도 부탁드립니다.");
 			model.addAttribute("url", "/community/reflectionDetail?idx="+idx);
+		}
+		else if(msgFlag.equals("memPhotoUpdateOk")) {
+			model.addAttribute("msg", "프로필 사진이 변경되었습니다.");
+			model.addAttribute("url", "/community/communityMyPage/memInfo?memNickname="+nickname);
+		}
+		else if(msgFlag.equals("memPhotoUpdateNo")) {
+			model.addAttribute("msg", "재시도 부탁드립니다.");
+			model.addAttribute("url", "/community/communityMyPage/memInfo?memNickname="+nickname);
 		}
 		
 		

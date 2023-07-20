@@ -2,12 +2,16 @@ package com.spring.javaweb8S.service;
 
 import java.util.ArrayList;
 
+import org.springframework.web.multipart.MultipartFile;
+
+import com.spring.javaweb8S.vo.BlockVO;
 import com.spring.javaweb8S.vo.BookSaveVO;
 import com.spring.javaweb8S.vo.InspiredVO;
 import com.spring.javaweb8S.vo.MemberVO;
 import com.spring.javaweb8S.vo.RefSaveVO;
 import com.spring.javaweb8S.vo.ReflectionVO;
 import com.spring.javaweb8S.vo.ReplyVO;
+import com.spring.javaweb8S.vo.ReportVO;
 
 public interface CommunityService {
 
@@ -77,15 +81,39 @@ public interface CommunityService {
 
 	public ArrayList<BookSaveVO> getBookSave(String categoryName, String memNickname);
 
-	public ArrayList<ReflectionVO> getMemReflection(String memNickname);
-
-	public ArrayList<InspiredVO> getMemInspired(int startIndexNo, int pageSize, String memNickname);
+	public ArrayList<InspiredVO> getMemInspired(int startIndexNo, int pageSize, String memNickname, String nickname);
 
 	public void setBookSaveInsert(BookSaveVO vo);
 
 	public void setBookSaveDelete(int idx);
 
 	public void setBookSaveCategoryChange(BookSaveVO vo);
+
+	public void setInspiredInsertMyPage(InspiredVO vo);
+
+	public void setReportInsert(ReportVO vo);
+
+	public ArrayList<ReflectionVO> getMemReflectionList(int startIndexNo, int pageSize, String memNickname);
+
+	public ArrayList<ReflectionVO> getMemReflectionSearch(int startIndexNo, int pageSize, String memNickname, String search, String searchString);
+
+	public ArrayList<ReplyVO> getMemReplyList(int startIndexNo, int pageSize, String memNickname);
+
+	public BlockVO getBlockInfo(String nickname, String blockedNickname);
+
+	public void setBlockInsert(BlockVO vo);
+
+	public void setBlockDelete(BlockVO vo);
+
+	public ArrayList<BlockVO> getBlockList(String memNickname);
+
+	public int setMemPhotoUpdate(MultipartFile file, MemberVO vo);
+
+	public int setMemDefaultPhotoUpdate(MemberVO vo);
+
+	public void setIntroductionUpdate(String introduction, String nickname);
+
+	public ArrayList<MemberVO> getMemberSearchList(String searchString, String memNickname);
 
 
 

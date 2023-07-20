@@ -11,23 +11,6 @@
 	<title>책(의)세계</title>
 	<jsp:include page="/WEB-INF/views/include/bs4.jsp" />
 	<style>
-/* 		.pill-nav a {
-		  display: inline-block;
-		  color: black;
-		  text-align: center;
-		  padding: 8px 20px;
-		  text-decoration: none;
-		  font-size: 17px;
-		  border-radius: 5px;
-		}
-		.pill-nav a:hover {
-		  background-color: #ddd;
-		  color: black;
-		}
-		.pill-nav a.active {
-		  background-color: #F5EBE0;
-		  color: #282828;
-		} */
 		a:link {text-decoration: none;}
 		a:visited {text-decoration: none;}
 		a:hover {text-decoration: none;}
@@ -555,7 +538,7 @@
 					  	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;정기 배송지 변경은 마이페이지에서 가능합니다.<!-- 여기 링크 달기! -->
 				  	</div>
 				  	<div><hr/>
-					  	<i class="fa-solid fa-circle-exclamation" style="color:#491f51;"></i>&nbsp;&nbsp;매달 15일 일괄 배송처리되며, 구독권 기간에 따라 6/12개월 동안 지속됩니다.
+					  	<i class="fa-solid fa-circle-exclamation" style="color:#491f51;"></i>&nbsp;&nbsp;매달 15일 일괄 발송되며, 구독권 기간에 따라 6/12개월 동안 지속됩니다.
 				  	</div>
 					</div>
 					<table class="table text-center" style="margin-top:10px">

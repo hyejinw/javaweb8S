@@ -94,17 +94,8 @@
 				return false;
 			}
 			 
-			let url = "${ctp}/community/reflectionInsert";
-
-			let popupWidth = 1200;
-			let popupHeight = 800;
-
-			let popupX = (window.screen.width / 2) - (popupWidth / 2);
-			let popupY= (window.screen.height / 2) - (popupHeight / 2);
-			
-			window.open(url, 'player', 'status=no, height=' + popupHeight  + ', width=' + popupWidth  + ', left='+ popupX + ', top='+ popupY);
+			location.href = "${ctp}/community/reflectionInsert";
 		}
-			
 		
 		function pageCheck() {
     	let pageSize = document.getElementById("pageSize").value;

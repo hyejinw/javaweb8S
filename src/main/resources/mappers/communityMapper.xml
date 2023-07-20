@@ -62,7 +62,7 @@
 	
 	<select id="reflectionSearchTotRecCnt" resultType="int">
 		SELECT count(*) FROM bo_reflection 
-		WHERE refDel != "삭제" AND ${search} like concat('%',#{searchString},'%');
+		WHERE refDel != "삭제" AND ${search} LIKE CONCAT('%',#{searchString},'%');
 	</select>
 	
 	<select id="getReflectionSearch" resultType="com.spring.javaweb8S.vo.ReflectionVO">
@@ -75,7 +75,7 @@
 		LEFT JOIN bo_member m 
 			ON r.memNickname = m.nickname  
 			
-		WHERE r.refDel != "삭제" AND r.${search} like concat('%',#{searchString},'%')
+		WHERE r.refDel != "삭제" AND r.${search} LIKE CONCAT('%',#{searchString},'%')
 		
 		ORDER BY r.idx DESC LIMIT #{startIndexNo},#{pageSize};
 	</select>
@@ -106,10 +106,89 @@
 		WHERE bookIdx = #{bookIdx} AND insDel != "삭제"; -->
 	
 	<select id="getMemInspired" resultType="com.spring.javaweb8S.vo.InspiredVO">
-		SELECT * FROM bo_inspired WHERE memNickname = #{memNickname} AND insDel != "삭제" 
-		ORDER BY idx DESC LIMIT #{startIndexNo},#{pageSize};
+		SELECT i.*, b.title AS bookTitle, b.authors AS authors, b.publisher AS publisher,
+		(select idx from bo_insSave WHERE insIdx = i.idx AND memNickname = #{nickname}) AS insSaveIdx 
+		
+		FROM bo_inspired i 
+		LEFT JOIN bo_book b
+		ON i.bookIdx = b.idx 
+		
+		WHERE i.memNickname = #{memNickname} AND i.insDel != "삭제" 
+		ORDER BY i.idx DESC LIMIT #{startIndexNo},#{pageSize};
 	</select>
 	
+	<select id="myPageReflectionTotRecCnt" resultType="int"> 
+ 		SELECT count(*) FROM bo_reflection WHERE memNickname = #{search} AND refDel != "삭제";
+	</select>
+	
+	<select id="getMemReflectionList" resultType="com.spring.javaweb8S.vo.ReflectionVO"> 
+		SELECT *, b.thumbnail AS thumbnail, m.memPhoto AS memPhoto, 
+		(select count(*) from bo_reply p where  r.idx = p.refIdx) AS replyNum
+		
+		FROM bo_reflection r
+		LEFT JOIN bo_book b 
+			ON r.bookIdx = b.idx 
+		LEFT JOIN bo_member m 
+			ON r.memNickname = m.nickname  
+			
+		WHERE r.refDel != "삭제" AND r.memNickname = #{memNickname} 
+		
+		ORDER BY r.idx DESC LIMIT #{startIndexNo},#{pageSize};
+	</select>
+	
+	<select id="myPageReflectionSearchTotRecCnt" resultType="int"> 
+		SELECT count(*) FROM bo_reflection 
+		WHERE refDel != "삭제" AND memNickname = #{memNickname} AND ${search} LIKE CONCAT('%',#{searchString},'%');
+	</select>
+	
+	<select id="getMemReflectionSearch" resultType="com.spring.javaweb8S.vo.ReflectionVO">
+		SELECT *, b.thumbnail AS thumbnail, m.memPhoto AS memPhoto, 
+		(select count(*) from bo_reply p where  r.idx = p.refIdx) AS replyNum
+		
+		FROM bo_reflection r
+		LEFT JOIN bo_book b 
+			ON r.bookIdx = b.idx 
+		LEFT JOIN bo_member m 
+			ON r.memNickname = m.nickname  
+			
+		WHERE r.refDel != "삭제" AND memNickname = #{memNickname} AND r.${search} LIKE CONCAT('%',#{searchString},'%')
+		
+		ORDER BY r.idx DESC LIMIT #{startIndexNo},#{pageSize};
+	</select> 
+	
+	<select id="myPageReplyTotRecCnt" resultType="int"> 
+		SELECT count(*) FROM bo_reply	WHERE replyDel != "삭제" AND memNickname = #{search};
+	</select>
+	
+	<select id="getMemReplyList" resultType="com.spring.javaweb8S.vo.ReplyVO"> 
+		SELECT r.*, f.bookIdx AS bookIdx 
+		
+		FROM bo_reply r
+		LEFT JOIN bo_reflection f
+		ON r.refIdx = f.idx 	
+		
+		WHERE r.replyDel != "삭제" AND r.memNickname = #{memNickname} 
+		ORDER BY r.idx DESC LIMIT #{startIndexNo},#{pageSize};
+	</select>
+	
+	<select id="getBlockInfo" resultType="com.spring.javaweb8S.vo.BlockVO">
+		SELECT * FROM bo_block WHERE memNickname = #{nickname} AND blockedNickname = #{blockedNickname};
+	</select>
+	
+	<select id="getBlockList" resultType="com.spring.javaweb8S.vo.BlockVO">
+		SELECT b.*, m.idx AS blockedMemIdx 
+		FROM bo_block b
+		LEFT JOIN bo_member m
+		ON b.blockedNickname = m.nickname
+		
+		WHERE b.memNickname = #{memNickname} AND m.memberDel != '탈퇴';
+	</select>
+	
+	<select id="getMemberSearchList" resultType="com.spring.javaweb8S.vo.MemberVO">
+		SELECT * FROM bo_member WHERE memberDel != '탈퇴' 
+		AND nickname LIKE CONCAT('%',#{searchString},'%')
+		AND nickname NOT IN (SELECT blockedNickname FROM bo_block WHERE memNickname = #{memNickname});
+	</select>
 	
 	<insert id="setReflectionInsert" parameterType="com.spring.javaweb8S.vo.ReflectionVO">
  		<if test='vo.bookTitle != null and vo.bookTitle=="없음"'>
@@ -119,7 +198,7 @@
 		</if>
 		<if test='vo.bookTitle != null and vo.bookTitle!="없음"'>
 			INSERT INTO bo_reflection	VALUES 
-			(default, (select idx from bo_book where title = #{vo.bookTitle} and publisher = #{vo.publisher} limit 1),
+			(default, (SELECT idx FROM bo_book WHERE title = #{vo.bookTitle} and publisher = #{vo.publisher} LIMIT 1),
 			 #{vo.memNickname}, #{vo.title}, #{vo.content}, default, default, #{vo.replyOpen}, default, #{vo.refHostIp}, default);
 		</if>
 	</insert>
@@ -158,6 +237,22 @@
 		INSERT INTO bo_bookSave VALUES (default,#{vo.memNickname},#{vo.categoryName},#{vo.bookIdx});
 	</insert>
 
+	<insert id="setInspiredInsertMyPage">
+		INSERT INTO bo_inspired VALUES 
+		(default, (SELECT idx FROM bo_book WHERE title = #{vo.bookTitle} AND publisher = #{vo.publisher} LIMIT 1),
+		#{vo.memNickname},#{vo.insContent},#{vo.page},#{vo.explanation},default,default,#{vo.insHostIp},default);
+	</insert>
+	
+	<insert id="setReportInsert">
+		INSERT INTO bo_report(idx,memNickname,reportCategory,originIdx,message,reportDate,reportDone,reportHostIp)
+		VALUES
+		(default,#{vo.memNickname},#{vo.reportCategory},#{vo.originIdx},#{vo.message},default,default,#{vo.reportHostIp});
+	</insert>
+	
+	<insert id="setBlockInsert">
+		INSERT INTO bo_block VALUES (default,#{vo.memNickname},#{vo.blockedNickname},default);
+	</insert>
+	
 	<update id="setRefSaveUpdate">
 		UPDATE bo_reflection SET refSave = refSave + #{refSaveNum} WHERE idx = #{refIdx};
 	</update>
@@ -205,6 +300,14 @@
 	<update id="setReplyForcedDelete">
 		UPDATE bo_reply SET replyDel = "삭제" WHERE refIdx = #{idx};
 	</update>
+	
+	<update id="setMemPhotoUpdate">
+		UPDATE bo_member SET memPhoto = #{vo.memPhoto} WHERE nickname = #{vo.nickname};
+	</update>
+	
+	<update id="setIntroductionUpdate">
+		UPDATE bo_member SET introduction = #{introduction} WHERE nickname = #{nickname};
+	</update>
 
 	<delete id="setRefSaveDelete">
 		DELETE FROM bo_refSave WHERE refIdx = #{refIdx} AND memNickname = #{memNickname};
@@ -224,6 +327,10 @@
 	
 	<delete id="setBookSaveDelete">
 		DELETE FROM bo_bookSave WHERE idx = #{idx};
+	</delete>
+	
+	<delete id="setBlockDelete">
+		DELETE FROM bo_block WHERE memNickname = #{vo.memNickname} AND blockedNickname = #{vo.blockedNickname};
 	</delete>
 	
 	

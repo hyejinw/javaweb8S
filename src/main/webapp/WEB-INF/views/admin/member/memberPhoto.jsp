@@ -177,7 +177,7 @@
 							<div class="col-sm-8"><input type="text" name="memo" id="memo" class="form-control"/></div>
 						</div>
 						<div class="row mb-3">
-							<div class="col-sm-4 head">메뉴 사진 <span class="must">*</span></div>
+							<div class="col-sm-4 head">기본 사진 <span class="must">*</span></div>
 							<div class="col-sm-8"><input type="file" name="file" id="photoName" onchange="imgCheck(this)" class="form-control-file border form-control"/></div>
 						</div>
 						<div class="row mb-4">

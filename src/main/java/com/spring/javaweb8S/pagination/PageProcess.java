@@ -54,6 +54,12 @@ public class PageProcess {
 		else if(section.equals("communityReflectionList")) totRecCnt = communityDAO.reflectionTotRecCnt();
 		else if(section.equals("communityReflectionSearch")) totRecCnt = communityDAO.reflectionSearchTotRecCnt(search, searchString);
 		else if(section.equals("communityMyPageInspired")) totRecCnt = communityDAO.myPageInspiredTotRecCnt(search);
+		else if(section.equals("communityMyPageReflectionList")) totRecCnt = communityDAO.myPageReflectionTotRecCnt(search);
+		else if(section.equals("communityMyPageReflectionSearch")) {
+			String memNickname = search.split("/")[0];
+			totRecCnt = communityDAO.myPageReflectionSearchTotRecCnt(memNickname, search.split("/")[1], searchString);
+		}
+		else if(section.equals("communityMyPageReplyList")) totRecCnt = communityDAO.myPageReplyTotRecCnt(search);
 		
 		
 //		else if(section.equals("board")) {

@@ -499,6 +499,65 @@
 			
 			location.href = "${ctp}/community/reflectionDelete?idx="+idx;
 		}
+		
+		// 신고 모달창에 값 주기
+		function reportCategory(reportCategory, originWriter, originIdx) {
+			document.getElementById('reportCategory').value = reportCategory;
+			document.getElementById('originWriter').value = originWriter;
+			document.getElementById('originIdx').value = originIdx;
+		}
+		
+		// 신고
+		function reportInsert() {
+			if('${sNickname}' == "") {
+				alert('로그인 후 이용해주세요.');
+				return false;
+			}			
+			
+			let reportCategory = document.getElementById('reportCategory').value;
+			let originIdx = document.getElementById('originIdx').value;
+			let reportHostIp = document.getElementById('reportHostIp').value;
+			let message = document.getElementById('message').value;
+			
+			if(message == '') {
+				alert('신고 내용을 입력해주세요.');
+				document.getElementById('message').focus();
+		    return false;
+		  }
+			
+			$.ajax({
+				type : "post",
+				url : "${ctp}/community/reportInsert",
+				data : {
+					memNickname : '${sNickname}',
+					reportCategory : reportCategory,
+					originIdx : originIdx,
+					message : message,
+					reportHostIp : reportHostIp
+				},
+				success : function() {
+					alert('소중한 의견 감사합니다. 빠르게 처리해드리겠습니다.');
+					if(reportCategory == '문장수집') sessionStorage.setItem('inspiredSW', 'ON'); 
+					location.reload();
+				},
+				error : function() {
+					alert('전송 오류! 재시도 부탁드립니다.');
+				}
+			}); 
+		}
+		
+		// 되돌아가기 경로
+		function returnPath() {
+			if(sessionStorage.getItem('myPageReflectionSW') == 'ON') {
+				location.href="${ctp}/community/communityMyPage/reflection?memNickname=${vo.memNickname}"
+			}
+			else if(sessionStorage.getItem('myPageReplySW') == 'ON') {
+				location.href="${ctp}/community/communityMyPage/reply?memNickname=${vo.memNickname}"
+			}
+			else {
+				location.href="${ctp}/community/reflection"
+			}
+		}
   </script>
 </head>
 <body>
@@ -516,17 +575,19 @@
 	 		<div style="background-color:white; padding:20px; margin-bottom:30px">
 	 			<div class="row">
 	 				<div class="col text-left">
-						<a class="btn btn-dark mb-4" href="${ctp}/community/reflection" style="margin-left:20px;"><i class="fa-solid fa-chevron-left"></i></a>
+						<a class="btn btn-dark mb-4" href="javascript:returnPath()" style="margin-left:20px;">
+							<i class="fa-solid fa-chevron-left"></i>
+						</a>
 	 				</div>
 	 				<div class="col text-right">
-					  <a class="btn btn-warning" href="javascript:insert()" style="margin-right:20px;"><i class="fa-solid fa-share-from-square"></i>카카오톡공유</a>
+					  <a class="btn btn-warning" href="javascript:insert()" style="margin-right:20px;"><i class="fa-solid fa-share-from-square"></i>카카오톡 공유</a>
 	 				</div>
 	 			</div>
 				<div style="text-align:center">
 					<span class="text-center" style="font-size:30px; text-align:center; font-weight:500">${vo.title}</span>
 				
 					<c:if test="${(vo.memNickname == sNickname)}">&nbsp;&nbsp;
-	  				<a href="${ctp}/community/reflectionUpdate?idx=${vo.idx}">
+	  				<a href="${ctp}/community/reflectionUpdate?idx=${vo.idx}&flag=${flag}">
 							<i class="fa-regular fa-pen-to-square" style="font-size:20px"></i>
 						</a>			
 					</c:if>	
@@ -538,6 +599,10 @@
 				<div class="row">
 					<div class="col ml-5">
 						<a href="#replySection" class="btn btn-outline-primary">댓글(${replyNum})</a>
+						&nbsp;&nbsp;&nbsp;&nbsp;
+						<a href="#" class="btn btn-outline-secondary" onclick="reportCategory('기록','${vo.memNickname}','${vo.idx}')" data-toggle="modal" data-target="#reportModal">
+							신고
+						</a>
 					</div>
 					<div class="col text-right mr-5">
 						<c:if test="${vo.memNickname == sNickname}">
@@ -588,7 +653,7 @@
 		  				<div style="margin-left:30px">
 		  					<div style="padding:0px 16px 0px 16px; width:80%; max-width:1000px; margin-left: auto; margin-right: auto;">
 									<div class="mt-3" style="background-color:rgba(254, 251, 232); border-radius:10px; padding:10px;">
-										<a href="${ctp}/community/memPage?nickname='+mentionedNickname+'">
+										<a href="${ctp}/community/memPage?nickname=${replyVO.mentionedNickname}">
 										<span style="color:grey">@${replyVO.mentionedNickname}</span>
 										</a>
 										&nbsp;&nbsp;&nbsp;
@@ -634,7 +699,9 @@
 				  				<i class="fa-solid fa-comments" style="font-size:18px"></i>
 				  				<!-- <i class="fa-regular fa-comments" style="font-size:18px"></i> -->
 			  				</a>&nbsp;&nbsp;&nbsp;
-				  			<button class="btn btn-sm btn-outline-secondary">신고</button>
+				  			<a href="#" class="btn btn-sm btn-outline-secondary" onclick="reportCategory('댓글','${replyVO.memNickname}','${replyVO.idx}')" data-toggle="modal" data-target="#reportModal">
+									신고
+								</a>
 				  		</div>
 				  	</div>
 				  		
@@ -734,7 +801,10 @@
 					    		<div style="padding:10px">
 						    		<c:if test="${inspiredVO.insSaveIdx == 0}"><i class="fa-regular fa-bookmark save" style="font-size:25px" onclick="insSave('${inspiredVO.idx}', '${inspiredVO.insSaveIdx}')" title="관심등록되지 않은 문장수집 입니다"></i></c:if>
 										<c:if test="${inspiredVO.insSaveIdx != 0}"><i class="fa-solid fa-bookmark save" style="font-size:25px" onclick="insSave('${inspiredVO.idx}', '${inspiredVO.insSaveIdx}')" title="관심등록된 문장수집"></i></c:if>
-					  				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<button class="btn btn-sm btn-outline-secondary">신고</button>
+					  				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+										<a href="#" class="btn btn-sm btn-outline-secondary" onclick="reportCategory('문장수집','${inspiredVO.memNickname}','${inspiredVO.idx}')" data-toggle="modal" data-target="#reportModal">
+											신고
+										</a>
 					    		</div>
 					    	</div>
 					    </div>
@@ -857,6 +927,52 @@
         <!-- Modal footer -->
         <div class="modal-footer">
           <button type="button" class="btn btn-secondary" onclick="inspiredEdit()">수정</button>
+        </div>
+        
+      </div>
+    </div>
+  </div>
+	
+	<!-- The Modal -->
+  <div class="modal fade" id="reportModal">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+      <div class="modal-content">
+      
+        <!-- Modal Header -->
+        <div class="modal-header">
+          <h4 class="modal-title">신고창</h4>
+          <button type="button" class="close" data-dismiss="modal">&times;</button>
+        </div>
+        
+        <!-- Modal body -->
+        <div class="modal-body" style="padding:0px">
+          <div class="w3-container w3-border" style="background-color:#eee;">
+		  			<textarea rows="4" cols="10" id="message" class="form-control mt-3" placeholder="신고 내용을 상세히 입력해주세요."></textarea>
+	  				<input type="hidden" id="reportCategory"/>
+	  				<input type="hidden" id="originIdx"/>
+	  				<input type="hidden" id="reportHostIp" value="${pageContext.request.remoteAddr}"/>
+		  			
+		  			<div class="row ml-4 mr-3 mt-2 mb-4">
+		  				<div class="col">
+				  			<div>
+				  				<span style="color:red"><i class="fa-solid fa-triangle-exclamation" style="font-size:17px; margin-bottom:15px"></i>&nbsp;&nbsp;신고 철회는 불가능합니다.</span><br/>
+				  				<span>
+				  					신고자 : <b>
+				  					<c:if test="${empty sNickname}">비회원은 신고하실 수 없습니다.</c:if>
+				  					<c:if test="${!empty sNickname}">${sNickname}</c:if>
+			  						</b>
+				  				</span><br/>
+				  				<span>원본 작성자 : <b><input type="text" id="originWriter" style="background-color:transparent; border:0px" readonly/></b></span>
+				  			</div>
+		  				</div>
+		  			</div>
+				  </div>
+				  
+        </div>
+        
+        <!-- Modal footer -->
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" onclick="reportInsert()">신고</button>
         </div>
         
       </div>

@@ -1,6 +1,7 @@
 package com.spring.javaweb8S;
 
 import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.util.ArrayList;
 
 import javax.servlet.http.HttpSession;
@@ -13,11 +14,13 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.spring.javaweb8S.common.BookInsertSearch;
 import com.spring.javaweb8S.pagination.PageProcess;
 import com.spring.javaweb8S.pagination.PageVO;
 import com.spring.javaweb8S.service.CommunityService;
+import com.spring.javaweb8S.vo.BlockVO;
 import com.spring.javaweb8S.vo.BookSaveVO;
 import com.spring.javaweb8S.vo.BookVO;
 import com.spring.javaweb8S.vo.InsSaveVO;
@@ -26,6 +29,7 @@ import com.spring.javaweb8S.vo.MemberVO;
 import com.spring.javaweb8S.vo.RefSaveVO;
 import com.spring.javaweb8S.vo.ReflectionVO;
 import com.spring.javaweb8S.vo.ReplyVO;
+import com.spring.javaweb8S.vo.ReportVO;
 
 @Controller
 @RequestMapping("/community")
@@ -420,16 +424,35 @@ public class CommunityController {
 		else return "redirect:/message/reflectionDeleteNo?idx="+idx;
 	}
 	
+	
+	// 커뮤니티 기록 상세창, 신고
+	@ResponseBody
+	@RequestMapping(value = "/reportInsert", method = RequestMethod.POST)
+	public String reportInsertPosrt(ReportVO vo) {
+		
+		communityService.setReportInsert(vo);
+		return "";
+	}
+	
 	// 커뮤니티 마이페이지 메인창(서재, 문장수집)
 	@RequestMapping(value = "/communityMyPage", method = RequestMethod.GET)
-	public String communityMyPageGet(String memNickname, Model model,
+	public String communityMyPageGet(String memNickname, Model model, HttpSession session,
 			@RequestParam(name="searchString", defaultValue = "", required = false) String searchString,  // 책 검색용
+			@RequestParam(name="inspiredSearchString", defaultValue = "", required = false) String inspiredSearchString,  // 문장수집 첵 검색용
 			@RequestParam(name="pag", defaultValue = "1", required = false) int pag,
-			@RequestParam(name="pageSize", defaultValue = "20", required = false) int pageSize) {
+			@RequestParam(name="pageSize", defaultValue = "5", required = false) int pageSize) {
 		
 		// 회원정보
 		MemberVO memberVO = communityService.getMemberInfo(memNickname);
 		model.addAttribute("memberVO", memberVO);
+		
+		String nickname = (String) session.getAttribute("sNickname");
+		// 차단 정보
+		if(!nickname.equals(memNickname)) {
+			String blockedNickname = memNickname;
+			BlockVO blockVO = communityService.getBlockInfo(nickname, blockedNickname);
+			model.addAttribute("blockVO", blockVO);
+		}
 		
 		// (서재) 카테고리별 책 저장
 		ArrayList<BookSaveVO> bookSave1VOS = communityService.getBookSave("인생책", memNickname);
@@ -448,12 +471,12 @@ public class CommunityController {
 		
 		// 새 소식
 	
-		// 문장 수집
+		// 문장 수집 + 저장 유무도 가져오기
 		PageVO pageVO = pageProcess.totRecCnt(pag, pageSize, "communityMyPageInspired", memNickname, "");
-		ArrayList<InspiredVO> inspiredVO = communityService.getMemInspired(pageVO.getStartIndexNo(), pageSize, memNickname);
+		ArrayList<InspiredVO> inspiredVOS = communityService.getMemInspired(pageVO.getStartIndexNo(), pageSize, memNickname, nickname);
 		
 		model.addAttribute("pageVO", pageVO);
-		model.addAttribute("inspiredVO", inspiredVO);
+		model.addAttribute("inspiredVOS", inspiredVOS);
 		
 		// 책 검색
 		if(!searchString.equals("")) {
@@ -469,18 +492,32 @@ public class CommunityController {
 			model.addAttribute("searchString", searchString);
 		}
 		
-		// 기록  : 이거 앞에서 함 근데 다시 봐야 한다!
-		//ArrayList<ReflectionVO> reflectionVOS = communityService.getMemReflection(memNickname);
-		//model.addAttribute("reflectionVOS", reflectionVOS);
-		
-		
-		// 댓글
-		
-		// 작성 문의
+		// 문장수집용 책 검색
+		if(!inspiredSearchString.equals("")) {
+			ArrayList<BookVO> insBookVOS = new ArrayList<BookVO>();
+			
+			try {
+				insBookVOS = bookInsert.bookInsert(inspiredSearchString);
+			} catch (UnsupportedEncodingException e) {
+				e.printStackTrace();
+			}
+			
+			model.addAttribute("insBookVOS", insBookVOS);
+			model.addAttribute("inspiredSearchString", inspiredSearchString);
+		}
 		
 		return "community/communityMyPage";
 	}
 	
+	
+	// 커뮤니티 마이페이지 메인창에서, 문장수집 추가
+	@ResponseBody
+	@RequestMapping(value = "/inspiredInsertMyPage", method = RequestMethod.POST)
+	public String inspiredInsertMyPagePost(InspiredVO vo) {
+		
+		communityService.setInspiredInsertMyPage(vo);
+		return "";
+	}
 	
 	
 	// 커뮤니티 마이페이지 메인창에서, 책 저장 추가
@@ -512,6 +549,165 @@ public class CommunityController {
 		return "";
 	}
 	
+	
+	// 커뮤니티 마이페이지 기록창(검색 가능)
+	@RequestMapping(value = "/communityMyPage/reflection", method = RequestMethod.GET)
+	public String communityMyPageReflectionGet(String memNickname, Model model, HttpSession session,
+			@RequestParam(name="searchString", defaultValue = "", required = false) String searchString,
+			@RequestParam(name="search", defaultValue = "", required = false) String search,
+			@RequestParam(name="pag", defaultValue = "1", required = false) int pag,
+			@RequestParam(name="pageSize", defaultValue = "20", required = false) int pageSize) {
+		
+		// 회원정보
+		MemberVO memberVO = communityService.getMemberInfo(memNickname);
+		model.addAttribute("memberVO", memberVO);
+		
+		String nickname = (String) session.getAttribute("sNickname");
+		// 차단 정보
+		if(!nickname.equals(memNickname)) {
+			String blockedNickname = memNickname;
+			BlockVO blockVO = communityService.getBlockInfo(nickname, blockedNickname);
+			model.addAttribute("blockVO", blockVO);
+		}
+		
+		
+		// 새 소식
+	
+		
+		// 기록 
+		PageVO pageVO = new PageVO();
+		ArrayList<ReflectionVO> vos = new ArrayList<ReflectionVO>();
+		
+		// 검색어가 없다면, 전체를 보여준다.
+		if(searchString.equals("")) {
+			pageVO = pageProcess.totRecCnt(pag, pageSize, "communityMyPageReflectionList", memNickname, "");
+			vos =	communityService.getMemReflectionList(pageVO.getStartIndexNo(), pageSize, memNickname);
+		}
+		else {
+			pageVO = pageProcess.totRecCnt(pag, pageSize, "communityMyPageReflectionSearch", memNickname+"/"+search, searchString);
+			vos = communityService.getMemReflectionSearch(pageVO.getStartIndexNo(), pageSize, memNickname, search, searchString);
+			model.addAttribute("search", search);
+			model.addAttribute("searchString", searchString);
+		}
+		model.addAttribute("pageVO", pageVO);
+		model.addAttribute("vos", vos);
+		
+		return "community/communityMyPage/reflection";
+	}
+	
+	// 커뮤니티 마이페이지 댓글창
+	@RequestMapping(value = "/communityMyPage/reply", method = RequestMethod.GET)
+	public String communityMyPageReflectionGet(String memNickname, 
+			Model model, HttpSession session,
+			@RequestParam(name="pag", defaultValue = "1", required = false) int pag,
+			@RequestParam(name="pageSize", defaultValue = "15", required = false) int pageSize) {
+		
+		// 회원정보
+		MemberVO memberVO = communityService.getMemberInfo(memNickname);
+		model.addAttribute("memberVO", memberVO);
+		
+		String nickname = (String) session.getAttribute("sNickname");
+		// 차단 정보
+		if(!nickname.equals(memNickname)) {
+			String blockedNickname = memNickname;
+			BlockVO blockVO = communityService.getBlockInfo(nickname, blockedNickname);
+			model.addAttribute("blockVO", blockVO);
+		}
+		
+		
+		// 새 소식
+		
+		
+		// 댓글 
+		PageVO pageVO = pageProcess.totRecCnt(pag, pageSize, "communityMyPageReplyList", memNickname, "");
+		ArrayList<ReplyVO> vos =	communityService.getMemReplyList(pageVO.getStartIndexNo(), pageSize, memNickname);
+
+		model.addAttribute("pageVO", pageVO);
+		model.addAttribute("vos", vos);
+		
+		// 작성 문의
+		
+		
+		return "community/communityMyPage/reply";
+	}
+	
+	// 회원 차단
+	@ResponseBody
+	@RequestMapping(value = "/blockInsert", method = RequestMethod.POST)
+	public String blockInsertPost(BlockVO vo) {
+		
+		communityService.setBlockInsert(vo);
+		return "";
+	}
+	
+	// 회원 차단 해제
+	@ResponseBody
+	@RequestMapping(value = "/blockDelete", method = RequestMethod.POST)
+	public String blockDeletePost(BlockVO vo) {
+		
+		communityService.setBlockDelete(vo);
+		return "";
+	}
+	
+	// 커뮤니티 마이페이지 회원정보 창 (해당 페이지 주인만 들어갈 수 있음!)
+	@RequestMapping(value = "/communityMyPage/memInfo", method = RequestMethod.GET)
+	public String memInfoGet(String memNickname, Model model, HttpSession session) {
+		
+		// 회원정보
+		MemberVO memberVO = communityService.getMemberInfo(memNickname);
+		model.addAttribute("memberVO", memberVO);
+		
+		// 차단 리스트
+		ArrayList<BlockVO> blockVOS = communityService.getBlockList(memNickname);
+		model.addAttribute("blockVOS", blockVOS);
+		
+		return "community/communityMyPage/memInfo";
+	}
+	
+	// 커뮤니티 마이페이지 회원정보 창에서 프로필 사진 변경
+	@RequestMapping(value = "/communityMyPage/memPhotoUpdate", method = RequestMethod.POST)
+	public String memPhotoUpdatePost(MultipartFile file, MemberVO vo, 
+			String defaultPhoto, HttpSession session) throws UnsupportedEncodingException {
+		
+		int res = 0;
+		
+		if(defaultPhoto.equals("defaultPhotoNone")) {
+			res = communityService.setMemPhotoUpdate(file, vo);
+			
+			String memPhotoFileName = file.getOriginalFilename();
+			session.setAttribute("sMemPhoto", memPhotoFileName);
+		}
+		else {
+			vo.setMemPhoto(defaultPhoto);
+			res = communityService.setMemDefaultPhotoUpdate(vo);
+			session.setAttribute("sMemPhoto", defaultPhoto);
+		}
+		String nickname = URLEncoder.encode(vo.getNickname(), "UTF-8");
+		if(res != 0) return "redirect:/message/memPhotoUpdateOk?nickname=" + nickname;
+		else return "redirect:/message/memPhotoUpdateNo?idx?nickname=" + nickname;
+	}
+	
+	// 커뮤니티 마이페이지 회원정보 창에서 소개글 수정
+	@ResponseBody
+	@RequestMapping(value = "/introductionUpdate", method = RequestMethod.POST)
+	public String introductionUpdatePost(String introduction, String nickname) {
+		
+		communityService.setIntroductionUpdate(introduction, nickname);
+		return "";
+	}
+	
+	// 커뮤니티 마이페이지 회원정보 창에서, 차단할 회원 검색
+	@ResponseBody
+	@RequestMapping(value = "/blockMemSearch", method = RequestMethod.POST)
+	public ArrayList<MemberVO> blockMemSearchPost(String searchString, String memNickname) {
+		
+		ArrayList<MemberVO> searchVOS = communityService.getMemberSearchList(searchString, memNickname);
+		
+		return searchVOS;
+	}
+	
+	
+	
 	// 회원 창
 	@RequestMapping(value = "/memPage", method = RequestMethod.GET)
 	public String memPageGet(String memNickname) {
@@ -524,6 +720,7 @@ public class CommunityController {
 		
 		return "community/memPage";
 	}
+
 	
 	
 }
