@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 import org.apache.ibatis.annotations.Param;
 
+import com.spring.javaweb8S.vo.AskVO;
 import com.spring.javaweb8S.vo.BlockVO;
 import com.spring.javaweb8S.vo.BookSaveVO;
 import com.spring.javaweb8S.vo.InspiredVO;
@@ -21,6 +22,9 @@ public interface CommunityDAO {
 	public int myPageInspiredTotRecCnt(@Param("search") String search);
 	public int myPageReflectionTotRecCnt(@Param("search") String search);
 	public int myPageReflectionSearchTotRecCnt(@Param("memNickname") String memNickname, @Param("search") String search, @Param("searchString") String searchString);
+	public int myPageAskSearchTotRecCnt(@Param("memNickname") String memNickname, @Param("sort") String sort, @Param("search") String search, @Param("searchString") String searchString);
+	public int AskSearchTotRecCnt(@Param("sort") String sort, @Param("search") String search, @Param("searchString") String searchString);
+	
 	
 	public MemberVO getMemberInfo(@Param("nickname") String nickname);
 
@@ -71,7 +75,7 @@ public interface CommunityDAO {
 	
 	public void setReplyUpdate(@Param("vo") ReplyVO vo);
 	
-	public void setReplyDelete(@Param("idx") int idx);
+	public void setReplyDelete(@Param("vo") ReplyVO vo);
 	
 	public void setRefViewUpdate(@Param("idx") int idx);
 	
@@ -116,6 +120,14 @@ public interface CommunityDAO {
 	public void setIntroductionUpdate(@Param("introduction") String introduction, @Param("nickname") String nickname);
 	
 	public ArrayList<MemberVO> getMemberSearchList(@Param("searchString") String searchString, @Param("memNickname") String memNickname);
+	
+	public ArrayList<AskVO> getMemAskSearch(@Param("startIndexNo") int startIndexNo, @Param("pageSize") int pageSize, @Param("memNickname") String memNickname, @Param("sort") String sort,	@Param("search") String search, @Param("searchString") String searchString);
+	
+	public ArrayList<AskVO> getAskSearch(@Param("startIndexNo") int startIndexNo, @Param("pageSize") int pageSize, @Param("sort") String sort,	@Param("search") String search, @Param("searchString") String searchString);
+	
+	public int setAskInsert(@Param("vo") AskVO vo);
+
+
 	
 	
 

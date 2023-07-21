@@ -130,11 +130,19 @@ public class MessageController {
 		}
 		else if(msgFlag.equals("memPhotoUpdateOk")) {
 			model.addAttribute("msg", "프로필 사진이 변경되었습니다.");
-			model.addAttribute("url", "/community/communityMyPage/memInfo?memNickname="+nickname);
+			model.addAttribute("url", "/community/myPage/memInfo?memNickname="+nickname);
 		}
 		else if(msgFlag.equals("memPhotoUpdateNo")) {
 			model.addAttribute("msg", "재시도 부탁드립니다.");
-			model.addAttribute("url", "/community/communityMyPage/memInfo?memNickname="+nickname);
+			model.addAttribute("url", "/community/myPage/memInfo?memNickname="+nickname);
+		}
+		else if(msgFlag.equals("askInsertOk")) {
+			model.addAttribute("msg", "문의가 등록되었습니다.");
+			model.addAttribute("url", "/community/ask");
+		}
+		else if(msgFlag.equals("askInsertNo")) {
+			model.addAttribute("msg", "재시도 부탁드립니다.");
+			model.addAttribute("url", "/community/askInsert");
 		}
 		
 		

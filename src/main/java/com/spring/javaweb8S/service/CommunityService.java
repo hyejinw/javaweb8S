@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 import org.springframework.web.multipart.MultipartFile;
 
+import com.spring.javaweb8S.vo.AskVO;
 import com.spring.javaweb8S.vo.BlockVO;
 import com.spring.javaweb8S.vo.BookSaveVO;
 import com.spring.javaweb8S.vo.InspiredVO;
@@ -18,8 +19,6 @@ public interface CommunityService {
 	public MemberVO getMemberInfo(String nickname);
 
 	public ArrayList<ReflectionVO> getReflectionList(int startIndexNo, int pageSize);
-
-	public void imgCheck(String content);
 
 	public int setReflectionInsert(ReflectionVO vo);
 
@@ -61,15 +60,11 @@ public interface CommunityService {
 
 	public int setReflectionUpdate(ReflectionVO vo);
 
-	public void imgCheckUpdate(String content);
-
-	public void imgDelete(String content);
-
 	public ArrayList<ReplyVO> getReReplyOriginContent(ArrayList<ReplyVO> tempReplyVOS);
 
 	public void setReplyUpdate(ReplyVO vo);
 
-	public void setReplyDelete(int idx);
+	public void setReplyDelete(ReplyVO vo);
 
 	public void setRefViewUpdate(int idx);
 
@@ -114,6 +109,12 @@ public interface CommunityService {
 	public void setIntroductionUpdate(String introduction, String nickname);
 
 	public ArrayList<MemberVO> getMemberSearchList(String searchString, String memNickname);
+
+	public ArrayList<AskVO> getMemAskSearch(int startIndexNo, int pageSize, String memNickname, String sort, String search, String searchString);
+
+	public ArrayList<AskVO> getAskSearch(int startIndexNo, int pageSize, String sort, String search, String searchString);
+
+	public int setAskInsert(AskVO vo);
 
 
 

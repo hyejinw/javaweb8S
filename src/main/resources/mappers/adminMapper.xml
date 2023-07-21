@@ -82,7 +82,7 @@
 	</select>
 	
 	<select id="getMagazinePhotoName" resultType="com.spring.javaweb8S.vo.MagazineVO">
-		SELECT maDetail,maThumbnail FROM bo_magazine WHERE idx in 
+		SELECT maDetail,maThumbnail FROM bo_magazine WHERE idx IN 
    	<foreach collection="magazineList" item="magazineList" open="(" close=")" separator=",">
    		#{magazineList}
     </foreach>
@@ -101,7 +101,7 @@
 	</select>
 	
 	<select id="getProdCode" resultType="String">
-		SELECT prodCode FROM bo_product WHERE colIdx = #{colIdx} and prodName = #{prodName} and prodPrice = #{prodPrice};
+		SELECT prodCode FROM bo_product WHERE colIdx = #{colIdx} AND prodName = #{prodName} AND prodPrice = #{prodPrice};
 	</select>
 	
 	<select id="colProductTotRecCnt" resultType="int">
@@ -109,7 +109,7 @@
 	</select>
 	
 	<select id="getColProductList" resultType="com.spring.javaweb8S.vo.ProductVO">
-		SELECT p.*, c.colName FROM bo_product as p, bo_collection as c ORDER BY idx DESC;
+		SELECT p.*, c.colName FROM bo_product AS p, bo_collection AS c ORDER BY idx DESC;
 	</select>
 	
 	<select id="getProductInfo" resultType="com.spring.javaweb8S.vo.ProductVO">
@@ -121,7 +121,7 @@
 	</select>
 	
 	<select id="getProductPhotoName" resultType="com.spring.javaweb8S.vo.ProductVO">
-		SELECT prodDetail,prodThumbnail FROM bo_product WHERE idx in
+		SELECT prodDetail,prodThumbnail FROM bo_product WHERE idx IN
    	<foreach collection="colProdList" item="colProdList" open="(" close=")" separator=",">
    		#{colProdList}
     </foreach>
@@ -143,10 +143,10 @@
 			SELECT count(*) FROM bo_product WHERE 
 			
 			<if test='sort != "" and (sort == "판매" or sort == "품절")'>
-				prodStatus = #{sort} and 
+				prodStatus = #{sort} AND 
 			</if>
 			<if test='sort != "" and (sort == "공개" or sort == "비공개")'>
-				prodOpen = #{sort} and 
+				prodOpen = #{sort} AND 
 			</if>
 			
 			${search} LIKE CONCAT('%',#{searchString},'%');
@@ -155,10 +155,10 @@
 			SELECT count(*) FROM bo_product WHERE
 			
 			<if test='sort != "" and (sort == "판매" or sort == "품절")'>
-				prodStatus = #{sort} and 
+				prodStatus = #{sort} AND 
 			</if>
 			<if test='sort != "" and (sort == "공개" or sort == "비공개")'>
-				prodOpen = #{sort} and 
+				prodOpen = #{sort} AND 
 			</if> 
 			
 			date_format(prodDate, '%Y-%m-%d') BETWEEN #{startDate} AND #{endDate};
@@ -167,13 +167,13 @@
 			SELECT count(*) FROM bo_product WHERE 
 			
 			<if test='sort != "" and (sort == "판매" or sort == "품절")'>
-				prodStatus = #{sort} and 
+				prodStatus = #{sort} AND 
 			</if>
 			<if test='sort != "" and (sort == "공개" or sort == "비공개")'>
-				prodOpen = #{sort} and 
+				prodOpen = #{sort} AND 
 			</if>
 			
-			${search} LIKE CONCAT('%',#{searchString},'%') and date_format(prodDate, '%Y-%m-%d') BETWEEN #{startDate} AND #{endDate};
+			${search} LIKE CONCAT('%',#{searchString},'%') AND date_format(prodDate, '%Y-%m-%d') BETWEEN #{startDate} AND #{endDate};
 		</if>
 	</select>
 	
@@ -194,10 +194,10 @@
 			SELECT * FROM bo_product WHERE 
 			
 			<if test='sort != "" and (sort == "판매" or sort == "품절")'>
-				prodStatus = #{sort} and 
+				prodStatus = #{sort} AND 
 			</if>
 			<if test='sort != "" and (sort == "공개" or sort == "비공개")'>
-				prodOpen = #{sort} and 
+				prodOpen = #{sort} AND 
 			</if>
 			
 			${search} LIKE CONCAT('%',#{searchString},'%')
@@ -207,10 +207,10 @@
 			SELECT * FROM bo_product WHERE 
 			
 			<if test='sort != "" and (sort == "판매" or sort == "품절")'>
-				prodStatus = #{sort} and 
+				prodStatus = #{sort} AND 
 			</if>
 			<if test='sort != "" and (sort == "공개" or sort == "비공개")'>
-				prodOpen = #{sort} and 
+				prodOpen = #{sort} AND 
 			</if>
 			
 			date_format(prodDate, '%Y-%m-%d') BETWEEN #{startDate} AND #{endDate}
@@ -248,12 +248,12 @@
 			SELECT count(*) 
 			FROM bo_product p 
 			LEFT JOIN bo_collection c 
-			on p.colIdx = c.idx WHERE 
+			ON p.colIdx = c.idx WHERE 
 			<if test='sort != "" and (sort == "판매" or sort == "품절")'>
-				p.prodStatus = #{sort} and 
+				p.prodStatus = #{sort} AND 
 			</if>
 			<if test='sort != "" and (sort == "공개" or sort == "비공개")'>
-				p.prodOpen = #{sort} and 
+				p.prodOpen = #{sort} AND 
 			</if>
 			
 			c.${search} LIKE CONCAT('%',#{searchString},'%');
@@ -262,10 +262,10 @@
 			SELECT count(*) FROM bo_product WHERE
 			
 			<if test='sort != "" and (sort == "판매" or sort == "품절")'>
-				prodStatus = #{sort} and 
+				prodStatus = #{sort} AND 
 			</if>
 			<if test='sort != "" and (sort == "공개" or sort == "비공개")'>
-				prodOpen = #{sort} and 
+				prodOpen = #{sort} AND 
 			</if> 
 			
 			date_format(prodDate, '%Y-%m-%d') BETWEEN #{startDate} AND #{endDate};
@@ -274,16 +274,16 @@
 			SELECT count(*) 
 			FROM bo_product p 
 			LEFT JOIN bo_collection c 
-			on p.colIdx = c.idx WHERE 
+			ON p.colIdx = c.idx WHERE 
 			
 			<if test='sort != "" and (sort == "판매" or sort == "품절")'>
-				p.prodStatus = #{sort} and 
+				p.prodStatus = #{sort} AND 
 			</if>
 			<if test='sort != "" and (sort == "공개" or sort == "비공개")'>
-				p.prodOpen = #{sort} and 
+				p.prodOpen = #{sort} AND 
 			</if>
 			
-			c.${search} LIKE CONCAT('%',#{searchString},'%') and date_format(p.prodDate, '%Y-%m-%d') BETWEEN #{startDate} AND #{endDate};
+			c.${search} LIKE CONCAT('%',#{searchString},'%') AND date_format(p.prodDate, '%Y-%m-%d') BETWEEN #{startDate} AND #{endDate};
 		</if>
 	</select>
 	
@@ -305,13 +305,13 @@
 			SELECT * 
 			FROM bo_product p 
 			LEFT JOIN bo_collection c 
-			on p.colIdx = c.idx WHERE 
+			ON p.colIdx = c.idx WHERE 
 			
 			<if test='sort != "" and (sort == "판매" or sort == "품절")'>
-				p.prodStatus = #{sort} and 
+				p.prodStatus = #{sort} AND 
 			</if>
 			<if test='sort != "" and (sort == "공개" or sort == "비공개")'>
-				p.prodOpen = #{sort} and 
+				p.prodOpen = #{sort} AND 
 			</if>
 			
 			c.${search} LIKE CONCAT('%',#{searchString},'%')
@@ -321,10 +321,10 @@
 			SELECT * FROM bo_product WHERE 
 			
 			<if test='sort != "" and (sort == "판매" or sort == "품절")'>
-				prodStatus = #{sort} and 
+				prodStatus = #{sort} AND 
 			</if>
 			<if test='sort != "" and (sort == "공개" or sort == "비공개")'>
-				prodOpen = #{sort} and 
+				prodOpen = #{sort} AND 
 			</if>
 			
 			date_format(prodDate, '%Y-%m-%d') BETWEEN #{startDate} AND #{endDate}
@@ -334,13 +334,13 @@
 			SELECT * 
 			FROM bo_product p 
 			LEFT JOIN bo_collection c 
-			on p.colIdx = c.idx WHERE
+			ON p.colIdx = c.idx WHERE
 			
 			<if test='sort != "" and (sort == "판매" or sort == "품절")'>
-				p.prodStatus = #{sort} and 
+				p.prodStatus = #{sort} AND 
 			</if>
 			<if test='sort != "" and (sort == "공개" or sort == "비공개")'>
-				p.prodOpen = #{sort} and 
+				p.prodOpen = #{sort} AND 
 			</if>			
 			
 			c.${search} LIKE CONCAT('%',#{searchString},'%') and date_format(p.prodDate, '%Y-%m-%d') BETWEEN #{startDate} AND #{endDate}
@@ -393,7 +393,7 @@
 			SELECT count(*) FROM bo_order WHERE 
 			
 			<if test='sort != "" and sort != "전체"'>
-				orderStatus = #{sort} and 
+				orderStatus = #{sort} AND 
 			</if>
 			
 			${search} LIKE CONCAT('%',#{searchString},'%');
@@ -402,7 +402,7 @@
 			SELECT count(*) FROM bo_order WHERE
 			
 			<if test='sort != "" and sort != "전체"'>
-				orderStatus = #{sort} and 
+				orderStatus = #{sort} AND 
 			</if> 
 			
 			date_format(orderDate, '%Y-%m-%d') BETWEEN #{startDate} AND #{endDate};
@@ -411,7 +411,7 @@
 			SELECT count(*) FROM bo_order WHERE 
 			
 			<if test='sort != "" and sort != "전체"'>
-				orderStatus = #{sort} and 
+				orderStatus = #{sort} AND 
 			</if>
 			
 			${search} LIKE CONCAT('%',#{searchString},'%') and date_format(orderDate, '%Y-%m-%d') BETWEEN #{startDate} AND #{endDate};
@@ -441,7 +441,7 @@
 			SELECT * FROM bo_order WHERE
 			
 			<if test='sort != "" and sort != "전체"'>
-				orderStatus = #{sort} and 
+				orderStatus = #{sort} AND 
 			</if> 
 			
 			date_format(orderDate, '%Y-%m-%d') BETWEEN #{startDate} AND #{endDate}
@@ -451,7 +451,7 @@
 			SELECT * FROM bo_order WHERE 
 			
 			<if test='sort != "" and sort != "전체"'>
-				orderStatus = #{sort} and 
+				orderStatus = #{sort} AND 
 			</if>
 			
 			${search} LIKE CONCAT('%',#{searchString},'%') and date_format(orderDate, '%Y-%m-%d') BETWEEN #{startDate} AND #{endDate}
@@ -461,50 +461,50 @@
 	
 	<!-- 송장으로 검색 -->
 	<select id="orderWithInvoiceTotRecCntWithPeriod" resultType="com.spring.javaweb8S.vo.OrderVO">
-<if test='searchString == "" and startDate == ""'>
+		<if test='searchString == "" and startDate == ""'>
 			SELECT * FROM bo_order 
 			
 			<if test='sort != "" and sort != "전체"'>
 				WHERE orderStatus = #{sort}
 			</if>
-			group by orderCode;
+			GROUP BY orderCode;
 		</if>
 		<if test='searchString != "" and startDate == ""'>
 			SELECT *   
 			FROM bo_order o
 			LEFT JOIN bo_delivery d
-			on o.idx = d.orderIdx
+			ON o.idx = d.orderIdx
 			WHERE 
 			<if test='sort != "" and sort != "전체"'>
-				o.orderStatus = #{sort} and 
+				o.orderStatus = #{sort} AND 
 			</if>
 			
 			d.${search} LIKE CONCAT('%',#{searchString},'%')
-			group by o.orderCode;
+			GROUP BY o.orderCode;
 		</if>
 		<if test='searchString == "" and startDate != ""'>
 			SELECT * FROM bo_order WHERE
 			
 			<if test='sort != "" and sort != "전체"'>
-				orderStatus = #{sort} and 
+				orderStatus = #{sort} AND 
 			</if> 
 			
 			date_format(orderDate, '%Y-%m-%d') BETWEEN #{startDate} AND #{endDate}
-			group by orderCode;
+			GROUP BY orderCode;
 		</if>
 		<if test='searchString != "" and startDate != ""'>
 			SELECT *  
 			FROM bo_order o
 			LEFT JOIN bo_delivery d
-			on o.idx = d.orderIdx
+			ON o.idx = d.orderIdx
 			WHERE  
 			
 			<if test='sort != "" and sort != "전체"'>
-				o.orderStatus = #{sort} and 
+				o.orderStatus = #{sort} AND 
 			</if>
 			
-			d.${search} LIKE CONCAT('%',#{searchString},'%') and date_format(o.orderDate, '%Y-%m-%d') BETWEEN #{startDate} AND #{endDate}
-			group by o.orderCode;
+			d.${search} LIKE CONCAT('%',#{searchString},'%') AND date_format(o.orderDate, '%Y-%m-%d') BETWEEN #{startDate} AND #{endDate}
+			GROUP BY o.orderCode;
 		</if>
 	</select>
 	
@@ -515,47 +515,47 @@
 			<if test='sort != "" and sort != "전체"'>
 				WHERE orderStatus = #{sort}
 			</if>
-			group by orderCode
+			GROUP BY orderCode
 			ORDER BY idx DESC LIMIT #{startIndexNo},#{pageSize};
 		</if>
 		<if test='searchString != "" and startDate == ""'>
 			SELECT *   
 			FROM bo_order o
 			LEFT JOIN bo_delivery d
-			on o.idx = d.orderIdx
+			ON o.idx = d.orderIdx
 			WHERE 
 			<if test='sort != "" and sort != "전체"'>
-				o.orderStatus = #{sort} and 
+				o.orderStatus = #{sort} AND 
 			</if>
 			
 			d.${search} LIKE CONCAT('%',#{searchString},'%')
-			group by o.orderCode 
+			GROUP BY o.orderCode 
 			ORDER BY o.idx DESC LIMIT #{startIndexNo},#{pageSize};
 		</if>
 		<if test='searchString == "" and startDate != ""'>
 			SELECT * FROM bo_order WHERE
 			
 			<if test='sort != "" and sort != "전체"'>
-				orderStatus = #{sort} and 
+				orderStatus = #{sort} AND 
 			</if> 
 			
 			date_format(orderDate, '%Y-%m-%d') BETWEEN #{startDate} AND #{endDate}
-			group by orderCode
+			GROUP BY orderCode
 			ORDER BY idx DESC LIMIT #{startIndexNo},#{pageSize};
 		</if>
 		<if test='searchString != "" and startDate != ""'>
 			SELECT *  
 			FROM bo_order o
 			LEFT JOIN bo_delivery d
-			on o.idx = d.orderIdx
+			ON o.idx = d.orderIdx
 			WHERE  
 			
 			<if test='sort != "" and sort != "전체"'>
-				o.orderStatus = #{sort} and 
+				o.orderStatus = #{sort} AND 
 			</if>
 			
 			d.${search} LIKE CONCAT('%',#{searchString},'%') and date_format(o.orderDate, '%Y-%m-%d') BETWEEN #{startDate} AND #{endDate}
-			group by o.orderCode
+			GROUP BY o.orderCode
 			ORDER BY o.idx DESC LIMIT #{startIndexNo},#{pageSize};
 		</if>
 	</select>
@@ -577,25 +577,6 @@
 		INSERT INTO bo_book VALUES(default,#{vo.title},#{vo.contents},#{vo.url},#{vo.isbn},#{vo.datetime},#{vo.authors},#{vo.publisher},
 		#{vo.translators},#{vo.price},#{vo.sale_price},#{vo.thumbnail},#{vo.status},default,default,default);
 	</insert>
-
-<!-- 됨 
-	<insert id="setMagazineInsert" parameterType="com.spring.javaweb8S.vo.MagazineVO">
- 		<if test="vo.maStock eq null">
-			INSERT INTO bo_magazine VALUES(default,#{vo.maCode},#{vo.maType},#{vo.maTitle},#{vo.maPrice},#{vo.maThumbnail},#{vo.maDetail},default,default,default,default,default);
-		</if>
-		<if test="vo.maStock neq null">
-			INSERT INTO bo_magazine VALUES(default,#{vo.maCode},#{vo.maType},#{vo.maTitle},#{vo.maPrice},#{vo.maThumbnail},#{vo.maDetail},#{vo.maDate},#{vo.maStock},#{vo.maSaleQuantity},default,default);
-		</if> 
-	</insert>	 -->
-<!-- 	안 됨 
- 	<insert id="setMagazineInsert" parameterType="com.spring.javaweb8S.vo.MagazineVO">
- 		<if test="vo.maType != null and 'vo.maType.equals(정기 구독)'">
-			INSERT INTO bo_magazine VALUES(default,#{vo.maCode},#{vo.maType},#{vo.maTitle},#{vo.maPrice},#{vo.maThumbnail},#{vo.maDetail},default,default,default,default,default);
-		</if>
-		<if test="vo.maType != null and 'vo.maType.equals(매거진)'">
-			INSERT INTO bo_magazine VALUES(default,#{vo.maCode},#{vo.maType},#{vo.maTitle},#{vo.maPrice},#{vo.maThumbnail},#{vo.maDetail},#{vo.maDate},#{vo.maStock},#{vo.maSaleQuantity},default,default);
-		</if> 
-	</insert>	 -->
 	
  	<insert id="setMagazineInsert" parameterType="com.spring.javaweb8S.vo.MagazineVO">
  		<if test='vo.maType != null and vo.maType=="정기 구독"'>
@@ -614,14 +595,14 @@
 	<insert id="setProdInsert">
 		INSERT INTO bo_product VALUES(default,#{vo.colIdx},
 		
-		(select idx FROM bo_book WHERE title = #{vo.bookTitle} LIMIT 1), #{vo.bookTitle},
+		(SELECT idx FROM bo_book WHERE title = #{vo.bookTitle} LIMIT 1), #{vo.bookTitle},
 		#{vo.prodCode},#{vo.prodName},#{vo.prodPrice},#{vo.prodReason},#{vo.prodThumbnail},#{vo.prodDetail},default,default,default,#{vo.prodStatus},default);
 	</insert>
 	
 	<insert id="setProdOpInsert" parameterType="java.util.ArrayList">
 		INSERT INTO bo_option VALUES
 		<foreach item="item" index="index" collection="optionList" separator=",">
-    	(default, (select idx FROM bo_product WHERE prodCode = #{prodCode}), #{item.opName}, #{item.opPrice}, #{item.opStock})       
+    	(default, (SELECT idx FROM bo_product WHERE prodCode = #{prodCode}), #{item.opName}, #{item.opPrice}, #{item.opStock})       
     </foreach>
 	</insert>
 	

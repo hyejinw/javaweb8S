@@ -428,14 +428,19 @@
 		}
 		
 		// 댓글 삭제
-		function replyDelete(idx) {
+		function replyDelete(idx,refIdx,groupId,level) {
 			let ans = confirm('삭제 후 복구 불가능합니다. 삭제하시겠습니까?');
 			if(!ans) return false;
 			
 			$.ajax({
 				type : "post",
 				url : "${ctp}/community/replyDelete",
-				data : { idx : idx },
+				data : { 
+					idx : idx, 
+					refIdx : refIdx, 
+					groupId : groupId, 
+					level : level
+				},
 				success : function() {
 					alert('댓글이 삭제되었습니다.');
 					location.reload();
@@ -549,10 +554,10 @@
 		// 되돌아가기 경로
 		function returnPath() {
 			if(sessionStorage.getItem('myPageReflectionSW') == 'ON') {
-				location.href="${ctp}/community/communityMyPage/reflection?memNickname=${vo.memNickname}"
+				location.href="${ctp}/community/myPage/reflection?memNickname=${vo.memNickname}"
 			}
 			else if(sessionStorage.getItem('myPageReplySW') == 'ON') {
-				location.href="${ctp}/community/communityMyPage/reply?memNickname=${vo.memNickname}"
+				location.href="${ctp}/community/myPage/reply?memNickname=${vo.memNickname}"
 			}
 			else {
 				location.href="${ctp}/community/reflection"
@@ -657,12 +662,17 @@
 										<span style="color:grey">@${replyVO.mentionedNickname}</span>
 										</a>
 										&nbsp;&nbsp;&nbsp;
-										<span>
-											<a href="#" onclick="replyDetail('${replyVO.originIdx}')" data-toggle="modal" data-target="#replyDetailModal">
-												<c:if test="${replyVO.originEdit == 1}"><span style="color:grey">(수정됨)</span></c:if>
-												${fn:substring(replyVO.originContent,0,75)}</span>
-												<c:if test="${fn:length(replyVO.originContent) > 75}">...</c:if>
-											</a>
+										<c:if test="${empty replyVO.originContent}">
+											<span style="color:grey">(삭제된 댓글입니다.)</span>
+										</c:if>
+										<c:if test="${!empty replyVO.originContent}">
+											<span>
+												<a href="#" onclick="replyDetail('${replyVO.originIdx}')" data-toggle="modal" data-target="#replyDetailModal">
+													<c:if test="${replyVO.originEdit == 1}"><span style="color:grey">(수정됨)</span></c:if>
+													${fn:substring(replyVO.originContent,0,75)}</span>
+													<c:if test="${fn:length(replyVO.originContent) > 75}">...</c:if>
+												</a>
+										</c:if>
 									</div>
 								</div>
 		  				</div>
@@ -678,7 +688,7 @@
 				  				<span style="color:grey; font-size:17px"><b>${replyVO.memNickname}</b></span>
 				  			</a>
 				  			<c:if test="${(replyVO.memNickname == sNickname) || (sMemType == '관리자')}">
-				  				<a href="javascript:replyDelete('${replyVO.idx}')">
+				  				<a href="javascript:replyDelete('${replyVO.idx}','${replyVO.refIdx}','${replyVO.groupId}','${replyVO.level}')">
 				  				  &nbsp;&nbsp;
 				  					<i class="fa-solid fa-xmark" style="font-size:20px"></i>
 				  				</a>

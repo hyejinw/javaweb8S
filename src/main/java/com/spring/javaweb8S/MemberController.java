@@ -1,6 +1,8 @@
 package com.spring.javaweb8S;
 
 import java.io.File;
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.UUID;
@@ -62,7 +64,7 @@ public class MemberController {
 			@RequestParam(name="mid", defaultValue = "", required=false) String mid,
 			@RequestParam(name="pwd", defaultValue = "", required=false) String pwd,
 			@RequestParam(name="idSave", defaultValue = "", required=false) String idSave,
-			HttpSession session) {
+			HttpSession session) throws UnsupportedEncodingException {
 		MemberVO vo = memberService.getMidCheck(mid);
 		
 		if(vo == null || vo.getMemberDel().equals("OK")) {
@@ -107,7 +109,9 @@ public class MemberController {
 
 		// 로그인한 사용자의 총 방문 수, 오늘 방문 수, 마지막 방문일을 변경
 		memberService.setMemberLoginProcess(vo);
-		return "redirect:/message/memberLoginOk?nickname="+vo.getMid();
+		
+		String nickname = URLEncoder.encode(vo.getNickname(), "UTF-8");
+		return "redirect:/message/memberLoginOk?nickname="+nickname;
 	}
 	
 	// 회원가입 창
@@ -203,13 +207,15 @@ public class MemberController {
 	}
 	
 	// 로그아웃
-	@RequestMapping(value = "/memberLogout", method = RequestMethod.GET, produces="application/text; charset=utf-8")
-	public String memberLogoutGet(HttpSession session) {
+	@RequestMapping(value = "/memberLogout", method = RequestMethod.GET)
+	public String memberLogoutGet(HttpSession session) throws UnsupportedEncodingException {
 		//String nickname = (String) session.getAttribute("sNickname");
-		String mid = (String) session.getAttribute("sMid");
+		String nickname = (String) session.getAttribute("sNickname");
 		
 		session.invalidate();
-		return "redirect:/message/memberLogout?nickname="+mid;
+		
+		nickname = URLEncoder.encode(nickname, "UTF-8");
+		return "redirect:/message/memberLogout?nickname="+nickname;
 	}
 	
 	// 아이디 찾기 창

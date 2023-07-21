@@ -66,6 +66,7 @@
 		  opacity: 1;
 		  visibility: visible;
 		}
+		
   </style>
   <script>
 		'use strict';
@@ -138,7 +139,13 @@
 					  <a class="btn btn-warning" href="javascript:insert()" style="margin-right:20px;">기록 남기기</a>
 	 				</div>
 	 			</div>
-				<div style="text-align:center"><span class="text-center" style="font-size:30px; text-align:center; font-weight:500">기록</span></div>
+				<div style="text-align:center">
+					<i class="fa-solid fa-pencil" style="font-size:30px"></i>					
+					<span class="text-center" style="font-size:30px; text-align:center; font-weight:500">기록</span>
+				</div>
+				<hr style="border:0px; height:5px; width:120px; background:#282828; margin:0px auto"/>
+				
+				
 	 		</div>
 			<div class="row">
 				<div class="col-7 text-left">
@@ -189,7 +196,7 @@
 		  </table>
 		  
 			<table class="table">
-				<thead class="thead-dark text-center">
+				<thead class="text-center">
 		      <tr>
 		        <th>번호</th>
 		        <th colspan="3">제목</th>

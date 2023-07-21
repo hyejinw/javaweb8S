@@ -85,6 +85,7 @@
 		<foreach item="item" index="index" collection="tempReplyVOS" open="(" close=")" separator=",">
 			 #{item.originIdx}
 		</foreach>
+		 AND replyDel != "삭제";
 	</select>
 	
 	<select id="getBookSave" resultType="com.spring.javaweb8S.vo.BookSaveVO">
@@ -190,6 +191,126 @@
 		AND nickname NOT IN (SELECT blockedNickname FROM bo_block WHERE memNickname = #{memNickname});
 	</select>
 	
+	<select id="myPageAskSearchTotRecCnt" resultType="int">
+		<if test='searchString == ""'><!-- 검색어가 없으면 전체! -->
+		 	SELECT count(*) FROM bo_ask 
+		 	
+		 	WHERE memNickname = #{memNickname} AND askDel != "삭제"  
+		 	AND category = "커뮤니티" 
+		 	
+		 	<if test='sort != "" and (sort == "답변완료" or sort == "답변전")'>
+				AND answeredAsk = #{sort}
+			</if>
+		 	<if test='sort != "" and (sort == "공개" or sort == "비공개")'>
+				AND secret = #{sort}
+			</if>
+			;
+		</if>
+		<if test='searchString != ""'>
+		 	SELECT count(*) FROM bo_ask 
+		 	
+		 	WHERE memNickname = #{memNickname} AND askDel != "삭제" 
+		 	AND category = "커뮤니티" 
+		 	
+		 	<if test='sort != "" and (sort == "답변" or sort == "답변전")'>
+				AND answeredAsk = #{sort}
+			</if>
+		 	<if test='sort != "" and (sort == "공개" or sort == "비공개")'>
+				AND secret = #{sort}
+			</if>
+			AND ${search} LIKE CONCAT('%',#{searchString},'%');
+		</if>
+	</select>
+	
+	<select id="getMemAskSearch" resultType="com.spring.javaweb8S.vo.AskVO">
+		<if test='searchString == ""'><!-- 검색어가 없으면 전체! -->
+		 	SELECT * FROM bo_ask 
+		 	
+		 	WHERE memNickname = #{memNickname} AND askDel != "삭제"  
+		 	
+		 	<if test='sort != "" and (sort == "답변완료" or sort == "답변전")'>
+				AND answeredAsk = #{sort}
+			</if>
+		 	<if test='sort != "" and (sort == "공개" or sort == "비공개")'>
+				AND secret = #{sort}
+			</if>
+			ORDER BY idx DESC LIMIT #{startIndexNo},#{pageSize};
+		</if>
+		<if test='searchString != ""'>
+		 	SELECT * FROM bo_ask 
+		 	
+		 	WHERE memNickname = #{memNickname} AND askDel != "삭제" 
+		 	
+		 	<if test='sort != "" and (sort == "답변완료" or sort == "답변전")'>
+				AND answeredAsk = #{sort}
+			</if>
+		 	<if test='sort != "" and (sort == "공개" or sort == "비공개")'>
+				AND secret = #{sort}
+			</if>
+			AND ${search} LIKE CONCAT('%',#{searchString},'%') ORDER BY idx DESC LIMIT #{startIndexNo},#{pageSize};
+		</if>
+	</select>
+	
+	<select id="AskSearchTotRecCnt" resultType="int">
+		<if test='searchString == ""'><!-- 검색어가 없으면 전체! -->
+		 	SELECT count(*) FROM bo_ask 
+		 	
+		 	WHERE askDel != "삭제" AND category = "커뮤니티" 
+		 	
+		 	<if test='sort != "" and (sort == "답변완료" or sort == "답변전")'>
+				AND answeredAsk = #{sort}
+			</if>
+		 	<if test='sort != "" and (sort == "공개" or sort == "비공개")'>
+				AND secret = #{sort}
+			</if>
+			;
+		</if>
+		<if test='searchString != ""'>
+		 	SELECT count(*) FROM bo_ask 
+		 	
+		 	WHERE askDel != "삭제" AND category = "커뮤니티" 
+		 	
+		 	<if test='sort != "" and (sort == "답변완료" or sort == "답변전")'>
+				AND answeredAsk = #{sort}
+			</if>
+		 	<if test='sort != "" and (sort == "공개" or sort == "비공개")'>
+				AND secret = #{sort}
+			</if>
+			AND ${search} LIKE CONCAT('%',#{searchString},'%');
+		</if>
+	</select>
+	
+	<select id="getAskSearch" resultType="com.spring.javaweb8S.vo.AskVO">
+		<if test='searchString == ""'><!-- 검색어가 없으면 전체! -->
+		 	SELECT * FROM bo_ask 
+		 	
+		 	WHERE askDel != "삭제" AND category = "커뮤니티" 
+		 	
+		 	<if test='sort != "" and (sort == "답변완료" or sort == "답변전")'>
+				AND answeredAsk = #{sort}
+			</if>
+		 	<if test='sort != "" and (sort == "공개" or sort == "비공개")'>
+				AND secret = #{sort}
+			</if>
+			ORDER BY idx DESC LIMIT #{startIndexNo},#{pageSize};
+		</if>
+		<if test='searchString != ""'>
+		 	SELECT * FROM bo_ask 
+		 	
+		 	WHERE askDel != "삭제" AND category = "커뮤니티" 
+		 	
+		 	<if test='sort != "" and (sort == "답변완료" or sort == "답변전")'>
+				AND answeredAsk = #{sort}
+			</if>
+		 	<if test='sort != "" and (sort == "공개" or sort == "비공개")'>
+				AND secret = #{sort}
+			</if>
+			AND ${search} LIKE CONCAT('%',#{searchString},'%')
+			ORDER BY idx DESC LIMIT #{startIndexNo},#{pageSize};
+		</if>
+	</select>
+	
+	
 	<insert id="setReflectionInsert" parameterType="com.spring.javaweb8S.vo.ReflectionVO">
  		<if test='vo.bookTitle != null and vo.bookTitle=="없음"'>
 			INSERT INTO bo_reflection(idx, memNickname, title, content, refSave, refView, replyOpen, refDate, refHostIp, refDel)
@@ -253,6 +374,22 @@
 		INSERT INTO bo_block VALUES (default,#{vo.memNickname},#{vo.blockedNickname},default);
 	</insert>
 	
+	<insert id="setAskInsert" parameterType="com.spring.javaweb8S.vo.AskVO">
+		<if test="vo.memNickname == null">
+			INSERT INTO bo_ask(idx,email,category,askTitle,askContent,secret,askDate,answeredAsk,askHostIp,askDel) 
+			VALUES 
+			(default,#{vo.email},#{vo.category},#{vo.askTitle},#{vo.askContent},#{vo.secret},default,default,#{vo.askHostIp},default);
+		</if>
+		<if test="vo.memNickname != null">
+			INSERT INTO bo_ask(idx,memNickname,category,askTitle,askContent,secret,askDate,answeredAsk,askHostIp,askDel) 
+			VALUES 
+			(default,#{vo.memNickname},#{vo.category},#{vo.askTitle},#{vo.askContent},#{vo.secret},default,default,#{vo.askHostIp},default);
+		</if>
+	</insert>
+	
+	
+	
+	
 	<update id="setRefSaveUpdate">
 		UPDATE bo_reflection SET refSave = refSave + #{refSaveNum} WHERE idx = #{refIdx};
 	</update>
@@ -284,9 +421,14 @@
 		UPDATE bo_reply SET content = #{vo.content}, edit = 1 WHERE idx = #{vo.idx};
 	</update>
 	
-	<update id="setReplyDelete">
-		UPDATE bo_reply SET replyDel = "삭제" WHERE idx = #{idx};
-		UPDATE bo_reply SET replyDel = "삭제" WHERE originIdx = #{idx};
+	<update id="setReplyDelete" parameterType="com.spring.javaweb8S.vo.ReplyVO">
+		<if test="vo.level >= 1"> <!-- 대댓글: 본인만 삭제 후, 딸린 댓글에는 삭제된 댓글입니다로 표시 -->
+			UPDATE bo_reply SET replyDel = "삭제" WHERE idx = #{vo.idx};
+    </if>
+    <if test="vo.level lt 1"> <!-- 원본 댓글: 딸린 댓글 전체 삭제 -->
+			UPDATE bo_reply SET replyDel = "삭제" 
+			WHERE refIdx = #{vo.refIdx} AND groupId = #{vo.groupId}; 
+    </if>
 	</update>
 	
 	<update id="setRefViewUpdate">

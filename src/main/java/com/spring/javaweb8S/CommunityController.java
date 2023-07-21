@@ -17,9 +17,11 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.spring.javaweb8S.common.BookInsertSearch;
+import com.spring.javaweb8S.common.ImageManager;
 import com.spring.javaweb8S.pagination.PageProcess;
 import com.spring.javaweb8S.pagination.PageVO;
 import com.spring.javaweb8S.service.CommunityService;
+import com.spring.javaweb8S.vo.AskVO;
 import com.spring.javaweb8S.vo.BlockVO;
 import com.spring.javaweb8S.vo.BookSaveVO;
 import com.spring.javaweb8S.vo.BookVO;
@@ -44,6 +46,8 @@ public class CommunityController {
 	@Autowired
 	BookInsertSearch bookInsert;
 	
+	@Autowired
+	ImageManager imageManager;
 	
 	// 커뮤니티 가이드 창
 	@RequestMapping(value = "/guide", method = RequestMethod.GET)
@@ -141,7 +145,7 @@ public class CommunityController {
 		else vo.setReplyOpen("1");
 		
 		// content에 이미지가 저장되어 있다면, 저장된 이미지만 골라서 /resources/data/board/폴더에 저장시켜준다.
-		communityService.imgCheck(vo.getContent());
+		imageManager.imgCheck(vo.getContent(), "community");
 		
 		// 이미지들의 모든 복사작업을 마치면, ckeditor폴더경로를 community폴더 경로로 변경한다.
 		vo.setContent(vo.getContent().replace("/data/ckeditor/", "/data/community/"));
@@ -269,9 +273,9 @@ public class CommunityController {
 	// 커뮤니티 기록 상세창에서 댓글 삭제
 	@ResponseBody
 	@RequestMapping(value = "/replyDelete", method = RequestMethod.POST)
-	public String replyDeletePost(int idx) {
+	public String replyDeletePost(ReplyVO vo) {
 		
-		communityService.setReplyDelete(idx);
+		communityService.setReplyDelete(vo);
 		return "";
 	}
 	
@@ -352,7 +356,7 @@ public class CommunityController {
 		
 		// 수정창으로 이동시에는 먼저 원본파일에 그림파일이 있다면, 현재폴더(board)의 그림파일들을 ckeditor폴더로 복사시켜둔다.
 		ReflectionVO vo = communityService.getReflectionDetail(idx);
-		if(vo.getContent().indexOf("src=\"/") != -1) communityService.imgCheckUpdate(vo.getContent());
+		if(vo.getContent().indexOf("src=\"/") != -1) imageManager.imgCheckUpdate(vo.getContent(), "community", 30);
 		
 		model.addAttribute("vo", vo);
 		return "community/reflectionUpdate";
@@ -379,14 +383,14 @@ public class CommunityController {
 		if(!originVO.getContent().equals(vo.getContent())) {
 			
 			// 실제로 수정하기 버튼을 클릭하게되면, 기존의 community폴더에 저장된, 현재 content의 그림파일 모두를 삭제 시킨다.
-			if(originVO.getContent().indexOf("src=\"/") != -1) communityService.imgDelete(originVO.getContent());
+			if(originVO.getContent().indexOf("src=\"/") != -1) imageManager.imgDelete(originVO.getContent(), "community", 30);
 			
 			// board폴더에는 이미 그림파일이 삭제되어 있으므로(ckeditor폴더로 복사해놓았음), vo.getContent()에 있는 그림파일경로 'community'를 'ckeditor'경로로 변경해줘야한다.
 			vo.setContent(vo.getContent().replace("/data/community/", "/data/ckeditor/"));
 			
 			// 앞의 작업이 끝나면 파일을 처음 업로드한것과 같은 작업을 처리시켜준다.
 			// content에 이미지가 저장되어 있다면, 저장된 이미지만 골라서 /resources/data/board/폴더에 저장시켜준다.
-			communityService.imgCheck(vo.getContent());
+			imageManager.imgCheck(vo.getContent(), "community");
 			
 			// 이미지들의 모든 복사작업을 마치면, ckeditor폴더경로를 community폴더 경로로 변경한다.
 			vo.setContent(vo.getContent().replace("/data/ckeditor/", "/data/community/"));
@@ -409,7 +413,7 @@ public class CommunityController {
 		
 		// 기록에 사진이 존재한다면 서버에 있는 사진파일을 먼저 삭제처리한다.
 		ReflectionVO vo = communityService.getReflectionDetail(idx);
-		if(vo.getContent().indexOf("src=\"/") != -1) communityService.imgDelete(vo.getContent());
+		if(vo.getContent().indexOf("src=\"/") != -1) imageManager.imgDelete(vo.getContent(), "community", 30);
 		
 		// 기록 삭제
 		int res = communityService.setReflectionDelete(idx);
@@ -435,8 +439,8 @@ public class CommunityController {
 	}
 	
 	// 커뮤니티 마이페이지 메인창(서재, 문장수집)
-	@RequestMapping(value = "/communityMyPage", method = RequestMethod.GET)
-	public String communityMyPageGet(String memNickname, Model model, HttpSession session,
+	@RequestMapping(value = "/myPage", method = RequestMethod.GET)
+	public String myPageGet(String memNickname, Model model, HttpSession session,
 			@RequestParam(name="searchString", defaultValue = "", required = false) String searchString,  // 책 검색용
 			@RequestParam(name="inspiredSearchString", defaultValue = "", required = false) String inspiredSearchString,  // 문장수집 첵 검색용
 			@RequestParam(name="pag", defaultValue = "1", required = false) int pag,
@@ -506,7 +510,7 @@ public class CommunityController {
 			model.addAttribute("inspiredSearchString", inspiredSearchString);
 		}
 		
-		return "community/communityMyPage";
+		return "community/myPage";
 	}
 	
 	
@@ -551,8 +555,8 @@ public class CommunityController {
 	
 	
 	// 커뮤니티 마이페이지 기록창(검색 가능)
-	@RequestMapping(value = "/communityMyPage/reflection", method = RequestMethod.GET)
-	public String communityMyPageReflectionGet(String memNickname, Model model, HttpSession session,
+	@RequestMapping(value = "/myPage/reflection", method = RequestMethod.GET)
+	public String myPageReflectionGet(String memNickname, Model model, HttpSession session,
 			@RequestParam(name="searchString", defaultValue = "", required = false) String searchString,
 			@RequestParam(name="search", defaultValue = "", required = false) String search,
 			@RequestParam(name="pag", defaultValue = "1", required = false) int pag,
@@ -592,12 +596,12 @@ public class CommunityController {
 		model.addAttribute("pageVO", pageVO);
 		model.addAttribute("vos", vos);
 		
-		return "community/communityMyPage/reflection";
+		return "community/myPage/reflection";
 	}
 	
 	// 커뮤니티 마이페이지 댓글창
-	@RequestMapping(value = "/communityMyPage/reply", method = RequestMethod.GET)
-	public String communityMyPageReflectionGet(String memNickname, 
+	@RequestMapping(value = "/myPage/reply", method = RequestMethod.GET)
+	public String myPageReflectionGet(String memNickname, 
 			Model model, HttpSession session,
 			@RequestParam(name="pag", defaultValue = "1", required = false) int pag,
 			@RequestParam(name="pageSize", defaultValue = "15", required = false) int pageSize) {
@@ -628,7 +632,7 @@ public class CommunityController {
 		// 작성 문의
 		
 		
-		return "community/communityMyPage/reply";
+		return "community/myPage/reply";
 	}
 	
 	// 회원 차단
@@ -650,7 +654,7 @@ public class CommunityController {
 	}
 	
 	// 커뮤니티 마이페이지 회원정보 창 (해당 페이지 주인만 들어갈 수 있음!)
-	@RequestMapping(value = "/communityMyPage/memInfo", method = RequestMethod.GET)
+	@RequestMapping(value = "/myPage/memInfo", method = RequestMethod.GET)
 	public String memInfoGet(String memNickname, Model model, HttpSession session) {
 		
 		// 회원정보
@@ -661,11 +665,11 @@ public class CommunityController {
 		ArrayList<BlockVO> blockVOS = communityService.getBlockList(memNickname);
 		model.addAttribute("blockVOS", blockVOS);
 		
-		return "community/communityMyPage/memInfo";
+		return "community/myPage/memInfo";
 	}
 	
 	// 커뮤니티 마이페이지 회원정보 창에서 프로필 사진 변경
-	@RequestMapping(value = "/communityMyPage/memPhotoUpdate", method = RequestMethod.POST)
+	@RequestMapping(value = "/myPage/memPhotoUpdate", method = RequestMethod.POST)
 	public String memPhotoUpdatePost(MultipartFile file, MemberVO vo, 
 			String defaultPhoto, HttpSession session) throws UnsupportedEncodingException {
 		
@@ -706,7 +710,84 @@ public class CommunityController {
 		return searchVOS;
 	}
 	
+	// 커뮤니티 마이페이지 문의/신고 창 중에 문의 (검색 가능)
+	@RequestMapping(value = "/myPage/ask", method = RequestMethod.GET)
+	public String askGet(String memNickname, Model model,
+			@RequestParam(name="sort", defaultValue = "전체", required = false) String sort,
+			@RequestParam(name="search", defaultValue = "제목", required = false) String search,
+			@RequestParam(name="searchString", defaultValue = "", required = false) String searchString,
+			@RequestParam(name="pag", defaultValue = "1", required = false) int pag,
+			@RequestParam(name="pageSize", defaultValue = "20", required = false) int pageSize) {
+		
+		// 회원정보
+		MemberVO memberVO = communityService.getMemberInfo(memNickname);
+		model.addAttribute("memberVO", memberVO);
+		
+		// 문의 내역
+		// sort 에 들어올 수 있는 값: 전체, 답변완료, 답변전, 비공개, 공개
+		PageVO pageVO = pageProcess.totRecCnt(pag, pageSize, "communityMyPageAskSearch", memNickname+"/"+sort+"/"+search, searchString);
+		ArrayList<AskVO> vos = communityService.getMemAskSearch(pageVO.getStartIndexNo(), pageSize, memNickname, sort, search, searchString);
+
+		model.addAttribute("pageVO", pageVO);
+		model.addAttribute("vos", vos);
+		model.addAttribute("search", search);
+		model.addAttribute("searchString", searchString);
+		model.addAttribute("sort", sort);
+		
+		return "community/myPage/ask";
+	}
 	
+	
+	// 문의 창
+	@RequestMapping(value = "/ask", method = RequestMethod.GET)
+	public String ask(Model model,
+			@RequestParam(name="sort", defaultValue = "전체", required = false) String sort,
+			@RequestParam(name="search", defaultValue = "제목", required = false) String search,
+			@RequestParam(name="searchString", defaultValue = "", required = false) String searchString,
+			@RequestParam(name="pag", defaultValue = "1", required = false) int pag,
+			@RequestParam(name="pageSize", defaultValue = "20", required = false) int pageSize) {
+		
+		// 전체 문의 내역
+		// sort 에 들어올 수 있는 값: 전체, 답변완료, 답변전, 비공개, 공개
+		PageVO pageVO = pageProcess.totRecCnt(pag, pageSize, "communityAskSearch", sort+"/"+search, searchString);
+		ArrayList<AskVO> vos = communityService.getAskSearch(pageVO.getStartIndexNo(), pageSize, sort, search, searchString);
+
+		model.addAttribute("pageVO", pageVO);
+		model.addAttribute("vos", vos);
+		model.addAttribute("search", search);
+		model.addAttribute("searchString", searchString);
+		model.addAttribute("sort", sort);
+		
+		return "community/ask";
+	}
+	
+	
+	// 커뮤니티 문의 남기기 창
+	@RequestMapping(value = "/askInsert", method = RequestMethod.GET)
+	public String askInsertGet() {
+		return "community/askInsert";
+	}
+	
+	// 문의 등록
+	@RequestMapping(value = "/askInsert", method = RequestMethod.POST)
+	public String askInsertPost(AskVO vo) {
+		
+		if(vo.getSecret() == null) vo.setSecret("비공개");
+		else vo.setSecret("공개");
+		vo.setCategory("커뮤니티");
+		
+		// content에 이미지가 저장되어 있다면, 저장된 이미지만 골라서 /resources/data/ask/폴더에 저장시켜준다.
+		imageManager.imgCheck(vo.getAskContent(), "ask");
+		
+		// 이미지들의 모든 복사작업을 마치면, ckeditor폴더경로를 ask폴더 경로로 변경한다.
+		vo.setAskContent(vo.getAskContent().replace("/data/ckeditor/", "/data/ask/"));
+
+		// content안의 내용정리가 끝나면 변경된 vo를 DB에 저장시켜준다.
+		int res = communityService.setAskInsert(vo);
+		
+		if(res != 0)  return "redirect:/message/askInsertOk";
+		else return "redirect:/message/askInsertNo";
+	}
 	
 	// 회원 창
 	@RequestMapping(value = "/memPage", method = RequestMethod.GET)

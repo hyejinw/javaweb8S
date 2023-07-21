@@ -421,18 +421,18 @@
 					<div style="width:50%; margin:0px 0px 0px 150px">
 						<div class="alert alert-success">
 					    소개글)&nbsp;&nbsp;&nbsp;&nbsp;
-					    <c:if test="${memberVO.introduction == ''}">소개글이 없습니다</c:if>
+					    <c:if test="${(memberVO.introduction == '') || (empty memberVO.introduction)}">소개글이 없습니다</c:if>
 					    <c:if test="${memberVO.introduction != ''}"><strong>${memberVO.introduction}</strong></c:if>
 					</div>
 				</div>
 				
 				<div style="margin-top:100px">
-					<a href="${ctp}/community/communityMyPage?memNickname=${memberVO.nickname}"><span class="mr-5">서재 / 문장수집</span></a>
-					<a href="${ctp}/community/communityMyPage/reflection?memNickname=${memberVO.nickname}"><span class="mr-5">기록</span></a>
-					<a href="${ctp}/community/communityMyPage/reply?memNickname=${memberVO.nickname}"><span class="mr-5">작성 댓글</span></a>
+					<a href="${ctp}/community/myPage?memNickname=${memberVO.nickname}"><span class="mr-5">서재 / 문장수집</span></a>
+					<a href="${ctp}/community/myPage/reflection?memNickname=${memberVO.nickname}"><span class="mr-5">기록</span></a>
+					<a href="${ctp}/community/myPage/reply?memNickname=${memberVO.nickname}"><span class="mr-5">작성 댓글</span></a>
 					<c:if test="${memberVO.nickname == sNickname}">
-						<a href="${ctp}/community/communityMyPage/memInfo?memNickname=${memberVO.nickname}"><span class="nowPart mr-5">회원 정보</span></a>
-						<a href="${ctp}/community/communityMyPage/ask?memNickname=${memberVO.nickname}"><span>문의 / 신고</span></a>
+						<a href="${ctp}/community/myPage/memInfo?memNickname=${memberVO.nickname}"><span class="nowPart mr-5">회원 정보</span></a>
+						<a href="${ctp}/community/myPage/ask?memNickname=${memberVO.nickname}"><span>문의 / 신고</span></a>
 					</c:if>
 					<hr style="border:0px; height:1.0px; background:#41644A; margin:15px 0px"/>
 				</div>
@@ -518,7 +518,7 @@
 						    	<c:forEach var="blockVO" items="${blockVOS}" varStatus="st"> 
 						    		<tr>
 						    			<td class="text-center">${st.count}</td>
-						    			<td>
+						    			<td class="text-center">
 										  	${blockVO.blockedNickname}
 						    			</td>
 						    			<td class="text-center">
@@ -536,7 +536,7 @@
 					</div>
 					
 					<div class="col-5">
-						<form name="searchForm">
+						<form name="searchForm" onsubmit="return false;">
 	          	<div class="input-group" style="margin:0px auto; width:80%">
 					      <input type="text" name="searchString" id="searchString" value="${searchString}" class="form-control" placeholder="회원 별명을 입력해주세요" />
 					      <div class="input-group-append">
@@ -567,14 +567,14 @@
         <!-- Modal body -->
         <div class="modal-body" style="padding:0px">
           <div class="w3-container w3-border" style="background-color:#eee; padding:30px">
-          	<form name="memPhotoUpdate" method="post" action="${ctp}/community/communityMyPage/memPhotoUpdate">
+          	<form name="memPhotoUpdate" method="post" action="${ctp}/community/myPage/memPhotoUpdate">
 				  		<div class="row">
 				  			<div class="col-8">
 					  			<input type="file" name="file" id="memPhoto" onchange="imgCheck(this)" class="form-control-file border form-control"/>
 				  				<input type="hidden" name="memPhoto" value="${memberVO.memPhoto}"/>
 				  				<input type="hidden" name="nickname" value="${memberVO.nickname}"/>
 				  				<br/><br/>
-  								<label for="defaultPhotoNone"><span class="rounded-circle" style="padding:20px; background-color:#ddd">직접 선택</span></label>
+  								<label for="defaultPhotoNone"><span style="padding:20px; border-radius:50%; background-color:#ddd">직접 선택</span></label>
 				  				<input type="radio" id="defaultPhotoNone" name="defaultPhoto" value="defaultPhotoNone" checked/>
 				  				&nbsp;&nbsp;&nbsp;&nbsp;
   								<label for="defaultImage"><img src="${ctp}/admin/member/defaultImage.jpg" style="width:80px"/></label>

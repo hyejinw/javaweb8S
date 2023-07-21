@@ -25,7 +25,15 @@
   			alert('로그인 후 이용해주세요.');
   			return false;
   		}
-  		location.href = "${ctp}/community/communityMyPage?memNickname=${sNickname}";
+  		location.href = "${ctp}/community/myPage?memNickname=${sNickname}";
+  	}
+  	
+  	function messageCheck() {
+  		if('${sNickname}' == '') {
+  			alert('로그인 후 이용해주세요.');
+  			return false;
+  		}
+  		location.href = "${ctp}/community/message?memNickname=${sNickname}";
   	}
   </script>
 </head>
@@ -53,13 +61,21 @@
 	    <p>기록</p>
 	  </a>
 	  <a href="${ctp}/community/communityMain" class="w3-bar-item w3-button w3-padding-large w3-hover-sand">
- 	    <i class="fa fa-home w3-xxlarge"></i>
+ 	    <i class="fa fa-home w3-xxlarge" style="color:#41644A"></i>
 	    <p>홈</p>
 	  </a>
 	  <a href="${ctp}/" class="w3-bar-item w3-button w3-padding-large w3-hover-sand">
 <!-- 	    <i class="fa fa-home w3-xxlarge"></i> -->
 	    <img src="${ctp}/images/communityMenu1.png" style="width:100%; max-width:30px">
 	    <p>책(의)세계로 퇴장</p>
+	  </a>
+	  <a href="javascript:messageCheck()" class="w3-bar-item w3-button w3-padding-large w3-hover-sand">
+	    <i class="fa-solid fa-envelope-open-text" style="font-size:30px;"></i>
+	    <p>쪽지</p>
+	  </a>
+	  <a href="${ctp}/community/ask" class="w3-bar-item w3-button w3-padding-large w3-hover-sand">
+	    <i class="fa-solid fa-clipboard-question" style="font-size:30px;"></i>
+	    <p>문의</p>
 	  </a>
 	  <a href="#photos" class="w3-bar-item w3-button w3-padding-large w3-hover-sand">
 	    <i class="fa fa-eye w3-xxlarge"></i>

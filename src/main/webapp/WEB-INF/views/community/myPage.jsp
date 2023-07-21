@@ -189,7 +189,7 @@
 			else sw = 4;
 			sessionStorage.setItem('bookSelectionSW', sw); 
 			
-    	location.href = "${ctp}/community/communityMyPage?searchString="+searchString+"&memNickname=${memberVO.nickname}";
+    	location.href = "${ctp}/community/myPage?searchString="+searchString+"&memNickname=${memberVO.nickname}";
 		}
 		
 		// 책 선택
@@ -217,7 +217,7 @@
 				success : function() {
 					alert('책이 추가되었습니다.');
 					sessionStorage.setItem('bookSelectionSW', sw); 
-					location.href = "${ctp}/community/communityMyPage?memNickname=${memberVO.nickname}";
+					location.href = "${ctp}/community/myPage?memNickname=${memberVO.nickname}";
 				},
 				error : function() {
 					alert('전송 오류! 재시도 부탁드립니다.');
@@ -238,7 +238,7 @@
     	
 			sessionStorage.setItem('inspiredSW', 'ON'); 
 			
-    	location.href = "${ctp}/community/communityMyPage?inspiredSearchString="+inspiredSearchString+"&memNickname=${memberVO.nickname}";
+    	location.href = "${ctp}/community/myPage?inspiredSearchString="+inspiredSearchString+"&memNickname=${memberVO.nickname}";
 		}
 		
 		// 문장수집용 책 선택
@@ -358,7 +358,7 @@
 		
 		function pageCheck() {
     	let pageSize = document.getElementById("pageSize").value;
-    	location.href = "${ctp}/community/communityMypage?pag=${pageVO.pag}&pageSize="+pageSize;
+    	location.href = "${ctp}/community/myPage?pag=${pageVO.pag}&pageSize="+pageSize;
     }
 		
 		// 문장수집 저장
@@ -380,7 +380,7 @@
 	    		success:function() {
 	    			alert("문장수집이 저장되었습니다.");
 	    			//sessionStorage.setItem('inspiredSW', 'ON'); 
-	    			location.href = "${ctp}/community/communityMyPage?memNickname=${memberVO.nickname}";
+	    			location.href = "${ctp}/community/myPage?memNickname=${memberVO.nickname}";
 	    		},
 	    		error : function() {
 	    			alert("전송 오류! 재시도 부탁드립니다.");
@@ -399,7 +399,7 @@
 	    		success:function() {
 	    			alert("문장수집 저장이 취소되었습니다.");
 	    			sessionStorage.setItem('inspiredSW', 'ON'); 
-	    			location.href = "${ctp}/community/communityMyPage?memNickname=${memberVO.nickname}";
+	    			location.href = "${ctp}/community/myPage?memNickname=${memberVO.nickname}";
 	    		},
 	    		error : function() {
 	    			alert("전송 오류! 재시도 부탁드립니다.");
@@ -598,18 +598,18 @@
 					<div style="width:50%; margin:0px 0px 0px 150px">
 						<div class="alert alert-success">
 					    소개글)&nbsp;&nbsp;&nbsp;&nbsp;
-					    <c:if test="${memberVO.introduction == ''}">소개글이 없습니다</c:if>
+					    <c:if test="${(memberVO.introduction == '') || (empty memberVO.introduction)}">소개글이 없습니다</c:if>
 					    <c:if test="${memberVO.introduction != ''}"><strong>${memberVO.introduction}</strong></c:if>
 					</div>
 				</div>
 				
 				<div style="margin-top:100px">
-					<a href="${ctp}/community/communityMyPage?memNickname=${memberVO.nickname}"><span class="nowPart mr-5">서재 / 문장수집</span></a>
-					<a href="${ctp}/community/communityMyPage/reflection?memNickname=${memberVO.nickname}"><span class="mr-5">기록</span></a>
-					<a href="${ctp}/community/communityMyPage/reply?memNickname=${memberVO.nickname}"><span class="mr-5">작성 댓글</span></a>
+					<a href="${ctp}/community/myPage?memNickname=${memberVO.nickname}"><span class="nowPart mr-5">서재 / 문장수집</span></a>
+					<a href="${ctp}/community/myPage/reflection?memNickname=${memberVO.nickname}"><span class="mr-5">기록</span></a>
+					<a href="${ctp}/community/myPage/reply?memNickname=${memberVO.nickname}"><span class="mr-5">작성 댓글</span></a>
 					<c:if test="${memberVO.nickname == sNickname}">
-						<a href="${ctp}/community/communityMyPage/memInfo?memNickname=${memberVO.nickname}"><span class="mr-5">회원 정보</span></a>
-						<a href="${ctp}/community/communityMyPage/ask?memNickname=${memberVO.nickname}"><span>문의 / 신고</span></a>
+						<a href="${ctp}/community/myPage/memInfo?memNickname=${memberVO.nickname}"><span class="mr-5">회원 정보</span></a>
+						<a href="${ctp}/community/myPage/ask?memNickname=${memberVO.nickname}"><span>문의 / 신고</span></a>
 					</c:if>
 					<hr style="border:0px; height:1.0px; background:#41644A; margin:15px 0px"/>
 				</div>
@@ -853,7 +853,7 @@
 										</div>
 						  			<div style="display:none;" id="bookInsertSelectDone">
 						  				<div class="text-right">
-						  					<a class="btn btn-dark btn-sm" href="${ctp}/community/communityMyPage?memNickname=${memberVO.nickname}" style="margin-right:20px;">
+						  					<a class="btn btn-dark btn-sm" href="${ctp}/community/myPage?memNickname=${memberVO.nickname}" style="margin-right:20px;">
 						  						<i class="fa-solid fa-arrows-rotate"></i>
 					  						</a>
 						  				</div>
@@ -885,13 +885,13 @@
 					      <td class="text-right">
 					        <!-- 첫페이지 / 이전페이지 / (현재페이지번호/총페이지수) / 다음페이지 / 마지막페이지 -->
 					        <c:if test="${pageVO.pag > 1}">
-					          <a href="${ctp}/community/communityMypage?pageSize=${pageVO.pageSize}&pag=1" title="첫페이지로">◁◁</a>
-					          <a href="${ctp}/community/communityMypage?pageSize=${pageVO.pageSize}&pag=${pageVO.pag-1}" title="이전페이지로">◀</a>
+					          <a href="${ctp}/community/myPage?pageSize=${pageVO.pageSize}&pag=1" title="첫페이지로">◁◁</a>
+					          <a href="${ctp}/community/myPage?pageSize=${pageVO.pageSize}&pag=${pageVO.pag-1}" title="이전페이지로">◀</a>
 					        </c:if>
 					        ${pageVO.pag}/${pageVO.totPage}
 					        <c:if test="${pageVO.pag < pageVO.totPage}">
-					          <a href="${ctp}/community/communityMypage?pageSize=${pageVO.pageSize}&pag=${pageVO.pag+1}" title="다음페이지로">▶</a>
-					          <a href="${ctp}/community/communityMypage?pageSize=${pageVO.pageSize}&pag=${pageVO.totPage}" title="마지막페이지로">▷▷</a>
+					          <a href="${ctp}/community/myPage?pageSize=${pageVO.pageSize}&pag=${pageVO.pag+1}" title="다음페이지로">▶</a>
+					          <a href="${ctp}/community/myPage?pageSize=${pageVO.pageSize}&pag=${pageVO.totPage}" title="마지막페이지로">▷▷</a>
 					        </c:if>
 					      </td>
 					    </tr>
@@ -907,6 +907,7 @@
 						    <tbody>
 						    	<c:if test="${empty inspiredVOS}">
 						    		<tr><td class="text-center" style="padding:30px"><b>문장수집을 남겨주세요.</b></td></tr> 
+						    		<tr><td></td></tr>
 						    	</c:if>
 						    	<c:if test="${!empty inspiredVOS}">
 							    	<c:set var="curScrStartNo" value="${pageVO.curScrStartNo}" />
@@ -996,14 +997,14 @@
 					  <!-- 첫페이지 / 이전블록 / 1(4) 2(5) 3 / 다음블록 / 마지막페이지 -->
 					  <div class="text-center">
 						  <ul class="pagination justify-content-center">
-						    <c:if test="${pageVO.pag > 1}"><li class="page-item"><a class="page-link text-secondary" href="${ctp}/community/communityMyPage?pageSize=${pageVO.pageSize}&pag=1&memNickname=${memberVO.nickname}"><i class="fa-solid fa-angles-left"></i></a></li></c:if>
-						    <c:if test="${pageVO.curBlock > 0}"><li class="page-item"><a class="page-link text-secondary" href="${ctp}/community/communityMyPage?pageSize=${pageVO.pageSize}&pag=${(pageVO.curBlock-1)*pageVO.blockSize + 1}&memNickname=${memberVO.nickname}"><i class="fa-solid fa-angle-left"></i></a></li></c:if>
+						    <c:if test="${pageVO.pag > 1}"><li class="page-item"><a class="page-link text-secondary" href="${ctp}/community/myPage?pageSize=${pageVO.pageSize}&pag=1&memNickname=${memberVO.nickname}"><i class="fa-solid fa-angles-left"></i></a></li></c:if>
+						    <c:if test="${pageVO.curBlock > 0}"><li class="page-item"><a class="page-link text-secondary" href="${ctp}/community/myPage?pageSize=${pageVO.pageSize}&pag=${(pageVO.curBlock-1)*pageVO.blockSize + 1}&memNickname=${memberVO.nickname}"><i class="fa-solid fa-angle-left"></i></a></li></c:if>
 						    <c:forEach var="i" begin="${pageVO.curBlock*pageVO.blockSize + 1}" end="${pageVO.curBlock*pageVO.blockSize + pageVO.blockSize}" varStatus="st">
-						      <c:if test="${i <= pageVO.totPage && i == pageVO.pag}"><li class="page-item active"><a class="page-link text-white bg-secondary border-secondary" href="${ctp}/community/communityMyPage?pageSize=${pageVO.pageSize}&pag=${i}&memNickname=${memberVO.nickname}">${i}</a></li></c:if>
-						      <c:if test="${i <= pageVO.totPage && i != pageVO.pag}"><li class="page-item"><a class="page-link text-secondary" href="${ctp}/community/communityMyPage?pageSize=${pageVO.pageSize}&pag=${i}&memNickname=${memberVO.nickname}">${i}</a></li></c:if>
+						      <c:if test="${i <= pageVO.totPage && i == pageVO.pag}"><li class="page-item active"><a class="page-link text-white bg-secondary border-secondary" href="${ctp}/community/myPage?pageSize=${pageVO.pageSize}&pag=${i}&memNickname=${memberVO.nickname}">${i}</a></li></c:if>
+						      <c:if test="${i <= pageVO.totPage && i != pageVO.pag}"><li class="page-item"><a class="page-link text-secondary" href="${ctp}/community/myPage?pageSize=${pageVO.pageSize}&pag=${i}&memNickname=${memberVO.nickname}">${i}</a></li></c:if>
 						    </c:forEach>
-						    <c:if test="${pageVO.curBlock < pageVO.lastBlock}"><li class="page-item"><a class="page-link text-secondary" href="${ctp}/community/communityMyPage?pageSize=${pageVO.pageSize}&pag=${(pageVO.curBlock+1)*pageVO.blockSize + 1}&memNickname=${memberVO.nickname}"><i class="fa-solid fa-angle-right"></i></a></li></c:if>
-						    <c:if test="${pageVO.pag < pageVO.totPage}"><li class="page-item"><a class="page-link text-secondary" href="${ctp}/community/communityMyPage?pageSize=${pageVO.pageSize}&pag=${pageVO.totPage}&memNickname=${memberVO.nickname}"><i class="fa-solid fa-angles-right"></i></a></li></c:if>
+						    <c:if test="${pageVO.curBlock < pageVO.lastBlock}"><li class="page-item"><a class="page-link text-secondary" href="${ctp}/community/myPage?pageSize=${pageVO.pageSize}&pag=${(pageVO.curBlock+1)*pageVO.blockSize + 1}&memNickname=${memberVO.nickname}"><i class="fa-solid fa-angle-right"></i></a></li></c:if>
+						    <c:if test="${pageVO.pag < pageVO.totPage}"><li class="page-item"><a class="page-link text-secondary" href="${ctp}/community/myPage?pageSize=${pageVO.pageSize}&pag=${pageVO.totPage}&memNickname=${memberVO.nickname}"><i class="fa-solid fa-angles-right"></i></a></li></c:if>
 						  </ul>
 					  </div>
 					  
