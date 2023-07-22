@@ -102,22 +102,17 @@
 		});
 		
 		// 경고
-		function insertWarning() {
-			let ans = confirm('작성을 취소하시겠습니까?');
+		function updateWarning() {
+			let ans = confirm('수정을 취소하시겠습니까?');
 			if(!ans) return false;
 			
-			if(sessionStorage.getItem('myPageAskInsertSW') == 'ON') {
-				location.href="${ctp}/community/myPage/ask?memNickname=${sNickname}"
-			}
-			else {
-				location.href = "${ctp}/community/ask";
-			}
+			location.href = "${ctp}/community/askDetail?idx=${vo.idx}";
 		}
 		
-		// 문의 작성
-		function askInsert() {
-			let askTitle = insertForm.askTitle.value;
-			let email = insertForm.email.value;
+		// 기록 작성
+		function askUpdate() {
+			let askTitle = updateForm.askTitle.value;
+			let email = updateForm.email.value;
 			
 			let regex1 = /^[가-힣a-zA-Z0-9\{\}\[\]\/?.,;:|\)*~`!^\-_+<>@\#$%&\\\=\(\s]{1,100}$/g; 
 			// (제목)1자 이상 100자 이하,한글,영문,숫자,특수문자 허용
@@ -126,31 +121,30 @@
 			
 			if(!regex1.test(askTitle)){
 				alert('제목 형식에 맞춰주세요.(한글/영문/숫자/특수문자 허용, 1~100자)');
-				insertForm.askTitle.focus();
+				updateForm.askTitle.focus();
 		    return false;
 		  }
 			
 			if('${sNickname}' == "") {
 				if(email == "") {
 					alert('비회원 이메일은 필수 작성요소입니다.');
-					insertForm.email.focus();
+					updateForm.email.focus();
 					return false;
 				}
 				if(!regex2.test(email)){
 					alert('이메일 형식에 맞춰주세요.');
-					insertForm.email.focus();
+					updateForm.email.focus();
 			    return false;
 			  }
-				let pwd = insertForm.pwd.value;
+				let pwd = updateForm.pwd.value;
 				if(!regex3.test(pwd)){
 					alert('비밀번호 형식에 맞춰주세요.(숫자 4자리)');
-					insertForm.pwd.focus();
+					updateForm.pwd.focus();
 			    return false;
 			  }
 				
 			}
-			alert(sessionStorage.getItem('myPageAskInsertSW'));
-			insertForm.submit();
+			updateForm.submit();
 		}
   </script>
 </head>
@@ -165,22 +159,22 @@
 		</a>
 		
 	  <div class="table-responsive" style="width:90%; margin:0px auto; padding:40px 50px 100px 50px" class="border">
-	  	<form name="insertForm" method="post" action="${ctp}/community/askInsert">
+	  	<form name="updateForm" method="post" action="${ctp}/community/askUpdate">
 		 		<div style="background-color:white; padding:20px; margin-bottom:30px">
 		 			<div class="row mb-4">
 		 				<div class="col-3 text-left">
-							<a class="btn btn-dark mb-4" href="javascript:insertWarning()" style="margin-left:20px;"><i class="fa-solid fa-chevron-left"></i></a>
+							<a class="btn btn-dark mb-4" href="javascript:updateWarning()" style="margin-left:20px;"><i class="fa-solid fa-chevron-left"></i></a>
 		 				</div>
 		 				<div class="col-6 text-center">
-		 					<span class="text-center" style="font-size:25px; text-align:center; font-weight:bold">문의 남기기</span>
+		 					<span class="text-center" style="font-size:25px; text-align:center; font-weight:bold">문의 수정</span>
 		 				</div>
 		 				<div class="col-3 text-right">
-							<a class="btn btn-dark mb-4" href="${ctp}/community/askInsert" style="margin-right:20px;"><i class="fa-solid fa-arrows-rotate"></i></a>
+							<a class="btn btn-dark mb-4" href="${ctp}/community/askUpdate?idx=${vo.idx}" style="margin-right:20px;"><i class="fa-solid fa-arrows-rotate"></i></a>
 		 				</div>
 		 			</div>
 					<div style="text-align:center">
 						<span class="text-center" style="font-size:30px; text-align:center; font-weight:500">
-							<input id="askTitle" class="text-center" name="askTitle" style="width:500px" placeholder="제목을 입력해주세요."/>
+							<input id="askTitle" class="text-center" name="askTitle" style="width:500px" placeholder="제목을 입력해주세요." value="${vo.askTitle}"/>
 						</span><br/>
 						<c:if test="${!empty sNickname}">
 							<span class="text-center" style="font-size:20px; text-align:center; color:grey">by. ${sNickname}</span><br/>
@@ -190,23 +184,21 @@
 						<c:if test="${empty sNickname}">
 							<br/>
 							<span class="text-center" style="font-size:20px; text-align:center; color:grey">
-								<input id="email" class="text-center" name="email" style="width:300px" placeholder="비회원 이메일을 입력해주세요."/>
+								<input id="email" class="text-center" name="email" value="${vo.email}" style="width:300px" placeholder="비회원 이메일을 입력해주세요."/>
 							</span><br/>
 						</c:if>
-						
+						<input type="hidden" name="idx" value="${vo.idx}"/>
 					</div>
 					<div class="row">
 						<div class="col ml-5">
 						</div>
 						<div class="col text-right mr-5">
 							<span style="font-size:18px">
-								<label for="secret"><input type="checkbox" name="secret" id="secret" class="form-check-input" checked/>
+								<label for="secret"><input type="checkbox" name="secret" id="secret" class="form-check-input" <c:if test="${vo.secret == '공개'}">checked</c:if>/>
 								&nbsp;공개 허용&nbsp;&nbsp;&nbsp;</label>
 							</span>&nbsp;&nbsp;&nbsp;&nbsp;
 							
-							<input type="hidden" name="askHostIp" value="${pageContext.request.remoteAddr}"/>
-
-							<button class="btn btn-secondary" type="button" onclick="askInsert()">작성</button>
+							<button class="btn btn-secondary" type="button" onclick="askUpdate()">수정</button>
 						</div>
 					
 					</div>
@@ -225,7 +217,7 @@
 				</c:if>
 				
 				<div style="padding:20px 20px 50px 20px;">
-					<textarea rows="100" name="askContent" id="CKEDITOR" class="form-control"></textarea>
+					<textarea rows="100" name="askContent" id="CKEDITOR" class="form-control">${vo.askContent}</textarea>
 		        <script>
 			        CKEDITOR.replace("askContent",{
 			        	height:500,

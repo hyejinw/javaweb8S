@@ -1,6 +1,7 @@
 package com.spring.javaweb8S.dao;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import org.apache.ibatis.annotations.Param;
 
@@ -126,6 +127,20 @@ public interface CommunityDAO {
 	public ArrayList<AskVO> getAskSearch(@Param("startIndexNo") int startIndexNo, @Param("pageSize") int pageSize, @Param("sort") String sort,	@Param("search") String search, @Param("searchString") String searchString);
 	
 	public int setAskInsert(@Param("vo") AskVO vo);
+	
+	public AskVO getAskDetail(@Param("idx") int idx);
+	
+	public int setAskUpdate(@Param("vo") AskVO vo);
+	
+	public int setAskDelete(@Param("idx") int idx);
+	
+	public ArrayList<AskVO> getAskList(@Param("askList") List<String> askList);
+	
+	public void setAskIdxesDelete(@Param("askList") List<String> askList);
+	
+	public void setAnswerInsert(@Param("idx") int idx, @Param("answer") String answer);
+	
+	public ArrayList<ReportVO> getMemReportList(@Param("memNickname") String memNickname, @Param("sort") String sort);
 
 
 	

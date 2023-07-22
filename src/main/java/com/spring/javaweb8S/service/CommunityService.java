@@ -1,6 +1,7 @@
 package com.spring.javaweb8S.service;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import org.springframework.web.multipart.MultipartFile;
 
@@ -115,6 +116,20 @@ public interface CommunityService {
 	public ArrayList<AskVO> getAskSearch(int startIndexNo, int pageSize, String sort, String search, String searchString);
 
 	public int setAskInsert(AskVO vo);
+
+	public AskVO getAskDetail(int idx);
+
+	public int setAskUpdate(AskVO vo);
+
+	public int setAskDelete(int idx);
+
+	public ArrayList<AskVO> getAskList(List<String> askList);
+
+	public void setAskIdxesDelete(List<String> askList);
+
+	public void setAnswerInsert(int idx, String answer);
+
+	public ArrayList<ReportVO> getMemReportList(String memNickname, String sort);
 
 
 

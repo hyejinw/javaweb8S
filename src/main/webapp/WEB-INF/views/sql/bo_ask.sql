@@ -4,6 +4,7 @@ create table bo_ask (
 	idx int not null auto_increment,         		  /* 적립금 고유번호 */
 	memNickname varchar(20),                 		  /* 회원 별명(외래키) */
 	email varchar(50),                       		  /* 비회원 이메일 */
+	pwd varchar(50),                              /* 비회원 비밀번호 */
 	category varchar(20) not null,         		    /* 문의 종류 */
 	originIdx int,                            		/* 출처 고유번호 */
 	askTitle varchar(200) not null,        		    /* 제목 */

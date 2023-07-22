@@ -7,6 +7,7 @@ public class AskVO {
 	private int idx;
 	private String memNickname;
 	private String email;
+	private String pwd;
 	private String category;
 	private int originIdx;
 	private String askTitle;

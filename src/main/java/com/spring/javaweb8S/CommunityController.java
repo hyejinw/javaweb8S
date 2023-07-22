@@ -1,12 +1,20 @@
 package com.spring.javaweb8S;
 
+import java.io.File;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.util.ArrayList;
+import java.util.List;
 
+import javax.mail.MessagingException;
+import javax.mail.internet.MimeMessage;
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.mail.javamail.MimeMessageHelper;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
@@ -48,6 +56,12 @@ public class CommunityController {
 	
 	@Autowired
 	ImageManager imageManager;
+	
+	@Autowired
+	BCryptPasswordEncoder passwordEncoder;
+
+	@Autowired
+	JavaMailSender mailSender;
 	
 	// 커뮤니티 가이드 창
 	@RequestMapping(value = "/guide", method = RequestMethod.GET)
@@ -655,7 +669,7 @@ public class CommunityController {
 	
 	// 커뮤니티 마이페이지 회원정보 창 (해당 페이지 주인만 들어갈 수 있음!)
 	@RequestMapping(value = "/myPage/memInfo", method = RequestMethod.GET)
-	public String memInfoGet(String memNickname, Model model, HttpSession session) {
+	public String myPageInfoGet(String memNickname, Model model, HttpSession session) {
 		
 		// 회원정보
 		MemberVO memberVO = communityService.getMemberInfo(memNickname);
@@ -670,7 +684,7 @@ public class CommunityController {
 	
 	// 커뮤니티 마이페이지 회원정보 창에서 프로필 사진 변경
 	@RequestMapping(value = "/myPage/memPhotoUpdate", method = RequestMethod.POST)
-	public String memPhotoUpdatePost(MultipartFile file, MemberVO vo, 
+	public String myPagePhotoUpdatePost(MultipartFile file, MemberVO vo, 
 			String defaultPhoto, HttpSession session) throws UnsupportedEncodingException {
 		
 		int res = 0;
@@ -712,7 +726,7 @@ public class CommunityController {
 	
 	// 커뮤니티 마이페이지 문의/신고 창 중에 문의 (검색 가능)
 	@RequestMapping(value = "/myPage/ask", method = RequestMethod.GET)
-	public String askGet(String memNickname, Model model,
+	public String myPageAskGet(String memNickname, Model model,
 			@RequestParam(name="sort", defaultValue = "전체", required = false) String sort,
 			@RequestParam(name="search", defaultValue = "제목", required = false) String search,
 			@RequestParam(name="searchString", defaultValue = "", required = false) String searchString,
@@ -730,12 +744,57 @@ public class CommunityController {
 
 		model.addAttribute("pageVO", pageVO);
 		model.addAttribute("vos", vos);
+		model.addAttribute("askNum", vos.size());
 		model.addAttribute("search", search);
 		model.addAttribute("searchString", searchString);
 		model.addAttribute("sort", sort);
 		
+		
 		return "community/myPage/ask";
 	}
+	
+	// 커뮤니티 마이페이지 문의/신고 창 중에, 문의 복수 삭제 askIdxesDelete
+	@ResponseBody
+	@RequestMapping(value = "/askIdxesDelete", method = RequestMethod.POST)
+	public String askIdxesDeletePost(String checkRow) {
+		
+		List<String> askList = new ArrayList<String>();
+		String[] checkedAskIdxes = checkRow.split(",");
+		
+		for(int i=0; i < checkedAskIdxes.length; i++){
+			askList.add(checkedAskIdxes[i].toString());
+		}
+		
+		// 삭제할 문의 내용 가져오기
+		ArrayList<AskVO> askDeleteList = communityService.getAskList(askList);
+		
+		// 문의에 사진이 존재한다면 서버에 있는 사진파일을 먼저 삭제처리한다.
+		for(int i=0; i<askDeleteList.size(); i++) {
+			AskVO vo = askDeleteList.get(i);
+			if(vo.getAskContent().indexOf("src=\"/") != -1) imageManager.imgDelete(vo.getAskContent(), "ask", 24);
+		}
+
+		// DB에서 삭제
+		communityService.setAskIdxesDelete(askList);
+		
+		return "";
+	}	
+	
+	// 커뮤니티 마이페이지 문의/신고 창 중에, 신고 창
+	@RequestMapping(value = "/myPage/report", method = RequestMethod.GET)
+	public String myPageReportGet(String memNickname, Model model,
+			@RequestParam(name = "sort", defaultValue = "전체", required = false) String sort) {
+
+		// 회원정보
+		MemberVO memberVO = communityService.getMemberInfo(memNickname);
+		model.addAttribute("memberVO", memberVO);
+		
+		// 신고 내역
+		ArrayList<ReportVO> vos = communityService.getMemReportList(memNickname, sort);
+		model.addAttribute("vos", vos);
+		
+		return "community/myPage/report";
+	}	
 	
 	
 	// 문의 창
@@ -770,8 +829,12 @@ public class CommunityController {
 	
 	// 문의 등록
 	@RequestMapping(value = "/askInsert", method = RequestMethod.POST)
-	public String askInsertPost(AskVO vo) {
+	public String askInsertPost(AskVO vo) throws UnsupportedEncodingException {
 		
+		// 비회원 비밀번호 암호화
+		if(vo.getPwd() != null) vo.setPwd(passwordEncoder.encode(vo.getPwd()));
+
+		// 공개, 비공개 처리
 		if(vo.getSecret() == null) vo.setSecret("비공개");
 		else vo.setSecret("공개");
 		vo.setCategory("커뮤니티");
@@ -785,9 +848,164 @@ public class CommunityController {
 		// content안의 내용정리가 끝나면 변경된 vo를 DB에 저장시켜준다.
 		int res = communityService.setAskInsert(vo);
 		
-		if(res != 0)  return "redirect:/message/askInsertOk";
+		String nickname = URLEncoder.encode(vo.getMemNickname(), "UTF-8");
+		
+		if(res != 0)  return "redirect:/message/askInsertOk?nickname="+nickname;
 		else return "redirect:/message/askInsertNo";
 	}
+	
+	// 문의 상세창
+	@RequestMapping(value = "/askDetail", method = RequestMethod.GET)
+	public String askDetailGet(int idx, Model model) {
+		
+		AskVO vo = communityService.getAskDetail(idx);
+		model.addAttribute("vo", vo);
+		
+		return "community/askDetail";
+	}
+	
+	// 문의 상세창 들어가기 전, 비회원 비밀번호 확인
+	@ResponseBody
+	@RequestMapping(value = "/askPwdCheck", method = RequestMethod.POST)
+	public String askPwdCheckPost(String pwd, String ans) {
+		
+		if(!passwordEncoder.matches(ans, pwd)) {
+			return "0";
+		}
+		else {
+			return "1";
+		}
+	}
+	
+	// 문의 수정창
+	@RequestMapping(value = "/askUpdate", method = RequestMethod.GET)
+	public String askUpdateGet(int idx, Model model) {
+		
+		// 수정창으로 이동시에는 먼저 원본파일에 그림파일이 있다면, 현재폴더(ask)의 그림파일들을 ckeditor폴더로 복사시켜둔다.
+		AskVO vo = communityService.getAskDetail(idx);
+		if(vo.getAskContent().indexOf("src=\"/") != -1) imageManager.imgCheckUpdate(vo.getAskContent(), "ask", 24);
+		
+		model.addAttribute("vo", vo);
+		
+		return "community/askUpdate";
+	}
+	
+	// 문의 수정
+	@RequestMapping(value = "/askUpdate", method = RequestMethod.POST)
+	public String askUpdatePost(AskVO vo) {
+		
+			// 수정된 자료가 원본자료와 완전히 동일하다면 수정할 필요가 없기에, 먼저 DB에 저장된 원본자료를 불러와서 비교처리한다.
+			AskVO originVO = communityService.getAskDetail(vo.getIdx());
+			
+			// content의 내용이 조금이라도 변경된것이 있다면 내용을 수정처리한다.
+			if(!originVO.getAskContent().equals(vo.getAskContent())) {
+				
+				// 실제로 수정하기 버튼을 클릭하게되면, 기존의 community폴더에 저장된, 현재 content의 그림파일 모두를 삭제 시킨다.
+				if(originVO.getAskContent().indexOf("src=\"/") != -1) imageManager.imgDelete(originVO.getAskContent(), "ask", 24);
+				
+				// ask폴더에는 이미 그림파일이 삭제되어 있으므로(ckeditor폴더로 복사해놓았음), vo.getAskContent()에 있는 그림파일경로 'ask'를 'ckeditor'경로로 변경해줘야한다.
+				vo.setAskContent(vo.getAskContent().replace("/data/ask/", "/data/ckeditor/"));
+				
+				// 앞의 작업이 끝나면 파일을 처음 업로드한것과 같은 작업을 처리시켜준다.
+				// content에 이미지가 저장되어 있다면, 저장된 이미지만 골라서 /resources/data/ask/폴더에 저장시켜준다.
+				imageManager.imgCheck(vo.getAskContent(), "ask");
+				
+				// 이미지들의 모든 복사작업을 마치면, ckeditor폴더경로를 ask폴더 경로로 변경한다.
+				vo.setAskContent(vo.getAskContent().replace("/data/ckeditor/", "/data/ask/"));
+			}
+			
+			// 비회원 비밀번호 암호화
+			if(vo.getPwd() != null) vo.setPwd(passwordEncoder.encode(vo.getPwd()));
+
+			// 공개, 비공개 처리
+			if(vo.getSecret() == null) vo.setSecret("비공개");
+			else vo.setSecret("공개");
+			vo.setCategory("커뮤니티");
+			
+			int res = communityService.setAskUpdate(vo);
+			
+			if(res != 0)  return "redirect:/message/askUpdateOk?idx="+vo.getIdx();
+			else return "redirect:/message/askUpdateNo?idx="+vo.getIdx();
+	}
+	
+	// 문의 삭제
+	@RequestMapping(value = "/askDelete", method = RequestMethod.GET)
+	public String askDeleteGet(int idx) {
+
+		// 문의에 사진이 존재한다면 서버에 있는 사진파일을 먼저 삭제처리한다.
+		AskVO vo = communityService.getAskDetail(idx);
+		if(vo.getAskContent().indexOf("src=\"/") != -1) imageManager.imgDelete(vo.getAskContent(), "ask", 24);
+		
+		// 문의 삭제
+		int res = communityService.setAskDelete(idx);
+		
+		if(res != 0)  return "redirect:/message/askDeleteOk";
+		else return "redirect:/message/askDeleteNo?idx="+idx;
+	}
+
+	// 문의 답변 달기
+	@ResponseBody
+	@RequestMapping(value = "/answerInsert", method = RequestMethod.POST)
+	public String answerInsertPost(int idx, String answer, HttpServletRequest request) throws MessagingException {
+		
+		// 답변 등록
+		communityService.setAnswerInsert(idx, answer);
+
+		// 이메일
+		AskVO vo = communityService.getAskDetail(idx);
+		String email = "";
+		if(vo.getMemNickname() != null) {
+			MemberVO memberVO = communityService.getMemberInfo(vo.getMemNickname());
+			email = memberVO.getEmail();
+		}
+		else email = vo.getEmail();
+		
+		System.out.println("email : " + email);
+		
+		// 이메일 전송! + 이거 나중에 링크 바꿔서 달아주기! 49.142.157.251 그거로
+		String title = "[3개의 책] 문의 답변이 등록되었습니다.";
+		
+		// 메일 전송을 위한 객체 : MimeMessage(), MimeMessageHelper()
+		MimeMessage message = mailSender.createMimeMessage();
+		MimeMessageHelper messageHelper = new MimeMessageHelper(message, true, "UTF-8");
+		
+		// 메일보관함에 회원이 보내온 메세지들의 정보를 모두 저장시킨후 작업처리
+		messageHelper.setTo(email);
+		messageHelper.setSubject(title);
+		String content = "";
+		
+		// 메세지 보관함의 내용(content)에 필요한 정보를 추가로 담아서 전송
+		content += "<p><img src=\"cid:logo.png\" width='300px'></p>";
+		content += "<br><h4>안녕하세요. 책(의)세계입니다.<br>작성하신 [3개의 책] 커뮤니티 문의에 답변이 등록되었습니다.</h4>";
+		content += "<br><h5>문의 제목) "+vo.getAskTitle()+"</h5>";
+		content += "<br><hr><a href=\"http://localhost:9090/javaweb8S/community/askDetail?idx="+vo.getIdx()+"\"><h2><font color='blue'>바로 확인하기</font></h2></a><br>";
+		content += "<br><h4>추가 문의는 3개의 책 문의창에 남겨주세요.</h4>";
+		content += "<h3>기쁜 마음으로, 책(의)세계 드림</h3><br>";
+		messageHelper.setText(content, true);
+		
+		// 본문에 기재된 그림파일의 경로를 별도로 표시시켜준다. 그런 후, 다시 보관함에 담기
+		String realPath = request.getSession().getServletContext().getRealPath("/resources/images/");
+		File file = new File(realPath + "logo.png");		
+		messageHelper.addInline("logo.png", file);
+
+		// 메일 전송
+		mailSender.send(message);
+		
+		return "";
+	}
+	
+	// 문의 답변 수정
+	@ResponseBody
+	@RequestMapping(value = "/answerUpdate", method = RequestMethod.POST)
+	public String answerUpdatePost(int idx, String answer) {
+		
+		// 답변 등록
+		communityService.setAnswerInsert(idx, answer);
+		
+		return "";
+	}
+	
+	
 	
 	// 회원 창
 	@RequestMapping(value = "/memPage", method = RequestMethod.GET)

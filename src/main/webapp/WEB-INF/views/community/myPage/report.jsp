@@ -249,12 +249,12 @@
 	 		<div style="padding:20px 50px 50px 50px;">
 	 			<div class="row">
 	 				<div class="col">
-						<i class="fa-solid fa-clipboard-question" style="font-size:48px;"></i>
-						<span style="font-size:30px; margin-left:20px">문의</span>
+						<i class="fa-solid fa-triangle-exclamation" style="font-size:48px;"></i>
+						<span style="font-size:30px; margin-left:20px">신고</span>
 	 				</div>
 	 				<div class="col text-right">
-	 					<a href="${ctp}/community/myPage/report?memNickname=${memberVO.nickname}" class="btn btn-outline-dark">
-	 						<span style="font-size:15px">신고창&nbsp;&nbsp;<i class="fa-solid fa-arrow-right"></i></span>
+	 					<a href="${ctp}/community/myPage/ask?memNickname=${memberVO.nickname}" class="btn btn-outline-dark">
+	 						<span style="font-size:15px">문의창&nbsp;&nbsp;<i class="fa-solid fa-arrow-right"></i></span>
  						</a>
 	 				</div>
 	 			</div>
@@ -263,30 +263,17 @@
 			<form name="searchForm">
 				<div class="row">
 					<div class="col-7 text-left">
-						<select name="sort" id="sort" class="form-control mb-3" style="width:150px;" onchange="searchCheck()">
-			        <option <c:if test="${sort == '전체'}">selected</c:if> value="전체">전체</option>
-			        <option <c:if test="${sort == '답변완료'}">selected</c:if> value="답변완료">답변완료</option>
-			        <option <c:if test="${sort == '답변전'}">selected</c:if> value="답변전">답변 전</option>
-			        <option <c:if test="${sort == '공개'}">selected</c:if> value="공개">공개</option>
-			        <option <c:if test="${sort == '비공개'}">selected</c:if> value="비공개">비공개</option>
-			      </select>
 						<a class="btn btn-dark mr-3 mb-4" href="javascript:deleteAction()">선택 삭제</a>
 						<a class="btn btn-secondary mr-3 mb-4" href="javascript:insertCheck()">문의 등록</a>
 					</div>
 					<div class="col-5 text-right">
-			    	<div class="input-group">
-				    	<div class="mr-3">
-				        <select name="search" id="search" class="form-control">
-				          <option <c:if test="${search == 'askTitle'}">selected</c:if> value="askTitle">제목</option>
-				          <option <c:if test="${search == 'askContent'}">selected</c:if> value="askContent">내용</option>
-				          <option <c:if test="${search == 'answer'}">selected</c:if> value="answer">답변 내용</option>
-				        </select>
-				    	</div>
-				      <input type="text" name="searchString" id="searchString" value="${searchString}" class="form-control mr-sm-2" placeholder="검색어를 입력해주세요"/>
-				      <div class="input-group-append">
-				     		<a href="#" class="btn btn-outline-success my-2 my-sm-0" onclick="javascript:searchCheck()"><i class="fa-solid fa-magnifying-glass"></i></a>
-				     	</div>
-			     	</div>
+						<select name="sort" id="sort" class="form-control mb-3" style="width:150px;" onchange="searchCheck()">
+			        <option <c:if test="${sort == '전체'}">selected</c:if> value="전체">전체</option>
+			        <option <c:if test="${sort == '기록'}">selected</c:if> value="기록">기록</option>
+			        <option <c:if test="${sort == '댓글'}">selected</c:if> value="댓글">댓글</option>
+			        <option <c:if test="${sort == '문장수집'}">selected</c:if> value="문장수집">문장수집</option>
+			        <option <c:if test="${sort == '회원'}">selected</c:if> value="회원">회원</option>
+			      </select>
 					</div>
 				</div>
 	    </form>
@@ -296,15 +283,17 @@
 				<thead>
 		      <tr class="text-center">
 		        <th><input type="checkbox" name="checkAll" id="th_checkAll" onclick="checkAll();"/><label for="th_checkAll">&nbsp;&nbsp;&nbsp;&nbsp;No.</label></th>
+		        <th>분류</th>
 		        <th>제목</th>
-		        <th>답변 유무</th>
-		        <th>작성일</th>
+		        <th>내용</th>
+		        <th>신고일</th>
+		        <th>상세히</th>
 		      </tr>
 		    </thead>
 		    <tbody>
 		    	<c:if test="${empty vos}">
-		    		<tr><td colspan="4" class="text-center" style="padding:30px"><b>작성 문의가 없습니다.</b></td></tr> 
-		    		<tr><td colspan="4"></td></tr>
+		    		<tr><td colspan="6" class="text-center" style="padding:30px"><b>작성 신고가 없습니다.</b></td></tr> 
+		    		<tr><td colspan="6"></td></tr>
 		    	</c:if>
 		    	
 		    	<c:if test="${!empty vos}">
@@ -312,20 +301,22 @@
 				    	<c:forEach var="vo" items="${vos}"> 
 				    		<tr>
 				    			<td><label for="chk${vo.idx}"><input type="checkbox" name="checkRow" id="chk${vo.idx}" onclick="tempCheckChange()" class="form-check-input chkGrp" value="${vo.idx}" />&nbsp;&nbsp;&nbsp;&nbsp;${curScrStartNo}</label></td>
+				    			<td>${vo.reportCategory}</td>
 				    			<td>
-								  	<a href="javascript:askDetail('${vo.idx}')">
-								  		${vo.askTitle}
-								  		<c:if test="${vo.secret == '비공개'}">
-								  			<span class="badge badge-pill badge-dark">비공개</span>
-								  		</c:if>
-								  	</a>
+				    				${vo.message}&nbsp;&nbsp;&nbsp;
+				    				<c:if test="${vo.reportDone == '처리 전'}"><h6><span class="badge badge-dark">${vo.reportDone}</span></h6></c:if>
+				    				<c:if test="${vo.reportDone != '처리 전'}">
+				    					<a href="#" onclick="replyOpen()" ><h6><span class="badge badge-dark">${vo.reportDone}</span></h6></a>
+				    					<input id="reply${vo.idx}" value="${vo.reply}"/>
+			    					</c:if>
 				    			</td>
+				    			<td>${fn:substring(vo.reportDate,0,10)}</td>
 				    			<td class="text-center">
-				    				<c:if test="${vo.answeredAsk == '답변완료'}">${vo.answeredAsk}&nbsp;&nbsp;${fn:substring(vo.answerDate,0,10)}</c:if>	
-				    				<c:if test="${vo.answeredAsk == '답변전'}">답변 전</c:if>
+				    				<c:if test="${vo.reportDone == '처리 전'}">${vo.answeredAsk}</c:if>	
+				    				<c:if test="${vo.reportDone != '처리 전'}">처리 전</c:if>
 			    				</td>
 			    				<td class="text-center">
-			    					${fn:substring(vo.askDate,0,10)}
+			    					${fn:substring(vo.reportDate,0,10)}
 			    				</td>
 				    		</tr>
 				    		<c:set var="curScrStartNo" value="${curScrStartNo - 1}"/>

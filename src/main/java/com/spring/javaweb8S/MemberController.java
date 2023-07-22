@@ -293,7 +293,7 @@ public class MemberController {
 		content += "<br><h4>안녕하세요. 책(의)세계입니다.<br>임시 비밀번호를 보내드립니다.</h4><br>";
 		content += "<br><hr><h2><font color='blue'>"+tempPwd+"</font></h2><br>";
 		content += "<br><h4>로그인 후, 마이페이지에서 비밀번호를 변경해주세요!</h4>";
-		content += "<h3>책(의)세계 드림</h3><br>";
+		content += "<h3>기쁜 마음으로, 책(의)세계 드림</h3><br>";
 		messageHelper.setText(content, true);
 		
 		// 본문에 기재된 그림파일의 경로를 별도로 표시시켜준다. 그런 후, 다시 보관함에 담기

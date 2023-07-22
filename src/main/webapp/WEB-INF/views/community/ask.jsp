@@ -101,6 +101,53 @@
     	location.href = "${ctp}/community/ask?search="+search+"&searchString="+searchString+"&sort="+sort;
 		}
 		
+		// 문의 상세창
+		function askDetail(idx, secret, memNickname, pwd) {
+			
+			if(secret == '공개') {
+				location.href = "${ctp}/community/askDetail?idx="+idx;
+				return false;
+			}
+			else {
+				if((memNickname == "") && ('${sMemType}' != '관리자')) {
+					let ans = prompt('비회원 문의 비밀번호를 입력해주세요(숫자 4자리).');
+					if(ans == null) return false;
+					
+					$.ajax({
+						type : "post",
+						url : "${ctp}/community/askPwdCheck",
+						data : {
+							ans : ans,
+							pwd : pwd
+						},
+						success : function(res) {
+							if(res == "1") {
+								location.href = "${ctp}/community/askDetail?idx="+idx;
+								return false;
+							}
+							else {
+								alert('잘못된 비밀번호입니다.');
+								return false;
+							}
+						},
+						error : function() {
+							alert('전송 오류 발생, 재시도 부탁드립니다.');
+							return false;
+						}						
+					});
+				}
+				
+				
+				if(('${sNickname}' != memNickname) && ('${sMemType}' != '관리자')) {
+					alert('비공개 문의입니다.');
+					return false;
+				}
+				else {
+					location.href = "${ctp}/community/askDetail?idx="+idx;
+					return false;
+				}
+			}
+		}
   </script>
 </head>
 <body>
@@ -194,7 +241,7 @@
 				    				</span>
 				    			</td>
 				    			<td>
-								  	<a href="javascript:askDetail('${vo.idx}')">
+								  	<a href="javascript:askDetail('${vo.idx}','${vo.secret}','${vo.memNickname}', '${vo.pwd}')">
 								  		${vo.askTitle}
 								  		<c:if test="${vo.secret == '비공개'}">
 								  			<i class="fa-solid fa-lock"></i>
@@ -202,7 +249,7 @@
 								  	</a>
 				    			</td>
 				    			<td class="text-center">
-				    				<c:if test="${vo.answeredAsk == '답변완료'}">${vo.answeredAsk}&nbsp;&nbsp;${fn:substring(vo.answerDate,0,10)}</c:if>	
+				    				<c:if test="${vo.answeredAsk == '답변완료'}">${vo.answeredAsk}&nbsp;&nbsp;<span style="font-size:10px">${fn:substring(vo.answerDate,0,10)}</span></c:if>	
 				    				<c:if test="${vo.answeredAsk == '답변전'}">답변 전</c:if>
 			    				</td>
 			    				<td class="text-center">

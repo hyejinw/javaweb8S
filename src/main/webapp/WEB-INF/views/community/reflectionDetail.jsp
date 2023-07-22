@@ -579,12 +579,17 @@
 	  <div class="table-responsive" style="width:90%; margin:0px auto; padding:40px 50px 100px 50px" class="border">
 	 		<div style="background-color:white; padding:20px; margin-bottom:30px">
 	 			<div class="row">
-	 				<div class="col text-left">
+	 				<div class="col-3 text-left">
 						<a class="btn btn-dark mb-4" href="javascript:returnPath()" style="margin-left:20px;">
 							<i class="fa-solid fa-chevron-left"></i>
 						</a>
 	 				</div>
-	 				<div class="col text-right">
+	 				<div class="col-6 text-center">
+						<a href="javascript:returnPath()">
+		 					<span class="text-center" style="font-size:23px; color:grey; text-align:center;">기록)</span>
+						</a>
+	 				</div>
+	 				<div class="col-3 text-right">
 					  <a class="btn btn-warning" href="javascript:insert()" style="margin-right:20px;"><i class="fa-solid fa-share-from-square"></i>카카오톡 공유</a>
 	 				</div>
 	 			</div>
@@ -592,7 +597,7 @@
 					<span class="text-center" style="font-size:30px; text-align:center; font-weight:500">${vo.title}</span>
 				
 					<c:if test="${(vo.memNickname == sNickname)}">&nbsp;&nbsp;
-	  				<a href="${ctp}/community/reflectionUpdate?idx=${vo.idx}&flag=${flag}">
+	  				<a href="${ctp}/community/reflectionUpdate?idx=${vo.idx}">
 							<i class="fa-regular fa-pen-to-square" style="font-size:20px"></i>
 						</a>			
 					</c:if>	

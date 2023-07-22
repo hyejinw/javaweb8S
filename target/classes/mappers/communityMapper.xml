@@ -310,6 +310,25 @@
 		</if>
 	</select>
 	
+	<select id="getAskDetail" resultType="com.spring.javaweb8S.vo.AskVO">
+		SELECT * FROM bo_ask WHERE idx = #{idx};
+	</select>
+	
+	<select id="getAskList" resultType="com.spring.javaweb8S.vo.AskVO">
+		SELECT * FROM bo_ask WHERE idx IN 
+		<foreach collection="askList" item="askList" open="(" close=")" separator=",">
+			#{askList}
+		</foreach>
+		;
+	</select>
+	
+	<select id="getMemReportList" resultType="com.spring.javaweb8S.vo.ReportVO">
+		SELECT * FROM bo_report WHERE memNickname = #{memNickname}
+		<if test='sort != null and sort != "전체"'>
+			AND reportCategory = #{sort}			
+		</if>
+		ORDER BY idx;
+	</select>
 	
 	<insert id="setReflectionInsert" parameterType="com.spring.javaweb8S.vo.ReflectionVO">
  		<if test='vo.bookTitle != null and vo.bookTitle=="없음"'>
@@ -376,9 +395,9 @@
 	
 	<insert id="setAskInsert" parameterType="com.spring.javaweb8S.vo.AskVO">
 		<if test="vo.memNickname == null">
-			INSERT INTO bo_ask(idx,email,category,askTitle,askContent,secret,askDate,answeredAsk,askHostIp,askDel) 
+			INSERT INTO bo_ask(idx,email,pwd,category,askTitle,askContent,secret,askDate,answeredAsk,askHostIp,askDel) 
 			VALUES 
-			(default,#{vo.email},#{vo.category},#{vo.askTitle},#{vo.askContent},#{vo.secret},default,default,#{vo.askHostIp},default);
+			(default,#{vo.email},#{vo.pwd},#{vo.category},#{vo.askTitle},#{vo.askContent},#{vo.secret},default,default,#{vo.askHostIp},default);
 		</if>
 		<if test="vo.memNickname != null">
 			INSERT INTO bo_ask(idx,memNickname,category,askTitle,askContent,secret,askDate,answeredAsk,askHostIp,askDel) 
@@ -386,8 +405,6 @@
 			(default,#{vo.memNickname},#{vo.category},#{vo.askTitle},#{vo.askContent},#{vo.secret},default,default,#{vo.askHostIp},default);
 		</if>
 	</insert>
-	
-	
 	
 	
 	<update id="setRefSaveUpdate">
@@ -451,6 +468,34 @@
 		UPDATE bo_member SET introduction = #{introduction} WHERE nickname = #{nickname};
 	</update>
 
+	<update id="setAskUpdate" parameterType="com.spring.javaweb8S.vo.AskVO">
+		<if test="vo.memNickname == null">
+			UPDATE bo_ask SET 
+			email = #{vo.email}, pwd = #{vo.pwd}, askTitle = #{vo.askTitle}, askContent = #{vo.askContent}, secret = #{vo.secret} 
+			WHERE idx = #{vo.idx};
+		</if>
+		<if test="vo.memNickname != null">
+			UPDATE bo_ask SET 
+			askTitle = #{vo.askTitle}, askContent = #{vo.askContent}, secret = #{vo.secret} 
+			WHERE idx = #{vo.idx};
+		</if>
+	</update>	
+	
+	<update id="setAskDelete">
+		UPDATE bo_ask SET askDel = "삭제" WHERE idx = #{idx};
+	</update>
+	
+	<update id="setAskIdxesDelete">
+		UPDATE bo_ask SET askDel = "삭제" WHERE idx IN 
+		<foreach collection="askList" item="askList" open="(" close=")" separator=",">
+			#{askList}
+		</foreach>
+	</update>
+	
+	<update id="setAnswerInsert">
+		UPDATE bo_ask SET answer = #{answer}, answeredAsk = "답변완료", answerDate = default WHERE idx = #{idx};
+	</update>
+	
 	<delete id="setRefSaveDelete">
 		DELETE FROM bo_refSave WHERE refIdx = #{refIdx} AND memNickname = #{memNickname};
 	</delete>

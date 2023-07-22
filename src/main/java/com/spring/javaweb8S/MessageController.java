@@ -1,5 +1,7 @@
 package com.spring.javaweb8S;
 
+import javax.servlet.http.HttpSession;
+
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -11,7 +13,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 public class MessageController {
 	
 	@RequestMapping(value = "/message/{msgFlag}", method = RequestMethod.GET, produces="application/text; charset=utf-8")
-	public String listGet(@PathVariable String msgFlag, 
+	public String listGet(@PathVariable String msgFlag, HttpSession session,
 			@RequestParam(name="nickname", defaultValue = "", required=false) String nickname,
 			@RequestParam(name="idx", defaultValue = "1", required=false) int idx,
 			Model model) {
@@ -138,11 +140,34 @@ public class MessageController {
 		}
 		else if(msgFlag.equals("askInsertOk")) {
 			model.addAttribute("msg", "문의가 등록되었습니다.");
-			model.addAttribute("url", "/community/ask");
+			System.out.println("(String)session.getAttribute(\"myPageAskInsertSW\") : " +(String)session.getAttribute("myPageAskInsertSW")); // 얘가 왜 null이지????????
+			
+			if(((String)session.getAttribute("myPageAskInsertSW") != null) && ((String)session.getAttribute("myPageAskInsertSW")).equals("ON")) {
+				model.addAttribute("url", "/community/myPage/ask?memNickname="+nickname);
+			}
+			else {
+				model.addAttribute("url", "/community/ask");
+			}
 		}
 		else if(msgFlag.equals("askInsertNo")) {
 			model.addAttribute("msg", "재시도 부탁드립니다.");
 			model.addAttribute("url", "/community/askInsert");
+		}
+		else if(msgFlag.equals("askUpdateOk")) {
+			model.addAttribute("msg", "문의가 수정되었습니다.");
+			model.addAttribute("url", "/community/askDetail?idx="+idx);
+		}
+		else if(msgFlag.equals("askUpdateNo")) {
+			model.addAttribute("msg", "재시도 부탁드립니다.");
+			model.addAttribute("url", "/community/askUpdate?idx="+idx);
+		}
+		else if(msgFlag.equals("askDeleteOk")) {
+			model.addAttribute("msg", "문의가 삭제되었습니다.");
+			model.addAttribute("url", "/community/ask");
+		}
+		else if(msgFlag.equals("askDeleteNo")) {
+			model.addAttribute("msg", "재시도 부탁드립니다.");
+			model.addAttribute("url", "/community/askDetail?idx="+idx);
 		}
 		
 		

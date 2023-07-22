@@ -3,6 +3,7 @@ package com.spring.javaweb8S.service;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -353,6 +354,48 @@ public class CommunityServiceImpl implements CommunityService {
 	@Override
 	public int setAskInsert(AskVO vo) {
 		return communityDAO.setAskInsert(vo);
+	}
+
+	// 문의 상세 내용
+	@Override
+	public AskVO getAskDetail(int idx) {
+		return communityDAO.getAskDetail(idx);
+	}
+
+	// 문의 수정
+	@Override
+	public int setAskUpdate(AskVO vo) {
+		return communityDAO.setAskUpdate(vo);
+	}
+
+	// 문의 삭제
+	@Override
+	public int setAskDelete(int idx) {
+		return communityDAO.setAskDelete(idx);
+	}
+
+	// 삭제할 문의 내용 가져오기
+	@Override
+	public ArrayList<AskVO> getAskList(List<String> askList) {
+		return communityDAO.getAskList(askList);
+	}
+
+	// 마이페이지 문의 복수 개 삭제
+	@Override
+	public void setAskIdxesDelete(List<String> askList) {
+		communityDAO.setAskIdxesDelete(askList);
+	}
+
+	// 문의 답변달기
+	@Override
+	public void setAnswerInsert(int idx, String answer) {
+		communityDAO.setAnswerInsert(idx, answer);
+	}
+
+	// 커뮤니티 마이페이지 신고 리스트
+	@Override
+	public ArrayList<ReportVO> getMemReportList(String memNickname, String sort) {
+		return communityDAO.getMemReportList(memNickname, sort);
 	}
 	
 	
