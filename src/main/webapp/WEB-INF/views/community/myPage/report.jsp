@@ -118,11 +118,9 @@
 		
 		// 문의 검색 + 분류 검색
 		function searchCheck() {
-			let searchString = $("#searchString").val();
-			let search = $("#search").val();
 			let sort = $("#sort").val();
 	    	
-    	location.href = "${ctp}/community/myPage/ask?memNickname=${memberVO.nickname}&search="+search+"&searchString="+searchString+"&sort="+sort;
+    	location.href = "${ctp}/community/myPage/report?memNickname=${memberVO.nickname}&sort="+sort;
 		}
 		
 		/* 체크박스 전체선택, 전체해제 */
@@ -144,7 +142,7 @@
 			}
 			
 			// 전체 선택한 경우 '전체 선택' 체크박스도 선택시켜주기 (전체 상품 개수에서 품절 개수는 제외)
-			if($( "input[name='checkRow']:checked" ).length == ${askNum}) {
+			if($( "input[name='checkRow']:checked" ).length == (${reportNum} - ${reportYetDoneNum})) {
 				$("input[name=checkAll]").prop("checked", true);
 			}
 		}
@@ -158,18 +156,18 @@
 		  checkRow = checkRow.substring(0,checkRow.lastIndexOf(",")); //맨 끝 콤마 지우기
 		 
 		  if(checkRow == '') {
-		    alert("삭제할 문의를 선택하세요.");
+		    alert("삭제할 신고를 선택하세요.");
 		    return false;
 		  }
 		 
-		  if(confirm("선택한 문의를 삭제하시겠습니까?")) {
+		  if(confirm("선택한 신고를 삭제하시겠습니까?")) {
 		      
  	      $.ajax({
 	    	  type : "post",
-	    	  url : "${ctp}/community/askIdxesDelete",
+	    	  url : "${ctp}/community/reportIdxesDelete",
 	    	  data : {checkRow : checkRow},
 	    	  success : function(res) {
-    				alert("선택한 문의가 삭제되었습니다.");
+    				alert("선택한 신고가 삭제되었습니다.");
     				location.reload();
 	    		},
 	    		error : function() {
@@ -179,25 +177,17 @@
 		  }
 		}
 		
-		// 문의 상세창에서 돌아왔다면, 해당 session을 없애준다.
-		$(document).ready(function(){
-			if(sessionStorage.getItem('myPageAskSW') == 'ON') {
-				sessionStorage.removeItem('myPageAskSW');
+		// 신고 상세창 값 전달
+		function reportDetail(idx) {
+			document.getElementById('reportCategory').value = document.getElementById('reportCategory'+idx).value;
+			document.getElementById('message').value = document.getElementById('message'+idx).value;
+			if(document.getElementById('reply'+idx).value == '') {
+				document.getElementById('reply').value = '(신고처리 진행 중입니다)';
 			}
-			if(sessionStorage.getItem('myPageAskInsertSW') == 'ON') {
-				sessionStorage.removeItem('myPageAskInsertSW');
+			else {
+				document.getElementById('reply').value = document.getElementById('reply'+idx).value;
 			}
-		});
-		
-		// 문의 상세창
-		function askDetail(idx) {
-			sessionStorage.setItem('myPageAskSW', 'ON');
-			location.href = "${ctp}/community/askDetail?idx="+idx;
-		}
-		// 문의 등록
-		function insertCheck(idx) {
-			sessionStorage.setItem('myPageAskInsertSW', 'ON');
-			location.href = "${ctp}/community/askInsert";
+			document.getElementById('reportDone').value = document.getElementById('reportDone'+idx).value;
 		}
   </script>
 </head>
@@ -248,11 +238,13 @@
 	 		
 	 		<div style="padding:20px 50px 50px 50px;">
 	 			<div class="row">
-	 				<div class="col">
+	 				<div class="col-9">
 						<i class="fa-solid fa-triangle-exclamation" style="font-size:48px;"></i>
 						<span style="font-size:30px; margin-left:20px">신고</span>
+						&nbsp;&nbsp;&nbsp;&nbsp;
+						<span> ※ 신고 철회 / 수정은 <b>불가</b>합니다. 처리완료된 신고만 삭제가 가능합니다.※</span>
 	 				</div>
-	 				<div class="col text-right">
+	 				<div class="col-3 text-right">
 	 					<a href="${ctp}/community/myPage/ask?memNickname=${memberVO.nickname}" class="btn btn-outline-dark">
 	 						<span style="font-size:15px">문의창&nbsp;&nbsp;<i class="fa-solid fa-arrow-right"></i></span>
  						</a>
@@ -263,10 +255,6 @@
 			<form name="searchForm">
 				<div class="row">
 					<div class="col-7 text-left">
-						<a class="btn btn-dark mr-3 mb-4" href="javascript:deleteAction()">선택 삭제</a>
-						<a class="btn btn-secondary mr-3 mb-4" href="javascript:insertCheck()">문의 등록</a>
-					</div>
-					<div class="col-5 text-right">
 						<select name="sort" id="sort" class="form-control mb-3" style="width:150px;" onchange="searchCheck()">
 			        <option <c:if test="${sort == '전체'}">selected</c:if> value="전체">전체</option>
 			        <option <c:if test="${sort == '기록'}">selected</c:if> value="기록">기록</option>
@@ -274,6 +262,9 @@
 			        <option <c:if test="${sort == '문장수집'}">selected</c:if> value="문장수집">문장수집</option>
 			        <option <c:if test="${sort == '회원'}">selected</c:if> value="회원">회원</option>
 			      </select>
+					</div>
+					<div class="col-5 text-right">
+						<a class="btn btn-dark mr-3 mb-4" href="javascript:deleteAction()">선택 삭제</a>
 					</div>
 				</div>
 	    </form>
@@ -285,9 +276,8 @@
 		        <th><input type="checkbox" name="checkAll" id="th_checkAll" onclick="checkAll();"/><label for="th_checkAll">&nbsp;&nbsp;&nbsp;&nbsp;No.</label></th>
 		        <th>분류</th>
 		        <th>제목</th>
-		        <th>내용</th>
 		        <th>신고일</th>
-		        <th>상세히</th>
+		        <th>상태</th>
 		      </tr>
 		    </thead>
 		    <tbody>
@@ -297,53 +287,71 @@
 		    	</c:if>
 		    	
 		    	<c:if test="${!empty vos}">
-			    	<c:set var="curScrStartNo" value="${pageVO.curScrStartNo}" />
-				    	<c:forEach var="vo" items="${vos}"> 
-				    		<tr>
-				    			<td><label for="chk${vo.idx}"><input type="checkbox" name="checkRow" id="chk${vo.idx}" onclick="tempCheckChange()" class="form-check-input chkGrp" value="${vo.idx}" />&nbsp;&nbsp;&nbsp;&nbsp;${curScrStartNo}</label></td>
-				    			<td>${vo.reportCategory}</td>
-				    			<td>
-				    				${vo.message}&nbsp;&nbsp;&nbsp;
-				    				<c:if test="${vo.reportDone == '처리 전'}"><h6><span class="badge badge-dark">${vo.reportDone}</span></h6></c:if>
-				    				<c:if test="${vo.reportDone != '처리 전'}">
-				    					<a href="#" onclick="replyOpen()" ><h6><span class="badge badge-dark">${vo.reportDone}</span></h6></a>
-				    					<input id="reply${vo.idx}" value="${vo.reply}"/>
-			    					</c:if>
-				    			</td>
-				    			<td>${fn:substring(vo.reportDate,0,10)}</td>
-				    			<td class="text-center">
-				    				<c:if test="${vo.reportDone == '처리 전'}">${vo.answeredAsk}</c:if>	
-				    				<c:if test="${vo.reportDone != '처리 전'}">처리 전</c:if>
-			    				</td>
-			    				<td class="text-center">
-			    					${fn:substring(vo.reportDate,0,10)}
-			    				</td>
-				    		</tr>
-				    		<c:set var="curScrStartNo" value="${curScrStartNo - 1}"/>
+			    	<c:forEach var="vo" items="${vos}" varStatus="st"> 
+			    		<tr>
+			    			<td><label for="chk${vo.idx}"><input type="checkbox" <c:if test="${vo.reportDone != '처리 전'}">name="checkRow" id="chk${vo.idx}"</c:if> onclick="tempCheckChange()" <c:if test="${vo.reportDone == '처리 전'}">disabled</c:if> class="form-check-input chkGrp" value="${vo.idx}" />&nbsp;&nbsp;&nbsp;&nbsp;${st.count}</label></td>
+			    			<td>${vo.reportCategory}</td>
+			    			<td>
+			    				<a href="#" onclick="reportDetail(${vo.idx})" data-toggle="modal" data-target="#myModal">
+			    					${fn:substring(vo.message,0,40)}
+			    					<c:if test="${fn:length(vo.message) > 40}">...</c:if>
+			    				</a>
+			    				<input type="hidden" id="reportCategory${vo.idx}" value="${vo.reportCategory}"/>
+			    				<input type="hidden" id="message${vo.idx}" value="${vo.message}"/>
+			    				<input type="hidden" id="reply${vo.idx}" value="${vo.reply}"/>
+			    				<input type="hidden" id="reportDone${vo.idx}" value="${vo.reportDone}"/>
+			    			</td>
+			    			<td>${fn:substring(vo.reportDate,0,10)}</td>
+			    			<td class="text-center">
+			    				<h6><span class="badge badge-dark">${vo.reportDone}</span></h6>
+		    				</td>
+			    		</tr>
 						</c:forEach>
-			    	<tr><td colspan="4"></td></tr> 
+			    	<tr><td colspan="5"></td></tr> 
 		    	</c:if>
 		    </tbody>
 		  </table>
 		  
-		  <!-- 4페이지(1블록)에서 0블록으로 가게되면 현재페이지는 1페이지가 블록의 시작페이지가 된다. -->
-		  <!-- 첫페이지 / 이전블록 / 1(4) 2(5) 3 / 다음블록 / 마지막페이지 -->
-		  <div class="text-center">
-			  <ul class="pagination justify-content-center">
-			    <c:if test="${pageVO.pag > 1}"><li class="page-item"><a class="page-link text-secondary" href="${ctp}/community/myPage/ask?pageSize=${pageVO.pageSize}&pag=1&search=${search}&searchString=${searchString}&memNickname=${memberVO.nickname}&sort=${sort}"><i class="fa-solid fa-angles-left"></i></a></li></c:if>
-			    <c:if test="${pageVO.curBlock > 0}"><li class="page-item"><a class="page-link text-secondary" href="${ctp}/community/myPage/ask?pageSize=${pageVO.pageSize}&pag=${(pageVO.curBlock-1)*pageVO.blockSize + 1}&search=${search}&searchString=${searchString}&memNickname=${memberVO.nickname}&sort=${sort}"><i class="fa-solid fa-angle-left"></i></a></li></c:if>
-			    <c:forEach var="i" begin="${pageVO.curBlock*pageVO.blockSize + 1}" end="${pageVO.curBlock*pageVO.blockSize + pageVO.blockSize}" varStatus="st">
-			      <c:if test="${i <= pageVO.totPage && i == pageVO.pag}"><li class="page-item active"><a class="page-link text-white bg-secondary border-secondary" href="${ctp}/community/myPage/ask?pageSize=${pageVO.pageSize}&pag=${i}&search=${search}&searchString=${searchString}&memNickname=${memberVO.nickname}&sort=${sort}">${i}</a></li></c:if>
-			      <c:if test="${i <= pageVO.totPage && i != pageVO.pag}"><li class="page-item"><a class="page-link text-secondary" href="${ctp}/community/myPage/ask?pageSize=${pageVO.pageSize}&pag=${i}&search=${search}&searchString=${searchString}&memNickname=${memberVO.nickname}&sort=${sort}">${i}</a></li></c:if>
-			    </c:forEach>
-			    <c:if test="${pageVO.curBlock < pageVO.lastBlock}"><li class="page-item"><a class="page-link text-secondary" href="${ctp}/community/myPage/ask?pageSize=${pageVO.pageSize}&pag=${(pageVO.curBlock+1)*pageVO.blockSize + 1}&search=${search}&searchString=${searchString}&memNickname=${memberVO.nickname}&sort=${sort}"><i class="fa-solid fa-angle-right"></i></a></li></c:if>
-			    <c:if test="${pageVO.pag < pageVO.totPage}"><li class="page-item"><a class="page-link text-secondary" href="${ctp}/community/myPage/ask?pageSize=${pageVO.pageSize}&pag=${pageVO.totPage}&search=${search}&searchString=${searchString}&memNickname=${memberVO.nickname}&sort=${sort}"><i class="fa-solid fa-angles-right"></i></a></li></c:if>
-			  </ul>
-		  </div>
-
   </div>
   
-	
+	 <!-- The Modal -->
+  <div class="modal fade" id="myModal">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+      <div class="modal-content">
+      
+        <!-- Modal Header -->
+        <div class="modal-header">
+          <h4 class="modal-title">신고 상세정보</h4>
+          <button type="button" class="close" data-dismiss="modal">&times;</button>
+        </div>
+        
+        <!-- Modal body -->
+        <div class="modal-body" style="padding:0px">
+          <div class="w3-container w3-border" style="background-color:#eee;">
+		  			<textarea rows="4" cols="10" id="message" style="background-color:#FFF; border:0px" readonly class="form-control mt-3"></textarea>
+		  			<hr style="border:0px; height:2px; width:200px; background:#41644A; margin:10px 0px"/>
+		  			
+		  			<div class="row ml-4 mr-3 mt-2 mb-4">
+		  				<div class="col">
+				  			<div>
+				  				<div class="mb-4">답변 : <textarea rows="4" cols="10" id="reply" style="background-color:#FFF; border:0px" readonly class="form-control"></textarea></div>
+				  				<span>분류 : <input type="text" id="reportCategory" style="width:500px; background-color:transparent; border:0px" readonly/></span><br/>
+				  				<span>상태 : <input type="text" id="reportDone" style="width:500px; background-color:transparent; border:0px" readonly/></span><br/>
+				  			</div>
+		  				</div>
+		  			
+		  			</div>
+				  </div>
+				  
+        </div>
+        
+        <!-- Modal footer -->
+        <div class="modal-footer">
+        </div>
+        
+      </div>
+    </div>
+  </div>
 	
 	<!-- END PAGE CONTENT -->
 	<jsp:include page="/WEB-INF/views/include/footer.jsp" />

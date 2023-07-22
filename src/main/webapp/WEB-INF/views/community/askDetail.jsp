@@ -340,7 +340,7 @@
 			  	
 			  	<div class="w3-container w3-border" style="background-color:#eee">
 			  		<c:if test="${(sMemType == '관리자') && (vo.answeredAsk == '답변전')}">
-			  			<textarea rows="4" cols="10" id="answerContent" class="form-control mt-3" placeholder="관리자) 1.수정은 지양해주시길 바랍니다.   2.등록 후, 작성자에게 문의등록이 이메일 전송됩니다. 작성 완료 후, 화면 전환까지 잠시 기다려주시길 바랍니다."></textarea>
+			  			<textarea rows="4" cols="10" id="answerContent" class="form-control mt-3" placeholder="[관리자]    1) 수정은 지양해주시길 바랍니다.   2) 작성 완료 후, 작성자에게 답변 등록 이메일이 전송됩니다. 화면 전환까지 잠시 기다려주시길 바랍니다."></textarea>
 			  			<div class="text-right mr-3 mt-2 mb-3"><button class="btn btn-dark" onclick="answerInsert()">작성</button></div>
 			  		</c:if>
 			  		<c:if test="${(sMemType == '관리자') && (vo.answeredAsk != '답변전')}">
@@ -369,61 +369,5 @@
 	<jsp:include page="/WEB-INF/views/include/footer.jsp" />
 	</div>
 	
-	
-	<!-- The Modal -->
-  <div class="modal fade" id="replyEditModal">
-    <div class="modal-dialog modal-dialog-centered">
-      <div class="modal-content">
-      
-        <!-- Modal Header -->
-        <div class="modal-header">
-          <h4 class="modal-title">댓글 수정</h4>
-          <button type="button" class="close" data-dismiss="modal">&times;</button>
-        </div>
-        
-        <!-- Modal body -->
-        <div class="modal-body" style="padding:0px">
-          <div class="w3-container w3-border" style="background-color:#eee">
-		  			<textarea rows="10" cols="10" id="replyEditContent" style="margin:15px 0px" class="form-control mt-3" placeholder="댓글을 남겨주세요." autofocus></textarea>
-		  			<input type="hidden" id="replyEditIdx"/>
-				  </div>
-        </div>
-        
-        <!-- Modal footer -->
-        <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" onclick="replyEdit()">수정</button>
-        </div>
-        
-      </div>
-    </div>
-  </div>
-  
-	<!-- The Modal -->
-  <div class="modal fade" id="replyDetailModal">
-    <div class="modal-dialog modal-dialog-centered">
-      <div class="modal-content">
-      
-        <!-- Modal Header -->
-        <div class="modal-header">
-          <h4 class="modal-title">댓글 상세창</h4>
-          <button type="button" class="close" data-dismiss="modal">&times;</button>
-        </div>
-        
-        <!-- Modal body -->
-        <div class="modal-body" style="padding:0px">
-          <div class="w3-container w3-border" style="background-color:#eee">
-		  			<textarea rows="10" cols="10" id="replyDetailContent" style="margin:15px 0px" class="form-control mt-3" disabled></textarea>
-				  </div>
-        </div>
-        
-        <!-- Modal footer -->
-        <div class="modal-footer">
-        </div>
-        
-      </div>
-    </div>
-  </div>
-	
-  
 </body>
 </html>

@@ -575,7 +575,7 @@
 	
 	<insert id="setBook">
 		INSERT INTO bo_book VALUES(default,#{vo.title},#{vo.contents},#{vo.url},#{vo.isbn},#{vo.datetime},#{vo.authors},#{vo.publisher},
-		#{vo.translators},#{vo.price},#{vo.sale_price},#{vo.thumbnail},#{vo.status},default,default,default);
+		#{vo.translators},#{vo.price},#{vo.sale_price},#{vo.thumbnail},#{vo.status},default,default);
 	</insert>
 	
  	<insert id="setMagazineInsert" parameterType="com.spring.javaweb8S.vo.MagazineVO">

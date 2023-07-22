@@ -461,7 +461,9 @@
 		        </td>
 		      </tr>
 		      <tr>
-		        <th class="text-center">프로필 사진</th>
+		        <th class="text-center">프로필 사진<br/>
+							<span style="font-size:12px">(클릭 시, 변경가능)</span>
+						</th>
 		        <td>
 			        <a href="#" data-toggle="modal" data-target="#memPhotoEditModal">
 			        	<img src="${ctp}/admin/member/${memberVO.memPhoto}" class="rounded-circle" style="width:100%; max-width:80px"/>

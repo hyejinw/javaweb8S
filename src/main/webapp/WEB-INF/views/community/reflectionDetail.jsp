@@ -559,6 +559,9 @@
 			else if(sessionStorage.getItem('myPageReplySW') == 'ON') {
 				location.href="${ctp}/community/myPage/reply?memNickname=${vo.memNickname}"
 			}
+			else if(sessionStorage.getItem('communityMainReflectionSW') == 'ON') {
+				location.href="${ctp}/community/communityMain"
+			}
 			else {
 				location.href="${ctp}/community/reflection"
 			}
@@ -817,9 +820,6 @@
 						    		<c:if test="${inspiredVO.insSaveIdx == 0}"><i class="fa-regular fa-bookmark save" style="font-size:25px" onclick="insSave('${inspiredVO.idx}', '${inspiredVO.insSaveIdx}')" title="관심등록되지 않은 문장수집 입니다"></i></c:if>
 										<c:if test="${inspiredVO.insSaveIdx != 0}"><i class="fa-solid fa-bookmark save" style="font-size:25px" onclick="insSave('${inspiredVO.idx}', '${inspiredVO.insSaveIdx}')" title="관심등록된 문장수집"></i></c:if>
 					  				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-										<a href="#" class="btn btn-sm btn-outline-secondary" onclick="reportCategory('문장수집','${inspiredVO.memNickname}','${inspiredVO.idx}')" data-toggle="modal" data-target="#reportModal">
-											신고
-										</a>
 					    		</div>
 					    	</div>
 					    </div>

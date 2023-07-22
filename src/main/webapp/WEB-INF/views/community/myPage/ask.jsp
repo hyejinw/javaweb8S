@@ -261,6 +261,10 @@
 			</div> 	
 			
 			<form name="searchForm">
+ 				<div class="text-right">
+					<a class="btn btn-dark mr-3 mb-4" href="javascript:deleteAction()">선택 삭제</a>
+					<a class="btn btn-secondary mr-3 mb-4" href="javascript:insertCheck()">문의 등록</a>
+				</div>
 				<div class="row">
 					<div class="col-7 text-left">
 						<select name="sort" id="sort" class="form-control mb-3" style="width:150px;" onchange="searchCheck()">
@@ -270,8 +274,6 @@
 			        <option <c:if test="${sort == '공개'}">selected</c:if> value="공개">공개</option>
 			        <option <c:if test="${sort == '비공개'}">selected</c:if> value="비공개">비공개</option>
 			      </select>
-						<a class="btn btn-dark mr-3 mb-4" href="javascript:deleteAction()">선택 삭제</a>
-						<a class="btn btn-secondary mr-3 mb-4" href="javascript:insertCheck()">문의 등록</a>
 					</div>
 					<div class="col-5 text-right">
 			    	<div class="input-group">

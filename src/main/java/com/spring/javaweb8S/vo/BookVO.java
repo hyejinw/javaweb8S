@@ -18,7 +18,6 @@ public class BookVO {
 	private String thumbnail;
 	private String status;
 	
-	private double bookRate;
 	private int save;
 	private String bookUpdate;
 }

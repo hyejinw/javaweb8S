@@ -223,7 +223,7 @@
 									</div>
 								</td>
 								<td class="text-center"> 
-			        		<a href="${ctp}/community/reflectionDetail?idx=${vo.idx}">
+			        		<a href="${ctp}/community/reflectionDetail?idx=${vo.idx}&bookIdx=${vo.bookIdx}">
 				        		${fn:substring(vo.refDate,0,10)}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 				        		<i class="fa-solid fa-eye"></i>&nbsp;&nbsp;${vo.refView}&nbsp;&nbsp;&nbsp;&nbsp;
 				        		<i class="fa-solid fa-comment-dots"></i>&nbsp;&nbsp;${vo.replyNum}

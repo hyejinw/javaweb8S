@@ -21,10 +21,7 @@
 		#main {margin-left: 120px}
 		/* Remove margins from "page content" on small screens */
 		@media only screen and (max-width: 600px) {#main {margin-left: 0}}
-		a:link {text-decoration: none !important;}
-		a:visited {text-decoration: none !important;}
-		a:hover {text-decoration: none !important;}
-		a:active {text-decoration: none !important;}
+		
 		
   	#back-to-top {
 		  display: inline-block;
@@ -221,29 +218,7 @@
 	    	}); 
 			}
 		}
-/* 
-		$(document).ready(function () {
-	    (function ($) {
-	        $('.owl-carousel').owlCarousel({
-				    stagePadding: 50,
-				    loop:true,
-				    margin:0,
-				    nav:true,
-				    autoplay:true,
-				    autoplayTimeout:5000,
-				    autoplayHoverPause:true,
-				    responsive:{
-			        0:{ items:1 },
-			        600:{ items:1 },
-			        800:{ items:2 },
-			        900:{ items:2 },
-			        1000:{ items:3 },
-			        1200:{ items:4 }
-				    }
-	        });
-	    })(jQuery);
-		}); */
-		
+
 		// 회원 페이지 열기
   	function memPage(memNickname) {
 			let url = "${ctp}/community/memPage?memNickname="+memNickname;
@@ -257,18 +232,7 @@
 			window.open(url, 'player', 'status=no, height=' + popupHeight  + ', width=' + popupWidth  + ', left='+ popupX + ', top='+ popupY);
 		}
 		
-		// 기록 상세창에서 돌아왔다면, 해당 session을 없애준다.
-		$(document).ready(function(){
-			if(sessionStorage.getItem('communityMainReflectionSW') == 'ON') {
-				sessionStorage.removeItem('communityMainReflectionSW');
-			}
-		});
 		
-		// 기록 상세창
-		function refDetail(idx, bookIdx) {
-			sessionStorage.setItem('communityMainReflectionSW', 'ON');
-			location.href = "${ctp}/community/reflectionDetail?idx="+idx+"&bookIdx="+bookIdx;
-		}
   </script>
  
 </head>
@@ -372,65 +336,6 @@
 	    </c:forEach>
 		</div>
 	</div>
-	
-	<div style="margin-top: 100px; padding:90px">
-		<div class="text-center" style="border-radius:10px; margin:0px auto; font-size:30px; font-weight:bold; padding:20px 0px; background-color:white; color:#282828;">
-			<div class="row">
-				<div class="col-3"></div>
-				<div class="col-6">최신 기록 &nbsp;&nbsp;&nbsp;
-					<a href="${ctp}/community/reflection">
-						<i class="fa-solid fa-circle-plus save" style="color:#41644A"></i>
-					</a>
-				</div>                                      
-				<div class="col-3 text-left"></div>
-			</div>
-	  	
-			<hr style="background-color:#9BA4B5; width:50%; height: 1px; margin:5px auto;"/>
-		</div>
-		<table class="table">
-			<thead class="text-center table-dark">
-	      <tr>
-	        <th>번호</th>
-	        <th colspan="3">제목</th>
-	        <th>비고</th>
-	        <th>작성자</th>
-	      </tr>
-	    </thead>
-	    <tbody>
-	    	<c:forEach var="reflectionVO" items="${reflectionVOS}" varStatus="st">
-		      <tr <c:if test="${reflectionVO.memNickname == sNickname}">style="background-color:#F5F5F5"</c:if>>
-		      	<td class="text-center">${st.count}</td>
-		      	<td class="text-center"><!-- 책 상세 페이지 -->
-		        	<c:if test="${!empty reflectionVO.thumbnail}"><img src="${reflectionVO.thumbnail}" style="width:50px"/></c:if>
-	        	</td>
-		        <td colspan="2">
-        			<div class="col-6" style="font-size:16px; font-weight:bold;">
-		        		<a href="javascript:refDetail(${reflectionVO.idx}, ${reflectionVO.bookIdx})">${reflectionVO.title}</a><!-- 상세페이지 -->
-							</div>
-						</td>
-						<td class="text-center"> 
-	        		<a href="javascript:refDetail(${reflectionVO.idx}, ${reflectionVO.bookIdx})">
-		        		${fn:substring(reflectionVO.refDate,0,10)}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-		        		<i class="fa-solid fa-eye"></i>&nbsp;&nbsp;${reflectionVO.refView}&nbsp;&nbsp;&nbsp;&nbsp;
-		        		<i class="fa-solid fa-comment-dots"></i>&nbsp;&nbsp;${reflectionVO.replyNum}
-		        		<c:if test="${(reflectionVO.memNickname == sNickname) || (sMemType == '관리자')}">
-		        			&nbsp;&nbsp;&nbsp;&nbsp;<i class="fa-solid fa-bookmark save"></i>&nbsp;&nbsp;${reflectionVO.refSave}
-		        		</c:if>	
-	        		</a><!-- 상세페이지 -->
-						</td>		
-						<td class="text-center">
-	        		<a href="${ctp}/community/memPage?nickname=${reflectionVO.memNickname}">  <!-- 회원 페이지 -->
-		        		<img src="${ctp}/admin/member/${reflectionVO.memPhoto}" class="rounded-circle" style="width:35px"/>&nbsp;&nbsp;&nbsp;
-		        		${reflectionVO.memNickname}
-	        		</a>
-						</td>	        	
-		      </tr>
-	    	</c:forEach>
-	    	<tr><td colspan="6"></td></tr> 
-	    </tbody>
-	  </table>
-	</div>
-	
 	<!-- END PAGE CONTENT -->
 	<jsp:include page="/WEB-INF/views/include/footer.jsp" />
 	</div>
@@ -484,4 +389,31 @@
   
 	
 </body>
+<script>
+
+	// 가장 많이 저장된 책 캐러셀
+	$(document).ready(function () {
+    (function ($) {
+        $('.owl-carousel').owlCarousel({
+			    stagePadding: 50,
+			    loop:true,
+			    margin:0,
+			    nav:true,
+			    autoplay:true,
+			    autoplayTimeout:5000,
+			    autoplayHoverPause:true,
+			    responsive:{
+		        0:{ items:1 },
+		        600:{ items:1 },
+		        800:{ items:2 },
+		        900:{ items:2 },
+		        1000:{ items:3 },
+		        1200:{ items:4 }
+			    }
+        });
+    })(jQuery);
+	});
+	
+
+</script>
 </html>

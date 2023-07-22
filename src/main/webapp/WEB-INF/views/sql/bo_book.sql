@@ -15,7 +15,6 @@ create table bo_book (
   thumbnail text,                       /* 도서 표지 미리보기 */
   status varchar(15),                   /* 도서 판매 상태 */
  	
-	bookRate double default 0,                      /* 도서 평점 */
 	save int default 0 not null,                    /* 저장 등록 수 */  
 	bookUpdate datetime default now() not null,     /* 도서 저장 날짜 */
 	            
@@ -25,7 +24,4 @@ create table bo_book (
 desc bo_book;
 drop table bo_book;
 ALTER TABLE bo_book AUTO_INCREMENT = 1;
-
-
-show tables;
 

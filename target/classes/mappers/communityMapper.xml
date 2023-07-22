@@ -330,6 +330,53 @@
 		ORDER BY idx;
 	</select>
 	
+	<select id="getNewInspired" resultType="com.spring.javaweb8S.vo.InspiredVO">
+		<if test="nickname != null">
+			SELECT i.*, b.title AS bookTitle, b.authors AS authors, b.publisher AS publisher,
+			(select idx from bo_insSave WHERE insIdx = i.idx AND memNickname = #{nickname}) AS insSaveIdx 
+			
+			FROM bo_inspired i 
+			LEFT JOIN bo_book b
+			ON i.bookIdx = b.idx 
+			
+			WHERE i.insDel != "삭제" 
+			ORDER BY i.idx DESC LIMIT 5;
+		</if>
+		<if test="nickname == null">
+			SELECT i.*, b.title AS bookTitle, b.authors AS authors, b.publisher AS publisher
+			
+			FROM bo_inspired i 
+			LEFT JOIN bo_book b
+			ON i.bookIdx = b.idx 
+			
+			WHERE i.insDel != "삭제" 
+			ORDER BY i.idx DESC LIMIT 5;
+		</if>
+	</select>
+	
+	<select id="getBookIdx" resultType="int">
+		SELECT idx FROM bo_book WHERE title = #{title} AND publisher = #{publisher} LIMIT 1;
+	</select>
+	
+	<select id="getPopularBook" resultType="com.spring.javaweb8S.vo.BookVO">
+		SELECT * FROM bo_book ORDER BY save DESC, idx DESC LIMIT 10;
+	</select>
+	
+	<select id="getNewReflection" resultType="com.spring.javaweb8S.vo.ReflectionVO">
+		SELECT *, b.thumbnail AS thumbnail, m.memPhoto AS memPhoto, 
+		(select count(*) from bo_reply p where r.idx = p.refIdx) AS replyNum
+		
+		FROM bo_reflection r
+		LEFT JOIN bo_book b 
+			ON r.bookIdx = b.idx 
+		LEFT JOIN bo_member m 
+			ON r.memNickname = m.nickname  
+			
+		WHERE r.refDel != "삭제" 
+		
+		ORDER BY r.idx DESC LIMIT 10;
+	</select>
+	
 	<insert id="setReflectionInsert" parameterType="com.spring.javaweb8S.vo.ReflectionVO">
  		<if test='vo.bookTitle != null and vo.bookTitle=="없음"'>
 			INSERT INTO bo_reflection(idx, memNickname, title, content, refSave, refView, replyOpen, refDate, refHostIp, refDel)
@@ -492,6 +539,10 @@
 		</foreach>
 	</update>
 	
+	<update id="setBookSaveNumUpdate">
+		UPDATE bo_book SET save = save + #{bookSaveNum} WHERE idx = #{idx};
+	</update>
+	
 	<update id="setAnswerInsert">
 		UPDATE bo_ask SET answer = #{answer}, answeredAsk = "답변완료", answerDate = default WHERE idx = #{idx};
 	</update>
@@ -518,6 +569,14 @@
 	
 	<delete id="setBlockDelete">
 		DELETE FROM bo_block WHERE memNickname = #{vo.memNickname} AND blockedNickname = #{vo.blockedNickname};
+	</delete>
+	
+	<delete id="setReportIdxesDelete">
+		DELETE FROM bo_report WHERE idx IN 
+		<foreach collection="reportList" item="reportList" open="(" close=")" separator=",">
+			#{reportList}
+		</foreach>
+		;
 	</delete>
 	
 	

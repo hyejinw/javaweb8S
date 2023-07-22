@@ -81,6 +81,18 @@ public class CommunityController {
 			session.setAttribute("sMemPhoto", memberVO.getMemPhoto());
 		}
 		
+		// 최근 문장수집(5개)
+		ArrayList<InspiredVO> inspiredVOS = communityService.getNewInspired(nickname);
+		model.addAttribute("inspiredVOS", inspiredVOS);
+		
+		// 가장 많이 저장된 책(10개)
+		ArrayList<BookVO> bookVOS = communityService.getPopularBook();
+		model.addAttribute("bookVOS", bookVOS);
+
+		// 최신 기록(10개)
+		ArrayList<ReflectionVO> reflectionVOS = communityService.getNewReflection();
+		model.addAttribute("reflectionVOS", reflectionVOS);
+		
 		return "community/communityMain";
 	}
 	
@@ -544,6 +556,12 @@ public class CommunityController {
 	public String bookSaveInsertPost(BookSaveVO vo) {
 		
 		communityService.setBookSaveInsert(vo);
+		
+		int idx = communityService.getBookIdx(vo.getTitle(), vo.getPublisher());
+		
+		// 책 테이블 저장 등록 수 변경
+		communityService.setBookSaveNumUpdate(idx, 1);
+		
 		return "";
 	}
 	
@@ -561,9 +579,12 @@ public class CommunityController {
 	// 커뮤니티 마이페이지 메인창에서, 책 저장 삭제
 	@ResponseBody
 	@RequestMapping(value = "/bookSaveDelete", method = RequestMethod.POST)
-	public String bookSaveDeletePost(int idx) {
+	public String bookSaveDeletePost(int idx, int bookIdx) {
 		
 		communityService.setBookSaveDelete(idx);
+		
+		// 책 테이블 저장 등록 수 변경
+		communityService.setBookSaveNumUpdate(bookIdx, -1);
 		return "";
 	}
 	
@@ -753,7 +774,7 @@ public class CommunityController {
 		return "community/myPage/ask";
 	}
 	
-	// 커뮤니티 마이페이지 문의/신고 창 중에, 문의 복수 삭제 askIdxesDelete
+	// 커뮤니티 마이페이지 문의/신고 창 중에, 문의 복수 삭제
 	@ResponseBody
 	@RequestMapping(value = "/askIdxesDelete", method = RequestMethod.POST)
 	public String askIdxesDeletePost(String checkRow) {
@@ -792,10 +813,39 @@ public class CommunityController {
 		// 신고 내역
 		ArrayList<ReportVO> vos = communityService.getMemReportList(memNickname, sort);
 		model.addAttribute("vos", vos);
+		model.addAttribute("reportNum", vos.size());
+		model.addAttribute("sort", sort);
+		
+		// 처리 전 상태인 신고 개수
+		int reportYetDoneNum = 0;
+		
+		// 품절 상품 개수
+		for(int i=0; i<vos.size(); i++) {
+			if(vos.get(i).getReportDone().equals("처리 전")) reportYetDoneNum++;
+		}
+		model.addAttribute("reportYetDoneNum", reportYetDoneNum);
 		
 		return "community/myPage/report";
 	}	
 	
+
+	// 커뮤니티 마이페이지 문의/신고 창 중에, 신고 복수 삭제
+	@ResponseBody
+	@RequestMapping(value = "/reportIdxesDelete", method = RequestMethod.POST)
+	public String reportIdxesDeletePost(String checkRow) {
+		
+		List<String> reportList = new ArrayList<String>();
+		String[] checkedReportIdxes = checkRow.split(",");
+		
+		for(int i=0; i < checkedReportIdxes.length; i++){
+			reportList.add(checkedReportIdxes[i].toString());
+		}
+
+		// DB에서 삭제
+		communityService.setReportIdxesDelete(reportList);
+		
+		return "";
+	}	
 	
 	// 문의 창
 	@RequestMapping(value = "/ask", method = RequestMethod.GET)

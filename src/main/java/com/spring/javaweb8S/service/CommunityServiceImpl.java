@@ -18,6 +18,7 @@ import com.spring.javaweb8S.dao.CommunityDAO;
 import com.spring.javaweb8S.vo.AskVO;
 import com.spring.javaweb8S.vo.BlockVO;
 import com.spring.javaweb8S.vo.BookSaveVO;
+import com.spring.javaweb8S.vo.BookVO;
 import com.spring.javaweb8S.vo.InspiredVO;
 import com.spring.javaweb8S.vo.MemberVO;
 import com.spring.javaweb8S.vo.RefSaveVO;
@@ -396,6 +397,42 @@ public class CommunityServiceImpl implements CommunityService {
 	@Override
 	public ArrayList<ReportVO> getMemReportList(String memNickname, String sort) {
 		return communityDAO.getMemReportList(memNickname, sort);
+	}
+
+	// 마이페이지 신고 복수 개 삭제
+	@Override
+	public void setReportIdxesDelete(List<String> reportList) {
+		communityDAO.setReportIdxesDelete(reportList);
+	}
+
+	// 커뮤니티 메인창 최근 문장수집(5개)
+	@Override
+	public ArrayList<InspiredVO> getNewInspired(String nickname) {
+		return communityDAO.getNewInspired(nickname);
+	}
+
+	// 책 고유번호 가져오기
+	@Override
+	public int getBookIdx(String title, String publisher) {
+		return communityDAO.getBookIdx(title, publisher);
+	}
+
+	// 책 테이블 저장 등록 수 변경
+	@Override
+	public void setBookSaveNumUpdate(int idx, int bookSaveNum) {
+		communityDAO.setBookSaveNumUpdate(idx, bookSaveNum);
+	}
+
+	// 가장 많이 저장된 책(10개)
+	@Override
+	public ArrayList<BookVO> getPopularBook() {
+		return communityDAO.getPopularBook();
+	}
+
+	// 최신 기록(10개)
+	@Override
+	public ArrayList<ReflectionVO> getNewReflection() {
+		return communityDAO.getNewReflection();
 	}
 	
 	

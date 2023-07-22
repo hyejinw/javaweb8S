@@ -8,6 +8,7 @@ import org.apache.ibatis.annotations.Param;
 import com.spring.javaweb8S.vo.AskVO;
 import com.spring.javaweb8S.vo.BlockVO;
 import com.spring.javaweb8S.vo.BookSaveVO;
+import com.spring.javaweb8S.vo.BookVO;
 import com.spring.javaweb8S.vo.InspiredVO;
 import com.spring.javaweb8S.vo.MemberVO;
 import com.spring.javaweb8S.vo.RefSaveVO;
@@ -141,6 +142,18 @@ public interface CommunityDAO {
 	public void setAnswerInsert(@Param("idx") int idx, @Param("answer") String answer);
 	
 	public ArrayList<ReportVO> getMemReportList(@Param("memNickname") String memNickname, @Param("sort") String sort);
+	
+	public void setReportIdxesDelete(@Param("reportList") List<String> reportList);
+	
+	public ArrayList<InspiredVO> getNewInspired(@Param("nickname") String nickname);
+	
+	public int getBookIdx(@Param("title") String title, @Param("publisher") String publisher);
+	
+	public void setBookSaveNumUpdate(@Param("idx") int idx, @Param("bookSaveNum") int bookSaveNum);
+	
+	public ArrayList<BookVO> getPopularBook();
+	
+	public ArrayList<ReflectionVO> getNewReflection();
 
 
 	

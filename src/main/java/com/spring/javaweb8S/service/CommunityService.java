@@ -8,6 +8,7 @@ import org.springframework.web.multipart.MultipartFile;
 import com.spring.javaweb8S.vo.AskVO;
 import com.spring.javaweb8S.vo.BlockVO;
 import com.spring.javaweb8S.vo.BookSaveVO;
+import com.spring.javaweb8S.vo.BookVO;
 import com.spring.javaweb8S.vo.InspiredVO;
 import com.spring.javaweb8S.vo.MemberVO;
 import com.spring.javaweb8S.vo.RefSaveVO;
@@ -130,6 +131,18 @@ public interface CommunityService {
 	public void setAnswerInsert(int idx, String answer);
 
 	public ArrayList<ReportVO> getMemReportList(String memNickname, String sort);
+
+	public void setReportIdxesDelete(List<String> reportList);
+
+	public ArrayList<InspiredVO> getNewInspired(String nickname);
+
+	public int getBookIdx(String title, String publisher);
+
+	public void setBookSaveNumUpdate(int idx, int bookSaveNum);
+
+	public ArrayList<BookVO> getPopularBook();
+
+	public ArrayList<ReflectionVO> getNewReflection();
 
 
 
