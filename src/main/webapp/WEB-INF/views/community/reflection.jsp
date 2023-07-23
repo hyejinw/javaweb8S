@@ -225,15 +225,20 @@
 								<td class="text-center"> 
 			        		<a href="${ctp}/community/reflectionDetail?idx=${vo.idx}&bookIdx=${vo.bookIdx}">
 				        		${fn:substring(vo.refDate,0,10)}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-				        		<i class="fa-solid fa-eye"></i>&nbsp;&nbsp;${vo.refView}&nbsp;&nbsp;&nbsp;&nbsp;
-				        		<i class="fa-solid fa-comment-dots"></i>&nbsp;&nbsp;${vo.replyNum}
+				        		<i class="fa-solid fa-eye"></i>&nbsp;&nbsp;${vo.refView}
+				        		<c:if test="${vo.replyOpen == 1}">
+					        		&nbsp;&nbsp;&nbsp;&nbsp;<i class="fa-solid fa-comment-dots"></i>&nbsp;&nbsp;${vo.replyNum}
+				        		</c:if>
+				        		<c:if test="${vo.replyOpen != 1}">
+					        		&nbsp;&nbsp;&nbsp;&nbsp;<span style="color:grey"><i class="fa-solid fa-comment-dots"></i>&nbsp;X</span>
+				        		</c:if>
 				        		<c:if test="${(vo.memNickname == sNickname) || (sMemType == '관리자')}">
 				        			&nbsp;&nbsp;&nbsp;&nbsp;<i class="fa-solid fa-bookmark save"></i>&nbsp;&nbsp;${vo.refSave}
 				        		</c:if>	
 			        		</a><!-- 상세페이지 -->
 								</td>		
 								<td class="text-center">
-			        		<a href="${ctp}/community/memPage?nickname=${vo.memNickname}">  <!-- 회원 페이지 -->
+			        		<a href="javascript:memPage('${vo.memNickname}')">  <!-- 회원 페이지 -->
 				        		<img src="${ctp}/admin/member/${vo.memPhoto}" class="rounded-circle" style="width:35px"/>&nbsp;&nbsp;&nbsp;
 				        		${vo.memNickname}
 			        		</a>

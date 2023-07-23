@@ -202,7 +202,7 @@
 			str += '<div class="row mt-3" style="background-color:rgba(254, 251, 232); border-radius:10px; padding:10px;">';
 
 			str += '<div class="col-10">';
-			str += '<a href="${ctp}/community/memPage?nickname='+mentionedNickname+'">';
+			str += '<a href="javascript:memPage(\''+mentionedNickname+'\')">';
 			str += '<span style="color:grey">@'+mentionedNickname+'</span>';
 			str += '</a>';
 			str += '&nbsp;&nbsp;&nbsp;';
@@ -566,6 +566,20 @@
 				location.href="${ctp}/community/reflection"
 			}
 		}
+		
+		// 회원 페이지에서 기록 상세페이지로 왔다면 session값 없애기
+		$(document).ready(function(){
+			if(localStorage.getItem('memPageReflectionSW') == 'ON') {
+				localStorage.removeItem('memPageReflectionSW');
+				localStorage.removeItem('memPageReflectionIdxSW');
+				localStorage.removeItem('memPageReflectionBookIdxSW');
+			}
+			if(localStorage.getItem('bookPageReflectionSW') == 'ON') {
+				localStorage.removeItem('bookPageReflectionSW');
+				localStorage.removeItem('bookPageReflectionIdxSW');
+				localStorage.removeItem('bookPageReflectionBookIdxSW');
+			}
+		});
   </script>
 </head>
 <body>
@@ -588,7 +602,7 @@
 						</a>
 	 				</div>
 	 				<div class="col-6 text-center">
-						<a href="javascript:returnPath()">
+						<a href="${ctp}/community/reflection">
 		 					<span class="text-center" style="font-size:23px; color:grey; text-align:center;">기록)</span>
 						</a>
 	 				</div>
@@ -606,12 +620,17 @@
 					</c:if>	
 				
 					<br/>
-					<a href="${ctp}/"><span class="text-center" style="font-size:20px; text-align:center; color:grey">by. ${vo.memNickname}</span></a><br/>
+					<a href="javascript:memPage('${vo.memNickname}')"><span class="text-center" style="font-size:20px; text-align:center; color:grey">by. ${vo.memNickname}</span></a><br/>
 					<span class="text-center" style="font-size:14px; text-align:center;">${fn:substring(vo.refDate,0,19)}</span>
 				</div>
 				<div class="row">
 					<div class="col ml-5">
-						<a href="#replySection" class="btn btn-outline-primary">댓글(${replyNum})</a>
+						<c:if test="${vo.replyOpen == 1}">
+							<a href="#replySection" class="btn btn-outline-primary">댓글(${replyNum})</a>
+						</c:if>
+						<c:if test="${vo.replyOpen != 1}">
+							<a href="#replySection" class="btn btn-outline-primary">댓글(X)</a>
+						</c:if>
 						&nbsp;&nbsp;&nbsp;&nbsp;
 						<a href="#" class="btn btn-outline-secondary" onclick="reportCategory('기록','${vo.memNickname}','${vo.idx}')" data-toggle="modal" data-target="#reportModal">
 							신고
@@ -644,13 +663,20 @@
 				${vo.content}
 			  <hr style="border:0px; height:1.0px; background:#41644A; margin:10px 0px"/>
 			</div>
-		  
 		  <div id="replySection">
 	  	  <div class="w3-bar">
-			    <button class="w3-bar-item w3-button tablink w3-blue" <c:if test="${vo.bookIdx != ''}">onclick="openCity(event,'reply')"</c:if>>댓글(${replyNum})</button>
+			    <button class="w3-bar-item w3-button tablink w3-blue" <c:if test="${vo.bookIdx != ''}">onclick="openCity(event,'reply')"</c:if>>
+			    	<c:if test="${vo.replyOpen == 1}">댓글(${replyNum})</c:if>
+			    	<c:if test="${vo.replyOpen != 1}">댓글(X)</c:if>
+			    </button>
 			    <c:if test="${vo.bookIdx != ''}"><button id="inspiredBtn" class="w3-bar-item w3-button tablink" onclick="openCity(event,'inspired')">문장 수집(${inspiredNum})</button></c:if>
 			  </div>
 			  
+		  <c:if test="${vo.replyOpen != 1}">
+			  <div id="reply" class="w3-border city">
+			  </div>
+			</c:if>
+		  <c:if test="${vo.replyOpen == 1}">
 			  <div id="reply" class="w3-border city">
 			  	
 			  	<div class="w3-container w3-border" style="background-color:#eee">
@@ -666,7 +692,7 @@
 		  				<div style="margin-left:30px">
 		  					<div style="padding:0px 16px 0px 16px; width:80%; max-width:1000px; margin-left: auto; margin-right: auto;">
 									<div class="mt-3" style="background-color:rgba(254, 251, 232); border-radius:10px; padding:10px;">
-										<a href="${ctp}/community/memPage?nickname=${replyVO.mentionedNickname}">
+										<a href="javascript:memPage('${replyVO.mentionedNickname}')">
 										<span style="color:grey">@${replyVO.mentionedNickname}</span>
 										</a>
 										&nbsp;&nbsp;&nbsp;
@@ -687,12 +713,12 @@
 	  				</c:if>
 				  	<div class="row mt-4" <c:if test="${replyVO.level != 0}">style="margin:0px 0px 0px 50px"</c:if>> 
 				  		<div class="col-2 text-right">
-					  		<a href="${ctp}/community/memPage?nickname=${replyVO.memNickname}">
+					  		<a href="javascript:memPage('${replyVO.memNickname}')">
 					  			<img src="${ctp}/admin/member/${replyVO.memPhoto}" class="rounded-circle" style="width:30px"/>
 				  			</a>
 				  		</div>
 				  		<div class="col-8">
-				  			<a href="${ctp}/community/memPage?nickname=${replyVO.memNickname}">
+				  			<a href="javascript:memPage('${replyVO.memNickname}')">
 				  				<span style="color:grey; font-size:17px"><b>${replyVO.memNickname}</b></span>
 				  			</a>
 				  			<c:if test="${(replyVO.memNickname == sNickname) || (sMemType == '관리자')}">
@@ -726,6 +752,8 @@
 		  			<hr style="margin:0px"/>
 					</c:forEach>
 			  </div>
+		  
+		  </c:if>
 			
 			  <div id="inspired" class="w3-border city" style="display:none">
 			  
@@ -796,7 +824,7 @@
 					    <div class="row">
 					    	<div class="col">
 							    <div style="padding:10px">
-							    	<a href="${ctp}/community/memPage?nickname=${inspiredVO.memNickname}"><span>by. ${inspiredVO.memNickname}</span></a>
+							    	<a href="javascript:memPage('${inspiredVO.memNickname}')"><span>by. ${inspiredVO.memNickname}</span></a>
 							    	<c:if test="${inspiredVO.explanation!= ''}">
 							    		&nbsp;&nbsp;&nbsp;
 							    		<span class="dropdown dropright">

@@ -94,7 +94,12 @@
 		LEFT JOIN bo_book b
 		ON s.bookIdx = b.idx
 		
-		WHERE s.categoryName = #{categoryName} AND s.memNickname = #{memNickname};
+		WHERE s.categoryName = #{categoryName} AND s.memNickname = #{memNickname}
+		
+		<if test='flag != null and flag == "memPage"'>
+			LIMIT 5 
+		</if>
+		;
 	</select>
 	
 	<select id="myPageInspiredTotRecCnt" resultType="int">
@@ -327,7 +332,7 @@
 		<if test='sort != null and sort != "전체"'>
 			AND reportCategory = #{sort}			
 		</if>
-		ORDER BY idx;
+		ORDER BY idx DESC;
 	</select>
 	
 	<select id="getNewInspired" resultType="com.spring.javaweb8S.vo.InspiredVO">
@@ -340,7 +345,7 @@
 			ON i.bookIdx = b.idx 
 			
 			WHERE i.insDel != "삭제" 
-			ORDER BY i.idx DESC LIMIT 5;
+			ORDER BY i.idx DESC LIMIT 10;
 		</if>
 		<if test="nickname == null">
 			SELECT i.*, b.title AS bookTitle, b.authors AS authors, b.publisher AS publisher
@@ -350,7 +355,7 @@
 			ON i.bookIdx = b.idx 
 			
 			WHERE i.insDel != "삭제" 
-			ORDER BY i.idx DESC LIMIT 5;
+			ORDER BY i.idx DESC LIMIT 10;
 		</if>
 	</select>
 	
@@ -375,6 +380,78 @@
 		WHERE r.refDel != "삭제" 
 		
 		ORDER BY r.idx DESC LIMIT 10;
+	</select>
+	
+	<select id="getMemPageInspired" resultType="com.spring.javaweb8S.vo.InspiredVO">
+		SELECT i.*, b.title AS bookTitle, b.authors AS authors, b.publisher AS publisher,
+		(select idx from bo_insSave WHERE insIdx = i.idx AND memNickname = #{nickname}) AS insSaveIdx 
+		
+		FROM bo_inspired i 
+		LEFT JOIN bo_book b
+		ON i.bookIdx = b.idx 
+		
+		WHERE i.memNickname = #{memNickname} AND i.insDel != "삭제" 
+		ORDER BY i.idx DESC LIMIT 5;
+	</select>
+	
+	<select id="getMemPageReflection" resultType="com.spring.javaweb8S.vo.ReflectionVO">
+		SELECT *, b.thumbnail AS thumbnail, m.memPhoto AS memPhoto, 
+		(select count(*) from bo_reply p where  r.idx = p.refIdx) AS replyNum
+		
+		FROM bo_reflection r
+		LEFT JOIN bo_book b 
+			ON r.bookIdx = b.idx 
+		LEFT JOIN bo_member m 
+			ON r.memNickname = m.nickname  
+			
+		WHERE r.refDel != "삭제" AND r.memNickname = #{memNickname} 
+		
+		ORDER BY r.idx DESC LIMIT 10;
+	</select>
+	
+	<select id="getBookInfo" resultType="com.spring.javaweb8S.vo.BookVO">
+		SELECT * FROM bo_book WHERE idx = #{idx};
+	</select>
+	
+	<select id="getMemBookSave" resultType="com.spring.javaweb8S.vo.BookSaveVO">
+		SELECT s.*, m.memPhoto AS memPhoto
+		FROM bo_bookSave s
+		LEFT JOIN bo_member m
+			ON s.memNickname = m.nickname 
+			
+		WHERE s.categoryName = #{categoryName} AND s.bookIdx = #{idx};
+	</select>
+	
+	<select id="getBookReflection" resultType="com.spring.javaweb8S.vo.ReflectionVO">
+		SELECT *, m.memPhoto AS memPhoto
+		
+		FROM bo_reflection r
+		LEFT JOIN bo_member m 
+			ON r.memNickname = m.nickname  
+			
+		WHERE r.refDel != "삭제" AND r.bookIdx = #{idx} 
+		
+		ORDER BY r.idx DESC;
+	</select>
+	
+	<select id="getProverbTotalNum" resultType="int">
+		SELECT count(*) FROM bo_proverb;
+	</select>
+	
+	<select id="getRandomProverb" resultType="com.spring.javaweb8S.vo.ProverbVO">
+		SELECT * FROM bo_proverb ORDER BY idx DESC LIMIT #{randomNum}, 1;
+	</select>
+	
+	<select id="getBookPageInspired" resultType="com.spring.javaweb8S.vo.InspiredVO">
+		SELECT i.*, b.title AS bookTitle, b.authors AS authors, b.publisher AS publisher,
+		(select idx from bo_insSave WHERE insIdx = i.idx AND memNickname = #{nickname}) AS insSaveIdx 
+		
+		FROM bo_inspired i 
+		LEFT JOIN bo_book b
+		ON i.bookIdx = b.idx 
+		
+		WHERE i.bookIdx = #{idx} AND i.insDel != "삭제" 
+		ORDER BY i.idx DESC;
 	</select>
 	
 	<insert id="setReflectionInsert" parameterType="com.spring.javaweb8S.vo.ReflectionVO">

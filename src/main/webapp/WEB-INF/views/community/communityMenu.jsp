@@ -35,6 +35,53 @@
   		}
   		location.href = "${ctp}/community/message?memNickname=${sNickname}";
   	}
+  	
+ 		// 책 상세 페이지 열기
+  	function bookPage(idx) {
+			let url = "${ctp}/community/bookPage?idx="+idx;
+	
+			let popupWidth = 700;
+			let popupHeight = 1200;
+	
+			let popupX = (window.screen.width / 2) - (popupWidth / 2);
+			let popupY= (window.screen.height / 2) - (popupHeight / 2);
+			
+			window.open(url, 'bookPage', 'status=no, height=' + popupHeight  + ', width=' + popupWidth  + ', left='+ popupX + ', top='+ popupY);
+		}
+  	
+ 		// 회원 페이지 열기
+  	function memPage(memNickname) {
+			let url = "${ctp}/community/memPage?memNickname="+memNickname;
+	
+			let popupWidth = 800;
+			let popupHeight = 1200;
+	
+			let popupX = (window.screen.width / 2) - (popupWidth / 2);
+			let popupY= (window.screen.height / 2) - (popupHeight / 2);
+			
+			window.open(url, 'memPage', 'status=no, height=' + popupHeight  + ', width=' + popupWidth  + ', left='+ popupX + ', top='+ popupY);
+		}
+		
+		$(document).ready(function(){
+	 		// 더 알아보기 눌렀으면 회원 상세 페이지로!
+			if(localStorage.getItem('myPageDetailSW') == 'ON') {
+				let memNickname = localStorage.getItem('memNicknameSW');
+		 		location.href = "${ctp}/community/myPage?memNickname="+memNickname;			
+			}
+	 		// 회원 페이지에서 기록 상세 페이지로!
+			if(localStorage.getItem('memPageReflectionSW') == 'ON') {
+				let idx = localStorage.getItem('memPageReflectionIdxSW');
+				let bookIdx = localStorage.getItem('memPageReflectionBookIdxSW');
+		 		location.href = "${ctp}/community/reflectionDetail?idx="+idx+"&bookIdx="+bookIdx;			
+			}
+	 		// 책 페이지에서 기록 상세 페이지로!
+			if(localStorage.getItem('bookPageReflectionSW') == 'ON') {
+				let idx = localStorage.getItem('bookPageReflectionIdxSW');
+				let bookIdx = localStorage.getItem('bookPageReflectionBookIdxSW');
+		 		location.href = "${ctp}/community/reflectionDetail?idx="+idx+"&bookIdx="+bookIdx;			
+			}
+		});
+ 		
   </script>
 </head>
 <body>

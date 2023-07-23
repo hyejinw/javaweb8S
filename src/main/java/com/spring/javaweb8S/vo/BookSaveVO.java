@@ -9,6 +9,9 @@ public class BookSaveVO {
 	private String categoryName;
 	private int bookIdx;
 	
+	// 해당 책 저장한 회원 사진
+	private String memPhoto;
+	
 	// bo_book 정보가 담길 예정
 	private String title;
 	private String contents;

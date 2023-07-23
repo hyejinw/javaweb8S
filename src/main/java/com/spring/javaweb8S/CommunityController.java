@@ -36,6 +36,7 @@ import com.spring.javaweb8S.vo.BookVO;
 import com.spring.javaweb8S.vo.InsSaveVO;
 import com.spring.javaweb8S.vo.InspiredVO;
 import com.spring.javaweb8S.vo.MemberVO;
+import com.spring.javaweb8S.vo.ProverbVO;
 import com.spring.javaweb8S.vo.RefSaveVO;
 import com.spring.javaweb8S.vo.ReflectionVO;
 import com.spring.javaweb8S.vo.ReplyVO;
@@ -74,6 +75,15 @@ public class CommunityController {
 	public String communityMainGet(Model model, HttpSession session) {
 		String nickname = (String) session.getAttribute("sNickname");
 		
+		// 랜덤 명언 띄우기
+		int proverbNum = communityService.getProverbTotalNum();
+		
+		// 1 ~ 명언 총 개수 사이의 랜덤한 정수를 얻는다.
+		int randomNum = (int) ((Math.random() * proverbNum) + 1);
+		ProverbVO proverbVO = communityService.getRandomProverb(randomNum - 1);
+		
+		model.addAttribute("proverbVO", proverbVO);
+		
 		// 커뮤니티 메뉴에 띄울 회원 사진, 세션에 저장
 		if(nickname != null) {
 			MemberVO memberVO = communityService.getMemberInfo(nickname);
@@ -81,7 +91,7 @@ public class CommunityController {
 			session.setAttribute("sMemPhoto", memberVO.getMemPhoto());
 		}
 		
-		// 최근 문장수집(5개)
+		// 최근 문장수집(10개)
 		ArrayList<InspiredVO> inspiredVOS = communityService.getNewInspired(nickname);
 		model.addAttribute("inspiredVOS", inspiredVOS);
 		
@@ -478,27 +488,29 @@ public class CommunityController {
 		
 		String nickname = (String) session.getAttribute("sNickname");
 		// 차단 정보
-		if(!nickname.equals(memNickname)) {
-			String blockedNickname = memNickname;
-			BlockVO blockVO = communityService.getBlockInfo(nickname, blockedNickname);
-			model.addAttribute("blockVO", blockVO);
+		if(nickname != null) {
+			if(!nickname.equals(memNickname)) {
+				String blockedNickname = memNickname;
+				BlockVO blockVO = communityService.getBlockInfo(nickname, blockedNickname);
+				model.addAttribute("blockVO", blockVO);
+			}
 		}
 		
 		// (서재) 카테고리별 책 저장
-		ArrayList<BookSaveVO> bookSave1VOS = communityService.getBookSave("인생책", memNickname);
-		ArrayList<BookSaveVO> bookSave2VOS = communityService.getBookSave("추천책", memNickname);
-		ArrayList<BookSaveVO> bookSave3VOS = communityService.getBookSave("읽은책", memNickname);
-		ArrayList<BookSaveVO> bookSave4VOS = communityService.getBookSave("관심책", memNickname);
+		ArrayList<BookSaveVO> bookSave1VOS = communityService.getBookSave("인생책", memNickname, "myPage");
+		ArrayList<BookSaveVO> bookSave2VOS = communityService.getBookSave("추천책", memNickname, "myPage");
+		ArrayList<BookSaveVO> bookSave3VOS = communityService.getBookSave("읽은책", memNickname, "myPage");
+		ArrayList<BookSaveVO> bookSave4VOS = communityService.getBookSave("관심책", memNickname, "myPage");
 		
 		model.addAttribute("bookSave1VOS", bookSave1VOS);
 		model.addAttribute("bookSave2VOS", bookSave2VOS);
 		model.addAttribute("bookSave3VOS", bookSave3VOS);
 		model.addAttribute("bookSave4VOS", bookSave4VOS);
+		
 		model.addAttribute("bookSave1VOSNum", bookSave1VOS.size());
 		model.addAttribute("bookSave2VOSNum", bookSave2VOS.size());
 		model.addAttribute("bookSave3VOSNum", bookSave3VOS.size());
 		model.addAttribute("bookSave4VOSNum", bookSave4VOS.size());
-		
 		// 새 소식
 	
 		// 문장 수집 + 저장 유무도 가져오기
@@ -602,11 +614,14 @@ public class CommunityController {
 		model.addAttribute("memberVO", memberVO);
 		
 		String nickname = (String) session.getAttribute("sNickname");
+		
 		// 차단 정보
-		if(!nickname.equals(memNickname)) {
-			String blockedNickname = memNickname;
-			BlockVO blockVO = communityService.getBlockInfo(nickname, blockedNickname);
-			model.addAttribute("blockVO", blockVO);
+		if(nickname != null) {
+			if(!nickname.equals(memNickname)) {
+				String blockedNickname = memNickname;
+				BlockVO blockVO = communityService.getBlockInfo(nickname, blockedNickname);
+				model.addAttribute("blockVO", blockVO);
+			}
 		}
 		
 		
@@ -647,10 +662,12 @@ public class CommunityController {
 		
 		String nickname = (String) session.getAttribute("sNickname");
 		// 차단 정보
-		if(!nickname.equals(memNickname)) {
-			String blockedNickname = memNickname;
-			BlockVO blockVO = communityService.getBlockInfo(nickname, blockedNickname);
-			model.addAttribute("blockVO", blockVO);
+		if(nickname != null) {
+			if(!nickname.equals(memNickname)) {
+				String blockedNickname = memNickname;
+				BlockVO blockVO = communityService.getBlockInfo(nickname, blockedNickname);
+				model.addAttribute("blockVO", blockVO);
+			}
 		}
 		
 		
@@ -1055,21 +1072,94 @@ public class CommunityController {
 		return "";
 	}
 	
-	
-	
-	// 회원 창
+	// 회원 창 메인(팝업)
 	@RequestMapping(value = "/memPage", method = RequestMethod.GET)
-	public String memPageGet(String memNickname) {
+	public String memPageGet(String memNickname, Model model, HttpSession session) {
+		// 회원정보
+		MemberVO memberVO = communityService.getMemberInfo(memNickname);
+		model.addAttribute("memberVO", memberVO);
 		
-		// 서재(책 저장 카테고리별 책 가져오기: 최신)
+		// (서재) 카테고리별 책 저장 (5개씩 가져오기)
+		ArrayList<BookSaveVO> bookSave1VOS = communityService.getBookSave("인생책", memNickname, "memPage");
+		ArrayList<BookSaveVO> bookSave2VOS = communityService.getBookSave("추천책", memNickname, "memPage");
+		ArrayList<BookSaveVO> bookSave3VOS = communityService.getBookSave("읽은책", memNickname, "memPage");
+		ArrayList<BookSaveVO> bookSave4VOS = communityService.getBookSave("관심책", memNickname, "memPage");
 		
+		model.addAttribute("bookSave1VOS", bookSave1VOS);
+		model.addAttribute("bookSave2VOS", bookSave2VOS);
+		model.addAttribute("bookSave3VOS", bookSave3VOS);
+		model.addAttribute("bookSave4VOS", bookSave4VOS);
 		
-		
-		// 
-		
+		// 문장 수집 (5개씩 가져오기)
+		String nickname = (String) session.getAttribute("sNickname");
+		ArrayList<InspiredVO> inspiredVOS = communityService.getMemPageInspired(memNickname, nickname);
+		model.addAttribute("inspiredVOS", inspiredVOS);
+
 		return "community/memPage";
 	}
-
 	
+	// 회원 창 기록(팝업)
+	@RequestMapping(value = "/memPage/reflection", method = RequestMethod.GET)
+	public String memPagereflectionGet(String memNickname, Model model, HttpSession session) {
+		// 회원정보
+		MemberVO memberVO = communityService.getMemberInfo(memNickname);
+		model.addAttribute("memberVO", memberVO);
+		
+		// 기록  (10개씩 가져오기)
+		ArrayList<ReflectionVO> vos = communityService.getMemPageReflection(memNickname);
+		model.addAttribute("vos", vos);
+		
+		return "community/memPage/reflection";
+	}
+
+	// 책 상세창(팝업)
+	@RequestMapping(value = "/bookPage", method = RequestMethod.GET)
+	public String bookPageGet(int idx, Model model) {
+	
+		// 책 정보
+		BookVO bookVO = communityService.getBookInfo(idx);
+		model.addAttribute("bookVO", bookVO);
+		
+		// (서재) 카테고리별 책 저장한 회원
+		ArrayList<BookSaveVO> bookSave1VOS = communityService.getMemBookSave("인생책", idx);
+		ArrayList<BookSaveVO> bookSave2VOS = communityService.getMemBookSave("추천책", idx);
+		ArrayList<BookSaveVO> bookSave3VOS = communityService.getMemBookSave("읽은책", idx);
+		ArrayList<BookSaveVO> bookSave4VOS = communityService.getMemBookSave("관심책", idx);
+		
+		model.addAttribute("bookSave1VOS", bookSave1VOS);
+		model.addAttribute("bookSave2VOS", bookSave2VOS);
+		model.addAttribute("bookSave3VOS", bookSave3VOS);
+		model.addAttribute("bookSave4VOS", bookSave4VOS);
+
+		model.addAttribute("bookSave1VOSNum", bookSave1VOS.size());
+		model.addAttribute("bookSave2VOSNum", bookSave2VOS.size());
+		model.addAttribute("bookSave3VOSNum", bookSave3VOS.size());
+		model.addAttribute("bookSave4VOSNum", bookSave4VOS.size());
+		
+		// 작성된 기록
+		ArrayList<ReflectionVO> vos = communityService.getBookReflection(idx);
+		model.addAttribute("vos", vos);
+		
+		// 수집된 문장
+		
+		
+		return "community/bookPage";
+	}
+	
+	// 책 상세창(팝업) + 문장수집
+	@RequestMapping(value = "/bookPage/inspired", method = RequestMethod.GET)
+	public String bookPageInspiredGet(int idx, Model model, HttpSession session) {
+		
+		// 책 정보
+		BookVO bookVO = communityService.getBookInfo(idx);
+		model.addAttribute("bookVO", bookVO);
+		
+		// 수집된 문장
+		String nickname = (String) session.getAttribute("sNickname");
+		ArrayList<InspiredVO> inspiredVOS = communityService.getBookPageInspired(nickname, idx);
+		model.addAttribute("inspiredVOS", inspiredVOS);
+		
+		return "community/bookPage/inspired";
+	}
 	
 }

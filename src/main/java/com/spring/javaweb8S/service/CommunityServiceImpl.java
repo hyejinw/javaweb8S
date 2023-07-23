@@ -21,6 +21,7 @@ import com.spring.javaweb8S.vo.BookSaveVO;
 import com.spring.javaweb8S.vo.BookVO;
 import com.spring.javaweb8S.vo.InspiredVO;
 import com.spring.javaweb8S.vo.MemberVO;
+import com.spring.javaweb8S.vo.ProverbVO;
 import com.spring.javaweb8S.vo.RefSaveVO;
 import com.spring.javaweb8S.vo.ReflectionVO;
 import com.spring.javaweb8S.vo.ReplyVO;
@@ -208,8 +209,8 @@ public class CommunityServiceImpl implements CommunityService {
 
 	// 커뮤니티 마이페이지, (서재) 카테고리별 책 저장
 	@Override
-	public ArrayList<BookSaveVO> getBookSave(String categoryName, String memNickname) {
-		return communityDAO.getBookSave(categoryName, memNickname);
+	public ArrayList<BookSaveVO> getBookSave(String categoryName, String memNickname, String flag) {
+		return communityDAO.getBookSave(categoryName, memNickname, flag);
 	}
 
 	// 커뮤니티 마이페이지, 문장수집
@@ -405,7 +406,7 @@ public class CommunityServiceImpl implements CommunityService {
 		communityDAO.setReportIdxesDelete(reportList);
 	}
 
-	// 커뮤니티 메인창 최근 문장수집(5개)
+	// 커뮤니티 메인창 최근 문장수집(10개)
 	@Override
 	public ArrayList<InspiredVO> getNewInspired(String nickname) {
 		return communityDAO.getNewInspired(nickname);
@@ -433,6 +434,54 @@ public class CommunityServiceImpl implements CommunityService {
 	@Override
 	public ArrayList<ReflectionVO> getNewReflection() {
 		return communityDAO.getNewReflection();
+	}
+
+	// 회원 페이지 문장수집 리스트(팝업)
+	@Override
+	public ArrayList<InspiredVO> getMemPageInspired(String memNickname, String nickname) {
+		return communityDAO.getMemPageInspired(memNickname, nickname);
+	}
+
+	// 회원 페이지 기록 리스트(팝업)
+	@Override
+	public ArrayList<ReflectionVO> getMemPageReflection(String memNickname) {
+		return communityDAO.getMemPageReflection(memNickname);
+	}
+
+	// 책 상세 정보 (팝업) 책 정보
+	@Override
+	public BookVO getBookInfo(int idx) {
+		return communityDAO.getBookInfo(idx);
+	}
+
+	// 책 상세 정보 (팝업) 해당 책 저장한 카테고리별 회원 
+	@Override
+	public ArrayList<BookSaveVO> getMemBookSave(String categoryName, int idx) {
+		return communityDAO.getMemBookSave(categoryName, idx);
+	}
+
+	// 책 상세 정보 (팝업) 해당 책으로 작성된 기록
+	@Override
+	public ArrayList<ReflectionVO> getBookReflection(int idx) {
+		return communityDAO.getBookReflection(idx);
+	}
+
+	// 랜덤 명언용, 총 명언 개수 구하기
+	@Override
+	public int getProverbTotalNum() {
+		return communityDAO.getProverbTotalNum();
+	}
+
+	// 랜덤 명언 가져오기
+	@Override
+	public ProverbVO getRandomProverb(int randomNum) {
+		return communityDAO.getRandomProverb(randomNum);
+	}
+
+	// 책 상세 정보(팝업) 해당 책으로 작성된 문장수집
+	@Override
+	public ArrayList<InspiredVO> getBookPageInspired(String nickname, int idx) {
+		return communityDAO.getBookPageInspired(nickname, idx);
 	}
 	
 	

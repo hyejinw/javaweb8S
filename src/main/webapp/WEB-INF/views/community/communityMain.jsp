@@ -9,6 +9,10 @@
   <title>책(의)세계</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
 	<jsp:include page="/WEB-INF/views/include/bs4.jsp"/>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css">
+  <script src="https://cdn.jsdelivr.net/npm/jquery@3.6.4/dist/jquery.slim.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.bundle.min.js"></script>
 	<link rel="stylesheet" href="${ctp}/css/owl.carousel.min.css">
 	<link rel="stylesheet" href="${ctp}/css/owl.theme.default.min.css">
 	<script src="${ctp}/js/owl.carousel.js"></script> 
@@ -84,6 +88,18 @@
 		.owl-carousel {
 			z-index: 0;
 		}
+		#indexBox {
+	    margin-top:50px; 
+	    border: 4px solid #eee;
+/* 	    border: 2px solid #E3F4F4; */
+/* 	    background-color: #FFF4D2; */
+	    background-color: #fff;
+	    z-index: 1;
+		  position: relative;
+		  top: 2px;
+		  border-radius: 30px;
+		  padding:20px;
+    }
   </style>
   <script>
 		'use strict';
@@ -244,19 +260,6 @@
 	    })(jQuery);
 		}); */
 		
-		// 회원 페이지 열기
-  	function memPage(memNickname) {
-			let url = "${ctp}/community/memPage?memNickname="+memNickname;
-	
-			let popupWidth = 1000;
-			let popupHeight = 1200;
-	
-			let popupX = (window.screen.width / 2) - (popupWidth / 2);
-			let popupY= (window.screen.height / 2) - (popupHeight / 2);
-			
-			window.open(url, 'player', 'status=no, height=' + popupHeight  + ', width=' + popupWidth  + ', left='+ popupX + ', top='+ popupY);
-		}
-		
 		// 기록 상세창에서 돌아왔다면, 해당 session을 없애준다.
 		$(document).ready(function(){
 			if(sessionStorage.getItem('communityMainReflectionSW') == 'ON') {
@@ -270,7 +273,6 @@
 			location.href = "${ctp}/community/reflectionDetail?idx="+idx+"&bookIdx="+bookIdx;
 		}
   </script>
- 
 </head>
 <body>
 <div id="back-to-top"></div>
@@ -279,8 +281,14 @@
 	<!-- Page Content -->
 	<div id="main">
 		<a href="${ctp}/community/communityMain">
-			<img src = "${ctp}/images/communityBanner.png" style="width: 100%; max-width:2000px"/>
+			<img src = "${ctp}/images/communityBanner.png" style="width:100%; max-width:2000px"/>
 		</a>
+		<div class="container text-center" id="indexBox">
+			<div>
+		    <h5 style="font-weight:bold; font-size:20px;">${proverbVO.content}</h5>
+		    <h6 style="font-weight:bold; font-size:16px;">-${proverbVO.origin}</h6>
+    	</div>
+		</div>
 	
 		<div class="row" style="margin: 60px 0px 0px 30px">
 			<div class="col-5" style="padding-left:30px">
@@ -327,12 +335,18 @@
 						    	</div>
 						    </div>
 		
-				    	<p class="ml-4" style="color:grey;">『 ${inspiredVO.bookTitle} 』(${inspiredVO.authors})&nbsp;&nbsp;${inspiredVO.page}</p>
+				    	<p class="ml-4" style="color:grey;">
+				    		<a href="javascript:bookPage(${inspiredVO.bookIdx})">
+				    			『 ${inspiredVO.bookTitle} 』(${inspiredVO.authors})&nbsp;&nbsp;${inspiredVO.page}
+			    			</a>
+			    		</p>
 					    <hr style="margin:0px"/>
 					    <div class="row">
 					    	<div class="col">
 							    <div style="padding:10px">
-							    	<span>by. ${inspiredVO.memNickname}</span>
+							    	<a href="javascript:memPage('${inspiredVO.memNickname}')">
+								    	<span>by. ${inspiredVO.memNickname}</span>
+							    	</a>
 							    	<c:if test="${inspiredVO.explanation!= ''}">
 							    		&nbsp;&nbsp;&nbsp;
 							    		<span class="dropdown dropright">
@@ -419,7 +433,7 @@
 	        		</a><!-- 상세페이지 -->
 						</td>		
 						<td class="text-center">
-	        		<a href="${ctp}/community/memPage?nickname=${reflectionVO.memNickname}">  <!-- 회원 페이지 -->
+	        		<a href="javascript:memPage('${reflectionVO.memNickname}')">  <!-- 회원 페이지 -->
 		        		<img src="${ctp}/admin/member/${reflectionVO.memPhoto}" class="rounded-circle" style="width:35px"/>&nbsp;&nbsp;&nbsp;
 		        		${reflectionVO.memNickname}
 	        		</a>

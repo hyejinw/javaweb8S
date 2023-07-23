@@ -11,6 +11,7 @@ import com.spring.javaweb8S.vo.BookSaveVO;
 import com.spring.javaweb8S.vo.BookVO;
 import com.spring.javaweb8S.vo.InspiredVO;
 import com.spring.javaweb8S.vo.MemberVO;
+import com.spring.javaweb8S.vo.ProverbVO;
 import com.spring.javaweb8S.vo.RefSaveVO;
 import com.spring.javaweb8S.vo.ReflectionVO;
 import com.spring.javaweb8S.vo.ReplyVO;
@@ -87,7 +88,7 @@ public interface CommunityDAO {
 	
 	public void setReplyForcedDelete(@Param("idx") int idx);
 	
-	public ArrayList<BookSaveVO> getBookSave(@Param("categoryName") String categoryName, @Param("memNickname") String memNickname);
+	public ArrayList<BookSaveVO> getBookSave(@Param("categoryName") String categoryName, @Param("memNickname") String memNickname, @Param("flag") String flag);
 	
 	public ArrayList<InspiredVO> getMemInspired(@Param("startIndexNo") int startIndexNo, @Param("pageSize") int pageSize, @Param("memNickname") String memNickname, @Param("nickname") String nickname);
 	
@@ -154,6 +155,22 @@ public interface CommunityDAO {
 	public ArrayList<BookVO> getPopularBook();
 	
 	public ArrayList<ReflectionVO> getNewReflection();
+	
+	public ArrayList<InspiredVO> getMemPageInspired(@Param("memNickname") String memNickname, @Param("nickname") String nickname);
+
+	public ArrayList<ReflectionVO> getMemPageReflection(@Param("memNickname") String memNickname);
+	
+	public BookVO getBookInfo(@Param("idx") int idx);
+	
+	public ArrayList<BookSaveVO> getMemBookSave(@Param("categoryName") String categoryName, @Param("idx") int idx);
+	
+	public ArrayList<ReflectionVO> getBookReflection(@Param("idx") int idx);
+	
+	public int getProverbTotalNum();
+	
+	public ProverbVO getRandomProverb(@Param("randomNum") int randomNum);
+	
+	public ArrayList<InspiredVO> getBookPageInspired(@Param("nickname") String nickname, @Param("idx") int idx);
 
 
 	

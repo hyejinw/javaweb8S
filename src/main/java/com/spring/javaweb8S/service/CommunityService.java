@@ -11,6 +11,7 @@ import com.spring.javaweb8S.vo.BookSaveVO;
 import com.spring.javaweb8S.vo.BookVO;
 import com.spring.javaweb8S.vo.InspiredVO;
 import com.spring.javaweb8S.vo.MemberVO;
+import com.spring.javaweb8S.vo.ProverbVO;
 import com.spring.javaweb8S.vo.RefSaveVO;
 import com.spring.javaweb8S.vo.ReflectionVO;
 import com.spring.javaweb8S.vo.ReplyVO;
@@ -76,7 +77,7 @@ public interface CommunityService {
 
 	public void setReplyForcedDelete(int idx);
 
-	public ArrayList<BookSaveVO> getBookSave(String categoryName, String memNickname);
+	public ArrayList<BookSaveVO> getBookSave(String categoryName, String memNickname, String flag);
 
 	public ArrayList<InspiredVO> getMemInspired(int startIndexNo, int pageSize, String memNickname, String nickname);
 
@@ -143,6 +144,22 @@ public interface CommunityService {
 	public ArrayList<BookVO> getPopularBook();
 
 	public ArrayList<ReflectionVO> getNewReflection();
+
+	public ArrayList<InspiredVO> getMemPageInspired(String memNickname, String nickname);
+
+	public ArrayList<ReflectionVO> getMemPageReflection(String memNickname);
+
+	public BookVO getBookInfo(int idx);
+
+	public ArrayList<BookSaveVO> getMemBookSave(String categoryName, int idx);
+
+	public ArrayList<ReflectionVO> getBookReflection(int idx);
+
+	public int getProverbTotalNum();
+
+	public ProverbVO getRandomProverb(int randomNum);
+
+	public ArrayList<InspiredVO> getBookPageInspired(String nickname, int idx);
 
 
 

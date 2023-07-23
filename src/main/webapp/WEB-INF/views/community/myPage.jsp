@@ -599,7 +599,7 @@
 				},
 				success : function() {
 					alert('소중한 의견 감사합니다. 빠르게 처리해드리겠습니다.');
-					if(reportCategory == '문장수집') sessionStorage.setItem('inspiredSW', 'ON'); 
+//					if(reportCategory == '문장수집') sessionStorage.setItem('inspiredSW', 'ON'); 
 					location.reload();
 				},
 				error : function() {
@@ -607,6 +607,15 @@
 				}
 			}); 
 		}
+		
+		// 회원 페이지에서 회원 상세페이지로 왔다면 session값 없애기
+		$(document).ready(function(){
+			if(localStorage.getItem('myPageDetailSW') == 'ON') {
+				localStorage.removeItem('myPageDetailSW');
+				localStorage.removeItem('memNicknameSW');
+			}
+		});
+		
   </script>
 </head>
 <body>
@@ -642,14 +651,14 @@
 						</c:if>
 					</div>
 				</div>
-					<div style="width:50%; margin:0px 0px 0px 150px">
-						<div class="alert alert-success">
-					    소개글)&nbsp;&nbsp;&nbsp;&nbsp;
-					    <c:if test="${(memberVO.introduction == '') || (empty memberVO.introduction)}">소개글이 없습니다</c:if>
-					    <c:if test="${memberVO.introduction != ''}"><strong>${memberVO.introduction}</strong></c:if>
+				<div style="width:50%; margin:0px 0px 0px 150px">
+					<div class="alert alert-success">
+				    소개글)&nbsp;&nbsp;&nbsp;&nbsp;
+				    <c:if test="${(memberVO.introduction == '') || (empty memberVO.introduction)}">소개글이 없습니다</c:if>
+				    <c:if test="${memberVO.introduction != ''}"><strong>${memberVO.introduction}</strong></c:if>
 					</div>
 				</div>
-				
+					
 				<div style="margin-top:100px">
 					<a href="${ctp}/community/myPage?memNickname=${memberVO.nickname}"><span class="nowPart mr-5">서재 / 문장수집</span></a>
 					<a href="${ctp}/community/myPage/reflection?memNickname=${memberVO.nickname}"><span class="mr-5">기록</span></a>
@@ -680,8 +689,10 @@
 		 						</span>
 		 					</div>
 		 					<div class="col-4 text-right pr-5">
-		 						<button class="btn btn-outline-dark btn-sm" id="bookSaveBtnEdit1" onclick="bookSaveEditOpen('bookSave1', '1')">편집</button>
-		 						<button class="btn btn-outline-warning btn-sm" id="bookSaveBtnDone1" onclick="bookSaveEditClose('bookSave1', '1')" style="display:none">완료</button>
+		 						<c:if test="${memberVO.nickname == sNickname}">
+			 						<button class="btn btn-outline-dark btn-sm" id="bookSaveBtnEdit1" onclick="bookSaveEditOpen('bookSave1', '1')">편집</button>
+			 						<button class="btn btn-outline-warning btn-sm" id="bookSaveBtnDone1" onclick="bookSaveEditClose('bookSave1', '1')" style="display:none">완료</button>
+		 						</c:if>
 		 					</div>
 		 				</div>
 						
@@ -699,8 +710,8 @@
 						  </c:if>
 					  	<c:forEach var="bookSave1VO" items="${bookSave1VOS}" varStatus="st">
 					  		<div>
-				  				<a href="javascript:bookPage(${bookSave1VO.idx})"><img src="${bookSave1VO.thumbnail}"/></a><br/>
-				  				<a href="javascript:bookPage(${bookSave1VO.idx})"><span style="color:grey"><b>${bookSave1VO.title}</b></span></a><br/>
+				  				<a href="javascript:bookPage(${bookSave1VO.bookIdx})"><img src="${bookSave1VO.thumbnail}"/></a><br/>
+				  				<a href="javascript:bookPage(${bookSave1VO.bookIdx})"><span style="color:grey"><b>${bookSave1VO.title}</b></span></a><br/>
 				  				<div class="dropdown bookEditBtn1" style="display:none; margin-top:10px">
 								    <button type="button" class="btn btn-outline-dark btn-sm dropdown-toggle" data-toggle="dropdown">
 								      이동&nbsp;&nbsp;<i class="fa-regular fa-folder-closed"></i>
@@ -728,8 +739,10 @@
 		 						</span>
 		 					</div>
 		 					<div class="col-4 text-right pr-5">
-		 						<button class="btn btn-outline-dark btn-sm" id="bookSaveBtnEdit2" onclick="bookSaveEditOpen('bookSave2', '2')">편집</button>
-		 						<button class="btn btn-outline-warning btn-sm" id="bookSaveBtnDone2" onclick="bookSaveEditClose('bookSave2', '2')" style="display:none">완료</button>
+		 						<c:if test="${memberVO.nickname == sNickname}">
+			 						<button class="btn btn-outline-dark btn-sm" id="bookSaveBtnEdit2" onclick="bookSaveEditOpen('bookSave2', '2')">편집</button>
+			 						<button class="btn btn-outline-warning btn-sm" id="bookSaveBtnDone2" onclick="bookSaveEditClose('bookSave2', '2')" style="display:none">완료</button>
+		 						</c:if>
 		 					</div>
 		 				</div>
 						
@@ -747,8 +760,8 @@
 						  </c:if>
 					  	<c:forEach var="bookSave2VO" items="${bookSave2VOS}" varStatus="st">
 					  		<div>
-				  				<a href="javascript:bookPage(${bookSave2VO.idx})"><img src="${bookSave2VO.thumbnail}"/></a><br/>
-				  				<a href="javascript:bookPage(${bookSave2VO.idx})"><span style="color:grey"><b>${bookSave2VO.title}</b></span></a><br/>
+				  				<a href="javascript:bookPage(${bookSave2VO.bookIdx})"><img src="${bookSave2VO.thumbnail}"/></a><br/>
+				  				<a href="javascript:bookPage(${bookSave2VO.bookIdx})"><span style="color:grey"><b>${bookSave2VO.title}</b></span></a><br/>
 				  				<div class="dropdown bookEditBtn2" style="display:none; margin-top:10px">
 								    <button type="button" class="btn btn-outline-dark btn-sm dropdown-toggle" data-toggle="dropdown">
 								      이동&nbsp;&nbsp;<i class="fa-regular fa-folder-closed"></i>
@@ -772,12 +785,14 @@
 				 					<span style="font-size:20px">읽은책&nbsp;&nbsp;&nbsp;(${bookSave3VOSNum})</span>	
 			 					</button>
 			 					<span class="w3-tooltip"><i class="fa-regular fa-circle-question" style="font-size:16px"></i>&nbsp;&nbsp;&nbsp;
-			 						<span class="w3-text w3-tag" style="font-style:italic;"><b>읽었어요. 같이 이야기해요</b></span>
+			 						<span class="w3-text w3-tag" style="font-style:italic;"><b>읽었어요. 같이 이야기해요.</b></span>
 		 						</span>
 		 					</div>
 		 					<div class="col-4 text-right pr-5">
-		 						<button class="btn btn-outline-dark btn-sm" id="bookSaveBtnEdit3" onclick="bookSaveEditOpen('bookSave3', '3')">편집</button>
-		 						<button class="btn btn-outline-warning btn-sm" id="bookSaveBtnDone3" onclick="bookSaveEditClose('bookSave3', '3')" style="display:none">완료</button>
+		 						<c:if test="${memberVO.nickname == sNickname}">
+			 						<button class="btn btn-outline-dark btn-sm" id="bookSaveBtnEdit3" onclick="bookSaveEditOpen('bookSave3', '3')">편집</button>
+			 						<button class="btn btn-outline-warning btn-sm" id="bookSaveBtnDone3" onclick="bookSaveEditClose('bookSave3', '3')" style="display:none">완료</button>
+		 						</c:if>
 		 					</div>
 		 				</div>
 						
@@ -793,8 +808,8 @@
 						  	</div>
 					  	<c:forEach var="bookSave3VO" items="${bookSave3VOS}" varStatus="st">
 					  		<div>
-				  				<a href="javascript:bookPage(${bookSave3VO.idx})"><img src="${bookSave3VO.thumbnail}"/></a><br/>
-				  				<a href="javascript:bookPage(${bookSave3VO.idx})"><span style="color:grey"><b>${bookSave3VO.title}</b></span></a><br/>
+				  				<a href="javascript:bookPage(${bookSave3VO.bookIdx})"><img src="${bookSave3VO.thumbnail}"/></a><br/>
+				  				<a href="javascript:bookPage(${bookSave3VO.bookIdx})"><span style="color:grey"><b>${bookSave3VO.title}</b></span></a><br/>
 				  				<div class="dropdown bookEditBtn3" style="display:none; margin-top:10px">
 								    <button type="button" class="btn btn-outline-dark btn-sm dropdown-toggle" data-toggle="dropdown">
 								      이동&nbsp;&nbsp;<i class="fa-regular fa-folder-closed"></i>
@@ -816,15 +831,17 @@
 		 				<div class="row">
 		 					<div class="col-8">
 				 				<button id="bookSaveOpen4" onclick="bookSaveOpen('bookSave4','4')" class="w3-btn w3-left-align">
-				 					<span style="font-size:20px">추천책&nbsp;&nbsp;&nbsp;(${bookSave4VOSNum})</span>	
+				 					<span style="font-size:20px">관심책&nbsp;&nbsp;&nbsp;(${bookSave4VOSNum})</span>	
 			 					</button>
 			 					<span class="w3-tooltip"><i class="fa-regular fa-circle-question" style="font-size:16px"></i>&nbsp;&nbsp;&nbsp;
-			 						<span class="w3-text w3-tag" style="font-style:italic;"><b>아직 읽지 않았지만 관심있어요</b></span>
+			 						<span class="w3-text w3-tag" style="font-style:italic;"><b>아직 읽지 않았지만 관심있어요.</b></span>
 		 						</span>
 		 					</div>
 		 					<div class="col-4 text-right pr-5">
-		 						<button class="btn btn-outline-dark btn-sm" id="bookSaveBtnEdit4" onclick="bookSaveEditOpen('bookSave4', '4')">편집</button>
-		 						<button class="btn btn-outline-warning btn-sm" id="bookSaveBtnDone4" onclick="bookSaveEditClose('bookSave4', '4')" style="display:none">완료</button>
+		 						<c:if test="${memberVO.nickname == sNickname}">
+			 						<button class="btn btn-outline-dark btn-sm" id="bookSaveBtnEdit4" onclick="bookSaveEditOpen('bookSave4', '4')">편집</button>
+			 						<button class="btn btn-outline-warning btn-sm" id="bookSaveBtnDone4" onclick="bookSaveEditClose('bookSave4', '4')" style="display:none">완료</button>
+		 						</c:if>
 		 					</div>
 		 				</div>
 						
@@ -840,8 +857,8 @@
 						  	</div>
 					  	<c:forEach var="bookSave4VO" items="${bookSave4VOS}" varStatus="st">
 					  		<div>
-				  				<a href="javascript:bookPage(${bookSave4VO.idx})"><img src="${bookSave4VO.thumbnail}"/></a><br/>
-				  				<a href="javascript:bookPage(${bookSave4VO.idx})"><span style="color:grey"><b>${bookSave4VO.title}</b></span></a><br/>
+				  				<a href="javascript:bookPage(${bookSave4VO.bookIdx})"><img src="${bookSave4VO.thumbnail}"/></a><br/>
+				  				<a href="javascript:bookPage(${bookSave4VO.bookIdx})"><span style="color:grey"><b>${bookSave4VO.title}</b></span></a><br/>
 				  				<div class="dropdown bookEditBtn4" style="display:none; margin-top:10px">
 								    <button type="button" class="btn btn-outline-dark btn-sm dropdown-toggle" data-toggle="dropdown">
 								      이동&nbsp;&nbsp;<i class="fa-regular fa-folder-closed"></i>
