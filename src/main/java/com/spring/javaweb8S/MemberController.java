@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.UUID;
 
@@ -25,10 +26,20 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.multipart.MultipartFile;
 
+import com.spring.javaweb8S.pagination.PageProcess;
+import com.spring.javaweb8S.pagination.PageVO;
+import com.spring.javaweb8S.service.AdminService;
 import com.spring.javaweb8S.service.MemberService;
+import com.spring.javaweb8S.vo.AddressVO;
+import com.spring.javaweb8S.vo.BooksletterVO;
+import com.spring.javaweb8S.vo.DeliveryVO;
 import com.spring.javaweb8S.vo.MemberVO;
+import com.spring.javaweb8S.vo.OrderVO;
 import com.spring.javaweb8S.vo.ProverbVO;
+import com.spring.javaweb8S.vo.RefundVO;
+import com.spring.javaweb8S.vo.SubscribeVO;
 
 @Controller
 @RequestMapping("/member")
@@ -36,12 +47,18 @@ public class MemberController {
 	
 	@Autowired
 	MemberService memberService;
+	
+	@Autowired
+	AdminService adminService;
 
 	@Autowired
 	BCryptPasswordEncoder passwordEncoder;
 
 	@Autowired
 	JavaMailSender mailSender;
+	
+	@Autowired
+	PageProcess pageProcess;
 	
 	// 로그인 창
 	@RequestMapping(value = "/memberLogin", method = RequestMethod.GET)
@@ -94,10 +111,6 @@ public class MemberController {
 				}
 			}
 		}
-		
-		// 첫 방문시, 커뮤니티 책 저장 카테고리 생성
-		if(vo.getTotCnt() == 0) memberService.setBookSaveCategoryInsert(vo.getNickname());
-		
 		Date today = new Date();
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 		String strToday = sdf.format(today);
@@ -345,13 +358,193 @@ public class MemberController {
 	}
 	
 	// 회원 마이페이지
-	@RequestMapping(value = "/memberPage", method = RequestMethod.GET)
-	public String memberPageGet() {
+	@RequestMapping(value = "/myPage", method = RequestMethod.GET)
+	public String memberPageGet(HttpSession session, Model model) {
+		String nickname = (String) session.getAttribute("sNickname");
 		
-		return "member/memberPageGet";
+		// 회원 기본 정보 +  가용 포인트
+		MemberVO memberVO = memberService.getMemberInfo(nickname);
+		model.addAttribute("memberVO", memberVO);
+		
+		// 총 포인트
+		String totalPoint = memberService.getTotalPoint(nickname);
+		model.addAttribute("totalPoint", totalPoint);
+		
+		// 사용 포인트
+		String totalUsedPoint = memberService.getTotalUsedPoint(nickname);
+		model.addAttribute("totalUsedPoint", totalUsedPoint);
+		
+		// 총 주문 횟수, 총 주문 금액
+		OrderVO orderVO = memberService.getTotalOrder(nickname);
+		model.addAttribute("orderVO", orderVO);
+		
+		// 최근 3개월 동안의 주문 현황 상태 개수 (결제완료, 배송준비중, 배송중, 배송완료, 환불완료)
+		String orderLevel1Num = memberService.getOrderStatusNum("결제완료", nickname);
+		String orderLevel2Num = memberService.getOrderStatusNum("배송준비중", nickname);
+		String orderLevel3Num = memberService.getOrderStatusNum("배송중", nickname);
+		String orderLevel4Num = memberService.getOrderStatusNum("배송완료", nickname);
+		String orderLevel5Num = memberService.getOrderStatusNum("환불완료", nickname);
+		
+		model.addAttribute("orderLevel1Num", orderLevel1Num);
+		model.addAttribute("orderLevel2Num", orderLevel2Num);
+		model.addAttribute("orderLevel3Num", orderLevel3Num);
+		model.addAttribute("orderLevel4Num", orderLevel4Num);
+		model.addAttribute("orderLevel5Num", orderLevel5Num);
+		
+		return "member/myPage";
 	}
 	
-//	비밀번호 변경
+	// 마이페이지, 주문 관리창
+	@RequestMapping(value = "/myPage/order", method = RequestMethod.GET)
+	public String orderListGet(Model model, HttpSession session,
+			@RequestParam(name="sort", defaultValue = "전체", required = false) String sort,
+			@RequestParam(name="searchString", defaultValue = "", required = false) String searchString,
+			@RequestParam(name="search", defaultValue = "상품명", required = false) String search,
+			@RequestParam(name="startDate", defaultValue = "", required = false) String startDate,
+			@RequestParam(name="endDate", defaultValue = "", required = false) String endDate,
+			@RequestParam(name="pag", defaultValue = "1", required = false) int pag,
+			@RequestParam(name="pageSize", defaultValue = "15", required = false) int pageSize) {
+		
+		PageVO pageVO = new PageVO();
+		ArrayList<OrderVO> vos = new ArrayList<OrderVO>();
+		
+		String nickname = (String) session.getAttribute("sNickname");
+		
+		if(search.equals("invoice")) {
+			pageVO = pageProcess.totRecCntWithPeriodAndSort(pag, pageSize, "myPageOrderWithInvoice", sort, nickname+"/"+search, searchString, startDate, endDate);
+			vos = memberService.getOrderWithInvoiceSearchList(sort, search, searchString, startDate, endDate, nickname, pageVO.getStartIndexNo(), pageSize);
+		}
+		else {
+			pageVO = pageProcess.totRecCntWithPeriodAndSort(pag, pageSize, "myPageOrder", sort, nickname+"/"+search, searchString, startDate, endDate);
+			vos = memberService.getOrderSearchList(sort, search, searchString, startDate, endDate, nickname, pageVO.getStartIndexNo(), pageSize);
+		}
+		
+		model.addAttribute("sort", sort);
+		model.addAttribute("search", search);
+		model.addAttribute("searchString", searchString);
+		model.addAttribute("startDate", startDate);
+		model.addAttribute("endDate", endDate);
+		
+		model.addAttribute("vos", vos);
+		model.addAttribute("pageVO", pageVO);
+		
+		return "member/myPage/order";
+	}
+	
+	// 주문 관리창, 주문 상세 정보(팝업)
+	@RequestMapping(value = "/myPage/orderInfo", method = RequestMethod.GET)
+	public String orderInfoGet(Model model, int idx, HttpSession session) {
+
+		String memNickname = (String) session.getAttribute("sNickname");
+		
+		OrderVO vo = adminService.getOrderInfo(idx);
+		DeliveryVO deliveryVO = adminService.getDeliveryInfo(idx);
+		MemberVO memberVO = adminService.getMemberInfo(memNickname);
+		AddressVO addressVO = adminService.getAddressInfo(vo.getAddressIdx());
+		RefundVO refundVO = adminService.getRefundInfo(idx);
+		
+		model.addAttribute("vo", vo);
+		model.addAttribute("deliveryVO", deliveryVO);
+		model.addAttribute("memberVO", memberVO);
+		model.addAttribute("addressVO", addressVO);
+		model.addAttribute("refundVO", refundVO);
+		
+		return "member/myPage/orderInfo";
+	}
+	
+	// 주문 관리창, 정기구독 주문 상세 정보(팝업)
+	@RequestMapping(value = "/myPage/subOrderInfo", method = RequestMethod.GET)
+	public String subOrderInfoGet(Model model, int idx, HttpSession session) {
+		
+		String memNickname = (String) session.getAttribute("sNickname");
+		
+		OrderVO vo = adminService.getOrderInfo(idx);
+		ArrayList<DeliveryVO> deliveryVOS = adminService.getSubDeliveryInfo(idx);
+		MemberVO memberVO = adminService.getMemberInfo(memNickname);
+		AddressVO addressVO = adminService.getAddressInfo(vo.getAddressIdx());
+		SubscribeVO subscribeVO = adminService.getSubscribeInfo(idx);
+		
+		model.addAttribute("vo", vo);
+		model.addAttribute("deliveryVOS", deliveryVOS);
+		model.addAttribute("memberVO", memberVO);
+		model.addAttribute("addressVO", addressVO);
+		model.addAttribute("subscribeVO", subscribeVO);
+		
+		return "member/myPage/subOrderInfo";
+	}
+	
+	// 마이페이지, 주문 조회창 구매확정
+	@ResponseBody
+	@RequestMapping(value = "/myPage/orderComplete", method = RequestMethod.POST)
+	public String orderCompletePost(int idx, String memNickname) {
+		
+		// 구매확정
+		memberService.setOrderComplete(idx);
+		
+		// 포인트 지급
+		memberService.setOrderPointInsert(idx, memNickname);
+	
+		// 회원 테이블 포인트 값 변경
+		memberService.setMemberPointUpdate(idx, memNickname);
+		
+		return "";
+	}
+	
+	// 마이페이지 반품 신청
+	@Transactional
+	@RequestMapping(value = "/myPage/refundInsert", method = RequestMethod.POST)
+	public String refundInsertPost(MultipartFile file, RefundVO vo) {
+
+		if(vo.getMaIdx().equals("0")) vo.setMaIdx(null);
+		if(vo.getOpIdx().equals("0")) vo.setOpIdx(null);
+		
+		// 1) 주문 테이블 수정
+		// 주문 테이블 상품 상태 변경 (반품신청)
+		memberService.setOrderRefundStatus(vo.getOrderIdx());
+		
+		// 일부만 반품
+		if(vo.getOriginOrderNum() != vo.getRefundNum()) {
+			
+			// 나머지 상품은 구매확정 포인트 지급
+			int point = Integer.parseInt(String.format("%.0f", (vo.getOriginPaidPrice() - vo.getRefundPrice()) * 0.05));
+			memberService.setPartlyOrderPointInsert(vo.getOrderIdx(), point, vo.getMemNickname());
+			
+			// 회원 테이블 포인트 값 변경
+			memberService.setPartlyMemberPointUpdate(point, vo.getMemNickname());
+		}
+		
+		// 2) 반품 테이블 추가
+		// 반품 코드 생성
+		SimpleDateFormat format = new SimpleDateFormat("yyMMdd");
+		Date today = new Date();
+		String str = format.format(today);
+		UUID uid = UUID.randomUUID();
+		
+		vo.setRefundCode(str + uid.toString().substring(0,5));
+		int res = memberService.setRefundInsert(file, vo);
+		
+		if(res != 0) return "redirect:/message/refundInsertOk";
+		else return "redirect:/message/refundInsertNo";
+	}
+	
+	// 마이페이지, 회원정보 창
+	@RequestMapping(value = "/myPage/profile", method = RequestMethod.GET)
+	public String orderListGet(Model model, HttpSession session) {
+		
+		String nickname = (String) session.getAttribute("sNickname");
+		MemberVO vo = memberService.getMemberInfo(nickname);
+		model.addAttribute("vo", vo);
+		
+		// 뉴스레터 구독 정보
+		BooksletterVO booksletterVO = memberService.getBooksletterInfo(nickname);
+		model.addAttribute("booksletterVO", booksletterVO);
+		
+		return "member/myPage/profile";
+	}
+	
+	
+	// 이게 뭐지?????????
+//	비밀번호 변경  
 //	@RequestMapping(value = "/memberPwdUpdate", method = RequestMethod.GET)
 //	public String memberPwdUpdateGet(HttpSession session, String pwdFlag) {
 //		if(!pwdFlag.equals("")) session.setAttribute("sPwdFlag", "pwdFlag");

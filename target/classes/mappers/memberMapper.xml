@@ -30,6 +30,257 @@
 		SELECT * FROM bo_proverb ORDER BY idx DESC LIMIT #{randomNum}, 1;
 	</select>
 	
+	<select id="getMemberInfo" resultType="com.spring.javaweb8S.vo.MemberVO">
+		SELECT * FROM bo_member WHERE nickname = #{nickname};
+	</select>
+	
+	<select id="getTotalPoint" resultType="String">
+		SELECT sum(point) FROM bo_point WHERE memNickname = #{nickname};
+	</select>
+	
+	<select id="getTotalUsedPoint" resultType="String">
+		SELECT sum(usedPoint) FROM bo_pointUse WHERE memNickname = #{nickname};
+	</select>
+	
+	<select id="getTotalOrder" resultType="com.spring.javaweb8S.vo.OrderVO">
+		SELECT count(*) AS orderNum, sum(paidPrice) AS totalPaidPrice FROM bo_order WHERE memNickname = #{nickname} AND orderStatus != "환불완료";
+	</select>
+	
+	<select id="getOrderStatusNum" resultType="String">
+		SELECT count(*) FROM bo_order WHERE memNickname = #{nickname} AND orderStatus = #{orderStatus} AND orderDate BETWEEN DATE_ADD(NOW(), INTERVAL -3 MONTH) AND NOW();
+	</select>
+	
+	<!-- 송장으로 검색 -->
+	<select id="myPageOrderWithInvoiceTotRecCntWithPeriod" resultType="com.spring.javaweb8S.vo.OrderVO">
+		<if test='searchString == "" and startDate == ""'>
+			SELECT * FROM bo_order WHERE memNickname = #{nickname} 
+			
+			<if test='sort != "" and sort != "전체"'>
+				AND orderStatus = #{sort}
+			</if>
+			GROUP BY orderCode;
+		</if>
+		<if test='searchString != "" and startDate == ""'>
+			SELECT *   
+			FROM bo_order o
+			LEFT JOIN bo_delivery d
+			ON o.idx = d.orderIdx
+			WHERE o.memNickname = #{nickname} AND
+			<if test='sort != "" and sort != "전체"'>
+				o.orderStatus = #{sort} AND 
+			</if>
+			
+			d.${search} LIKE CONCAT('%',#{searchString},'%')
+			GROUP BY o.orderCode;
+		</if>
+		<if test='searchString == "" and startDate != ""'>
+			SELECT * FROM bo_order 
+			WHERE memNickname = #{nickname} AND
+			
+			<if test='sort != "" and sort != "전체"'>
+				orderStatus = #{sort} AND 
+			</if> 
+			
+			date_format(orderDate, '%Y-%m-%d') BETWEEN #{startDate} AND #{endDate}
+			GROUP BY orderCode;
+		</if>
+		<if test='searchString != "" and startDate != ""'>
+			SELECT *  
+			FROM bo_order o
+			LEFT JOIN bo_delivery d
+			ON o.idx = d.orderIdx
+			WHERE o.memNickname = #{nickname} AND 
+			
+			<if test='sort != "" and sort != "전체"'>
+				o.orderStatus = #{sort} AND 
+			</if>
+			
+			d.${search} LIKE CONCAT('%',#{searchString},'%') AND date_format(o.orderDate, '%Y-%m-%d') BETWEEN #{startDate} AND #{endDate}
+			GROUP BY o.orderCode;
+		</if>
+	</select>
+	
+	<select id="getOrderWithInvoiceSearchList" resultType="com.spring.javaweb8S.vo.OrderVO">
+		<if test='searchString == "" and startDate == ""'>
+			SELECT o.*, r.refundNum AS refundNum
+			
+			FROM bo_order o
+		 	LEFT JOIN bo_refund r
+		 		ON o.idx = r.orderIdx
+				 
+			WHERE o.memNickname = #{nickname} 
+			
+			<if test='sort != "" and sort != "전체"'>
+				AND o.orderStatus = #{sort}
+			</if>
+			GROUP BY o.orderCode
+			ORDER BY o.idx DESC LIMIT #{startIndexNo},#{pageSize};
+		</if>
+		<if test='searchString != "" and startDate == ""'>
+			SELECT o.*, r.refundNum AS refundNum  
+			FROM bo_order o
+			LEFT JOIN bo_delivery d
+				ON o.idx = d.orderIdx
+
+		 	LEFT JOIN bo_refund r
+		 		ON o.idx = r.orderIdx
+				 
+			WHERE o.memNickname = #{nickname} AND
+			<if test='sort != "" and sort != "전체"'>
+				o.orderStatus = #{sort} AND 
+			</if>
+			
+			d.${search} LIKE CONCAT('%',#{searchString},'%')
+			GROUP BY o.orderCode 
+			ORDER BY o.idx DESC LIMIT #{startIndexNo},#{pageSize};
+		</if>
+		<if test='searchString == "" and startDate != ""'>
+			SELECT o.*, r.refundNum AS refundNum
+			
+			FROM bo_order o
+		 	LEFT JOIN bo_refund r
+		 		ON o.idx = r.orderIdx
+				 
+			WHERE o.memNickname = #{nickname} AND
+			
+			<if test='sort != "" and sort != "전체"'>
+				o.orderStatus = #{sort} AND 
+			</if> 
+			
+			date_format(o.orderDate, '%Y-%m-%d') BETWEEN #{startDate} AND #{endDate}
+			GROUP BY o.orderCode
+			ORDER BY o.idx DESC LIMIT #{startIndexNo},#{pageSize};
+		</if>
+		<if test='searchString != "" and startDate != ""'>
+			SELECT o.*, r.refundNum AS refundNum  
+			FROM bo_order o
+			LEFT JOIN bo_delivery d
+				ON o.idx = d.orderIdx
+		 	LEFT JOIN bo_refund r
+		 		ON o.idx = r.orderIdx
+		 		
+			WHERE o.memNickname = #{nickname} AND   
+			
+			<if test='sort != "" and sort != "전체"'>
+				o.orderStatus = #{sort} AND 
+			</if>
+			
+			d.${search} LIKE CONCAT('%',#{searchString},'%') and date_format(o.orderDate, '%Y-%m-%d') BETWEEN #{startDate} AND #{endDate}
+			GROUP BY o.orderCode
+			ORDER BY o.idx DESC LIMIT #{startIndexNo},#{pageSize};
+		</if>
+	</select>
+	
+	<!-- 주문 내역 일반 검색 -->
+	<select id="myPageOrderTotRecCntWithPeriod" resultType="int">
+		<if test='searchString == "" and startDate == ""'>
+			SELECT count(*) FROM bo_order 
+			WHERE memNickname = #{nickname}   
+			<if test='sort != "" and sort != "전체"'>
+				AND orderStatus = #{sort}
+			</if>
+			;
+		</if>
+		<if test='searchString != "" and startDate == ""'>
+			SELECT count(*) FROM bo_order WHERE memNickname = #{nickname} AND
+			
+			<if test='sort != "" and sort != "전체"'>
+				orderStatus = #{sort} AND 
+			</if>
+			
+			${search} LIKE CONCAT('%',#{searchString},'%');
+		</if>
+		<if test='searchString == "" and startDate != ""'>
+			SELECT count(*) FROM bo_order WHERE memNickname = #{nickname} AND
+			
+			<if test='sort != "" and sort != "전체"'>
+				orderStatus = #{sort} AND 
+			</if> 
+			
+			date_format(orderDate, '%Y-%m-%d') BETWEEN #{startDate} AND #{endDate};
+		</if>
+		<if test='searchString != "" and startDate != ""'>
+			SELECT count(*) FROM bo_order WHERE memNickname = #{nickname} AND
+			
+			<if test='sort != "" and sort != "전체"'>
+				orderStatus = #{sort} AND 
+			</if>
+			
+			${search} LIKE CONCAT('%',#{searchString},'%') and date_format(orderDate, '%Y-%m-%d') BETWEEN #{startDate} AND #{endDate};
+		</if>
+	</select>
+	
+	<select id="getOrderSearchList" resultType="com.spring.javaweb8S.vo.OrderVO">
+		<if test='searchString == "" and startDate == ""'>
+			SELECT o.*, r.refundNum AS refundNum
+			
+			FROM bo_order o
+		 	LEFT JOIN bo_refund r
+		 		ON o.idx = r.orderIdx
+				 
+			WHERE o.memNickname = #{nickname} 
+			
+			<if test='sort != "" and sort != "전체"'>
+				AND o.orderStatus = #{sort}
+			</if>
+			ORDER BY o.idx DESC LIMIT #{startIndexNo},#{pageSize};
+		</if>
+		
+		
+		<if test='searchString != "" and startDate == ""'>
+			SELECT o.*, r.refundNum AS refundNum
+			
+			FROM bo_order o
+		 	LEFT JOIN bo_refund r
+		 		ON o.idx = r.orderIdx
+				 
+			WHERE o.memNickname = #{nickname} AND 
+			
+			<if test='sort != "" and sort != "전체"'>
+				o.orderStatus = #{sort} AND 
+			</if>
+			
+			o.${search} LIKE CONCAT('%',#{searchString},'%')
+			ORDER BY o.idx DESC LIMIT #{startIndexNo},#{pageSize};
+		</if>
+		<if test='searchString == "" and startDate != ""'>
+			SELECT o.*, r.refundNum AS refundNum
+			
+			FROM bo_order o
+		 	LEFT JOIN bo_refund r
+		 		ON o.idx = r.orderIdx
+				 
+			WHERE o.memNickname = #{nickname} AND
+			
+			<if test='sort != "" and sort != "전체"'>
+				o.orderStatus = #{sort} AND 
+			</if> 
+			
+			date_format(o.orderDate, '%Y-%m-%d') BETWEEN #{startDate} AND #{endDate}
+			ORDER BY o.idx DESC LIMIT #{startIndexNo},#{pageSize};
+		</if>
+		<if test='searchString != "" and startDate != ""'>
+			SELECT o.*, r.refundNum AS refundNum
+			
+			FROM bo_order o
+		 	LEFT JOIN bo_refund r
+		 		ON o.idx = r.orderIdx
+				 
+			WHERE o.memNickname = #{nickname} AND
+			
+			<if test='sort != "" and sort != "전체"'>
+				o.orderStatus = #{sort} AND 
+			</if>
+			
+			o.${search} LIKE CONCAT('%',#{searchString},'%') and date_format(o.orderDate, '%Y-%m-%d') BETWEEN #{startDate} AND #{endDate}
+			ORDER BY o.idx DESC LIMIT #{startIndexNo},#{pageSize};
+		</if>
+	</select>
+	
+	<select id="getBooksletterInfo" resultType="com.spring.javaweb8S.vo.BooksletterVO">
+		SELECT * FROM bo_booksletter WHERE memNickname = #{nickname};
+	</select>
+	
 	<insert id="setMember">
 		INSERT INTO bo_member(idx,mid,pwd,name,nickname,email,tel,memPhoto,memType,point,agreement,pwdUpdateDate,totCnt,firstVisit,memberDel) 
 		VALUES (default,#{vo.mid},#{vo.pwd},#{vo.name},#{vo.nickname},#{vo.email},#{vo.tel},default,default,#{vo.point},default,default,default,default,default);
@@ -46,11 +297,21 @@
 		(default, #{nickname},#{point},#{pointReason},default);
 	</insert>
 	
-	<insert id="setBookSaveCategoryInsert">
-		INSERT INTO bo_bookSaveCategory VALUES (default, #{nickname}, "인생책");
-		INSERT INTO bo_bookSaveCategory VALUES (default, #{nickname}, "추천책");
-		INSERT INTO bo_bookSaveCategory VALUES (default, #{nickname}, "읽은책");
-		INSERT INTO bo_bookSaveCategory VALUES (default, #{nickname}, "관심책");
+	<insert id="setOrderPointInsert">
+		INSERT INTO bo_point VALUES   
+		(default, #{memNickname}, #{idx},
+		(SELECT ROUND(paidPrice * 0.05) FROM bo_order WHERE idx = #{idx}),
+		"상품구매확정",default);
+	</insert>
+	
+	<insert id="setPartlyOrderPointInsert">
+		INSERT INTO bo_point VALUES
+		(default,#{memNickname},#{orderIdx},#{point},"상품구매확정",default);
+	</insert>
+	
+	<insert id="setRefundInsert">
+		INSERT INTO bo_refund VALUES
+		(default,#{vo.memNickname},#{vo.orderIdx},#{vo.maIdx},#{vo.opIdx},#{vo.refundNum},#{vo.refundCode},"반품신청",default,default,#{vo.refundReason},#{vo.refundDetail},#{vo.refundPhoto},#{vo.refundPrice},#{vo.refundPoint},#{vo.deliveryPrice});
 	</insert>
 	
 	<update id="setMemberPoint">
@@ -73,5 +334,23 @@
 	<update id="setBooksletterInsert">
 		UPDATE bo_booksletter SET memNickname = #{nickname} WHERE idx = #{booksletterIdx};
 	</update>
+	
+	<update id="setOrderComplete">
+		UPDATE bo_order SET orderStatus = "구매확정", manageDate = default WHERE idx = #{idx};
+	</update>
+	
+	<update id="setMemberPointUpdate">
+		UPDATE bo_member SET point = point + (SELECT ROUND(paidPrice * 0.05) FROM bo_order WHERE idx = #{idx}) 
+		WHERE nickname = #{memNickname};
+	</update>
+	
+	<update id="setOrderRefundStatus">
+		UPDATE bo_order SET orderStatus = "반품신청", manageDate = default WHERE idx = #{orderIdx};
+	</update>
+	
+	<update id="setPartlyMemberPointUpdate">
+		UPDATE bo_member SET point = point + #{point} WHERE nickname = #{memNickname};
+	</update>
+	
 	
 </mapper>

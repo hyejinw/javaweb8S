@@ -274,7 +274,7 @@
 		  }
 		}
 		
-		// 책 저장 카테고리별 열기
+		// 책 저장 카테고리별 수정 열기
 		function bookSaveEditOpen(id, flag) {
 		  document.getElementById('bookSaveOpen'+flag).disabled = true;
 		  
@@ -284,7 +284,7 @@
 		  $('#bookSaveBtnEdit'+flag).css('display','none');
 		}
 		
-		// 책 저장 카테고리별 닫기
+		// 책 저장 카테고리별 수정 닫기
 		function bookSaveEditClose(id, flag) {
 		  document.getElementById('bookSaveOpen'+flag).disabled = false;
 		  
@@ -292,6 +292,8 @@
 		  $('#bookSaveUpdate'+flag).css('display','none');
 		  $('#bookSaveBtnDone'+flag).css('display','none');
 		  $('#bookSaveBtnEdit'+flag).css('display','inline-block');
+		  
+		  bookSaveOpen(id, flag);
 		}
 		
 		// 책 저장 카테고리 변경
@@ -625,7 +627,7 @@
 	<!-- Page Content -->
 	<div id="main">
 		<a href="${ctp}/community/communityMain">
-			<img src = "${ctp}/images/communityBanner.png" style="width: 100%; max-width:2000px"/>
+			<img src = "${ctp}/images/banner.png" style="width: 100%; max-width:2000px"/>
 		</a>
 		
 		<div class="table-responsive" style="width:90%; margin:0px auto; padding:40px 50px 100px 50px" class="border">

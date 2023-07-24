@@ -740,7 +740,7 @@ public class CommunityController {
 		}
 		String nickname = URLEncoder.encode(vo.getNickname(), "UTF-8");
 		if(res != 0) return "redirect:/message/memPhotoUpdateOk?nickname=" + nickname;
-		else return "redirect:/message/memPhotoUpdateNo?idx?nickname=" + nickname;
+		else return "redirect:/message/memPhotoUpdateNo?nickname=" + nickname;
 	}
 	
 	// 커뮤니티 마이페이지 회원정보 창에서 소개글 수정

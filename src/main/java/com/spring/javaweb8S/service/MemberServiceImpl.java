@@ -1,11 +1,18 @@
 package com.spring.javaweb8S.service;
 
+import java.util.ArrayList;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
+import com.spring.javaweb8S.common.JavawebProvide;
 import com.spring.javaweb8S.dao.MemberDAO;
+import com.spring.javaweb8S.vo.BooksletterVO;
 import com.spring.javaweb8S.vo.MemberVO;
+import com.spring.javaweb8S.vo.OrderVO;
 import com.spring.javaweb8S.vo.ProverbVO;
+import com.spring.javaweb8S.vo.RefundVO;
 
 @Service
 public class MemberServiceImpl implements MemberService {
@@ -97,10 +104,102 @@ public class MemberServiceImpl implements MemberService {
 		return memberDAO.getRandomProverb(randomNum);
 	}
 
-	// 첫 방문시, 커뮤니티 책 저장 카테고리 생성
+	// 마이페이지, 회원 기본 정보
 	@Override
-	public void setBookSaveCategoryInsert(String nickname) {
-		memberDAO.setBookSaveCategoryInsert(nickname);
+	public MemberVO getMemberInfo(String nickname) {
+		return memberDAO.getMemberInfo(nickname);
+	}
+
+	// 마이페이지, 총 포인트
+	@Override
+	public String getTotalPoint(String nickname) {
+		return memberDAO.getTotalPoint(nickname);
+	}
+
+	// 마이페이지, 총 사용 포인트
+	@Override
+	public String getTotalUsedPoint(String nickname) {
+		return memberDAO.getTotalUsedPoint(nickname);
+	}
+
+  // 총 주문 횟수, 총 주문 금액
+	@Override
+	public OrderVO getTotalOrder(String nickname) {
+		return memberDAO.getTotalOrder(nickname);
+	}
+
+	// 마이페이지, 주문 상태에 따른 개수
+	@Override
+	public String getOrderStatusNum(String orderStatus, String nickname) {
+		return memberDAO.getOrderStatusNum(orderStatus, nickname);
+	}
+
+	// 마이페이지, 주문 내역 리스트(송장으로 검색)
+	@Override
+	public ArrayList<OrderVO> getOrderWithInvoiceSearchList(String sort, String search, String searchString, String startDate, String endDate, String nickname, int startIndexNo, int pageSize) {
+		return memberDAO.getOrderWithInvoiceSearchList(sort, search, searchString, startDate, endDate, nickname, startIndexNo, pageSize);
+	}
+
+	// 마이페이지, 주문 내역 리스트(일반 검색)
+	@Override
+	public ArrayList<OrderVO> getOrderSearchList(String sort, String search, String searchString, String startDate, String endDate, String nickname, int startIndexNo, int pageSize) {
+		return memberDAO.getOrderSearchList(sort, search, searchString, startDate, endDate, nickname, startIndexNo, pageSize);
+	}
+
+	// 마이페이지, 주문 조회창 구매확정
+	@Override
+	public void setOrderComplete(int idx) {
+		memberDAO.setOrderComplete(idx);
+	}
+
+	// 구매확정 시, 포인트 지급
+	@Override
+	public void setOrderPointInsert(int idx, String memNickname) {
+		memberDAO.setOrderPointInsert(idx, memNickname);
+	}
+
+	// 구매확정 시, 회원테이블 포인트 증가
+	@Override
+	public void setMemberPointUpdate(int idx, String memNickname) {
+		memberDAO.setMemberPointUpdate(idx, memNickname);
+	}
+
+	// 반품 신청
+	@Override
+	public int setRefundInsert(MultipartFile file, RefundVO vo) {
+		if(file != null) {
+			// 새로운 파일 서버 업로드
+			JavawebProvide jp = new JavawebProvide();
+			String refundPhoto = jp.fileUpload(file, "refund");
+			
+			// 새로운 파일명 set
+			vo.setRefundPhoto(refundPhoto);
+		}
+		return memberDAO.setRefundInsert(vo);
+	}
+
+	// 주문 테이블 상품 상태 변경
+	@Override
+	public void setOrderRefundStatus(int orderIdx) {
+		memberDAO.setOrderRefundStatus(orderIdx);
+	}
+
+	// 일부 반품 시, 나머지 상품은 구매확정 포인트 지급
+	@Override
+	public void setPartlyOrderPointInsert(int orderIdx, int point, String memNickname) {
+		memberDAO.setPartlyOrderPointInsert(orderIdx, point, memNickname);
+	}
+
+	// 일부 반품 시, 회원 테이블 포인트 증가
+	@Override
+	public void setPartlyMemberPointUpdate(int point, String memNickname) {
+		memberDAO.setPartlyMemberPointUpdate(point, memNickname);
+	}
+
+	// 마이페이지 회원정보 수정, 뉴스레터 내용
+	@Override
+	public BooksletterVO getBooksletterInfo(String nickname) {
+		return memberDAO.getBooksletterInfo(nickname);
 	}
 
 

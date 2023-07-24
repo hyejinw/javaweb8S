@@ -8,14 +8,25 @@ public class RefundVO {
 	private String memNickname;
 	
 	private int orderIdx;
+	private String maIdx;
+	private String opIdx;
+	
+	private int refundNum;
 	private String refundCode;
 	private String refundStatus;
 	private String refundDate;
+	private String manageDate;
 	
 	private String refundReason;
 	private String refundDetail;
 	private String refundPhoto;
-	private String refundPrice;
-	private String refundPoint;
-	private String deliveryPrice;
+	private int refundPrice;
+	private int refundPoint;
+	private int deliveryPrice;
+	
+	// 초기 상품 주문 개수
+	private int originOrderNum;
+	
+	// 초기 상품 주문 실제 구매가격
+	private int originPaidPrice;
 }

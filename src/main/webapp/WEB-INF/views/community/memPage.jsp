@@ -22,7 +22,6 @@
     	max-height: 1000px;
     	box-sizing: border-box;
     	background-color: white;
-    	overflow: auto;
     }
     .nowPart {
      color : #282828;

@@ -15,6 +15,7 @@ import com.spring.javaweb8S.vo.OptionVO;
 import com.spring.javaweb8S.vo.OrderVO;
 import com.spring.javaweb8S.vo.ProductVO;
 import com.spring.javaweb8S.vo.ProverbVO;
+import com.spring.javaweb8S.vo.RefundVO;
 import com.spring.javaweb8S.vo.SubscribeVO;
 
 public interface AdminDAO {
@@ -41,7 +42,7 @@ public interface AdminDAO {
 			@Param("endDate") String endDate);
 	public ArrayList<OrderVO> orderWithInvoiceTotRecCntWithPeriod(@Param("sort") String sort, @Param("search") String search, @Param("searchString") String searchString, @Param("startDate") String startDate,
 			@Param("endDate") String endDate);
-	
+
 	public ArrayList<DefaultPhotoVO> getDefaultPhoto();
 
 	public int memberDefaultPhotoInsert(@Param("vo") DefaultPhotoVO vo);
@@ -148,6 +149,9 @@ public interface AdminDAO {
 	
 	public ArrayList<OrderVO> getOrderWithInvoiceSearchList(@Param("sort") String sort, @Param("search") String search, @Param("searchString") String searchString, @Param("startDate") String startDate,
 			@Param("endDate") String endDate, @Param("startIndexNo") int startIndexNo, @Param("pageSize") int pageSize);
+	
+	public RefundVO getRefundInfo(@Param("idx") int idx);
+	
 
 	
 

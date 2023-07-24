@@ -16,6 +16,7 @@ import com.spring.javaweb8S.vo.OptionVO;
 import com.spring.javaweb8S.vo.OrderVO;
 import com.spring.javaweb8S.vo.ProductVO;
 import com.spring.javaweb8S.vo.ProverbVO;
+import com.spring.javaweb8S.vo.RefundVO;
 import com.spring.javaweb8S.vo.SubscribeVO;
 
 public interface AdminService {
@@ -126,6 +127,8 @@ public interface AdminService {
 
 	public ArrayList<OrderVO> getOrderWithInvoiceSearchList(String sort, String search, String searchString,
 			String startDate, String endDate, int startIndexNo, int pageSize);
+
+	public RefundVO getRefundInfo(int idx);
 
 
 

@@ -23,6 +23,7 @@ import com.spring.javaweb8S.dao.AutoUpdateDAO;
 import com.spring.javaweb8S.vo.BooksletterVO;
 import com.spring.javaweb8S.vo.DeliveryVO;
 import com.spring.javaweb8S.vo.OrderVO;
+import com.spring.javaweb8S.vo.RefundVO;
 import com.spring.javaweb8S.vo.SubscribeVO;
 
 @Service
@@ -44,9 +45,11 @@ public class AutoUpdate {
 		// 정기구독 제외, 구매확정 제외한 모든 주문의 idx, orderStatus, manageDate
 		ArrayList<OrderVO> vos = autoUpdateDAO.getAutoOrderList();
 		System.out.println("orderAutoUpdate의 vos : " + vos);
-		// level (결제완료) 후, 1(배송준비중:24시간 후), 2(배송중:12시간 후), 3(배송완료:120시간 후(5일 후)), 
-		// (반품신청) 후, 4(반품처리중:24시간 후), 5(반품완료:120시간 후(5일 후))
-		// (구매확정)은 구매자가 한다.
+		// level (결제완료) 후, 1(배송준비중:24시간 후), 2(배송중:12시간 후), 3(배송완료:120시간 후(5일 후)), 4(구매확정:168시간 후(7일 후))
+		// (구매확정)은 구매자 직접 또는 7일 후에 자동처리된다.
+		
+		
+		// (반품신청) 후, 1(반품처리중:24시간 후), 2(반품완료:120시간 후(5일 후))
 		
 		// 현재 시간
 		Date tempNow = new Date();
@@ -65,7 +68,8 @@ public class AutoUpdate {
 		ArrayList<Integer> level2 = new ArrayList<Integer>();
 		ArrayList<Integer> level3 = new ArrayList<Integer>();
 		ArrayList<Integer> level4 = new ArrayList<Integer>();
-		ArrayList<Integer> level5 = new ArrayList<Integer>();
+		ArrayList<OrderVO> level4_1 = new ArrayList<OrderVO>();
+		
 		
 		for(int i=0; i<vos.size(); i++) {
 			format2 = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse(vos.get(i).getManageDate());
@@ -85,13 +89,12 @@ public class AutoUpdate {
 			if(vos.get(i).getOrderStatus().equals("배송중")) {
 				if(diffHor >= 120) level3.add(vos.get(i).getIdx());
 			}
-			// 4단계) 반품처리중
-			if(vos.get(i).getOrderStatus().equals("반품신청")) {
-				if(diffHor >= 24) level4.add(vos.get(i).getIdx());
-			}
-			// 4단계) 반품완료
-			if(vos.get(i).getOrderStatus().equals("반품처리중")) {
-				if(diffHor >= 120) level5.add(vos.get(i).getIdx());
+			// 4단계) 구매확정
+			if(vos.get(i).getOrderStatus().equals("배송완료")) {
+				if(diffHor >= 168) {
+					level4.add(vos.get(i).getIdx());
+					level4_1.add(vos.get(i));
+				}
 			}
 		}
 		
@@ -123,13 +126,72 @@ public class AutoUpdate {
 			autoUpdateDAO.setOrderAutoUpdate(level3, "배송완료");
 			autoUpdateDAO.setDeliveryAutoUpdate(level3, "배송완료");
 		}
-		
-		if(level4.size() != 0) autoUpdateDAO.setRefundAutoUpdate(level4, "반품처리중");
-		if(level5.size() != 0) autoUpdateDAO.setRefundAutoUpdate(level5, "반품완료");
+		if(level4.size() != 0) {
+			autoUpdateDAO.setOrderAutoUpdate(level4, "구매확정");
 			
+			// 포인트 지급
+			// 1) 포인트 테이블
+			autoUpdateDAO.setOrderPointInsert(level4_1);
+			
+			// 2) 회원 테이블
+			autoUpdateDAO.setMemberPointUpdate(level4_1);
+		}
+		
+		
+		// 반품 관련 처리
+		// 반품완료 제외한 모든 리스트 가져오기
+		ArrayList<RefundVO> refundVOS = autoUpdateDAO.getAutoRefundList();
+		ArrayList<RefundVO> level5 = new ArrayList<RefundVO>();
+		ArrayList<RefundVO> level6 = new ArrayList<RefundVO>();
+		
+		for(int i=0; i<refundVOS.size(); i++) {
+			format2 = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse(refundVOS.get(i).getManageDate());
+			long diffHor = (format1.getTime() - format2.getTime()) / 3600000; //시 차이
+			System.out.println("format2  : " + format2);
+			System.out.println("diffHor  : " + diffHor);
+			
+			System.out.println();
+			System.out.println();
+			System.out.println();
+			System.out.println();
+			System.out.println();
+			System.out.println("refundVOS : " + refundVOS);
+			
+			// 1단계) 반품처리중
+			if(refundVOS.get(i).getRefundStatus().equals("반품신청")) {
+				if(diffHor >= 24) level5.add(refundVOS.get(i));
+			}
+			// 2단계) 반품완료
+			if(refundVOS.get(i).getRefundStatus().equals("반품진행중")) {
+				if(diffHor >= 120) level6.add(refundVOS.get(i));
+			}
+		}
+		
+		if(level5.size() != 0) {
+			autoUpdateDAO.setRefundAutoUpdate(level5, "반품진행중");
+			// 주문 테이블도 변경
+			autoUpdateDAO.setRefundOrderAutoUpdate(level5, "반품진행중");
+		}
+		if(level6.size() != 0) {
+			autoUpdateDAO.setRefundAutoUpdate(level6, "반품완료");
+			// 주문 테이블도 변경
+			autoUpdateDAO.setRefundOrderAutoUpdate(level6, "반품완료");
+			
+			ArrayList<RefundVO> tempVOS = new ArrayList<RefundVO>();
+			
+			// 포인트 반환
+			for(int i=0; i<level6.size(); i++) {
+				if(level6.get(i).getRefundPoint() != 0) tempVOS.add(level6.get(i));
+			}
+			autoUpdateDAO.setPointReturn(tempVOS);          // 포인트 테이블
+			autoUpdateDAO.setMemPointReturn(tempVOS);       // 회원 테이블
+			
+			// 상품 재고 변경 + 판매수량 변경
+			autoUpdateDAO.setStockUpdate(level6);
+		}
 	}
 	
-	
+
 	// 정기구독 발송
 	// 매월 15일 자정 마다!
 	@Transactional

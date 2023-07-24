@@ -327,10 +327,14 @@
 				        <td>${vo.orderCode}</td>
 				        <td>
 				        	<c:if test="${vo.type == '컬렉션 상품'}">
-					        	${vo.prodName}<br/>[옵션]  ${vo.opName}
+				        		<a href="${ctp}/collection/colProduct?idx=${vo.prodIdx}">
+					        		${vo.prodName}<br/>[옵션]  ${vo.opName}
+					        	</a>
 				        	</c:if>
 				        	<c:if test="${vo.type != '컬렉션 상품'}">
-					        	${vo.prodName}
+				        		<a href="${ctp}/magazine/maProduct?idx=${vo.maIdx}">
+					        		${vo.prodName}
+					        	</a>
 					        	<c:if test="${vo.type == '매거진'}"><span class="badge badge-pill badge-success">M</span></c:if>
 					        	<c:if test="${vo.type == '정기 구독'}"><span class="badge badge-pill badge-warning">S</span></c:if>
 				        	</c:if>
@@ -338,7 +342,12 @@
 				        <td>${vo.num}  개</td>
 				        <td><fmt:formatNumber value="${vo.paidPrice}" pattern="#,###"/> 원</td>
 				        <td>${vo.usedPoint}</td>
-				        <td>${vo.orderStatus}</td>
+				        <td>
+									<c:if test="${!fn:contains(vo.orderStatus,'반품')}">${vo.orderStatus}</c:if>
+									<c:if test="${fn:contains(vo.orderStatus,'반품')}">
+				        		<span style="color:blue"><b>${vo.orderStatus}&nbsp;&nbsp;(${vo.refundNum}개)</b></span>
+				        	</c:if>
+								</td>
 				        <td><button class="btn btn-sm btn-dark">관리</button></td>
 				        <td>${fn:substring(vo.orderDate,0,10)}</td>
 								<td>

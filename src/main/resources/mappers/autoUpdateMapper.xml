@@ -3,44 +3,64 @@
 <mapper namespace="com.spring.javaweb8S.dao.AutoUpdateDAO">
 	
 	<select id="getAutoOrderList" resultType="com.spring.javaweb8S.vo.OrderVO">
-		select idx, orderStatus, manageDate from bo_order where type != "정기 구독" and orderStatus != "구매확정";
+		SELECT idx, orderStatus, manageDate FROM bo_order WHERE type != "정기 구독" AND orderStatus != "구매확정";
 	</select>
 	
 	<select id="getAutoSubList" resultType="com.spring.javaweb8S.vo.SubscribeVO">
-		select * from bo_subscribe where subStatus = "구독중";
+		SELECT * FROM bo_subscribe WHERE subStatus = "구독중";
 	</select>
 	
 	<select id="getMemberInfo" resultType="com.spring.javaweb8S.vo.SubscribeVO">
-		select s.memNickname, s.subStartDate, s.subExpireDate, m.email as email 
-		from bo_subscribe s 
-		left join bo_member m 
-		on s.memNickname = m.nickname 
-		where s.subStatus = "구독종료";
+		SELECT s.memNickname, s.subStartDate, s.subExpireDate, m.email AS email 
+		FROM bo_subscribe s 
+		LEFT JOIN bo_member m 
+			ON s.memNickname = m.nickname 
+		WHERE s.subStatus = "구독종료";
 	</select>
 	
 	<select id="getBooksletterList" resultType="com.spring.javaweb8S.vo.BooksletterVO">
-		select * from bo_booksletter where booksletterStatus = "구독중";
+		SELECT * FROM bo_booksletter WHERE booksletterStatus = "구독중";
+	</select>
+	
+	<select id="getAutoRefundList" resultType="com.spring.javaweb8S.vo.RefundVO">
+		SELECT * FROM bo_refund WHERE refundStatus != "반품완료";
 	</select>
 	
 	<insert id="setDeliAutoInsert">
    	<foreach item="item" index="index" collection="insertVOS">
-			insert into bo_delivery (idx,memNickname,orderIdx,addressIdx,invoice,deliveryStatus,deliveryDate,deliveryReason)
-			values 
+			INSERT INTO bo_delivery (idx,memNickname,orderIdx,addressIdx,invoice,deliveryStatus,deliveryDate,deliveryReason)
+			VALUES 
 			(default,#{item.memNickname},#{item.orderIdx},
-			(select addressIdx from bo_order where idx = #{item.orderIdx}),
+			(select addressIdx FROM bo_order WHERE idx = #{item.orderIdx}),
 			#{item.invoice},"배송중",default,"정기 구독");
 		</foreach>
 	</insert>
 	
+	<insert id="setPointReturn">
+   	<foreach item="item" index="index" collection="tempVOS">
+			INSERT INTO bo_point VALUES 
+			(default,#{item.memNickname},#{item.orderIdx},#{item.refundPoint},"반품 포인트반환",default);
+		</foreach>
+	</insert>
+	
+	<insert id="setOrderPointInsert">
+   	<foreach item="item" index="index" collection="level">
+   		INSERT INTO bo_point VALUES   
+			(default, #{item.memNickname}, #{item.idx},
+			(SELECT ROUND(paidPrice * 0.05) FROM bo_order WHERE idx = #{item.idx}),
+			"상품구매확정",default);
+		</foreach>
+	</insert>
+	
 	<update id="setOrderAutoUpdate">
-		update bo_order set orderStatus = #{status}, manageDate = default where idx in
+		UPDATE bo_order SET orderStatus = #{status}, manageDate = default WHERE idx IN
    	<foreach collection="level" item="level" open="(" close=")" separator=",">
    		#{level}
     </foreach>;
 	</update>
 	
 	<update id="setDeliveryAutoUpdate">
-		update bo_delivery set deliveryStatus = #{status}, deliveryDate = default  where orderIdx in
+		UPDATE bo_delivery SET deliveryStatus = #{status}, deliveryDate = default  WHERE orderIdx IN
    	<foreach collection="level" item="level" open="(" close=")" separator=",">
    		#{level}
     </foreach>;
@@ -48,24 +68,66 @@
 	
 	<update id="setDeliveryAutoUpdateWithInvoices">
    	<foreach collection="insertVOS" item="level">
-			update bo_delivery set invoice = #{level.invoice}, deliveryStatus = #{status}, deliveryDate = default  
-			where orderIdx = #{level.idx};
+			UPDATE bo_delivery SET invoice = #{level.invoice}, deliveryStatus = #{status}, deliveryDate = default  
+			WHERE orderIdx = #{level.idx};
     </foreach>;
 	</update>
 	
-	
 	<update id="setSubStatusUpdate">
-		update bo_subscribe set subStatus = "구독종료" where subSendNum = 0;
+		UPDATE bo_subscribe SET subStatus = "구독종료" WHERE subSendNum = 0;
 	</update>
 	
 	<update id="setSubSendNum">
-		update bo_subscribe set subSendNum = subSendNum - 1 where subStatus = "구독중" and subSendNum != 0;
+		UPDATE bo_subscribe SET subSendNum = subSendNum - 1 WHERE subStatus = "구독중" AND subSendNum != 0;
 	</update>
 	
 	<update id="setSubDeliAutoUpdate">
-		update bo_delivery set deliveryStatus = "배송완료", deliveryDate = default 
-		where deliveryReason = "정기구독" and deliveryStatus != "배송완료";
+		UPDATE bo_delivery SET deliveryStatus = "배송완료", deliveryDate = default 
+		WHERE deliveryReason = "정기구독" AND deliveryStatus != "배송완료";
 	</update>	
 	
+	<update id="setRefundAutoUpdate">
+		UPDATE bo_refund SET refundStatus = #{status}, manageDate = default WHERE idx IN 
+		<foreach collection="level" item="level" open="(" close=")" separator=",">
+			#{level.idx}
+		</foreach>
+	</update>
+	
+	<update id="setRefundOrderAutoUpdate">
+		UPDATE bo_order SET orderStatus = #{status}, manageDate = default WHERE idx IN 
+		<foreach collection="level" item="level" open="(" close=")" separator=",">
+			#{level.orderIdx}
+		</foreach>
+	</update>
+	
+	<update id="setMemPointReturn">
+		<foreach collection="tempVOS" item="level">
+			UPDATE bo_member SET point = point + #{level.refundPoint} WHERE nickname = #{level.memNickname};
+		</foreach>
+	</update>
+	
+	<update id="setStockUpdate">
+		<foreach collection="level" item="level">
+			<if test="level.maIdx != null">
+				UPDATE bo_magazine SET maStock = maStock + #{level.refundNum}, 
+				maSaleQuantity = maSaleQuantity - #{level.refundNum} 
+				WHERE idx = #{level.maIdx};
+			</if>
+			<if test="level.opIdx != null">
+				UPDATE bo_product SET prodSaleQuantity = prodSaleQuantity - #{level.refundNum} 
+				WHERE idx = (SELECT prodIdx FROM bo_option WHERE idx = #{level.opIdx});
+				
+				UPDATE bo_option SET opStock = opStock + #{level.refundNum} 
+				WHERE idx = #{level.opIdx};
+			</if>
+		</foreach>
+	</update>
+	
+	<update id="setMemberPointUpdate">
+		<foreach collection="level" item="level">
+			UPDATE bo_member SET point = point + (SELECT ROUND(paidPrice * 0.05) FROM bo_order WHERE idx = #{level.idx}) 
+			WHERE nickname = #{level.memNickname};
+		</foreach>
+	</update>
 	
 </mapper>

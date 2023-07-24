@@ -2,6 +2,8 @@ package com.spring.javaweb8S.common;
 
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.UUID;
 
 import javax.servlet.http.HttpServletRequest;
@@ -13,18 +15,22 @@ import org.springframework.web.multipart.MultipartFile;
 public class JavawebProvide {
 	
 	// 중복 방지(아직 미사용)
-	public int fileUpload(MultipartFile fName, String urlPath) {
-		int res = 0;
+	public String fileUpload(MultipartFile fName, String urlPath) {
+		
+		SimpleDateFormat format = new SimpleDateFormat("yyMMdd");
+		Date today = new Date();
+		String str = format.format(today);
+		UUID uid = UUID.randomUUID();
+		
+		String oFileName = fName.getOriginalFilename();
+		String saveFileName = str + uid.toString().substring(0,5) + "_" + oFileName;
 		try {
-			UUID uid = UUID.randomUUID();
-			String oFileName = fName.getOriginalFilename();
-			String saveFileName = uid + "_" + oFileName;
 			writeFile(fName, saveFileName, urlPath);
-			res = 1;
+			
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		return res;
+		return saveFileName;
 	}
 	
   // 파일 업로드

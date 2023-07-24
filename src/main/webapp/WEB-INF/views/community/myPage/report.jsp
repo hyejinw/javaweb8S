@@ -198,7 +198,7 @@
 	<!-- Page Content -->
 	<div id="main">
 		<a href="${ctp}/community/communityMain">
-			<img src = "${ctp}/images/communityBanner.png" style="width: 100%; max-width:2000px"/>
+			<img src = "${ctp}/images/banner.png" style="width: 100%; max-width:2000px"/>
 		</a>
 		
 		<div class="table-responsive" style="width:90%; margin:0px auto; padding:40px 50px 100px 50px" class="border">

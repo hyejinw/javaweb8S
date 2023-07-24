@@ -29,7 +29,11 @@ public class OrderVO {
 	private String orderDate;
 	private String orderStatus;
 	private String manageDate;
-
+	
+	// 마이페이지용
+	private int orderNum;
+	private int totalPaidPrice;
+	private int refundNum;
 	
 	// 이 아래는 관리자 및 회원 페이지에서 쓰게 되면 쓰고 아니면 삭제 필요
 	// 컬렉션 정보 (장바구니용)

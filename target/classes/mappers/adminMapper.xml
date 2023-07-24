@@ -353,7 +353,12 @@
 	</select>
 	
 	<select id="getOrderList" resultType="com.spring.javaweb8S.vo.OrderVO">
-		SELECT * FROM bo_order ORDER BY idx DESC LIMIT #{startIndexNo},#{pageSize};
+		SELECT o.*, r.refundNum AS refundNum
+		FROM bo_order o
+	 	LEFT JOIN bo_refund r
+	 		ON o.idx = r.orderIdx
+	 		
+		ORDER BY o.idx DESC LIMIT #{startIndexNo},#{pageSize};
 	</select>
 	
 	<select id="getOrderInfo" resultType="com.spring.javaweb8S.vo.OrderVO">
@@ -420,42 +425,66 @@
 	
 	<select id="getOrderSearchList" resultType="com.spring.javaweb8S.vo.OrderVO">
 		<if test='searchString == "" and startDate == ""'>
-			SELECT * FROM bo_order 
+			SELECT o.*, r.refundNum AS refundNum
 			
+			FROM bo_order o
+		 	LEFT JOIN bo_refund r
+		 		ON o.idx = r.orderIdx
+				 
 			<if test='sort != "" and sort != "전체"'>
-				WHERE orderStatus = #{sort}
+				WHERE o.orderStatus = #{sort}
 			</if>
-			ORDER BY idx DESC LIMIT #{startIndexNo},#{pageSize};
+			ORDER BY o.idx DESC LIMIT #{startIndexNo},#{pageSize};
 		</if>
+		
+		
 		<if test='searchString != "" and startDate == ""'>
-			SELECT * FROM bo_order WHERE 
+			SELECT o.*, r.refundNum AS refundNum
+			
+			FROM bo_order o
+		 	LEFT JOIN bo_refund r
+		 		ON o.idx = r.orderIdx
+				 
+			WHERE
 			
 			<if test='sort != "" and sort != "전체"'>
-				orderStatus = #{sort} AND 
+				o.orderStatus = #{sort} AND 
 			</if>
 			
-			${search} LIKE CONCAT('%',#{searchString},'%')
-			ORDER BY idx DESC LIMIT #{startIndexNo},#{pageSize};
+			o.${search} LIKE CONCAT('%',#{searchString},'%')
+			ORDER BY o.idx DESC LIMIT #{startIndexNo},#{pageSize};
 		</if>
 		<if test='searchString == "" and startDate != ""'>
-			SELECT * FROM bo_order WHERE
+			SELECT o.*, r.refundNum AS refundNum
+			
+			FROM bo_order o
+		 	LEFT JOIN bo_refund r
+		 		ON o.idx = r.orderIdx
+				 
+			WHERE 
 			
 			<if test='sort != "" and sort != "전체"'>
-				orderStatus = #{sort} AND 
+				o.orderStatus = #{sort} AND 
 			</if> 
 			
-			date_format(orderDate, '%Y-%m-%d') BETWEEN #{startDate} AND #{endDate}
-			ORDER BY idx DESC LIMIT #{startIndexNo},#{pageSize};
+			date_format(o.orderDate, '%Y-%m-%d') BETWEEN #{startDate} AND #{endDate}
+			ORDER BY o.idx DESC LIMIT #{startIndexNo},#{pageSize};
 		</if>
 		<if test='searchString != "" and startDate != ""'>
-			SELECT * FROM bo_order WHERE 
+			SELECT o.*, r.refundNum AS refundNum
+			
+			FROM bo_order o
+		 	LEFT JOIN bo_refund r
+		 		ON o.idx = r.orderIdx
+				 
+			WHERE 
 			
 			<if test='sort != "" and sort != "전체"'>
-				orderStatus = #{sort} AND 
+				o.orderStatus = #{sort} AND 
 			</if>
 			
-			${search} LIKE CONCAT('%',#{searchString},'%') and date_format(orderDate, '%Y-%m-%d') BETWEEN #{startDate} AND #{endDate}
-			ORDER BY idx DESC LIMIT #{startIndexNo},#{pageSize};
+			o.${search} LIKE CONCAT('%',#{searchString},'%') and date_format(o.orderDate, '%Y-%m-%d') BETWEEN #{startDate} AND #{endDate}
+			ORDER BY o.idx DESC LIMIT #{startIndexNo},#{pageSize};
 		</if>
 	</select>
 	
@@ -510,19 +539,27 @@
 	
 	<select id="getOrderWithInvoiceSearchList" resultType="com.spring.javaweb8S.vo.OrderVO">
 		<if test='searchString == "" and startDate == ""'>
-			SELECT * FROM bo_order 
+			SELECT o.*, r.refundNum AS refundNum
 			
+			FROM bo_order o
+		 	LEFT JOIN bo_refund r
+		 		ON o.idx = r.orderIdx
+				 
 			<if test='sort != "" and sort != "전체"'>
-				WHERE orderStatus = #{sort}
+				WHERE o.orderStatus = #{sort}
 			</if>
-			GROUP BY orderCode
-			ORDER BY idx DESC LIMIT #{startIndexNo},#{pageSize};
+			GROUP BY o.orderCode
+			ORDER BY o.idx DESC LIMIT #{startIndexNo},#{pageSize};
 		</if>
 		<if test='searchString != "" and startDate == ""'>
-			SELECT *   
+			SELECT o.*, r.refundNum AS refundNum  
 			FROM bo_order o
 			LEFT JOIN bo_delivery d
-			ON o.idx = d.orderIdx
+				ON o.idx = d.orderIdx
+
+		 	LEFT JOIN bo_refund r
+		 		ON o.idx = r.orderIdx
+				 
 			WHERE 
 			<if test='sort != "" and sort != "전체"'>
 				o.orderStatus = #{sort} AND 
@@ -533,22 +570,31 @@
 			ORDER BY o.idx DESC LIMIT #{startIndexNo},#{pageSize};
 		</if>
 		<if test='searchString == "" and startDate != ""'>
-			SELECT * FROM bo_order WHERE
+			SELECT o.*, r.refundNum AS refundNum
+			
+			FROM bo_order o
+		 	LEFT JOIN bo_refund r
+		 		ON o.idx = r.orderIdx
+				 
+			WHERE 
 			
 			<if test='sort != "" and sort != "전체"'>
-				orderStatus = #{sort} AND 
+				o.orderStatus = #{sort} AND 
 			</if> 
 			
-			date_format(orderDate, '%Y-%m-%d') BETWEEN #{startDate} AND #{endDate}
-			GROUP BY orderCode
-			ORDER BY idx DESC LIMIT #{startIndexNo},#{pageSize};
+			date_format(o.orderDate, '%Y-%m-%d') BETWEEN #{startDate} AND #{endDate}
+			GROUP BY o.orderCode
+			ORDER BY o.idx DESC LIMIT #{startIndexNo},#{pageSize};
 		</if>
 		<if test='searchString != "" and startDate != ""'>
-			SELECT *  
+			SELECT o.*, r.refundNum AS refundNum  
 			FROM bo_order o
 			LEFT JOIN bo_delivery d
-			ON o.idx = d.orderIdx
-			WHERE  
+				ON o.idx = d.orderIdx
+		 	LEFT JOIN bo_refund r
+		 		ON o.idx = r.orderIdx
+		 		
+			WHERE   
 			
 			<if test='sort != "" and sort != "전체"'>
 				o.orderStatus = #{sort} AND 
@@ -560,7 +606,9 @@
 		</if>
 	</select>
 	
-	
+	<select id="getRefundInfo" resultType="com.spring.javaweb8S.vo.RefundVO">
+		SELECT * FROM bo_refund WHERE orderIdx = #{idx};
+	</select>
 	
 	
 	

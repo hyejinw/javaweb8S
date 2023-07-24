@@ -9,6 +9,7 @@ import com.spring.javaweb8S.dao.AdminDAO;
 import com.spring.javaweb8S.dao.CollectionDAO;
 import com.spring.javaweb8S.dao.CommunityDAO;
 import com.spring.javaweb8S.dao.MagazineDAO;
+import com.spring.javaweb8S.dao.MemberDAO;
 import com.spring.javaweb8S.dao.OrderDAO;
 import com.spring.javaweb8S.vo.OrderVO;
 
@@ -29,6 +30,9 @@ public class PageProcess {
 	
 	@Autowired
 	CommunityDAO communityDAO;
+	
+	@Autowired
+	MemberDAO memberDAO;
 	
 	public PageVO totRecCnt(int pag, int pageSize, String section, String search, String searchString) {
 		PageVO pageVO = new PageVO();
@@ -153,6 +157,17 @@ public class PageProcess {
 		if(section.equals("adminOrderWithInvoice")) {
 			ArrayList<OrderVO> temp = adminDAO.orderWithInvoiceTotRecCntWithPeriod(sort, search, searchString, startDate, endDate);
 			totRecCnt = temp.size();
+		}
+		if(section.equals("myPageOrderWithInvoice")) {
+			String nickname = search.split("/")[0];
+			search = search.split("/")[1];
+			ArrayList<OrderVO> temp = memberDAO.myPageOrderWithInvoiceTotRecCntWithPeriod(sort, search, searchString, startDate, endDate, nickname);
+			totRecCnt = temp.size();
+		}
+		if(section.equals("myPageOrder")) {
+			String nickname = search.split("/")[0];
+			search = search.split("/")[1];
+			totRecCnt = memberDAO.myPageOrderTotRecCntWithPeriod(sort, search, searchString, startDate, endDate, nickname);
 		}
 			
 		int totPage = (totRecCnt % pageSize)==0 ? totRecCnt /pageSize : (totRecCnt / pageSize) + 1;

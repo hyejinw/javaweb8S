@@ -423,7 +423,7 @@ public class OrderController {
 			
 			tempVO.setNum(cartVOS.get(i).getNum());
 			tempVO.setTotalPrice(cartVOS.get(i).getTotalPrice());
-			tempVO.setPaidPrice(cartVOS.get(i).getProdPrice() - usedPoint[i]);
+			tempVO.setPaidPrice(cartVOS.get(i).getTotalPrice() - usedPoint[i]);
 			tempVO.setUsedPoint(usedPoint[i]);
 			
 			if(cartVOS.get(i).getType().equals("컬렉션 상품")) {

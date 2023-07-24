@@ -402,7 +402,7 @@
 	<!-- Page Content -->
 	<div id="main">
 		<a href="${ctp}/community/communityMain">
-			<img src = "${ctp}/images/communityBanner.png" style="width: 100%; max-width:2000px"/>
+			<img src = "${ctp}/images/banner.png" style="width: 100%; max-width:2000px"/>
 		</a>
 		
 		<div class="table-responsive" style="width:90%; margin:0px auto; padding:40px 50px 100px 50px" class="border">
@@ -569,7 +569,7 @@
         <!-- Modal body -->
         <div class="modal-body" style="padding:0px">
           <div class="w3-container w3-border" style="background-color:#eee; padding:30px">
-          	<form name="memPhotoUpdate" method="post" action="${ctp}/community/myPage/memPhotoUpdate">
+          	<form name="memPhotoUpdate" method="post" action="${ctp}/community/myPage/memPhotoUpdate" enctype="multipart/form-data">
 				  		<div class="row">
 				  			<div class="col-8">
 					  			<input type="file" name="file" id="memPhoto" onchange="imgCheck(this)" class="form-control-file border form-control"/>

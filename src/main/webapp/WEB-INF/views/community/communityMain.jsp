@@ -9,14 +9,16 @@
   <title>책(의)세계</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
 	<jsp:include page="/WEB-INF/views/include/bs4.jsp"/>
+	 <link rel="stylesheet" href="${ctp}/resources/font/font.css">
+	 <link rel="stylesheet" href="${ctp}/resources/css/owl.carousel.min.css">
+	 <link rel="stylesheet" href="${ctp}/resources/css/owl.theme.default.min.css">
+	 <script src="${ctp}/resources/js/owl.carousel.js"></script> 
+	 <script src="${ctp}/resources/js/owl.carousel.min.js"></script>
+	 
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css">
   <script src="https://cdn.jsdelivr.net/npm/jquery@3.6.4/dist/jquery.slim.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.bundle.min.js"></script>
-	<link rel="stylesheet" href="${ctp}/css/owl.carousel.min.css">
-	<link rel="stylesheet" href="${ctp}/css/owl.theme.default.min.css">
-	<script src="${ctp}/js/owl.carousel.js"></script> 
-	<script src="${ctp}/js/owl.carousel.min.js"></script>
   <style>
   	.w3-row-padding img {margin-bottom: 12px}
 		/* Set the width of the sidebar to 120px */
@@ -237,28 +239,25 @@
 	    	}); 
 			}
 		}
-/* 
 		$(document).ready(function () {
-	    (function ($) {
-	        $('.owl-carousel').owlCarousel({
-				    stagePadding: 50,
-				    loop:true,
-				    margin:0,
-				    nav:true,
-				    autoplay:true,
-				    autoplayTimeout:5000,
-				    autoplayHoverPause:true,
-				    responsive:{
-			        0:{ items:1 },
-			        600:{ items:1 },
-			        800:{ items:2 },
-			        900:{ items:2 },
-			        1000:{ items:3 },
-			        1200:{ items:4 }
-				    }
-	        });
-	    })(jQuery);
-		}); */
+        $('.owl-carousel').owlCarousel({
+			    stagePadding: 50,
+			    loop:true,
+			    margin:0,
+			    nav:true,
+			    autoplay:true,
+			    autoplayTimeout:5000,
+			    autoplayHoverPause:true,
+			    responsive:{
+		        0:{ items:1 },
+		        600:{ items:1 },
+		        800:{ items:2 },
+		        900:{ items:2 },
+		        1000:{ items:3 },
+		        1200:{ items:4 }
+			    }
+        });
+		}); 
 		
 		// 기록 상세창에서 돌아왔다면, 해당 session을 없애준다.
 		$(document).ready(function(){
@@ -281,7 +280,7 @@
 	<!-- Page Content -->
 	<div id="main">
 		<a href="${ctp}/community/communityMain">
-			<img src = "${ctp}/images/communityBanner.png" style="width:100%; max-width:2000px"/>
+			<img src = "${ctp}/images/banner.png" style="width:100%; max-width:2000px"/>
 		</a>
 		<div class="container text-center" id="indexBox">
 			<div>

@@ -39,7 +39,7 @@
 			location.href = '${ctp}/member/memberLogin';
 		}
 		else if(flag == 'memPage') {
-			location.href = '${ctp}/member/memberPage';
+			location.href = '${ctp}/member/myPage';
 		}
 		else if(flag == 'cart') {
 			location.href = '${ctp}/order/cart';

@@ -305,19 +305,13 @@ public class CommunityServiceImpl implements CommunityService {
 			originFileDelete.delete();
 		}
 			
-		try {
-			String memPhotoFileName = file.getOriginalFilename();
+		// 새로운 파일 서버 업로드
+		JavawebProvide jp = new JavawebProvide();
+		String memPhotoFileName = jp.fileUpload(file,"admin/member");
+		
+		// 새로운 파일명 set
+		vo.setMemPhoto(memPhotoFileName);
 			
-			// 새로운 파일 서버 업로드
-			JavawebProvide jp = new JavawebProvide();
-			jp.writeFile(file,memPhotoFileName,"admin/member");
-			
-			// 새로운 파일명 set
-			vo.setMemPhoto(memPhotoFileName);
-			
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
 		return communityDAO.setMemPhotoUpdate(vo);
 	}
 

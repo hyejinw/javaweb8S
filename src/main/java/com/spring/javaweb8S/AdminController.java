@@ -34,6 +34,7 @@ import com.spring.javaweb8S.vo.OptionVO;
 import com.spring.javaweb8S.vo.OrderVO;
 import com.spring.javaweb8S.vo.ProductVO;
 import com.spring.javaweb8S.vo.ProverbVO;
+import com.spring.javaweb8S.vo.RefundVO;
 import com.spring.javaweb8S.vo.SubscribeVO;
 
 @Controller
@@ -58,6 +59,7 @@ public class AdminController {
 	public String adminPageGet() throws ParseException, MessagingException {
 
 		// 아래내용은 전부 확인용으로 씀
+		//autoUpdate.orderAutoUpdate();
 		//autoUpdate.subDeliAutoUpdate();
 		//autoUpdate.subAutoUpdate();
 		//autoUpdate.booksletterAutoSend();
@@ -770,11 +772,13 @@ public class AdminController {
 		DeliveryVO deliveryVO = adminService.getDeliveryInfo(idx);
 		MemberVO memberVO = adminService.getMemberInfo(memNickname);
 		AddressVO addressVO = adminService.getAddressInfo(vo.getAddressIdx());
+		RefundVO refundVO = adminService.getRefundInfo(idx);
 		
 		model.addAttribute("vo", vo);
 		model.addAttribute("deliveryVO", deliveryVO);
 		model.addAttribute("memberVO", memberVO);
 		model.addAttribute("addressVO", addressVO);
+		model.addAttribute("refundVO", refundVO);
 		
 		return "admin/order/orderInfo";
 	}

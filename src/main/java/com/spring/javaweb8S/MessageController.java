@@ -141,7 +141,7 @@ public class MessageController {
 		else if(msgFlag.equals("askInsertOk")) {
 			model.addAttribute("msg", "문의가 등록되었습니다.");
 			System.out.println("(String)session.getAttribute(\"myPageAskInsertSW\") : " +(String)session.getAttribute("myPageAskInsertSW")); // 얘가 왜 null이지????????
-			
+			//session.getId()
 			if(((String)session.getAttribute("myPageAskInsertSW") != null) && ((String)session.getAttribute("myPageAskInsertSW")).equals("ON")) {
 				model.addAttribute("url", "/community/myPage/ask?memNickname="+nickname);
 			}
@@ -168,6 +168,14 @@ public class MessageController {
 		else if(msgFlag.equals("askDeleteNo")) {
 			model.addAttribute("msg", "재시도 부탁드립니다.");
 			model.addAttribute("url", "/community/askDetail?idx="+idx);
+		}
+		else if(msgFlag.equals("refundInsertOk")) {
+			model.addAttribute("msg", "반품 신청되었습니다.");
+			model.addAttribute("url", "/member/myPage/order");
+		}
+		else if(msgFlag.equals("refundInsertNo")) {
+			model.addAttribute("msg", "재시도 부탁드립니다.");
+			model.addAttribute("url", "/member/myPage/order");
 		}
 		
 		

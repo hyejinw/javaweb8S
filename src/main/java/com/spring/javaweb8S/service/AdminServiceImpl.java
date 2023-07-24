@@ -28,6 +28,7 @@ import com.spring.javaweb8S.vo.OptionVO;
 import com.spring.javaweb8S.vo.OrderVO;
 import com.spring.javaweb8S.vo.ProductVO;
 import com.spring.javaweb8S.vo.ProverbVO;
+import com.spring.javaweb8S.vo.RefundVO;
 import com.spring.javaweb8S.vo.SubscribeVO;
 
 @Service
@@ -504,6 +505,12 @@ public class AdminServiceImpl implements AdminService {
 	public ArrayList<OrderVO> getOrderWithInvoiceSearchList(String sort, String search, String searchString,
 			String startDate, String endDate, int startIndexNo, int pageSize) {
 		return adminDAO.getOrderWithInvoiceSearchList(sort, search, searchString, startDate, endDate, startIndexNo, pageSize);
+	}
+
+	// 주문 상세 팝업창, 반품 정보
+	@Override
+	public RefundVO getRefundInfo(int idx) {
+		return adminDAO.getRefundInfo(idx);
 	}
 
 			

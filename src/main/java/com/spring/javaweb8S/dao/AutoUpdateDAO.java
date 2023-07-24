@@ -7,6 +7,7 @@ import org.apache.ibatis.annotations.Param;
 import com.spring.javaweb8S.vo.BooksletterVO;
 import com.spring.javaweb8S.vo.DeliveryVO;
 import com.spring.javaweb8S.vo.OrderVO;
+import com.spring.javaweb8S.vo.RefundVO;
 import com.spring.javaweb8S.vo.SubscribeVO;
 
 public interface AutoUpdateDAO {
@@ -20,9 +21,6 @@ public interface AutoUpdateDAO {
 
 	// 배송 자동 업데이트(송장 번호, 배송 날짜)
 	public void setDeliveryAutoUpdateWithInvoices(@Param("insertVOS") ArrayList<DeliveryVO> insertVOS, @Param("status") String status);
-
-	// 환불 자동 업데이트
-	public void setRefundAutoUpdate(@Param("level") ArrayList<Integer> level, @Param("status") String status);
 
 	// 정기 구독, 구독중 리스트만 가져오기 (구독취소/구독종료 제외)
 	public ArrayList<SubscribeVO> getAutoSubList();
@@ -47,5 +45,29 @@ public interface AutoUpdateDAO {
 
 	// 뉴스레터 구독 정보 리스트 
 	public ArrayList<BooksletterVO> getBooksletterList();
+
+	// 반품 리스트
+	public ArrayList<RefundVO> getAutoRefundList();
+
+	// 반품 테이블 상태 업데이트
+	public void setRefundAutoUpdate(@Param("level") ArrayList<RefundVO> level, @Param("status") String status);
+
+	// 주문 테이블 상태 업데이트(반품관련)
+	public void setRefundOrderAutoUpdate(@Param("level") ArrayList<RefundVO> level, @Param("status") String status);
+
+	// 포인트 테이블 포인트 반환 
+	public void setPointReturn(@Param("tempVOS") ArrayList<RefundVO> tempVOS);
+
+	// 회원 테이블 포인트 반환
+	public void setMemPointReturn(@Param("tempVOS") ArrayList<RefundVO> tempVOS);
+
+	// 상품 재고 변경 + 판매수량 변경
+	public void setStockUpdate(@Param("level") ArrayList<RefundVO> level);
+
+	// 구매확정 후, 포인트 지급
+	public void setOrderPointInsert(@Param("level") ArrayList<OrderVO> level);
+
+	// 구매확정 후, 회원 테이블 포인트 수정
+	public void setMemberPointUpdate(@Param("level") ArrayList<OrderVO> level);
 
 }
