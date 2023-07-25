@@ -79,6 +79,15 @@ public class PageProcess {
 			
 			totRecCnt = communityDAO.AskSearchTotRecCnt(sort, search, searchString);
 		}
+		else if(section.equals("myPagePoint")) {
+			String sort = search;
+			String nickname = searchString;
+			totRecCnt = memberDAO.myPagePointTotRecCnt(sort, nickname);
+		}
+		else if(section.equals("myPagePointUse")) {
+			String nickname = searchString;
+			totRecCnt = memberDAO.myPagePointUseTotRecCnt(nickname);
+		}
 		
 		
 //		else if(section.equals("board")) {

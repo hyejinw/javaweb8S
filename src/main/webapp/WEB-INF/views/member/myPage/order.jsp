@@ -358,14 +358,14 @@
 						<div class="col-9">
 							-  &nbsp;기본적으로 전체 내역이 조회되며, 기간 검색시 지난 주문내역을 조회하실 수 있습니다.<br/>
 							-  &nbsp;상세버튼을 클릭하시면 해당 주문에 대한 상세내역을 확인하실 수 있습니다.<br/>
-							-  &nbsp;반품 신청은 배송완료 후, &nbsp;<b>7일 이내</b> 가능합니다.    (정기구독의 경우, 문의로 구독 취소 신청이 가능합니다.)<br/><br/>
+							-  &nbsp;반품 신청은 배송완료 후, &nbsp;<b>7일 이내</b> 가능합니다.    (정기구독의 경우, <a href="${ctp}/member/myPage/subscribe"><b><u>구독 관리</u></b></a>에서 구독 취소 신청이 가능합니다.)<br/><br/>
 						</div>
 						<div class="col-3 text-right pr-4">
 							<a class="btn btn-dark btn-sm mb-4" href="${ctp}/member/myPage/order" style="margin-left:20px;"><i class="fa-solid fa-arrows-rotate"></i></a>
 						</div>
 					</div>
 					-  &nbsp;배송완료 후, 구매자 직접 구매확정 하실 수 있으며, 그렇지 않을 경우 배송완료 7일 이후 자동 구매확정 됩니다.<br/>
-					-  &nbsp;구매확정 후, 결제액의 5%가 포인트로 지급됩니다.
+					-  &nbsp;구매확정 후, 결제액의 5%가 포인트로 지급됩니다.    (정기구독의 경우, 구독종료 / 구독취소 시 지급.)
 					<div class="text-right mr-3">
 						<span style="font-size:15px; font-weight:300;">
 						 	<span class="badge badge-pill badge-success">M</span> (매거진) &nbsp;&nbsp;&nbsp;&nbsp;
@@ -489,7 +489,7 @@
 					        <td>
 					        	<c:if test="${!fn:contains(vo.orderStatus,'반품')}">
 						        	${vo.orderStatus}
-						        	<c:if test="${vo.orderStatus == '배송완료'}">
+						        	<c:if test="${(vo.orderStatus == '배송완료') && (vo.type != '정기 구독')}">
 						        		<br/><button class="btn btn-sm btn-outline-primary mt-2" onclick="orderComplete('${vo.idx}')">구매확정</button>
 						        		&nbsp;&nbsp;<button type="button" class="btn btn-sm btn-outline-dark mt-2" onclick="refundOpen(${vo.idx})" data-toggle="modal" data-target="#refundModal">반품 신청</button>
 						        		<input type="hidden" id="orderIdx${vo.idx}" value="${vo.idx}"/>
@@ -502,7 +502,7 @@
 						        	</c:if>
 					        	</c:if>
 					        	<c:if test="${fn:contains(vo.orderStatus,'반품')}">
-					        		<span style="color:blue"><b>${vo.orderStatus}&nbsp;&nbsp;(${vo.refundNum}개)</b></span>
+					        		<span style="color:blue">${vo.orderStatus}&nbsp;&nbsp;<b>(${vo.refundNum}개)</b></span>
 					        	</c:if>
 					        </td>
 					        <td>${fn:substring(vo.orderDate,0,10)}</td>

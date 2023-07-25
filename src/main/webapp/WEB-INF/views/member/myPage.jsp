@@ -113,7 +113,7 @@
 							<button class="btn btn-outline-dark btn-sm" onclick="location.href='${ctp}/member/myPage/point';">조회</button>
 						</div>
 						<div class="col ml-5">
-							<i class="fa-solid fa-angle-right"></i>&nbsp;&nbsp;총 포인트
+							<i class="fa-solid fa-angle-right"></i>&nbsp;&nbsp;총 적립 포인트
 						</div>
 						<div class="col text-right mr-5">
 							<c:if test="${empty totalPoint}">
@@ -295,6 +295,25 @@
 							</div>
 						</div>
 					</a>
+				</div>
+			</div>
+			<div class="row text-center">
+				<div class="col">
+					<a href="${ctp}/member/myPage/subscribe">
+						<div class="w3-panel w3-hover-shadow w3-card">
+							<div style="padding:20px">
+								<p>
+									<h6 style="color:grey"><b>SUBSCRIBE</b></h6>
+									<h5 style="color:#282828"><b>구독 관리</b></h5>
+								</p>
+								<span style="color:grey">책(의)편지 뉴스레터, 책Chaeg 매거진 정기구독 관리창입니다.</span>
+							</div>
+						</div>
+					</a>
+				</div>
+				<div class="col">
+				</div>
+				<div class="col">
 				</div>
 			</div>
 			

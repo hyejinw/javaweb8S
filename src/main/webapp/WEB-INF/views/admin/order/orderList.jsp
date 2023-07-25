@@ -345,7 +345,7 @@
 				        <td>
 									<c:if test="${!fn:contains(vo.orderStatus,'반품')}">${vo.orderStatus}</c:if>
 									<c:if test="${fn:contains(vo.orderStatus,'반품')}">
-				        		<span style="color:blue"><b>${vo.orderStatus}&nbsp;&nbsp;(${vo.refundNum}개)</b></span>
+				        		<span style="color:blue">${vo.orderStatus}&nbsp;&nbsp;<b>(${vo.refundNum}개)</b></span>
 				        	</c:if>
 								</td>
 				        <td><button class="btn btn-sm btn-dark">관리</button></td>

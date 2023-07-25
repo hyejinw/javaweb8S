@@ -278,7 +278,65 @@
 	</select>
 	
 	<select id="getBooksletterInfo" resultType="com.spring.javaweb8S.vo.BooksletterVO">
-		SELECT * FROM bo_booksletter WHERE memNickname = #{nickname};
+		SELECT * FROM bo_booksletter WHERE memNickname = #{nickname} AND booksletterStatus != "구독취소";
+	</select>
+	
+	<select id="getSaveList" resultType="com.spring.javaweb8S.vo.SaveVO">
+		SELECT * FROM bo_save WHERE memNickname = #{nickname} AND type = #{sort} ORDER BY idx DESC;
+	</select>
+	
+	<select id="getAddressList" resultType="com.spring.javaweb8S.vo.AddressVO">
+		SELECT * FROM bo_address WHERE memNickname = #{memNickname} AND addressDel != "삭제";
+	</select>
+	
+	<select id="getAddressInfo" resultType="com.spring.javaweb8S.vo.AddressVO">
+		SELECT * FROM bo_address WHERE idx = #{idx};
+	</select>
+	
+	<select id="myPagePointTotRecCnt" resultType="int">
+		SELECT count(*) FROM bo_point WHERE memNickname = #{nickname} 
+		<if test='sort != null and sort != "전체"'>
+			AND pointReason LIKE CONCAT('%',#{sort},'%') 
+		</if>
+		;
+	</select>
+	
+	<select id="getPointList" resultType="com.spring.javaweb8S.vo.PointVO">
+		SELECT p.*, o.type AS type 
+	
+		FROM bo_point p
+		LEFT JOIN bo_order o
+			ON p.orderIdx = o.idx
+		
+		WHERE p.memNickname = #{nickname} 
+		<if test='sort != null and sort != "전체"'>
+			AND p.pointReason LIKE CONCAT('%',#{sort},'%') 
+		</if>
+		ORDER BY p.idx DESC LIMIT #{startIndexNo},#{pageSize};
+	</select>
+	
+	<select id="myPagePointUseTotRecCnt" resultType="int">
+		SELECT count(*) FROM bo_pointUse WHERE memNickname = #{nickname};
+	</select>
+	
+	<select id="getPointUseList" resultType="com.spring.javaweb8S.vo.PointUseVO">
+		SELECT p.*, o.type AS type 
+	
+		FROM bo_pointUse p
+		LEFT JOIN bo_order o
+			ON p.orderIdx = o.idx
+		
+		WHERE p.memNickname = #{nickname} 
+		ORDER BY p.idx DESC LIMIT #{startIndexNo},#{pageSize};
+	</select>
+	
+	<select id="getSubscribeInfo" resultType="com.spring.javaweb8S.vo.SubscribeVO">
+		SELECT s.*, o.prodName AS prodName, o.maIdx AS maIdx 
+		FROM bo_subscribe s
+		LEFT JOIN bo_order o
+			ON s.orderIdx = o.idx
+		
+		WHERE s.memNickname = #{nickname};
 	</select>
 	
 	<insert id="setMember">
@@ -352,5 +410,45 @@
 		UPDATE bo_member SET point = point + #{point} WHERE nickname = #{memNickname};
 	</update>
 	
+	<update id="setBooksletterDelete">
+		UPDATE bo_booksletter SET booksletterStatus = "구독취소" WHERE idx = #{idx};
+	</update>
+	
+	<update id="setMemberUpdate">
+		<if test="vo.pwd != ''">
+			UPDATE bo_member SET pwd = #{vo.pwd}, nickname = #{vo.nickname},
+			email = #{vo.email}, tel = #{vo.tel}, pwdUpdateDate = default WHERE idx = #{vo.idx};
+		</if>
+		<if test="vo.pwd == ''">
+			UPDATE bo_member SET nickname = #{vo.nickname}, email = #{vo.email}, tel = #{vo.tel} WHERE idx = #{vo.idx};
+		</if>
+	</update>
+	
+	<update id="setMemberDelete">
+		UPDATE bo_member SET memberDel = "탈퇴", memberDelReason = #{vo.memberDelReason}, lastVisit = default WHERE idx = #{vo.idx};
+	</update>
+	
+	<update id="setAddressDelete">
+		UPDATE bo_address SET addressDel = "삭제" WHERE idx = #{idx};
+	</update>
+	
+	<update id="setSubscribeCancel">
+		UPDATE bo_subscribe SET subStatus = "구독취소신청" WHERE idx = #{idx};
+	</update>
+	
+	<update id="setOrderAddressIdxChange">
+		UPDATE bo_order SET addressIdx = #{vo.addressIdx} WHERE idx = #{vo.idx};
+	</update>
+	
+	<delete id="setSaveIdxesDelete">
+		DELETE FROM bo_save WHERE idx IN
+    <foreach collection="saveIdxList" item="saveIdxList" open="(" close=")" separator=",">
+   		#{saveIdxList}
+    </foreach>
+	</delete>
+	
+	<delete id="setSaveDelete">
+		DELETE FROM bo_save WHERE idx = #{idx};
+	</delete>
 	
 </mapper>

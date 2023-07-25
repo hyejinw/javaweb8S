@@ -1,6 +1,5 @@
 package com.spring.javaweb8S.common;
 
-import java.io.File;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -8,16 +7,14 @@ import java.util.Date;
 
 import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
-import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.FileSystemResource;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.context.request.RequestContextHolder;
-import org.springframework.web.context.request.ServletRequestAttributes;
 
 import com.spring.javaweb8S.dao.AutoUpdateDAO;
 import com.spring.javaweb8S.vo.BooksletterVO;
@@ -34,7 +31,6 @@ public class AutoUpdate {
 
 	@Autowired
 	JavaMailSender mailSender;
-	
 
 	// 주문(배송) 관련 자동 처리
 	// 매 시간마다 실시(정각)
@@ -42,7 +38,7 @@ public class AutoUpdate {
 	@Scheduled(cron = "0 0 0/1 * * *")  
 	public void orderAutoUpdate() throws ParseException {
 		
-		// 정기구독 제외, 구매확정 제외한 모든 주문의 idx, orderStatus, manageDate
+		// 정기구독 제외!!!!!!!!, 구매확정 제외한 모든 주문의 idx, orderStatus, manageDate
 		ArrayList<OrderVO> vos = autoUpdateDAO.getAutoOrderList();
 		System.out.println("orderAutoUpdate의 vos : " + vos);
 		// level (결제완료) 후, 1(배송준비중:24시간 후), 2(배송중:12시간 후), 3(배송완료:120시간 후(5일 후)), 4(구매확정:168시간 후(7일 후))
@@ -195,11 +191,12 @@ public class AutoUpdate {
 	// 정기구독 발송
 	// 매월 15일 자정 마다!
 	@Transactional
-	@Scheduled(cron = "0 0 0 15 * *")  
+	//@Scheduled(cron = "0 0 0 15 * *")  
+	@Scheduled(cron = "0 35 11 * * 2")  
 	public void subAutoUpdate() throws ParseException, MessagingException {
 
 		// 1) 매거진 발송 처리
-		// 1-1) 구독중 리스트만 가져오기 (구독취소/구독종료 제외)
+		// 1-1) 구독중 리스트만 가져오기 (구독취소신청/구독취소/구독종료 제외)
 		ArrayList<SubscribeVO> vos = autoUpdateDAO.getAutoSubList();
 
 		// 1-2) 배송중으로 배송 처리
@@ -224,12 +221,24 @@ public class AutoUpdate {
 		
 		// 1-3) 구독중인 회원 발송 잔여 횟수 -1
 		autoUpdateDAO.setSubSendNum();
+		
+		// 2) 잔여 횟수 0인 회원, 구독종료로 변경
+		autoUpdateDAO.setSubStatusUpdate();
+		
+		// 2-1) 잔여 횟수 0인 회원(구독종료 회원) 포인트 적립
+		ArrayList<SubscribeVO> subPointVOS = new ArrayList<SubscribeVO>(); 
+		for(int i=0; i<vos.size(); i++) {
+			if(vos.get(i).getSubSendNum() == 1) { // 0이 되었을 것!
+				subPointVOS.add(vos.get(i));
+			}
+		}
+		if(subPointVOS.size() != 0) {
+			autoUpdateDAO.setSubPointInsert(subPointVOS);     // 1) 포인트 테이블 추가
+			autoUpdateDAO.setSubMemPointUpdate(subPointVOS);  // 2) 회원 테이블 포인트 수정
+		}
 
 		
-		// 2) 잔여 횟수 0인 회원, 구독 종료로 변경
-		autoUpdateDAO.setSubStatusUpdate();
-
-		// 2-1) 잔여 횟수 0인 회원, 구독 유지 유도하는 메일 전송
+		// 2-2) 잔여 횟수 0인 회원, 구독 유지 유도하는 메일 전송
 		// 회원 별명, 이메일 주소, 구독 시작일, 구독 종료일
 		ArrayList<SubscribeVO> tempVOS = autoUpdateDAO.getMemberInfo();
 		
@@ -258,10 +267,7 @@ public class AutoUpdate {
 			messageHelper.setText(content, true);
 			
 			// 본문에 기재된 그림파일의 경로를 별도로 표시시켜준다. 그런 후, 다시 보관함에 담기
-			HttpServletRequest request = ((ServletRequestAttributes)RequestContextHolder.currentRequestAttributes()).getRequest();
-			
-			String realPath = request.getSession().getServletContext().getRealPath("/resources/images/");
-			File file = new File(realPath + "logo.png");		
+			FileSystemResource file = new FileSystemResource("D:\\javaweb\\springframework\\project\\javaweb8S\\src\\main\\webapp\\resources\\images\\logo.png");
 			messageHelper.addInline("logo.png", file);
 			
 			// 메일 전송
@@ -272,7 +278,6 @@ public class AutoUpdate {
 
 	// 정기구독 발송완료
 	// 매월 20일 오전 11시마다! (+ 발송 후, 5일 뒤) 
-	@Transactional
 	@Scheduled(cron = "0 0 11 20 * *")  
 	public void subDeliAutoUpdate() throws ParseException {
 		
@@ -280,58 +285,64 @@ public class AutoUpdate {
 		autoUpdateDAO.setSubDeliAutoUpdate();
 	}
 	
+	
 	// 뉴스레터 발송
 	// 매주 월요일 오후 3시
-	@Transactional
+	//@Transactional
 	@Scheduled(cron = "0 0 15 * * 1")  
 	public void booksletterAutoSend() throws MessagingException {
 		
+		// 구독취소 제외 = 구독중만
 		ArrayList<BooksletterVO> vos = autoUpdateDAO.getBooksletterList();
-		
+
 		for(int i=0; i<vos.size(); i++) {
-			
+			//emailSender(vos.get(i).getEmail());
 			String title = "책(의)편지 뉴스레터";
 			
 			// 메일 전송을 위한 객체 : MimeMessage(), MimeMessageHelper()
 			MimeMessage message = mailSender.createMimeMessage();
-			MimeMessageHelper messageHelper = new MimeMessageHelper(message, true, "UTF-8");
 			
 			// 메일보관함에 회원이 보내온 메세지들의 정보를 모두 저장시킨후 작업처리
-			messageHelper.setTo(vos.get(i).getEmail());
-			messageHelper.setSubject(title);
-			String content = "";
-			
-			// 메세지 보관함의 내용(content)에 필요한 정보를 추가로 담아서 전송
-			content += "<p><img src=\"cid:logo.png\" width='300px'></p>";
-			content += "<br><h4>안녕하세요. 책(의)세계입니다.<br>책(의)편지 뉴스레터를 보내드립니다.</h4><br>";
-			content += "<br><p><img src=\"cid:booksletter1.jpg\" width='500px'></p><br>";
-			content += "<br><p><img src=\"cid:booksletter2.jpg\" width='500px'></p><br>";
-			content += "<br><p><img src=\"cid:booksletter3.jpg\" width='500px'></p><br>";
-			content += "<br><h4>책(의)편지 관련 문의는 책(의)세계 <U>이메일</U> 혹은 (회원일 경우) <U>마이페이지 > 문의</U>에 남겨주세요:)</h4>";
-			content += "<br><h4>매주 새로운 소식으로 함께할 수 있어 영광입니다.</h4>";
-			content += "<h3>기쁜 마음으로, 책(의)세계 드림</h3><br>";
-			messageHelper.setText(content, true);
-			
-			// 본문에 기재된 그림파일의 경로를 별도로 표시시켜준다. 그런 후, 다시 보관함에 담기
-			HttpServletRequest request = ((ServletRequestAttributes)RequestContextHolder.currentRequestAttributes()).getRequest();
-			
-			String realPath = request.getSession().getServletContext().getRealPath("/resources/images/");
-			File file1 = new File(realPath + "logo.png");		
-			File file2 = new File(realPath + "booksletter1.jpg");		
-			File file3 = new File(realPath + "booksletter2.jpg");		
-			File file4 = new File(realPath + "booksletter3.jpg");		
-			messageHelper.addInline("logo.png", file1);
-			messageHelper.addInline("booksletter1.jpg", file2);
-			messageHelper.addInline("booksletter2.jpg", file3);
-			messageHelper.addInline("booksletter3.jpg", file4);
-			
-			// 메일 전송
-			mailSender.send(message);
+			try {
+				MimeMessageHelper messageHelper = new MimeMessageHelper(message, true, "UTF-8");
+				messageHelper.setTo(vos.get(i).getEmail());
+				
+				messageHelper.setSubject(title);
+				String content = "";
+				
+				// 메세지 보관함의 내용(content)에 필요한 정보를 추가로 담아서 전송
+				content += "<p><img src=\"cid:logo.png\" width='300px'></p>";
+				content += "<br><h4>안녕하세요. 책(의)세계입니다.<br>책(의)편지 뉴스레터를 보내드립니다.</h4><br>";
+				content += "<br><p><img src=\"cid:booksletter1.jpg\" width='500px'></p><br>";
+				content += "<br><p><img src=\"cid:booksletter2.jpg\" width='500px'></p><br>";
+				content += "<br><p><img src=\"cid:booksletter3.jpg\" width='500px'></p><br>";
+				content += "<br><h4>책(의)편지 관련 문의는 책(의)세계 <U>이메일</U> 혹은 (회원일 경우) <U>마이페이지 > 문의</U>에 남겨주세요:)</h4>";
+				content += "<br><h4>매주 새로운 소식으로 함께할 수 있어 영광입니다.</h4>";
+				content += "<h3>기쁜 마음으로, 책(의)세계 드림</h3><br>";
+				messageHelper.setText(content, true);
+				
+				// 본문에 기재된 그림파일의 경로를 별도로 표시시켜준다. 그런 후, 다시 보관함에 담기
+	      FileSystemResource file1 = new FileSystemResource("D:\\javaweb\\springframework\\project\\javaweb8S\\src\\main\\webapp\\resources\\images\\logo.png");
+	      FileSystemResource file2 = new FileSystemResource("D:\\javaweb\\springframework\\project\\javaweb8S\\src\\main\\webapp\\resources\\images\\booksletter1.jpg");
+	      FileSystemResource file3 = new FileSystemResource("D:\\javaweb\\springframework\\project\\javaweb8S\\src\\main\\webapp\\resources\\images\\booksletter2.jpg");
+	      FileSystemResource file4 = new FileSystemResource("D:\\javaweb\\springframework\\project\\javaweb8S\\src\\main\\webapp\\resources\\images\\booksletter3.jpg");
+	      
+				messageHelper.addInline("logo.png", file1);
+				messageHelper.addInline("booksletter1.jpg", file2);
+				messageHelper.addInline("booksletter2.jpg", file3);
+				messageHelper.addInline("booksletter3.jpg", file4);
+				
+				// 메일 전송
+				mailSender.send(message);
+			} catch (MessagingException e) {
+				e.printStackTrace();
+			}
 		}
+		// 발송횟수 증가
+		autoUpdateDAO.setBooksletterSendNumUpdate(vos);
 	}
 	
-	
-	
+
 	// @Scheduled(cron="*/1 * * * * *")
   public void test2() {
       System.out.println("123@Scheduled annotation : 1초에 1번씩 console 찍기");

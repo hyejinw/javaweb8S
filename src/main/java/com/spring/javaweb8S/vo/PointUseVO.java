@@ -9,4 +9,7 @@ public class PointUseVO {
 	private int orderIdx;
 	private int usedPoint;
 	private String pointUseDate;
+	
+	// 포인트 상세 내역용
+	private String type;
 }

@@ -29,7 +29,7 @@
 				return false;
 			}
 			
-			let url = "${ctp}/order/addressInsert";
+			let url = "${ctp}/member/myPage/addressInsert";
 
 			let popupWidth = 800;
 			let popupHeight = 600;
@@ -43,7 +43,7 @@
 		// 주소록 수정
 		function addressUpdate(idx) {
 			
-			let url = "${ctp}/order/addressUpdate?idx="+idx;
+			let url = "${ctp}/member/myPage/addressUpdate?idx="+idx;
 
 			let popupWidth = 800;
 			let popupHeight = 600;
@@ -109,20 +109,31 @@
 		  }
 		}
 		
-		// 배송 주소 적용
-		function addressChoose(idx,defaultAddress,addressName,name,postcode,roadAddress,detailAddress,extraAddress,addressMsg) {
-			if(defaultAddress == 0) addressName = addressName + "  (기본 배송지)";
+		
+		// 배송 주소 적용 + 매거진 정기배송지 변경
+		function addressChoose(idx) {
+			let orderIdx = localStorage.getItem("sSubAddressChangeOrderIdx");
 			
-			opener.window.document.getElementById('addressIdx').value = idx;
-			opener.window.document.getElementById('addressName').value = addressName;
-			opener.window.document.getElementById('name').value = name;
-			opener.window.document.getElementById('postcode').value = postcode;
-			opener.window.document.getElementById('roadAddress').value = roadAddress;
-			opener.window.document.getElementById('detailAddress').value = detailAddress;
-			opener.window.document.getElementById('extraAddress').value = extraAddress;
-			opener.window.document.getElementById('addressMsg').value = addressMsg;
+			if(confirm("선택한 주소로 변경하시겠습니까?")) {
+			      
+	      $.ajax({
+	    	  type : "post",
+	    	  url : "${ctp}/member/myPage/orderAddressIdxChange",
+	    	  data : {
+	    		  idx : orderIdx,
+	    		  addressIdx : idx
+    		  },
+	    	  success : function(res) {
+	  				alert("매거진 정기배송지가 변경되었습니다.");
+	  				window.opener.location.reload();
+	  				window.close();
+	    		},
+	    		error : function() {
+	    			alert("전송 오류! 재시도 부탁드립니다.");
+	    		}
+	    	}); 
+			} 
 			
-			window.close();
 		}
 	</script>
 </head>
@@ -181,7 +192,7 @@
 										<c:if test="${empty vo.addressMsg}"><i class="fa-solid fa-text-slash"></i></c:if>
 									</td>
 									<td>
-										<button class="btn btn-sm btn-warning mb-2" onclick="addressChoose('${vo.idx}','${vo.defaultAddress}','${vo.addressName}','${vo.name}','${vo.postcode}','${vo.roadAddress}','${vo.detailAddress}','${vo.extraAddress}','${vo.addressMsg}')">적용</button>
+										<button class="btn btn-sm btn-warning mb-2" onclick="addressChoose('${vo.idx}')">적용</button>
 										<button class="btn btn-sm btn-outline-secondary" onclick="addressUpdate(${vo.idx})">수정</button>
 									</td>
 								</tr>

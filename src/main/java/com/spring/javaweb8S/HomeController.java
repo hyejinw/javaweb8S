@@ -9,11 +9,16 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 
+import javax.mail.MessagingException;
+import javax.mail.internet.MimeMessage;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.mail.javamail.MimeMessageHelper;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -22,8 +27,10 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.spring.javaweb8S.common.BookInsertSearch;
+import com.spring.javaweb8S.dao.AutoUpdateDAO;
 import com.spring.javaweb8S.service.HomeService;
 import com.spring.javaweb8S.vo.BookVO;
+import com.spring.javaweb8S.vo.BooksletterVO;
 import com.spring.javaweb8S.vo.MagazineVO;
 
 @Controller
@@ -34,6 +41,12 @@ public class HomeController {
 	
 	@Autowired
 	BookInsertSearch bookInsert;
+	
+	@Autowired
+	JavaMailSender mailSender;
+	
+	@Autowired
+	AutoUpdateDAO autoUpdateDAO;
 	
 	@RequestMapping(value = "/", method = RequestMethod.GET)
 	public String home(Model model, HttpSession session) {
@@ -141,5 +154,62 @@ public class HomeController {
 		out.flush();		
 		fos.close();
 	}
+	
+//	
+//	// 뉴스레터 전송
+//	@Scheduled(cron = "0 19 11 * * 2")  
+//	//@RequestMapping(value = "/booksletterMailAutoSend")
+//	public void booksletterMailAutoSend(HttpServletRequest request) {
+//		System.out.println("하이");
+//		ArrayList<BooksletterVO> vos = autoUpdateDAO.getBooksletterList();
+//		
+//		for(int i=0; i<vos.size(); i++) {
+//			
+//			String title = "책(의)편지 뉴스레터";
+//			
+//			// 메일 전송을 위한 객체 : MimeMessage(), MimeMessageHelper()
+//			MimeMessage message = mailSender.createMimeMessage();
+//			
+//			// 메일보관함에 회원이 보내온 메세지들의 정보를 모두 저장시킨후 작업처리
+//			try {
+//				MimeMessageHelper messageHelper = new MimeMessageHelper(message, true, "UTF-8");
+//				messageHelper.setTo(vos.get(i).getEmail());
+//				
+//				messageHelper.setSubject(title);
+//				String content = "";
+//				
+//				// 메세지 보관함의 내용(content)에 필요한 정보를 추가로 담아서 전송
+//				content += "<p><img src=\"cid:logo.png\" width='300px'></p>";
+//				content += "<br><h4>안녕하세요. 책(의)세계입니다.<br>책(의)편지 뉴스레터를 보내드립니다.</h4><br>";
+//				content += "<br><p><img src=\"cid:booksletter1.jpg\" width='500px'></p><br>";
+//				content += "<br><p><img src=\"cid:booksletter2.jpg\" width='500px'></p><br>";
+//				content += "<br><p><img src=\"cid:booksletter3.jpg\" width='500px'></p><br>";
+//				content += "<br><h4>책(의)편지 관련 문의는 책(의)세계 <U>이메일</U> 혹은 (회원일 경우) <U>마이페이지 > 문의</U>에 남겨주세요:)</h4>";
+//				content += "<br><h4>매주 새로운 소식으로 함께할 수 있어 영광입니다.</h4>";
+//				content += "<h3>기쁜 마음으로, 책(의)세계 드림</h3><br>";
+//				messageHelper.setText(content, true);
+//				
+//				// 본문에 기재된 그림파일의 경로를 별도로 표시시켜준다. 그런 후, 다시 보관함에 담기
+//				//HttpServletRequest request = ((ServletRequestAttributes)RequestContextHolder.currentRequestAttributes()).getRequest();
+//				String realPath = request.getSession().getServletContext().getRealPath("/resources/images/");
+//				File file1 = new File(realPath + "logo.png");		
+//				File file2 = new File(realPath + "booksletter1.jpg");		
+//				File file3 = new File(realPath + "booksletter2.jpg");		
+//				File file4 = new File(realPath + "booksletter3.jpg");		
+//				messageHelper.addInline("logo.png", file1);
+//				messageHelper.addInline("booksletter1.jpg", file2);
+//				messageHelper.addInline("booksletter2.jpg", file3);
+//				messageHelper.addInline("booksletter3.jpg", file4);
+//				
+//				// 메일 전송
+//				mailSender.send(message);
+//			
+//			} catch (MessagingException e) {
+//				e.printStackTrace();
+//			}
+//		}
+//			
+//		
+//	}
 	
 }

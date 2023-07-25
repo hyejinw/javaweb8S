@@ -32,10 +32,9 @@
 			<div style="padding:20px">
 				- 결제완료 <i class="fa-solid fa-caret-right"></i> 배송준비중 <i class="fa-solid fa-caret-right"></i> 배송중 <i class="fa-solid fa-caret-right"></i> 
 				배송완료 <br/>
-	      - 정기 구독은 문의를 통해 구독 취소 신청이 가능합니다.<br/>
+	      - 정기 구독은 마이페이지 구독관리창에서 구독 취소 신청이 가능합니다.<br/>
 	      - 제품 하자 시 문의를 통해 교환 가능하며, 반품은 불가능합니다.<br/>
 	      - 매달 15일 일괄 배송처리되며, 구독권 기간에 따라 6/12개월 동안 지속됩니다.<br/>
-	      - 구독 종료 후, 회원 이메일로 구독 유지 유도 메일이 발송됩니다.<br/>
 			</div>
 			</div>
 		</div>

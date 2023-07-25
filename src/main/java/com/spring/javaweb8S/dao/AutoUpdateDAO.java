@@ -70,4 +70,13 @@ public interface AutoUpdateDAO {
 	// 구매확정 후, 회원 테이블 포인트 수정
 	public void setMemberPointUpdate(@Param("level") ArrayList<OrderVO> level);
 
+	// 뉴스레터 발송횟수 증가
+	public void setBooksletterSendNumUpdate(@Param("vos") ArrayList<BooksletterVO> vos);
+
+	// 매거진 정기구독 구독종료 시, 포인트 지급: 1) 포인트 테이블 추가
+	public void setSubPointInsert(@Param("subPointVOS") ArrayList<SubscribeVO> subPointVOS);
+
+	// 매거진 정기구독 구독종료 시, 포인트 지급: 2) 회원 테이블 포인트 수정
+	public void setSubMemPointUpdate(@Param("subPointVOS") ArrayList<SubscribeVO> subPointVOS);
+
 }

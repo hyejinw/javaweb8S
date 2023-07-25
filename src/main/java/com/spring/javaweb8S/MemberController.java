@@ -6,6 +6,7 @@ import java.net.URLEncoder;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.UUID;
 
 import javax.mail.MessagingException;
@@ -37,8 +38,11 @@ import com.spring.javaweb8S.vo.BooksletterVO;
 import com.spring.javaweb8S.vo.DeliveryVO;
 import com.spring.javaweb8S.vo.MemberVO;
 import com.spring.javaweb8S.vo.OrderVO;
+import com.spring.javaweb8S.vo.PointUseVO;
+import com.spring.javaweb8S.vo.PointVO;
 import com.spring.javaweb8S.vo.ProverbVO;
 import com.spring.javaweb8S.vo.RefundVO;
+import com.spring.javaweb8S.vo.SaveVO;
 import com.spring.javaweb8S.vo.SubscribeVO;
 
 @Controller
@@ -84,7 +88,7 @@ public class MemberController {
 			HttpSession session) throws UnsupportedEncodingException {
 		MemberVO vo = memberService.getMidCheck(mid);
 		
-		if(vo == null || vo.getMemberDel().equals("OK")) {
+		if(vo == null || vo.getMemberDel().equals("탈퇴")) {
 			return "redirect:/message/memberMidNo";
 		}	
 		else if(!passwordEncoder.matches(pwd, vo.getPwd())) {
@@ -531,18 +535,271 @@ public class MemberController {
 	@RequestMapping(value = "/myPage/profile", method = RequestMethod.GET)
 	public String orderListGet(Model model, HttpSession session) {
 		
+		// 회원정보
 		String nickname = (String) session.getAttribute("sNickname");
 		MemberVO vo = memberService.getMemberInfo(nickname);
 		model.addAttribute("vo", vo);
 		
-		// 뉴스레터 구독 정보
-		BooksletterVO booksletterVO = memberService.getBooksletterInfo(nickname);
-		model.addAttribute("booksletterVO", booksletterVO);
-		
 		return "member/myPage/profile";
 	}
 	
+	// 마이페이지, 회원정보 창에서 회원정보 수정
+	@ResponseBody
+	@RequestMapping(value = "/myPage/memberUpdate", method = RequestMethod.POST)
+	public String memberUpdatePost(MemberVO vo, HttpSession session) {
+
+		// 비밀번호 수정 시 처리
+		if(vo.getPwd() != "") {
+			
+			// 1) 암호화
+			vo.setPwd(passwordEncoder.encode(vo.getPwd()));  // 비밀번호 암호화
+			
+			// 2) 임시비밀번호 발급 중이었으면 session 삭제
+			if(session.getAttribute("sTempPwd") != null) session.removeAttribute("sTempPwd");
+			
+			// 3) 비밀번호 변경일 변경 --> myBatis로 처리
+		}
+		// 별명 세션값 변경
+		session.setAttribute("sNickname", vo.getNickname());
+		memberService.setMemberUpdate(vo);
+		
+		return "";
+	}
 	
+	// 마이페이지, 회원정보 창에서 탈퇴용 비밀번호 검사
+	@ResponseBody
+	@RequestMapping(value = "/myPage/memberPwdCheck", method = RequestMethod.POST)
+	public String memberPwdCheckPost(String pwd, String memberDelPwd) {
+		
+		String res = "0";
+		if(passwordEncoder.matches(memberDelPwd, pwd)) res = "1"; 
+		
+		return res;
+	}
+	
+	// 마이페이지, 회원정보 창에서 탈퇴용 비밀번호 검사
+	@RequestMapping(value = "/myPage/memberDelete", method = RequestMethod.POST)
+	public String memberDeletePost(MemberVO vo, HttpSession session) throws UnsupportedEncodingException {
+		
+		// 회원탈퇴
+		int res = memberService.setMemberDelete(vo);
+		
+		if(res != 0) {  // 탈퇴 성공 시
+			String nickname = (String) session.getAttribute("sNickname");
+			nickname = URLEncoder.encode(nickname, "UTF-8");
+			session.invalidate();   // 세션 끊기
+			return "redirect:/message/memberDeleteOk?nickname="+nickname;
+		} 
+		else return "redirect:/message/memberDeleteNo";
+	}
+	
+	// 마이페이지, 관심상품 창
+	@RequestMapping(value = "/myPage/wishlist", method = RequestMethod.GET)
+	public String wishlistGet(Model model, HttpSession session,
+			@RequestParam(name = "sort", defaultValue = "컬렉션 상품", required = false) String sort) {
+		
+		// 관심 상품
+		String nickname = (String) session.getAttribute("sNickname");
+		ArrayList<SaveVO> vos = memberService.getSaveList(nickname, sort);
+		model.addAttribute("vos", vos);
+		model.addAttribute("vosNum", vos.size());
+		model.addAttribute("sort", sort);
+		
+		
+		return "member/myPage/wishlist";
+	}
+	
+	// 마이페이지 관심상품 삭제(여러 개)
+	@ResponseBody
+	@RequestMapping(value = "/myPage/saveIdxesDelete", method = RequestMethod.POST)
+	public String cartIdxesDeletePost(String checkRow) {
+		
+		List<String> saveIdxList = new ArrayList<String>();
+		String[] checkedSaveIdx = checkRow.split(",");
+		
+		for(int i=0; i < checkedSaveIdx.length; i++){
+			saveIdxList.add(checkedSaveIdx[i].toString());
+		}
+
+		memberService.setSaveIdxesDelete(saveIdxList);
+
+		return "";
+	}
+	
+	// 마이페이지 관심상품 삭제(단일)
+	@ResponseBody
+	@RequestMapping(value = "/myPage/saveDelete", method = RequestMethod.POST)
+	public String saveDeletePost(int idx) {
+		
+		memberService.setSaveDelete(idx);
+		
+		return "";
+	}
+	
+	// 마이페이지, 배송 주소록 관리창
+	@RequestMapping(value = "/myPage/address", method = RequestMethod.GET)
+	public String addressGet(Model model, HttpSession session) {
+		
+		String memNickname = (String) session.getAttribute("sNickname");
+		
+		ArrayList<AddressVO> vos = memberService.getAddressList(memNickname);
+		model.addAttribute("vos", vos);
+		
+		model.addAttribute("addressNum", vos.size());
+		
+		return "member/myPage/address";
+	}
+	
+	// 주문창, 주소록 리스트 창(팝업)
+	@RequestMapping(value = "/myPage/addressList", method = RequestMethod.GET)
+	public String addressListGet(Model model, HttpSession session) {
+		
+		String memNickname = (String) session.getAttribute("sNickname");
+		
+		ArrayList<AddressVO> vos = memberService.getAddressList(memNickname);
+		model.addAttribute("vos", vos);
+		
+		model.addAttribute("addressNum", vos.size());
+		
+		return "member/myPage/addressList";
+	}
+	
+	// 마이페이지, 주소록 등록 창(팝업)
+	@RequestMapping(value = "/myPage/addressInsert", method = RequestMethod.GET)
+	public String addressListGet() {
+		return "member/myPage/addressInsert";
+	}
+	
+	// 마이페이지, 주소록 수정 창(팝업)
+	@RequestMapping(value = "/myPage/addressUpdate", method = RequestMethod.GET)
+	public String addressUpdateGet(int idx, Model model) {
+		
+		AddressVO vo = memberService.getAddressInfo(idx);
+		model.addAttribute("vo", vo);
+		
+		return "member/myPage/addressUpdate";
+	}
+	
+	// 마이페이지 주소록 삭제
+	@ResponseBody
+	@RequestMapping(value = "/myPage/addressDelete", method = RequestMethod.POST)
+	public String addressDeletePost(int idx) {
+		
+		memberService.setAddressDelete(idx);
+		return "";
+	}
+	
+	// 마이페이지, 포인트 적립내역 관리창
+	@RequestMapping(value = "/myPage/point", method = RequestMethod.GET)
+	public String pointGet(Model model, HttpSession session,
+			@RequestParam(name="sort", defaultValue = "전체", required = false) String sort,
+			@RequestParam(name="pag", defaultValue = "1", required = false) int pag,
+			@RequestParam(name="pageSize", defaultValue = "15", required = false) int pageSize) {
+		
+		String nickname = (String) session.getAttribute("sNickname");
+
+		// 회원 기본 정보 +  가용 포인트
+		MemberVO memberVO = memberService.getMemberInfo(nickname);
+		model.addAttribute("memberVO", memberVO);
+		
+		// 총 포인트
+		String totalPoint = memberService.getTotalPoint(nickname);
+		model.addAttribute("totalPoint", totalPoint);
+		
+		// 사용 포인트
+		String totalUsedPoint = memberService.getTotalUsedPoint(nickname);
+		model.addAttribute("totalUsedPoint", totalUsedPoint);
+		
+		// 포인트 적립 내역 + 페이징 처리
+		PageVO pageVO = pageProcess.totRecCnt(pag, pageSize, "myPagePoint", sort, nickname);
+		ArrayList<PointVO> vos = memberService.getPointList(nickname, sort, pageVO.getStartIndexNo(), pageSize);
+		
+		model.addAttribute("vos", vos);
+		model.addAttribute("pageVO", pageVO);
+		model.addAttribute("sort", sort);
+		
+		// 포인트 사용 내역은 따로 아래에!!!!!!!
+		return "member/myPage/point";
+	}
+	
+	// 마이페이지, 포인트 사용내역 관리창
+	@RequestMapping(value = "/myPage/pointUse", method = RequestMethod.GET)
+	public String pointUseGet(Model model, HttpSession session,
+			@RequestParam(name="pag", defaultValue = "1", required = false) int pag,
+			@RequestParam(name="pageSize", defaultValue = "15", required = false) int pageSize) {
+		
+		String nickname = (String) session.getAttribute("sNickname");
+		
+		// 회원 기본 정보 +  가용 포인트
+		MemberVO memberVO = memberService.getMemberInfo(nickname);
+		model.addAttribute("memberVO", memberVO);
+		
+		// 총 포인트
+		String totalPoint = memberService.getTotalPoint(nickname);
+		model.addAttribute("totalPoint", totalPoint);
+		
+		// 사용 포인트
+		String totalUsedPoint = memberService.getTotalUsedPoint(nickname);
+		model.addAttribute("totalUsedPoint", totalUsedPoint);
+		
+		// 포인트 적립 내역 + 페이징 처리
+		PageVO pageVO = pageProcess.totRecCnt(pag, pageSize, "myPagePointUse", "", nickname);
+		ArrayList<PointUseVO> vos = memberService.getPointUseList(nickname, pageVO.getStartIndexNo(), pageSize);
+		
+		model.addAttribute("vos", vos);
+		model.addAttribute("pageVO", pageVO);
+		
+		return "member/myPage/pointUse";
+	}
+	
+	// 마이페이지, 구독관리 창
+	@RequestMapping(value = "/myPage/subscribe", method = RequestMethod.GET)
+	public String subscribeGet(Model model, HttpSession session) {
+		
+		String nickname = (String) session.getAttribute("sNickname");
+		
+		// 뉴스레터 구독 정보
+		ArrayList<BooksletterVO> booksletterVOS = memberService.getBooksletterInfo(nickname);
+		model.addAttribute("booksletterVOS", booksletterVOS);
+		
+		// 매거진 정기 구독 정보
+		ArrayList<SubscribeVO> subscribeVOS = memberService.getSubscribeInfo(nickname);
+		model.addAttribute("subscribeVOS", subscribeVOS);
+		
+		return "member/myPage/subscribe";
+	}
+	
+	// 마이페이지, 구독관리 창에서 뉴스레터 구독 취소
+	@ResponseBody
+	@RequestMapping(value = "/myPage/booksletterDelete", method = RequestMethod.POST)
+	public String booksletterDeletePost(int idx) {
+
+		memberService.setBooksletterDelete(idx);
+		return "";
+	}
+	
+	// 마이페이지, 구독관리 창에서 매거진 정기구독 취소신청
+	@ResponseBody
+	@RequestMapping(value = "/myPage/subscribeCancel", method = RequestMethod.POST)
+	public String subscribeCancelPost(int idx) {
+		
+		memberService.setSubscribeCancel(idx);
+		return "";
+	}
+	
+	// 마이페이지, 구독관리 창에서 매거진 정기구독 정기배송지 변경
+	@ResponseBody
+	@RequestMapping(value = "/myPage/orderAddressIdxChange", method = RequestMethod.POST)
+	public String orderAddressIdxChangePost(OrderVO vo) {
+		
+		memberService.setOrderAddressIdxChange(vo);
+		return "";
+	}
+	
+	
+	
+	
+	// 임시 비밀번호 받고 확인한 다음에 삭제하자
 	// 이게 뭐지?????????
 //	비밀번호 변경  
 //	@RequestMapping(value = "/memberPwdUpdate", method = RequestMethod.GET)

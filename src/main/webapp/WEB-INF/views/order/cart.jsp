@@ -398,7 +398,7 @@
 					      	</c:if>
 					        <td>
 					        	<a href="${ctp}/collection/colProduct?idx=${cartProdVO.prodIdx}">
-					        	<img src="${ctp}/collection/${cartProdVO.prodThumbnail}" style="width:100%; max-width:100px"/>
+					        		<img src="${ctp}/collection/${cartProdVO.prodThumbnail}" style="width:100%; max-width:100px"/>
 					        	</a>
 					        </td>
 					        <td>
@@ -535,7 +535,7 @@
 					  <div class="w3-tag" style="font-size:22px; font-style:italic;">매거진 정기구독</div>
 					  <div style="font-size:16px;" class="mt-3">&nbsp;&nbsp;&nbsp;&nbsp;<i class="fa-solid fa-circle-exclamation" style="color:#491f51;"></i>
 					  	&nbsp;&nbsp;복수 개 구매 시, 주문 배송지로 일괄 배송됩니다:)<br/>
-					  	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;정기 배송지 변경은 마이페이지에서 가능합니다.<!-- 여기 링크 달기! -->
+					  	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;정기 배송지 변경은&nbsp;&nbsp;<a href="${ctp}/member/myPage/subscribe"><b><u>마이페이지</u></b></a>에서 가능합니다.<!-- 여기 링크 달기! -->
 				  	</div>
 				  	<div><hr/>
 					  	<i class="fa-solid fa-circle-exclamation" style="color:#491f51;"></i>&nbsp;&nbsp;매달 15일 일괄 발송되며, 구독권 기간에 따라 6/12개월 동안 지속됩니다.

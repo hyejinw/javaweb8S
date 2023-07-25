@@ -1,6 +1,7 @@
 package com.spring.javaweb8S.service;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -8,11 +9,16 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.spring.javaweb8S.common.JavawebProvide;
 import com.spring.javaweb8S.dao.MemberDAO;
+import com.spring.javaweb8S.vo.AddressVO;
 import com.spring.javaweb8S.vo.BooksletterVO;
 import com.spring.javaweb8S.vo.MemberVO;
 import com.spring.javaweb8S.vo.OrderVO;
+import com.spring.javaweb8S.vo.PointUseVO;
+import com.spring.javaweb8S.vo.PointVO;
 import com.spring.javaweb8S.vo.ProverbVO;
 import com.spring.javaweb8S.vo.RefundVO;
+import com.spring.javaweb8S.vo.SaveVO;
+import com.spring.javaweb8S.vo.SubscribeVO;
 
 @Service
 public class MemberServiceImpl implements MemberService {
@@ -198,8 +204,92 @@ public class MemberServiceImpl implements MemberService {
 
 	// 마이페이지 회원정보 수정, 뉴스레터 내용
 	@Override
-	public BooksletterVO getBooksletterInfo(String nickname) {
+	public ArrayList<BooksletterVO> getBooksletterInfo(String nickname) {
 		return memberDAO.getBooksletterInfo(nickname);
+	}
+
+	// 마이페이지 회원정보 수정창, 뉴스레터 구독 취소
+	@Override
+	public void setBooksletterDelete(int idx) {
+		memberDAO.setBooksletterDelete(idx);
+	}
+
+	// 마이페이지 회원정보 수정창, 회원정보 수정
+	@Override
+	public void setMemberUpdate(MemberVO vo) {
+		memberDAO.setMemberUpdate(vo);
+	}
+	
+	// 마이페이지 회원정보 수정창, 회원탈퇴
+	@Override
+	public int setMemberDelete(MemberVO vo) {
+		return memberDAO.setMemberDelete(vo);
+	}
+
+	// 마이페이지 관심상품 창, 관심상품 리스트
+	@Override
+	public ArrayList<SaveVO> getSaveList(String nickname, String sort) {
+		return memberDAO.getSaveList(nickname, sort);
+	}
+
+	// 마이페이지 관심상품 창, 관심상품 삭제(복수 개)
+	@Override
+	public void setSaveIdxesDelete(List<String> saveIdxList) {
+		memberDAO.setSaveIdxesDelete(saveIdxList);
+	}
+
+	// 마이페이지 관심상품 창, 관심상품 삭제(단일)
+	@Override
+	public void setSaveDelete(int idx) {
+		memberDAO.setSaveDelete(idx);
+	}
+
+	// 마이페이지 배송 주소록 창, 주소록 리스트
+	@Override
+	public ArrayList<AddressVO> getAddressList(String memNickname) {
+		return memberDAO.getAddressList(memNickname);
+	}
+
+	// 마이페이지 배송 주소록 창, 해당 주소 정보 가져오기
+	@Override
+	public AddressVO getAddressInfo(int idx) {
+		return memberDAO.getAddressInfo(idx);
+	}
+
+	// 마이페이지 배송 주소록 창, 주소록 삭제
+	@Override
+	public void setAddressDelete(int idx) {
+		memberDAO.setAddressDelete(idx);
+	}
+
+	// 마이페이지 포인트 적립 내역
+	@Override
+	public ArrayList<PointVO> getPointList(String nickname, String sort, int startIndexNo, int pageSize) {
+		return memberDAO.getPointList(nickname, sort, startIndexNo, pageSize);
+	}
+
+	// 마이페이지 포인트 사용 내역
+	@Override
+	public ArrayList<PointUseVO> getPointUseList(String nickname, int startIndexNo, int pageSize) {
+		return memberDAO.getPointUseList(nickname, startIndexNo, pageSize);
+	}
+
+	// 마이페이지 회원 정보창, 매거진 정기 구독 정보
+	@Override
+	public ArrayList<SubscribeVO> getSubscribeInfo(String nickname) {
+		return memberDAO.getSubscribeInfo(nickname);
+	}
+
+	// 마이페이지, 구독관리 창에서 매거진 정기구독 취소신청
+	@Override
+	public void setSubscribeCancel(int idx) {
+		memberDAO.setSubscribeCancel(idx);
+	}
+
+	// 마이페이지, 구독관리 창에서 매거진 정기구독 정기배송지 변경
+	@Override
+	public void setOrderAddressIdxChange(OrderVO vo) {
+		memberDAO.setOrderAddressIdxChange(vo);
 	}
 
 

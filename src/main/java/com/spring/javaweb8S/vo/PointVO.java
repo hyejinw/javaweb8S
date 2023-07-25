@@ -10,4 +10,8 @@ public class PointVO {
 	private int point;
 	private String pointReason;
 	private String pointStartDate;
+	
+	// 포인트 상세 내역용
+	private String type;
+
 }

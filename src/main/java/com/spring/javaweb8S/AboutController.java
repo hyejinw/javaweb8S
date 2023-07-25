@@ -1,7 +1,5 @@
 package com.spring.javaweb8S;
 
-import java.util.List;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -51,7 +49,7 @@ public class AboutController {
 	@ResponseBody
 	@RequestMapping(value = "/booksletterInsert", method = RequestMethod.POST)
 	public String booksletterInsertPost(String email, String memNickname) {
-		
+
 		aboutService.getBooksletterInsert(email, memNickname);
 		return "";
 	}

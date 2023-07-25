@@ -52,6 +52,15 @@
 		</foreach>
 	</insert>
 	
+	<insert id="setSubPointInsert">
+   	<foreach item="item" index="index" collection="subPointVOS">
+   		INSERT INTO bo_point VALUES   
+			(default, #{item.memNickname}, #{item.orderIdx},
+			(SELECT ROUND(paidPrice * 0.05) FROM bo_order WHERE idx = #{item.orderIdx}),
+			"상품구매확정",default);
+		</foreach>
+	</insert>
+	
 	<update id="setOrderAutoUpdate">
 		UPDATE bo_order SET orderStatus = #{status}, manageDate = default WHERE idx IN
    	<foreach collection="level" item="level" open="(" close=")" separator=",">
@@ -126,6 +135,19 @@
 	<update id="setMemberPointUpdate">
 		<foreach collection="level" item="level">
 			UPDATE bo_member SET point = point + (SELECT ROUND(paidPrice * 0.05) FROM bo_order WHERE idx = #{level.idx}) 
+			WHERE nickname = #{level.memNickname};
+		</foreach>
+	</update>
+	
+	<update id="setBooksletterSendNumUpdate">
+		<foreach collection="vos" item="vo">
+			UPDATE bo_booksletter SET sendNum = sendNum + 1	WHERE idx = #{vo.idx};
+		</foreach>
+	</update>
+	
+	<update id="setSubMemPointUpdate">
+		<foreach collection="subPointVOS" item="level">
+			UPDATE bo_member SET point = point + (SELECT ROUND(paidPrice * 0.05) FROM bo_order WHERE idx = #{level.orderIdx}) 
 			WHERE nickname = #{level.memNickname};
 		</foreach>
 	</update>

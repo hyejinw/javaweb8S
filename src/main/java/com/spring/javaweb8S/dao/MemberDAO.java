@@ -1,14 +1,20 @@
 package com.spring.javaweb8S.dao;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import org.apache.ibatis.annotations.Param;
 
+import com.spring.javaweb8S.vo.AddressVO;
 import com.spring.javaweb8S.vo.BooksletterVO;
 import com.spring.javaweb8S.vo.MemberVO;
 import com.spring.javaweb8S.vo.OrderVO;
+import com.spring.javaweb8S.vo.PointUseVO;
+import com.spring.javaweb8S.vo.PointVO;
 import com.spring.javaweb8S.vo.ProverbVO;
 import com.spring.javaweb8S.vo.RefundVO;
+import com.spring.javaweb8S.vo.SaveVO;
+import com.spring.javaweb8S.vo.SubscribeVO;
 
 public interface MemberDAO {
 	
@@ -17,6 +23,8 @@ public interface MemberDAO {
 			@Param("endDate") String endDate, @Param("nickname") String nickname);
 	public int myPageOrderTotRecCntWithPeriod(@Param("sort") String sort, @Param("search") String search, @Param("searchString") String searchString, @Param("startDate") String startDate,
 			@Param("endDate") String endDate, @Param("nickname") String nickname);
+	public int myPagePointTotRecCnt(@Param("sort") String sort, @Param("nickname") String nickname);
+	public int myPagePointUseTotRecCnt(@Param("nickname") String nickname);
 
 	public MemberVO getMidCheck(@Param("mid") String mid);
 
@@ -76,7 +84,36 @@ public interface MemberDAO {
 	
 	public void setPartlyMemberPointUpdate(@Param("point") int point, @Param("memNickname") String memNickname);
 	
-	public BooksletterVO getBooksletterInfo(@Param("nickname") String nickname);
+	public ArrayList<BooksletterVO> getBooksletterInfo(@Param("nickname") String nickname);
+	
+	public void setBooksletterDelete(@Param("idx") int idx);
+	
+	public void setMemberUpdate(@Param("vo") MemberVO vo);
+
+	public int setMemberDelete(@Param("vo") MemberVO vo);
+	
+	public ArrayList<SaveVO> getSaveList(@Param("nickname") String nickname, @Param("sort") String sort);
+	
+	public void setSaveIdxesDelete(@Param("saveIdxList") List<String> saveIdxList);
+
+	public void setSaveDelete(@Param("idx") int idx);
+	
+	public ArrayList<AddressVO> getAddressList(@Param("memNickname") String memNickname);
+
+	public AddressVO getAddressInfo(@Param("idx") int idx);
+	
+	public void setAddressDelete(@Param("idx") int idx);
+	
+	public ArrayList<PointVO> getPointList(@Param("nickname") String nickname, @Param("sort") String sort, @Param("startIndexNo") int startIndexNo, @Param("pageSize") int pageSize);
+
+	public ArrayList<PointUseVO> getPointUseList(@Param("nickname") String nickname, @Param("startIndexNo") int startIndexNo, @Param("pageSize") int pageSize);
+	
+	public ArrayList<SubscribeVO> getSubscribeInfo(@Param("nickname") String nickname);
+	
+	public void setSubscribeCancel(@Param("idx") int idx);
+	
+	public void setOrderAddressIdxChange(@Param("vo") OrderVO vo);
+	
 
 
 	

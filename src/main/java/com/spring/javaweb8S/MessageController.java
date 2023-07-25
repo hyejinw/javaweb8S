@@ -177,6 +177,14 @@ public class MessageController {
 			model.addAttribute("msg", "재시도 부탁드립니다.");
 			model.addAttribute("url", "/member/myPage/order");
 		}
+		else if(msgFlag.equals("memberDeleteOk")) {
+			model.addAttribute("msg", nickname+"님 지금까지 함께 해주셔서 감사합니다.\\n다시 뵙게 될 날을 기대합니다:)");
+			model.addAttribute("url", "/");
+		}
+		else if(msgFlag.equals("memberDeleteNo")) {
+			model.addAttribute("msg", "재시도 부탁드립니다.");
+			model.addAttribute("url", "/member/myPage/profile");
+		}
 		
 		
 		

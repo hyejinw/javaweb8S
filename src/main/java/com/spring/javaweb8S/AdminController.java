@@ -53,7 +53,6 @@ public class AdminController {
 	@Autowired
 	AutoUpdate autoUpdate;
 	
-	
 	// 관리자 메인 창
 	@RequestMapping(value = "/adminPage", method = RequestMethod.GET)
 	public String adminPageGet() throws ParseException, MessagingException {

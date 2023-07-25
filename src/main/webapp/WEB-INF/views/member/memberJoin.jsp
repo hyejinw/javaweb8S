@@ -418,23 +418,23 @@ o 로그 기록
 				return false;
 			}
 			
-		$.ajax({
-			type : "post",
-			url  : "${ctp}/member/memberNicknameCheck",
-			data : {nickname : nickname},
-			success:function(res) {
-				if(res == "1") {
-					alert("이미 사용 중인 별명입니다. 다시 입력해 주세요");
-					$("#nickname").focus();
+			$.ajax({
+				type : "post",
+				url  : "${ctp}/member/memberNicknameCheck",
+				data : {nickname : nickname},
+				success:function(res) {
+					if(res == "1") {
+						alert("이미 사용 중인 별명입니다. 다시 입력해 주세요");
+						$("#nickname").focus();
+					}
+					else  {
+						alert("사용 가능한 별명입니다.");
+							myform.nickname.readOnly = true;
+						nicknameCheckSw = 1;
+						$("#nickname").focus();
+					}
 				}
-				else  {
-					alert("사용 가능한 별명입니다.");
-						myform.nickname.readOnly = true;
-					nicknameCheckSw = 1;
-					$("#nickname").focus();
-				}
-			}
-		});
+			});
 		}
 		
 		// 전화번호 길이 제한(4자리 이상부터 입력 불가)
@@ -453,7 +453,6 @@ o 로그 기록
 	    }
 	    });
 		});	
-		
 		
 		let check = true;
 	
@@ -496,8 +495,8 @@ o 로그 기록
 			   document.getElementById("midError").innerHTML="";
 			   check = true;
 		  }
-/*		  
-			  // 비밀번호 확인
+		  
+		  // 비밀번호 확인
 		  if(!regex2.test(pwd)) {
 		    document.getElementById("pwdError").innerHTML="비밀번호가 올바르지 않습니다.(영문/숫자 필수, 특수문자 가능 4~20자)";
 		    check = false;
@@ -519,7 +518,7 @@ o 로그 기록
 		  	  check = true;
 			  }
 		  } 
-*/		  
+		  
 		  // 별명 확인
 		  if(!regex6.test(nickname)){
 		    document.getElementById("nicknameError").innerHTML="별명이 올바르지 않습니다.(한글/숫자만 2~10자)";
@@ -610,7 +609,7 @@ o 로그 기록
 			   check = true;
 		  }			
 		}	
-/*		
+		
 		function pwdCheck() {
 				
 			let regex2 = /^(?=.*[0-9])(?=.*[a-zA-Z])[a-zA-Z0-9!@#$%^&*()._-]{4,20}$/g; //(비밀번호)4자 이상 20자 이하, 영문/숫자 1개 이상 필수, 특수문자 허용
@@ -645,7 +644,7 @@ o 로그 기록
 	  	  check = true;
 		  }
 		} 
-*/		
+		
 		function nameCheck() {
 			
 			let regex3 = /^[가-힣a-zA-Z]{2,10}$/;  // (성명)한글,영문 2~10자
@@ -758,9 +757,7 @@ o 로그 기록
 					  emailSpinner.style.display = 'none';
 	    	  }
 	      });
-		    
 		  }
-		
 	  }
 	
 	  function enableEmailChange() {
@@ -861,7 +858,6 @@ o 로그 기록
 						data : {recoMid : recoMid},
 						success : function(res) {
 							if(res == '1') {
-							  /* check = true; 이걸 이렇게 주는 게 맞나? */
 								str += '<span>존재하는 회원입니다.</span>';
 							}
 							else {
@@ -884,8 +880,6 @@ o 로그 기록
 				$('.agree').prop('checked',this.checked);
 			});
 		});
-	
-
 	</script>
 	<style>
 		html {scroll-behavior:smooth;}
