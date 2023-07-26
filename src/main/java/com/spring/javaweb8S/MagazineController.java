@@ -16,6 +16,7 @@ import com.spring.javaweb8S.pagination.PageProcess;
 import com.spring.javaweb8S.pagination.PageVO;
 import com.spring.javaweb8S.service.MagazineService;
 import com.spring.javaweb8S.service.OrderService;
+import com.spring.javaweb8S.vo.AskVO;
 import com.spring.javaweb8S.vo.CartVO;
 import com.spring.javaweb8S.vo.MagazineVO;
 import com.spring.javaweb8S.vo.SaveVO;
@@ -74,16 +75,23 @@ public class MagazineController {
 		// 관심 저장 유무 확인
 		String nickname = (String) session.getAttribute("sNickname");
 		SaveVO saveVO = magazineService.getMagazineSave(nickname, idx);
+		model.addAttribute("saveVO", saveVO);
 
 		// 장바구니 저장 유무 확인
 		CartVO cartVO = magazineService.getMagazineCartSearch(nickname, idx);
+		model.addAttribute("cartVO", cartVO);
 		
 		// 매거진 상세 내용
 		MagazineVO vo = magazineService.getMagazineProduct(idx);
-
 		model.addAttribute("vo", vo);
-		model.addAttribute("saveVO", saveVO);
-		model.addAttribute("cartVO", cartVO);
+
+		// 상품 문의
+		ArrayList<AskVO> askVOS = new ArrayList<AskVO>();
+		
+		if(vo.getMaType().equals("매거진")) askVOS = magazineService.getMagazineAsk(idx, "매거진");
+		else askVOS = magazineService.getMagazineAsk(idx, "정기구독");
+		model.addAttribute("askVOS", askVOS);
+			
 		
 		return "magazine/maProduct";
 	}

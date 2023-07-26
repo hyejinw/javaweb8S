@@ -4,94 +4,98 @@
 
 	<select id="magazineListTotRecCnt" resultType="int">
 		<if test='search != null and search == "최신순"'>
-			select count(*) from bo_magazine where maOpen = '공개' 
-			<if test='maDate != null and maDate != "전체"'>and date_format(maDate, '%Y') = #{maDate} </if>
-			order by idx desc;
+			SELECT count(*) FROM bo_magazine WHERE maOpen = '공개' 
+			<if test='maDate != null and maDate != "전체"'>AND date_format(maDate, '%Y') = #{maDate} </if>
+			ORDER BY idx DESC;
 		</if>
 		<if test='search != null and search == "상품명"'>
-			select count(*) from bo_magazine where maOpen = '공개' 
-			<if test='maDate != null and maDate != "전체"'>and date_format(maDate, '%Y') = #{maDate} </if>
-			order by binary(maTitle);
+			select count(*) FROM bo_magazine WHERE maOpen = '공개' 
+			<if test='maDate != null and maDate != "전체"'>AND date_format(maDate, '%Y') = #{maDate} </if>
+			ORDER BY binary(maTitle);
 		</if>
 		<if test='search != null and search == "낮은 가격순"'>
-			select count(*) from bo_magazine where maOpen = '공개'  
-			<if test='maDate != null and maDate != "전체"'>and date_format(maDate, '%Y') = #{maDate} </if>
-			order by maPrice asc, idx desc;
+			select count(*) FROM bo_magazine WHERE maOpen = '공개'  
+			<if test='maDate != null and maDate != "전체"'>AND date_format(maDate, '%Y') = #{maDate} </if>
+			ORDER BY maPrice ASC, idx DESC;
 		</if>
 		<if test='search != null and search == "높은 가격순"'>
-			select count(*) from bo_magazine where maOpen = '공개'   
-			<if test='maDate != null and maDate != "전체"'>and date_format(maDate, '%Y') = #{maDate} </if>
-			order by maPrice desc, idx desc;
+			select count(*) FROM bo_magazine WHERE maOpen = '공개'   
+			<if test='maDate != null and maDate != "전체"'>AND date_format(maDate, '%Y') = #{maDate} </if>
+			ORDER BY maPrice DESC, idx DESC;
 		</if>
 	</select>
 	
 	<select id="getMagazineList" resultType="com.spring.javaweb8S.vo.MagazineVO">
 		<if test='search != null and search == "최신순"'>
-			select * from bo_magazine where maOpen = '공개'  
-			<if test='maDate != null and maDate != "전체"'>and date_format(maDate, '%Y') = #{maDate} </if>
-			order by idx desc limit #{startIndexNo},#{pageSize};
+			SELECT * FROM bo_magazine WHERE maOpen = '공개'  
+			<if test='maDate != null and maDate != "전체"'>AND date_format(maDate, '%Y') = #{maDate} </if>
+			ORDER BY idx DESC LIMIT #{startIndexNo},#{pageSize};
 		</if>
 		<if test='search != null and search == "상품명"'>
-			select * from bo_magazine where maOpen = '공개' 
-			<if test='maDate != null and maDate != "전체"'>and date_format(maDate, '%Y') = #{maDate} </if>
-			order by binary(maTitle) limit #{startIndexNo},#{pageSize};
+			SELECT * FROM bo_magazine WHERE maOpen = '공개' 
+			<if test='maDate != null and maDate != "전체"'>AND date_format(maDate, '%Y') = #{maDate} </if>
+			ORDER BY binary(maTitle) LIMIT #{startIndexNo},#{pageSize};
 		</if>
 		<if test='search != null and search == "낮은 가격순"'>
-			select * from bo_magazine where maOpen = '공개'  
-			<if test='maDate != null and maDate != "전체"'>and date_format(maDate, '%Y') = #{maDate} </if>
-			order by maPrice asc, idx desc limit #{startIndexNo},#{pageSize};
+			SELECT * FROM bo_magazine WHERE maOpen = '공개'  
+			<if test='maDate != null and maDate != "전체"'>AND date_format(maDate, '%Y') = #{maDate} </if>
+			ORDER BY maPrice asc, idx DESC LIMIT #{startIndexNo},#{pageSize};
 		</if>
 		<if test='search != null and search == "높은 가격순"'>
-			select * from bo_magazine where maOpen = '공개'  
-			<if test='maDate != null and maDate != "전체"'>and date_format(maDate, '%Y') = #{maDate} </if>
-			order by maPrice desc, idx desc limit #{startIndexNo},#{pageSize};
+			SELECT * FROM bo_magazine WHERE maOpen = '공개'  
+			<if test='maDate != null and maDate != "전체"'>AND date_format(maDate, '%Y') = #{maDate} </if>
+			ORDER BY maPrice DESC, idx DESC LIMIT #{startIndexNo},#{pageSize};
 		</if>
 	</select>
 	
 	<select id="getMaDate" resultType="String">
-		select distinct YEAR(maDate) from bo_magazine order by maDate desc;  
+		SELECT distinct YEAR(maDate) FROM bo_magazine ORDER BY maDate DESC;  
 	</select>
 	
 	
 <!-- 이렇게 하면 맥에서는 오류가 뜬다! 	
   <select id="getMaDate" resultType="String">
-		select distinct YEAR(maDate) from bo_magazine;
+		select distinct YEAR(maDate) FROM bo_magazine;
 	</select> -->
 	
 	
 	<select id="getMagazineProduct" resultType="com.spring.javaweb8S.vo.MagazineVO">
-		select * from bo_magazine where idx = #{idx};
+		SELECT * FROM bo_magazine WHERE idx = #{idx};
 	</select>
 	
 	<select id="getMagazineSave" resultType="com.spring.javaweb8S.vo.SaveVO">
-		select * from bo_save where memNickname = #{nickname} and maIdx = #{idx};
+		SELECT * FROM bo_save WHERE memNickname = #{nickname} AND maIdx = #{idx};
 	</select>
 
 	<select id="getMagazineCartSearch" resultType="com.spring.javaweb8S.vo.CartVO">
-		select * from bo_cart where memNickname = #{nickname} and maIdx = (select idx from bo_magazine where idx = #{idx} and maOpen = '공개');
+		SELECT * FROM bo_cart WHERE memNickname = #{nickname} AND maIdx = (select idx FROM bo_magazine WHERE idx = #{idx} AND maOpen = '공개');
+	</select>
+
+	<select id="getMagazineAsk" resultType="com.spring.javaweb8S.vo.AskVO">
+		SELECT * FROM bo_ask WHERE category = #{category} AND originIdx = #{idx} AND askDel != '삭제';
 	</select>
 	
 	<insert id="setMagazineSave">
-		insert into bo_save(idx,memNickname,type,maIdx,prodName,prodPrice,prodThumbnail) 
-		values (default,#{vo.memNickname},#{vo.type},#{vo.maIdx},#{vo.prodName},#{vo.prodPrice},#{vo.prodThumbnail});
+		INSERT INTO bo_save(idx,memNickname,type,maIdx,prodName,prodPrice,prodThumbnail) 
+		VALUES (default,#{vo.memNickname},#{vo.type},#{vo.maIdx},#{vo.prodName},#{vo.prodPrice},#{vo.prodThumbnail});
 	</insert>
 	
 	<insert id="setMagazineCartInsert">
-		insert into bo_cart(idx,memNickname,type,maIdx,prodName,prodPrice,prodThumbnail,num,totalPrice,cartDate) 
-		values (default,#{vo.memNickname},#{vo.type},#{vo.maIdx},#{vo.prodName},#{vo.prodPrice},#{vo.prodThumbnail},#{vo.num},#{vo.totalPrice},default);
+		INSERT INTO bo_cart(idx,memNickname,type,maIdx,prodName,prodPrice,prodThumbnail,num,totalPrice,cartDate) 
+		VALUES (default,#{vo.memNickname},#{vo.type},#{vo.maIdx},#{vo.prodName},#{vo.prodPrice},#{vo.prodThumbnail},#{vo.num},#{vo.totalPrice},default);
 	</insert>
 	
 	<update id="setMagazineCartUpdate">
-		update bo_cart set num = num + #{vo.num}, totalPrice = totalPrice + #{vo.totalPrice} where memNickname = #{vo.memNickname} and maIdx = #{vo.maIdx};
+		UPDATE bo_cart SET num = num + #{vo.num}, totalPrice = totalPrice + #{vo.totalPrice} WHERE memNickname = #{vo.memNickname} AND maIdx = #{vo.maIdx};
 	</update>
 	
 	<update id="setMaSaveNumUpdate">
-		update bo_magazine set maSave = maSave + #{maSaveNum} where idx = #{maIdx};
+		UPDATE bo_magazine SET maSave = maSave + #{maSaveNum} WHERE idx = #{maIdx};
 	</update>
 	
 	
 	<delete id="setMagazineSaveDelete">
-		delete from bo_save where memNickname = #{memNickname} and maIdx = #{maIdx};
+		DELETE FROM bo_save WHERE memNickname = #{memNickname} AND maIdx = #{maIdx};
 	</delete>
 	
 </mapper>

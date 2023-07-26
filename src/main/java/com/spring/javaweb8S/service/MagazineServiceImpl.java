@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.spring.javaweb8S.dao.MagazineDAO;
+import com.spring.javaweb8S.vo.AskVO;
 import com.spring.javaweb8S.vo.CartVO;
 import com.spring.javaweb8S.vo.MagazineVO;
 import com.spring.javaweb8S.vo.SaveVO;
@@ -75,6 +76,12 @@ public class MagazineServiceImpl implements MagazineService {
 	@Override
 	public void setMaSaveNumUpdate(int maIdx, int maSaveNum) {
 		magazineDAO.setMaSaveNumUpdate(maIdx, maSaveNum);
+	}
+
+  // 매거진 상세창, 문의내역 전체 가져오기
+	@Override
+	public ArrayList<AskVO> getMagazineAsk(int idx, String category) {
+		return magazineDAO.getMagazineAsk(idx, category);
 	}
 
 	

@@ -6,6 +6,7 @@ import java.util.List;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.spring.javaweb8S.vo.AddressVO;
+import com.spring.javaweb8S.vo.AskVO;
 import com.spring.javaweb8S.vo.BooksletterVO;
 import com.spring.javaweb8S.vo.MemberVO;
 import com.spring.javaweb8S.vo.OrderVO;
@@ -103,6 +104,8 @@ public interface MemberService {
 	public void setSubscribeCancel(int idx);
 
 	public void setOrderAddressIdxChange(OrderVO vo);
+
+	public ArrayList<AskVO> getMemAskSearch(int startIndexNo, int pageSize, String memNickname, String sort, String search, String searchString);
 
 
 }

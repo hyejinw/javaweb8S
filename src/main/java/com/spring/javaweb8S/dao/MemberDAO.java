@@ -6,6 +6,7 @@ import java.util.List;
 import org.apache.ibatis.annotations.Param;
 
 import com.spring.javaweb8S.vo.AddressVO;
+import com.spring.javaweb8S.vo.AskVO;
 import com.spring.javaweb8S.vo.BooksletterVO;
 import com.spring.javaweb8S.vo.MemberVO;
 import com.spring.javaweb8S.vo.OrderVO;
@@ -25,6 +26,7 @@ public interface MemberDAO {
 			@Param("endDate") String endDate, @Param("nickname") String nickname);
 	public int myPagePointTotRecCnt(@Param("sort") String sort, @Param("nickname") String nickname);
 	public int myPagePointUseTotRecCnt(@Param("nickname") String nickname);
+	public int myPageAskSearchTotRecCnt(@Param("memNickname") String memNickname, @Param("sort") String sort, @Param("search") String search, @Param("searchString") String searchString);
 
 	public MemberVO getMidCheck(@Param("mid") String mid);
 
@@ -113,6 +115,9 @@ public interface MemberDAO {
 	public void setSubscribeCancel(@Param("idx") int idx);
 	
 	public void setOrderAddressIdxChange(@Param("vo") OrderVO vo);
+	
+	public ArrayList<AskVO> getMemAskSearch(@Param("startIndexNo") int startIndexNo, @Param("pageSize") int pageSize, @Param("memNickname") String memNickname, @Param("sort") String sort,	@Param("search") String search, @Param("searchString") String searchString);
+	
 	
 
 

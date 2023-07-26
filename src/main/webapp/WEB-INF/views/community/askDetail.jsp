@@ -279,7 +279,7 @@
 						</a>
 	 				</div>
 	 				<div class="col-3 text-right">
-					  <a class="btn btn-warning" href="javascript:insert()" style="margin-right:20px;"><i class="fa-solid fa-share-from-square"></i>카카오톡 공유</a>
+					  <a class="btn btn-warning" href="javascript:insert()" style="margin-right:20px;"><i class="fa-solid fa-share-from-square"></i>&nbsp;카카오톡 공유</a>
 	 				</div>
 	 			</div>
 				<div style="text-align:center">
@@ -319,8 +319,10 @@
 				<hr style="border:0px; height:1.0px; background:#41644A; margin:10px 0px"/>
 	 		</div>
 			
-			<div style="padding:20px 20px 50px 20px;">
+			<div style="padding:20px 80px">
 				${vo.askContent}
+			</div>
+			<div style="padding:20px 20px 50px 20px;">
 			  <hr style="border:0px; height:1.0px; background:#41644A; margin:10px 0px"/>
 			</div>
 		  
@@ -355,12 +357,8 @@
 			  			</div>
 			  		</c:if>
 				  </div>
-				  
-				  
 			  </div>
-			
 			</div>
-			
 					  
 		</div>
 	  

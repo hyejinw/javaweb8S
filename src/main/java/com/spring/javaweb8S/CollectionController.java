@@ -16,6 +16,7 @@ import com.spring.javaweb8S.pagination.PageProcess;
 import com.spring.javaweb8S.pagination.PageVO;
 import com.spring.javaweb8S.service.CollectionService;
 import com.spring.javaweb8S.service.OrderService;
+import com.spring.javaweb8S.vo.AskVO;
 import com.spring.javaweb8S.vo.CartVO;
 import com.spring.javaweb8S.vo.CollectionVO;
 import com.spring.javaweb8S.vo.OptionVO;
@@ -116,6 +117,10 @@ public class CollectionController {
 		// 상품 옵션
 		ArrayList<OptionVO> optionVOS = collectionService.getProdOption(idx);
 		model.addAttribute("optionVOS", optionVOS);
+		
+		// 상품 문의
+		ArrayList<AskVO> askVOS = collectionService.getProductAsk(idx, "컬렉션상품");
+		model.addAttribute("askVOS", askVOS);
 		
 		return "collection/colProduct";
 	}

@@ -19,6 +19,7 @@ import com.spring.javaweb8S.common.JavawebProvide;
 import com.spring.javaweb8S.dao.AdminDAO;
 import com.spring.javaweb8S.vo.AddressVO;
 import com.spring.javaweb8S.vo.BookVO;
+import com.spring.javaweb8S.vo.BooksletterVO;
 import com.spring.javaweb8S.vo.CollectionVO;
 import com.spring.javaweb8S.vo.DefaultPhotoVO;
 import com.spring.javaweb8S.vo.DeliveryVO;
@@ -26,6 +27,8 @@ import com.spring.javaweb8S.vo.MagazineVO;
 import com.spring.javaweb8S.vo.MemberVO;
 import com.spring.javaweb8S.vo.OptionVO;
 import com.spring.javaweb8S.vo.OrderVO;
+import com.spring.javaweb8S.vo.PointUseVO;
+import com.spring.javaweb8S.vo.PointVO;
 import com.spring.javaweb8S.vo.ProductVO;
 import com.spring.javaweb8S.vo.ProverbVO;
 import com.spring.javaweb8S.vo.RefundVO;
@@ -79,7 +82,7 @@ public class AdminServiceImpl implements AdminService {
 		return adminDAO.memberDefaultPhotoDelete(defaultPhotoList);
 	}
 
-  // 삭제된 기본 이미지 사용 회원, 프로필 'defaultImage.png'로 변경
+  // 삭제된 기본 이미지 사용 회원, 프로필 'defaultImage.jpg'로 변경
 	@Override
 	public void setChangeMemberPhotos(List<String> defaultPhotoList) {
 		adminDAO.setChangeMemberPhotos(defaultPhotoList);
@@ -511,6 +514,48 @@ public class AdminServiceImpl implements AdminService {
 	@Override
 	public RefundVO getRefundInfo(int idx) {
 		return adminDAO.getRefundInfo(idx);
+	}
+
+	// 회원 리스트
+	@Override
+	public ArrayList<MemberVO> getMemberList(String sort, String search, String searchString, int startIndexNo, int pageSize) {
+		return adminDAO.getMemberList(sort, search, searchString, startIndexNo, pageSize);
+	}
+
+	// 회원 상세창, 배송지 주소록 (+삭제한 것도 전부)
+	@Override
+	public ArrayList<AddressVO> getMemberAddressList(String nickname) {
+		return adminDAO.getMemberAddressList(nickname);
+	}
+
+	// 회원 상세창, 포인트 적립내역
+	@Override
+	public ArrayList<PointVO> getMemberPointList(String nickname) {
+		return adminDAO.getMemberPointList(nickname);
+	}
+
+	// 회원 상세창, 포인트 사용내역
+	@Override
+	public ArrayList<PointUseVO> getMemberPointUseList(String nickname) {
+		return adminDAO.getMemberPointUseList(nickname);
+	}
+
+	// 회원 상세창, 뉴스레터 구독 내역
+	@Override
+	public ArrayList<BooksletterVO> getMemberBooksletterList(String nickname) {
+		return adminDAO.getMemberBooksletterList(nickname);
+	}
+
+	// 회원 상세창, 매거진 정기구독 내역
+	@Override
+	public ArrayList<SubscribeVO> getMemberSubscribeList(String nickname) {
+		return adminDAO.getMemberSubscribeList(nickname);
+	}
+
+	// 회원 상세창, 회원 강제탈퇴
+	@Override
+	public void setMemberForcedDelete(int idx, String memberDelReason) {
+		adminDAO.setMemberForcedDelete(idx, memberDelReason);
 	}
 
 			

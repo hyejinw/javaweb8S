@@ -22,7 +22,7 @@ public class ImageManager {
 		// <img alt="" src="/javawebS/data/ckeditor/230616141341_sanfran.jpg" style="height:300px; width:400px" /></p><p><img alt="" src="/javawebS/data/ckeditor/230616141353_paris.jpg" style="height:300px; width:400px" /></p>
 		// <img alt="" src="/javawebS/data/community/230616141341_sanfran.jpg" style="height:300px; width:400px" /></p><p><img alt="" src="/javawebS/data/ckeditor/230616141353_paris.jpg" style="height:300px; width:400px" /></p>
 		
-		// content안에 그림파일이 존재한다면 그림을 /data/board/폴더로 복사처리한다. 없으면 돌려보낸다.
+		// content안에 그림파일이 존재한다면 그림을 /data/ask/폴더로 복사처리한다. 없으면 돌려보낸다.
 		if(content.indexOf("src=\"/") == -1) return;
 		
 		HttpServletRequest request = ((ServletRequestAttributes)RequestContextHolder.currentRequestAttributes()).getRequest();
@@ -38,7 +38,7 @@ public class ImageManager {
 			String origFilePath = realPath + "ckeditor/" + imgFile;
 			String copyFilePath = realPath + flag+"/" + imgFile;
 			
-			fileCopyCheck(origFilePath, copyFilePath);	// ckeditor폴더의 그림파일을 community폴더 위치로 복사처리한다.
+			fileCopyCheck(origFilePath, copyFilePath);	// ckeditor폴더의 그림파일을 설정 폴더 위치로 복사처리한다.
 			
 			if(nextImg.indexOf("src=\"/") == -1) {
 				sw = false;

@@ -143,6 +143,9 @@
     </foreach>
 	</select>
 	
+	<select id="getProductAsk" resultType="com.spring.javaweb8S.vo.AskVO">
+		SELECT * FROM bo_ask WHERE category = #{category} AND originIdx = #{idx} AND askDel != '삭제';
+	</select>
 	
 	<insert id="setProductSave">
 		insert into bo_save(idx,memNickname,type,prodIdx,prodName,prodPrice,prodThumbnail) 

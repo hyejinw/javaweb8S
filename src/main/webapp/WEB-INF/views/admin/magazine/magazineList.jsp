@@ -281,7 +281,7 @@
 				      <tr>
 				        <td><label for="chk${vo.idx}"><input type="checkbox" name="checkRow" id="chk${vo.idx}" class="form-check-input chkGrp" value="${vo.idx}" />&nbsp;&nbsp;&nbsp;&nbsp;${curScrStartNo}</label></td>
 				        <td>${vo.maCode}</td>
-				        <td>${vo.maTitle}</td>
+				        <td><a href="${ctp}/magazine/maProduct?idx=${vo.idx}">${vo.maTitle}</a></td>
 				        <td>${vo.maPrice}</td>
 				        <td>${fn:substring(vo.maDate,0,10)}</td>
 				        <td>${vo.maStock}</td>

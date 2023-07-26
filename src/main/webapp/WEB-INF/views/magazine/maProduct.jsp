@@ -1,6 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
 <c:set var="ctp" value="${pageContext.request.contextPath}"/>
 <!DOCTYPE html>
 <html>
@@ -97,6 +98,15 @@
 		.save:hover {
 			cursor: pointer;
 		}
+		.infoBox {
+    	border: 4px solid #e8e8e8;
+    	width: 100%;
+    	height: 100%;
+    	max-height: 800px;
+    	box-sizing: border-box;
+    	background-color: white;
+    	overflow: auto;
+    }
 	</style>
 	<script>
 		'use strict';
@@ -273,6 +283,88 @@
 			document.getElementById("totalPrice").value = ${vo.maPrice} * num;
 			myform.submit();
 		}
+		
+		$(document).ready(function(){
+			// 문의 남기기에서 돌아왔다면, 해당 session을 없애준다.
+			if(localStorage.getItem('magazineAskInsertSW') == 'ON') {
+				localStorage.removeItem('magazineAskInsertSW');
+				localStorage.removeItem('magazineReturnOriginIdx');
+			}
+			// 문의 상세창에서 돌아왔다면, 해당 session을 없애준다.
+			if(localStorage.getItem('magazineAskDetailSW') == 'ON') {
+				localStorage.removeItem('magazineAskDetailSW');
+				localStorage.removeItem('magazineReturnOriginIdx2');
+			}
+		});
+		
+		// 문의 남기기
+		function askInsert() {
+			// 되돌아오기 세션값 주기
+			localStorage.setItem('magazineAskInsertSW', 'ON');
+			localStorage.setItem('magazineReturnOriginIdx', '${vo.idx}');
+			
+			if("${vo.maType}" == '매거진') {
+				location.href='${ctp}/about/askInsert?category=매거진&originIdx=${vo.idx}';
+			}
+			else {
+				location.href='${ctp}/about/askInsert?category=정기구독&originIdx=${vo.idx}';
+			}
+		}
+		
+		
+		// 문의 상세창
+		function askDetail(idx, secret, memNickname, pwd, originIdx) {
+			
+			if(secret == '공개') {
+				localStorage.setItem('magazineAskDetailSW', 'ON');
+				localStorage.setItem('magazineReturnOriginIdx2', originIdx);
+				location.href = "${ctp}/about/askDetail?idx="+idx;
+				return false;
+			}
+			else {
+				if((memNickname == "") && ('${sMemType}' != '관리자')) {
+					let ans = prompt('비회원 문의 비밀번호를 입력해주세요(숫자 4자리).');
+					if(ans == null) return false;
+					
+					$.ajax({
+						type : "post",
+						url : "${ctp}/community/askPwdCheck",  /* 이거 중복인데 그냥 그대로 쓰겠다! */
+						data : {
+							ans : ans,
+							pwd : pwd
+						},
+						success : function(res) {
+							if(res == "1") {
+								localStorage.setItem('magazineAskDetailSW', 'ON');
+								localStorage.setItem('magazineReturnOriginIdx2', originIdx);
+								location.href = "${ctp}/about/askDetail?idx="+idx;
+								return false;
+							}
+							else {
+								alert('잘못된 비밀번호입니다.');
+								return false;
+							}
+						},
+						error : function() {
+							alert('전송 오류 발생, 재시도 부탁드립니다.');
+							return false;
+						}						
+					});
+				}
+				
+				
+				if(('${sNickname}' != memNickname) && ('${sMemType}' != '관리자')) {
+					alert('비공개 문의입니다.');
+					return false;
+				}
+				else {
+					localStorage.setItem('magazineAskDetailSW', 'ON');
+					localStorage.setItem('magazineReturnOriginIdx2', originIdx);
+					location.href = "${ctp}/about/askDetail?idx"+idx;
+					return false;
+				}
+			}
+		}
 	</script>
 </head>
 <body>
@@ -400,18 +492,77 @@
 					</div>
 				</div>
 			</div>
-			<div class="row">
-				<div class="col text-center">
-					<div id="q&a"></div>
-					<div style="margin-top:150px" class="text-center pill-nav">
-						<a href="#detail">상세설명</a> &nbsp;&nbsp;&nbsp;/&nbsp;&nbsp;&nbsp;
-						<a href="#info">기타안내</a> &nbsp;&nbsp;&nbsp;/&nbsp;&nbsp;&nbsp;
-						<a href="#q&a" class="active">Q&A</a>
-					</div>
-					<hr style="height:1px; background:#282828;"/>
-					
-				</div>
+			<div id="q&a"></div>
+			<div style="margin-top:150px" class="text-center pill-nav">
+				<a href="#detail">상세설명</a> &nbsp;&nbsp;&nbsp;/&nbsp;&nbsp;&nbsp;
+				<a href="#info">기타안내</a> &nbsp;&nbsp;&nbsp;/&nbsp;&nbsp;&nbsp;
+				<a href="#q&a" class="active">Q&A</a>
 			</div>
+			<hr style="height:1px; background:#282828;"/>
+			<div class="row mt-3">
+				<div class="col text-left">
+					<b>상품 Q&A</b><br/>
+					상품에 대한 궁금한 점을 해결해 드립니다.
+				</div>
+				<div class="col text-right mr-2">
+					<button type="button" class="btn btn-sm btn-dark mr-2" onclick="askInsert()">상품 문의하기 <i class="fa-solid fa-chevron-right"></i></button>
+			 	  <button type="button" class="btn btn-sm btn-secondary" onclick="location.href='${ctp}/about/ask';">목록</button>
+				</div>
+	 	  </div>
+	 	  
+	 	  <!-- Q&A 리스트 -->
+	 	  <div class="infoBox" style="margin:50px 0px 250px 0px">
+	 	  	<c:if test="${empty askVOS}">
+	    		<div class="text-center" style="padding:40px"><b>작성 문의가 없습니다.</b></div> 
+	    	</c:if>
+	    	<c:if test="${!empty askVOS}">
+		 	  	<table class="table text-center">
+						<thead>
+				      <tr class="text-center">
+				        <th>No.</th>
+				        <th>작성자</th>
+				        <th>제목</th>
+				        <th>답변 유무</th>
+				        <th>작성일</th>
+				      </tr>
+				    </thead>
+				    <tbody>
+				    	<c:forEach var="askVO" items="${askVOS}" varStatus="st"> 
+				    		<tr>
+				    			<td>${st.count}</td>
+				    			<td>
+				    				<span style="color:grey; font-weight:bold">
+					    				<c:if test="${empty askVO.memNickname}">
+						    				${askVO.email}&nbsp;&nbsp;<span class="badge badge-pill badge-light">비회원</span>
+					    				</c:if>
+					    				<c:if test="${!empty askVO.memNickname}">
+						    				${askVO.memNickname}
+					    				</c:if>
+				    				</span>
+				    			</td>
+				    			<td>
+								  	<a href="javascript:askDetail('${askVO.idx}','${askVO.secret}','${askVO.memNickname}', '${askVO.pwd}','${askVO.originIdx}')">
+								  		${askVO.askTitle}
+								  		<c:if test="${askVO.secret == '비공개'}">
+								  			<i class="fa-solid fa-lock"></i>
+								  		</c:if>
+								  	</a>
+				    			</td>
+				    			<td class="text-center">
+				    				<c:if test="${askVO.answeredAsk == '답변완료'}">${askVO.answeredAsk}&nbsp;&nbsp;<span style="font-size:10px">${fn:substring(askVO.answerDate,0,10)}</span></c:if>	
+				    				<c:if test="${askVO.answeredAsk == '답변전'}">답변 전</c:if>
+			    				</td>
+			    				<td class="text-center">
+			    					${fn:substring(askVO.askDate,0,10)}
+			    				</td>
+				    		</tr>
+							</c:forEach>
+				    </tbody>
+				  </table>
+	    	</c:if>
+	 	  </div>
+			 	  
+			 	  
 		</div>
 	</div>
 	<footer>

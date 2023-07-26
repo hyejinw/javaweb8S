@@ -112,7 +112,7 @@
 	 	<div class="table-responsive" style="width:90%; margin:0px auto; padding:80px 50px 100px 50px" class="border">
 	 		<div style="background-color:white; padding:20px; margin-bottom:30px">
 				<div style="text-align:center"><span class="text-center" style="font-size:30px; text-align:center; font-weight:500">기본 프로필 사진 관리</span></div>
-				<div style="text-align:center"><span class="text-center" style="font-size:15px; text-align:center; font-weight:300; color:red;">삭제 시, 해당 이미지를 선택한 회원의 프로필이 'defaultImage.png'로 변경됩니다.</span></div>
+				<div style="text-align:center"><span class="text-center" style="font-size:15px; text-align:center; font-weight:300; color:red;">삭제 시, 해당 이미지를 선택한 회원의 프로필이 'defaultImage.jpg'로 변경됩니다.</span></div>
 			</div>
 			<div class="row">
 				<div class="col text-left">
@@ -135,10 +135,10 @@
 		    <tbody>
  		    	<c:forEach var="vo" items="${vos}" varStatus="st">
 			      <tr>
-			      	<c:if test="${vo.photoName == 'defaultImage.png'}">
+			      	<c:if test="${vo.photoName == 'defaultImage.jpg'}">
 				        <td><label for="chk${vo.idx}"><input type="checkbox" id="chk${vo.idx}" class="form-check-input chkGrp" value="${vo.photoName}" disabled/>&nbsp;&nbsp;&nbsp;&nbsp;${st.count}</label></td>
 			      	</c:if>
-			      	<c:if test="${vo.photoName != 'defaultImage.png'}">
+			      	<c:if test="${vo.photoName != 'defaultImage.jpg'}">
 				        <td><label for="chk${vo.idx}"><input type="checkbox" name="checkRow" id="chk${vo.idx}" class="form-check-input chkGrp" value="${vo.photoName}" />&nbsp;&nbsp;&nbsp;&nbsp;${st.count}</label></td>
 			      	</c:if>
   			        <td><a href="${ctp}/admin/member/${vo.photoName}" download>${vo.photoName}</a><br/><img src="${ctp}/admin/member/${vo.photoName}" style="width:100px" class="w3-hover-opacity"></td>

@@ -896,7 +896,8 @@ public class CommunityController {
 	
 	// 문의 등록
 	@RequestMapping(value = "/askInsert", method = RequestMethod.POST)
-	public String askInsertPost(AskVO vo) throws UnsupportedEncodingException {
+	public String askInsertPost(AskVO vo,
+			@RequestParam(name = "returnPath", defaultValue = "", required = false) String returnPath) throws UnsupportedEncodingException {
 		
 		// 비회원 비밀번호 암호화
 		if(vo.getPwd() != null) vo.setPwd(passwordEncoder.encode(vo.getPwd()));
@@ -915,10 +916,16 @@ public class CommunityController {
 		// content안의 내용정리가 끝나면 변경된 vo를 DB에 저장시켜준다.
 		int res = communityService.setAskInsert(vo);
 		
-		String nickname = URLEncoder.encode(vo.getMemNickname(), "UTF-8");
-		
-		if(res != 0)  return "redirect:/message/askInsertOk?nickname="+nickname;
-		else return "redirect:/message/askInsertNo";
+		if(returnPath.equals("")) {
+			if(res != 0)  return "redirect:/message/askInsertOk";
+			else return "redirect:/message/askInsertNo";
+		}
+		// 마이페이지에서 왔다면, 다시 보내준다
+		else {
+			String nickname = URLEncoder.encode(vo.getMemNickname(), "UTF-8");
+			if(res != 0)  return "redirect:/message/communityMypageAskInsertOk?nickname="+nickname;
+			else return "redirect:/message/communityMypageAskInsertNo";
+		}
 	}
 	
 	// 문의 상세창
@@ -997,7 +1004,8 @@ public class CommunityController {
 	
 	// 문의 삭제
 	@RequestMapping(value = "/askDelete", method = RequestMethod.GET)
-	public String askDeleteGet(int idx) {
+	public String askDeleteGet(int idx,
+			@RequestParam(name = "flag", defaultValue = "", required = false) String flag) {
 
 		// 문의에 사진이 존재한다면 서버에 있는 사진파일을 먼저 삭제처리한다.
 		AskVO vo = communityService.getAskDetail(idx);
@@ -1005,9 +1013,15 @@ public class CommunityController {
 		
 		// 문의 삭제
 		int res = communityService.setAskDelete(idx);
-		
-		if(res != 0)  return "redirect:/message/askDeleteOk";
-		else return "redirect:/message/askDeleteNo?idx="+idx;
+		if(flag.equals("")) {
+			if(res != 0)  return "redirect:/message/askDeleteOk";
+			else return "redirect:/message/askDeleteNo?idx="+idx;
+		}
+		else {
+			// 책(의)세계 문의 삭제의 경우!
+			if(res != 0)  return "redirect:/message/aboutAskDeleteOk";
+			else return "redirect:/message/aboutAskDeleteNo?idx="+idx;
+		}
 	}
 
 	// 문의 답변 달기

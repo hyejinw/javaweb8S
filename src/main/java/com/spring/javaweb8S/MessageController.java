@@ -16,6 +16,8 @@ public class MessageController {
 	public String listGet(@PathVariable String msgFlag, HttpSession session,
 			@RequestParam(name="nickname", defaultValue = "", required=false) String nickname,
 			@RequestParam(name="idx", defaultValue = "1", required=false) int idx,
+			@RequestParam(name="returnPath", defaultValue = "", required=false) String returnPath,
+			@RequestParam(name="returnOriginIdx", defaultValue = "", required=false) String returnOriginIdx,
 			Model model) {
 		
 		if(msgFlag.equals("memberJoinOk")) {
@@ -140,16 +142,17 @@ public class MessageController {
 		}
 		else if(msgFlag.equals("askInsertOk")) {
 			model.addAttribute("msg", "문의가 등록되었습니다.");
-			System.out.println("(String)session.getAttribute(\"myPageAskInsertSW\") : " +(String)session.getAttribute("myPageAskInsertSW")); // 얘가 왜 null이지????????
-			//session.getId()
-			if(((String)session.getAttribute("myPageAskInsertSW") != null) && ((String)session.getAttribute("myPageAskInsertSW")).equals("ON")) {
-				model.addAttribute("url", "/community/myPage/ask?memNickname="+nickname);
-			}
-			else {
-				model.addAttribute("url", "/community/ask");
-			}
+			model.addAttribute("url", "/community/ask");
 		}
 		else if(msgFlag.equals("askInsertNo")) {
+			model.addAttribute("msg", "재시도 부탁드립니다.");
+			model.addAttribute("url", "/community/askInsert");
+		}
+		else if(msgFlag.equals("communityMypageAskInsertOk")) {
+			model.addAttribute("msg", "문의가 등록되었습니다.");
+			model.addAttribute("url", "/community/myPage/ask?memNickname="+nickname);
+		}
+		else if(msgFlag.equals("communityMypageAskInsertNo")) {
 			model.addAttribute("msg", "재시도 부탁드립니다.");
 			model.addAttribute("url", "/community/askInsert");
 		}
@@ -169,6 +172,14 @@ public class MessageController {
 			model.addAttribute("msg", "재시도 부탁드립니다.");
 			model.addAttribute("url", "/community/askDetail?idx="+idx);
 		}
+		else if(msgFlag.equals("aboutAskDeleteOk")) {
+			model.addAttribute("msg", "문의가 삭제되었습니다.");
+			model.addAttribute("url", "/about/ask");
+		}
+		else if(msgFlag.equals("aboutAskDeleteNo")) {
+			model.addAttribute("msg", "재시도 부탁드립니다.");
+			model.addAttribute("url", "/about/askDetail?idx="+idx);
+		}
 		else if(msgFlag.equals("refundInsertOk")) {
 			model.addAttribute("msg", "반품 신청되었습니다.");
 			model.addAttribute("url", "/member/myPage/order");
@@ -184,6 +195,25 @@ public class MessageController {
 		else if(msgFlag.equals("memberDeleteNo")) {
 			model.addAttribute("msg", "재시도 부탁드립니다.");
 			model.addAttribute("url", "/member/myPage/profile");
+		}
+		else if(msgFlag.equals("aboutAskInsertOk")) {
+			model.addAttribute("msg", "문의가 등록되었습니다.");
+			model.addAttribute("url", "/about/ask");
+		}
+		else if(msgFlag.equals("aboutAskInsertNo")) {
+			model.addAttribute("msg", "재시도 부탁드립니다.");
+			model.addAttribute("url", "/about/askInsert");
+		}
+		else if(msgFlag.equals("aboutOriginAskInsertOk")) {
+			model.addAttribute("msg", "문의가 등록되었습니다.");
+			if(returnPath.equals("컬렉션상품")) model.addAttribute("url", "/collection/colProduct?idx="+returnOriginIdx+"#q&a");
+			else model.addAttribute("url", "/magazine/maProduct?idx="+returnOriginIdx+"#q&a");
+		}
+		else if(msgFlag.equals("aboutOriginAskInsertNo")) {
+			model.addAttribute("msg", "재시도 부탁드립니다.");
+			model.addAttribute("url", "/about/askInsert?category="+returnPath+"&originIdx="+returnOriginIdx);
+//			if(returnPath.equals("컬렉션상품")) model.addAttribute("url", "/collection/colProduct?idx="+returnOriginIdx);
+//			else model.addAttribute("url", "/magazine/maProduct?idx="+returnOriginIdx);
 		}
 		
 		

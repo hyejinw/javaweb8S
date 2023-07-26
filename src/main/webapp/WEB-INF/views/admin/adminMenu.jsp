@@ -148,7 +148,7 @@
 		      <div id="collapseEight" class="collapse" data-parent="#accordion">
 		        <div class="card-body" style="margin:10px">
 			        <a href="${ctp}/admin/memberList">문의 관리</a><hr/>
-			        <a href="${ctp}/admin/memberList">공지사항 관리</a>
+			        <a href="${ctp}/admin/memberList">공지사항</a><hr/>
 			        <a href="${ctp}/admin/memberList">임시 파일 관리</a>
 		        </div>
 		      </div>

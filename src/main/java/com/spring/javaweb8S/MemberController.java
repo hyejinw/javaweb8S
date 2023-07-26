@@ -34,6 +34,7 @@ import com.spring.javaweb8S.pagination.PageVO;
 import com.spring.javaweb8S.service.AdminService;
 import com.spring.javaweb8S.service.MemberService;
 import com.spring.javaweb8S.vo.AddressVO;
+import com.spring.javaweb8S.vo.AskVO;
 import com.spring.javaweb8S.vo.BooksletterVO;
 import com.spring.javaweb8S.vo.DeliveryVO;
 import com.spring.javaweb8S.vo.MemberVO;
@@ -796,8 +797,32 @@ public class MemberController {
 		return "";
 	}
 	
+	// 마이페이지, 문의관리창
+	@RequestMapping(value = "/myPage/ask", method = RequestMethod.GET)
+	public String myPageAskGet(HttpSession session, Model model,
+			@RequestParam(name="sort", defaultValue = "전체", required = false) String sort,
+			@RequestParam(name="search", defaultValue = "제목", required = false) String search,
+			@RequestParam(name="searchString", defaultValue = "", required = false) String searchString,
+			@RequestParam(name="pag", defaultValue = "1", required = false) int pag,
+			@RequestParam(name="pageSize", defaultValue = "20", required = false) int pageSize) {
 	
-	
+		String memNickname = (String) session.getAttribute("sNickname");
+		
+		// 문의 내역
+		// sort 에 들어올 수 있는 값: 전체, 답변완료, 답변전, 비공개, 공개
+		PageVO pageVO = pageProcess.totRecCnt(pag, pageSize, "myPageAskSearch", memNickname+"/"+sort+"/"+search, searchString);
+		ArrayList<AskVO> vos = memberService.getMemAskSearch(pageVO.getStartIndexNo(), pageSize, memNickname, sort, search, searchString);
+
+		model.addAttribute("pageVO", pageVO);
+		model.addAttribute("vos", vos);
+		model.addAttribute("askNum", vos.size());
+		model.addAttribute("search", search);
+		model.addAttribute("searchString", searchString);
+		model.addAttribute("sort", sort);
+		
+		
+		return "member/myPage/ask";
+	}
 	
 	// 임시 비밀번호 받고 확인한 다음에 삭제하자
 	// 이게 뭐지?????????

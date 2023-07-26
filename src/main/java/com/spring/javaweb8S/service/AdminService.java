@@ -7,6 +7,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.spring.javaweb8S.vo.AddressVO;
 import com.spring.javaweb8S.vo.BookVO;
+import com.spring.javaweb8S.vo.BooksletterVO;
 import com.spring.javaweb8S.vo.CollectionVO;
 import com.spring.javaweb8S.vo.DefaultPhotoVO;
 import com.spring.javaweb8S.vo.DeliveryVO;
@@ -14,6 +15,8 @@ import com.spring.javaweb8S.vo.MagazineVO;
 import com.spring.javaweb8S.vo.MemberVO;
 import com.spring.javaweb8S.vo.OptionVO;
 import com.spring.javaweb8S.vo.OrderVO;
+import com.spring.javaweb8S.vo.PointUseVO;
+import com.spring.javaweb8S.vo.PointVO;
 import com.spring.javaweb8S.vo.ProductVO;
 import com.spring.javaweb8S.vo.ProverbVO;
 import com.spring.javaweb8S.vo.RefundVO;
@@ -129,6 +132,20 @@ public interface AdminService {
 			String startDate, String endDate, int startIndexNo, int pageSize);
 
 	public RefundVO getRefundInfo(int idx);
+
+	public ArrayList<MemberVO> getMemberList(String sort, String search, String searchString, int startIndexNo, int pageSize);
+
+	public ArrayList<AddressVO> getMemberAddressList(String nickname);
+
+	public ArrayList<PointVO> getMemberPointList(String nickname);
+
+	public ArrayList<PointUseVO> getMemberPointUseList(String nickname);
+
+	public ArrayList<BooksletterVO> getMemberBooksletterList(String nickname);
+
+	public ArrayList<SubscribeVO> getMemberSubscribeList(String nickname);
+
+	public void setMemberForcedDelete(int idx, String memberDelReason);
 
 
 

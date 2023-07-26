@@ -232,7 +232,7 @@
 		 	SELECT * FROM bo_ask 
 		 	
 		 	WHERE memNickname = #{memNickname} AND askDel != "삭제"  
-		 	
+		 	AND category = "커뮤니티" 
 		 	<if test='sort != "" and (sort == "답변완료" or sort == "답변전")'>
 				AND answeredAsk = #{sort}
 			</if>
@@ -245,7 +245,7 @@
 		 	SELECT * FROM bo_ask 
 		 	
 		 	WHERE memNickname = #{memNickname} AND askDel != "삭제" 
-		 	
+		 	AND category = "커뮤니티" 
 		 	<if test='sort != "" and (sort == "답변완료" or sort == "답변전")'>
 				AND answeredAsk = #{sort}
 			</if>

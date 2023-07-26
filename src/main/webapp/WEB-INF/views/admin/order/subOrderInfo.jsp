@@ -145,6 +145,10 @@
 									<th>구독 취소 환불금</th>
 									<td><fmt:formatNumber value="${subscribeVO.subRefund}" pattern="#,###"/> 원</td>
 								</tr>
+								<tr>
+									<th>구독 취소 환불포인트</th>
+									<td>${subscribeVO.subRefundPoint}</td>
+								</tr>
 							</c:if>
 				    </tbody>
 					</table>			

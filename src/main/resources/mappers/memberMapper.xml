@@ -339,6 +339,66 @@
 		WHERE s.memNickname = #{nickname};
 	</select>
 	
+	<select id="myPageAskSearchTotRecCnt" resultType="int">
+		<if test='searchString == ""'><!-- 검색어가 없으면 전체! -->
+		 	SELECT count(*) FROM bo_ask 
+		 	
+		 	WHERE memNickname = #{memNickname} AND askDel != "삭제"  
+		 	AND category != "커뮤니티" 
+		 	
+		 	<if test='sort != "" and (sort == "답변완료" or sort == "답변전")'>
+				AND answeredAsk = #{sort}
+			</if>
+		 	<if test='sort != "" and (sort == "공개" or sort == "비공개")'>
+				AND secret = #{sort}
+			</if>
+			;
+		</if>
+		<if test='searchString != ""'>
+		 	SELECT count(*) FROM bo_ask 
+		 	
+		 	WHERE memNickname = #{memNickname} AND askDel != "삭제" 
+		 	AND category != "커뮤니티" 
+		 	
+		 	<if test='sort != "" and (sort == "답변" or sort == "답변전")'>
+				AND answeredAsk = #{sort}
+			</if>
+		 	<if test='sort != "" and (sort == "공개" or sort == "비공개")'>
+				AND secret = #{sort}
+			</if>
+			AND ${search} LIKE CONCAT('%',#{searchString},'%');
+		</if>
+	</select>
+	
+	<select id="getMemAskSearch" resultType="com.spring.javaweb8S.vo.AskVO">
+		<if test='searchString == ""'><!-- 검색어가 없으면 전체! -->
+		 	SELECT * FROM bo_ask 
+		 	
+		 	WHERE memNickname = #{memNickname} AND askDel != "삭제"  
+		 	AND category != "커뮤니티" 
+		 	<if test='sort != "" and (sort == "답변완료" or sort == "답변전")'>
+				AND answeredAsk = #{sort}
+			</if>
+		 	<if test='sort != "" and (sort == "공개" or sort == "비공개")'>
+				AND secret = #{sort}
+			</if>
+			ORDER BY idx DESC LIMIT #{startIndexNo},#{pageSize};
+		</if>
+		<if test='searchString != ""'>
+		 	SELECT * FROM bo_ask 
+		 	
+		 	WHERE memNickname = #{memNickname} AND askDel != "삭제" 
+		 	AND category != "커뮤니티" 
+		 	<if test='sort != "" and (sort == "답변완료" or sort == "답변전")'>
+				AND answeredAsk = #{sort}
+			</if>
+		 	<if test='sort != "" and (sort == "공개" or sort == "비공개")'>
+				AND secret = #{sort}
+			</if>
+			AND ${search} LIKE CONCAT('%',#{searchString},'%') ORDER BY idx DESC LIMIT #{startIndexNo},#{pageSize};
+		</if>
+	</select>
+	
 	<insert id="setMember">
 		INSERT INTO bo_member(idx,mid,pwd,name,nickname,email,tel,memPhoto,memType,point,agreement,pwdUpdateDate,totCnt,firstVisit,memberDel) 
 		VALUES (default,#{vo.mid},#{vo.pwd},#{vo.name},#{vo.nickname},#{vo.email},#{vo.tel},default,default,#{vo.point},default,default,default,default,default);

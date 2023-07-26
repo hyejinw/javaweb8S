@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 import org.apache.ibatis.annotations.Param;
 
+import com.spring.javaweb8S.vo.AskVO;
 import com.spring.javaweb8S.vo.CartVO;
 import com.spring.javaweb8S.vo.CollectionVO;
 import com.spring.javaweb8S.vo.OptionVO;
@@ -41,6 +42,8 @@ public interface CollectionDAO {
 	public void setProductOpCartInsert(@Param("vo") CartVO vo, @Param("insertOption") ArrayList<CartVO> insertOption);
 	
 	public void setProdSaveNumUpdate(@Param("prodIdx") int prodIdx, @Param("prodSaveNum") int prodSaveNum);
+	
+	public ArrayList<AskVO> getProductAsk(@Param("idx") int idx, @Param("category") String category);
 
 
 }

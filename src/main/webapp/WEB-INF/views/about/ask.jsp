@@ -1,36 +1,23 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
 <c:set var="ctp" value="${pageContext.request.contextPath}"/>
 <!DOCTYPE html>
 <html>
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>책(의)세계</title>
-  <jsp:include page="/WEB-INF/views/include/bs4.jsp" />
-  <style>
-		/* .table a {
-			text-decoration : none;
-		} */
-		
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>책(의)세계</title>
+	<jsp:include page="/WEB-INF/views/include/bs4.jsp" />
+	<script src="${ctp}/ckeditor/ckeditor.js"></script>
+	<style>
 		a:link {text-decoration: none !important;}
 		a:visited {text-decoration: none !important;}
 		a:hover {text-decoration: none !important;}
 		a:active {text-decoration: none !important;}
 		
-		.table a:hover {color:#41644A !important;}
-		
-  	.w3-row-padding img {margin-bottom: 12px}
-		/* Set the width of the sidebar to 120px */
-		.w3-sidebar {width: 120px;background: #222;}
-		/* Add a left margin to the "page content" that matches the width of the sidebar (120px) */
-		#main {margin-left: 120px}
-		/* Remove margins from "page content" on small screens */
-		@media only screen and (max-width: 600px) {#main {margin-left: 0}}
-		
-		
-  	#back-to-top {
+		#back-to-top {
 		  display: inline-block;
 		  background-color: #282828;
 		  width: 50px;
@@ -66,31 +53,67 @@
 		  opacity: 1;
 		  visibility: visible;
 		}
-		
-  </style>
-  <script>
+		.infoBox {
+    	border: 4px solid #e8e8e8;
+    	width: 100%;
+    	height: 100%;
+    	max-height: 200px;
+    	box-sizing: border-box;
+    	background-color: white;
+    	overflow: auto;
+    	padding: 20px
+    }
+		.infoBox2 {
+    	border: 4px solid #e8e8e8;
+    	width: 100%;
+    	height: 100%;
+    	max-height: 300px;
+    	box-sizing: border-box;
+    	background-color: white;
+    	overflow: auto;
+    }
+    
+    .pill-nav a {
+		  display: inline-block;
+		  color: black;
+		  text-align: center;
+		  padding: 8px 20px;
+		  text-decoration: none;
+		  font-size: 17px;
+		  border-radius: 5px;
+		}
+		.pill-nav a:hover {
+		  background-color: #ddd;
+		  color: black;
+		}
+		.pill-nav a.active {
+		  background-color: #F5EBE0;
+		  color: #282828;
+		}
+		.nowPart {
+     color : #282828;
+     font-weight: bold;
+     border-bottom: 5px solid #282828;
+     padding-bottom:14px;
+    }
+	</style>
+	<script>
 		'use strict';
-	
 		// 맨 위로 스크롤
 		$(function(){
-	 		$('#back-to-top').on('click',function(e){
-	     	e.preventDefault();
-	     		$('html,body').animate({scrollTop:0},600);
-	  	});
-	  
-	 		$(window).scroll(function() {
-	    	if ($(document).scrollTop() > 100) {
-	    		$('#back-to-top').addClass('show');
-	    	} else {
-	    		$('#back-to-top').removeClass('show');
-	   		}
-	  	});
+		  $('#back-to-top').on('click',function(e){
+		      e.preventDefault();
+		      $('html,body').animate({scrollTop:0},600);
+		  });
+		  
+		  $(window).scroll(function() {
+		    if ($(document).scrollTop() > 100) {
+		      $('#back-to-top').addClass('show');
+		    } else {
+		      $('#back-to-top').removeClass('show');
+		    }
+		  });
 		});
-		
-		function pageCheck() {
-    	let pageSize = document.getElementById("pageSize").value;
-  		location.href = "${ctp}/community/reflection?pag=${pageVO.pag}&pageSize="+pageSize+"&search=${search}&searchString=${searchString}";
-    }
 		
 		// 문의 검색 + 분류 검색
 		function searchCheck() {
@@ -98,7 +121,7 @@
 			let search = $("#search").val();
 			let sort = $("#sort").val();
 	    	
-    	location.href = "${ctp}/community/ask?search="+search+"&searchString="+searchString+"&sort="+sort;
+    	location.href = "${ctp}/about/ask?search="+search+"&searchString="+searchString+"&sort="+sort;
 		}
 		
 		// 문의 상세창
@@ -106,7 +129,7 @@
 			let pwd = document.getElementById('pwd'+idx).value;
 			
 			if(secret == '공개') {
-				location.href = "${ctp}/community/askDetail?idx="+idx;
+				location.href = "${ctp}/about/askDetail?idx="+idx;
 				return false;
 			}
 			else {
@@ -116,14 +139,14 @@
 					
 					$.ajax({
 						type : "post",
-						url : "${ctp}/community/askPwdCheck",
+						url : "${ctp}/community/askPwdCheck",  /* 이건 똑같으니까 그대로 쓰겠다! */
 						data : {
 							ans : ans,
 							pwd : pwd
 						},
 						success : function(res) {
 							if(res == "1") {
-								location.href = "${ctp}/community/askDetail?idx="+idx;
+								location.href = "${ctp}/about/askDetail?idx="+idx;
 								return false;
 							}
 							else {
@@ -138,47 +161,35 @@
 					});
 				}
 				
-				
 				if(('${sNickname}' != memNickname) && ('${sMemType}' != '관리자')) {
 					alert('비공개 문의입니다.');
 					return false;
 				}
 				else {
-					location.href = "${ctp}/community/askDetail?idx="+idx;
+					location.href = "${ctp}/about/askDetail?idx="+idx;
 					return false;
 				}
 			}
 		}
-  </script>
+	</script>
 </head>
 <body>
-<div id="back-to-top"></div>
-<jsp:include page="/WEB-INF/views/community/communityMenu.jsp" />
-	
-	<!-- Page Content -->
-	<div id="main">
-		<a href="${ctp}/community/communityMain">
-			<img src = "${ctp}/images/banner.png" style="width: 100%; max-width:2000px"/>
-		</a>
+<a id="back-to-top"></a>
+<jsp:include page="/WEB-INF/views/include/nav2.jsp" />
+	<div id="container" style="margin:100px 0px 200px 0px">
+		<div class="container-xl">
 		
-		
-	  <div class="table-responsive" style="width:90%; margin:0px auto; padding:40px 50px 100px 50px" class="border">
-	 		<div style="background-color:white; padding:20px; margin-bottom:30px">
-	 			<div class="row">
-	 				<div class="col text-left">
-						<a class="btn btn-dark mb-4" href="${ctp}/community/ask" style="margin-left:20px;"><i class="fa-solid fa-arrows-rotate"></i></a>
-	 				</div>
-	 				<div class="col text-right">
-					  <a class="btn btn-dark" href="${ctp}/community/askInsert" style="margin-right:20px;">문의 남기기</a>
-	 				</div>
-	 			</div>
-				<div style="text-align:center">
-					<i class="fa-solid fa-clipboard-question" style="font-size:30px"></i>					
-					<span class="text-center" style="font-size:30px; text-align:center; font-weight:500">문의</span>
-				</div>
-				<hr style="border:0px; height:5px; width:120px; background:#282828; margin:0px auto"/>
-	 		</div>
-	 		
+			<div class="row mb-4">
+ 				<div class="col-3 text-left">
+					<a class="btn btn-dark mb-4" href="${ctp}/about/ask" style="margin-left:20px;"><i class="fa-solid fa-arrows-rotate"></i></a>
+ 				</div>
+ 				<div class="col-6 text-center">
+ 					<span class="text-center" style="margin:0px auto; font-size:30px; font-weight:bold; padding-bottom:20px">문의</span>
+ 				</div>
+ 				<div class="col-3 text-right">
+					<a class="btn btn-dark" href="${ctp}/about/askInsert" style="margin-right:20px;">문의 남기기</a>
+ 				</div>
+ 			</div>
 	 		
 			<form name="searchForm">
 				<div class="row mb-5">
@@ -216,6 +227,7 @@
 				<thead>
 		      <tr class="text-center">
 		        <th>No.</th>
+		        <th>문의 종류</th>
 		        <th>작성자</th>
 		        <th>제목</th>
 		        <th>답변 유무</th>
@@ -224,8 +236,8 @@
 		    </thead>
 		    <tbody>
 		    	<c:if test="${empty vos}">
-		    		<tr><td colspan="5" class="text-center" style="padding:30px"><b>작성 문의가 없습니다.</b></td></tr> 
-		    		<tr><td colspan="5"></td></tr>
+		    		<tr><td colspan="6" class="text-center" style="padding:30px"><b>작성 문의가 없습니다.</b></td></tr> 
+		    		<tr><td colspan="6"></td></tr>
 		    	</c:if>
 		    	
 		    	<c:if test="${!empty vos}">
@@ -233,6 +245,7 @@
 				    	<c:forEach var="vo" items="${vos}"> 
 				    		<tr>
 				    			<td>${curScrStartNo}</td>
+				    			<td>${vo.category}</td>
 				    			<td>
 				    				<span style="color:grey; font-weight:bold">
 					    				<c:if test="${empty vo.memNickname}">
@@ -262,7 +275,7 @@
 				    		</tr>
 				    		<c:set var="curScrStartNo" value="${curScrStartNo - 1}"/>
 						</c:forEach>
-			    	<tr><td colspan="5"></td></tr> 
+			    	<tr><td colspan="6"></td></tr> 
 		    	</c:if>
 		    </tbody>
 		  </table>
@@ -271,21 +284,22 @@
 		  <!-- 첫페이지 / 이전블록 / 1(4) 2(5) 3 / 다음블록 / 마지막페이지 -->
 		  <div class="text-center">
 			  <ul class="pagination justify-content-center">
-			    <c:if test="${pageVO.pag > 1}"><li class="page-item"><a class="page-link text-secondary" href="${ctp}/community/ask?pageSize=${pageVO.pageSize}&pag=1&search=${search}&searchString=${searchString}&sort=${sort}"><i class="fa-solid fa-angles-left"></i></a></li></c:if>
-			    <c:if test="${pageVO.curBlock > 0}"><li class="page-item"><a class="page-link text-secondary" href="${ctp}/community/ask?pageSize=${pageVO.pageSize}&pag=${(pageVO.curBlock-1)*pageVO.blockSize + 1}&search=${search}&searchString=${searchString}&sort=${sort}"><i class="fa-solid fa-angle-left"></i></a></li></c:if>
+			    <c:if test="${pageVO.pag > 1}"><li class="page-item"><a class="page-link text-secondary" href="${ctp}/about/ask?pageSize=${pageVO.pageSize}&pag=1&search=${search}&searchString=${searchString}&sort=${sort}"><i class="fa-solid fa-angles-left"></i></a></li></c:if>
+			    <c:if test="${pageVO.curBlock > 0}"><li class="page-item"><a class="page-link text-secondary" href="${ctp}/about/ask?pageSize=${pageVO.pageSize}&pag=${(pageVO.curBlock-1)*pageVO.blockSize + 1}&search=${search}&searchString=${searchString}&sort=${sort}"><i class="fa-solid fa-angle-left"></i></a></li></c:if>
 			    <c:forEach var="i" begin="${pageVO.curBlock*pageVO.blockSize + 1}" end="${pageVO.curBlock*pageVO.blockSize + pageVO.blockSize}" varStatus="st">
-			      <c:if test="${i <= pageVO.totPage && i == pageVO.pag}"><li class="page-item active"><a class="page-link text-white bg-secondary border-secondary" href="${ctp}/community/ask?pageSize=${pageVO.pageSize}&pag=${i}&search=${search}&searchString=${searchString}&sort=${sort}">${i}</a></li></c:if>
-			      <c:if test="${i <= pageVO.totPage && i != pageVO.pag}"><li class="page-item"><a class="page-link text-secondary" href="${ctp}/community/ask?pageSize=${pageVO.pageSize}&pag=${i}&search=${search}&searchString=${searchString}&sort=${sort}">${i}</a></li></c:if>
+			      <c:if test="${i <= pageVO.totPage && i == pageVO.pag}"><li class="page-item active"><a class="page-link text-white bg-secondary border-secondary" href="${ctp}/about/ask?pageSize=${pageVO.pageSize}&pag=${i}&search=${search}&searchString=${searchString}&sort=${sort}">${i}</a></li></c:if>
+			      <c:if test="${i <= pageVO.totPage && i != pageVO.pag}"><li class="page-item"><a class="page-link text-secondary" href="${ctp}/about/ask?pageSize=${pageVO.pageSize}&pag=${i}&search=${search}&searchString=${searchString}&sort=${sort}">${i}</a></li></c:if>
 			    </c:forEach>
-			    <c:if test="${pageVO.curBlock < pageVO.lastBlock}"><li class="page-item"><a class="page-link text-secondary" href="${ctp}/community/ask?pageSize=${pageVO.pageSize}&pag=${(pageVO.curBlock+1)*pageVO.blockSize + 1}&search=${search}&searchString=${searchString}&sort=${sort}"><i class="fa-solid fa-angle-right"></i></a></li></c:if>
-			    <c:if test="${pageVO.pag < pageVO.totPage}"><li class="page-item"><a class="page-link text-secondary" href="${ctp}/community/ask?pageSize=${pageVO.pageSize}&pag=${pageVO.totPage}&search=${search}&searchString=${searchString}&sort=${sort}"><i class="fa-solid fa-angles-right"></i></a></li></c:if>
+			    <c:if test="${pageVO.curBlock < pageVO.lastBlock}"><li class="page-item"><a class="page-link text-secondary" href="${ctp}/about/ask?pageSize=${pageVO.pageSize}&pag=${(pageVO.curBlock+1)*pageVO.blockSize + 1}&search=${search}&searchString=${searchString}&sort=${sort}"><i class="fa-solid fa-angle-right"></i></a></li></c:if>
+			    <c:if test="${pageVO.pag < pageVO.totPage}"><li class="page-item"><a class="page-link text-secondary" href="${ctp}/about/ask?pageSize=${pageVO.pageSize}&pag=${pageVO.totPage}&search=${search}&searchString=${searchString}&sort=${sort}"><i class="fa-solid fa-angles-right"></i></a></li></c:if>
 			  </ul>
 		  </div>
 		</div>
-		  
-	
-	<!-- END PAGE CONTENT -->
-	<jsp:include page="/WEB-INF/views/include/footer.jsp" />
 	</div>
+	
+	
+	<footer>
+		<jsp:include page="/WEB-INF/views/include/footer.jsp" />
+	</footer>
 </body>
 </html>

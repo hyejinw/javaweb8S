@@ -19,4 +19,7 @@ public class AskVO {
 	private String answerDate;
 	private String askHostIp;
 	private String askDel;
+	
+	// 문의 등록용 상품명
+	private String originName;
 }

@@ -2,6 +2,7 @@ package com.spring.javaweb8S.service;
 
 import java.util.ArrayList;
 
+import com.spring.javaweb8S.vo.AskVO;
 import com.spring.javaweb8S.vo.CartVO;
 import com.spring.javaweb8S.vo.CollectionVO;
 import com.spring.javaweb8S.vo.OptionVO;
@@ -35,5 +36,7 @@ public interface CollectionService {
 	public void setProductOpCartInsert(CartVO vo, ArrayList<CartVO> insertOption);
 
 	public void setProdSaveNumUpdate(int prodIdx, int prodSaveNum);
+
+	public ArrayList<AskVO> getProductAsk(int idx, String category);
 
 }

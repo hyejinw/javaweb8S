@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 import org.apache.ibatis.annotations.Param;
 
+import com.spring.javaweb8S.vo.AskVO;
 import com.spring.javaweb8S.vo.CartVO;
 import com.spring.javaweb8S.vo.MagazineVO;
 import com.spring.javaweb8S.vo.SaveVO;
@@ -32,6 +33,8 @@ public interface MagazineDAO {
 	public void setMagazineCartInsert(@Param("vo") CartVO vo);
 
 	public void setMaSaveNumUpdate(@Param("maIdx") int maIdx, @Param("maSaveNum") int maSaveNum);
+
+	public ArrayList<AskVO> getMagazineAsk(@Param("idx") int idx, @Param("category") String category);
 
 
 }

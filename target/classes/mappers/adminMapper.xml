@@ -15,11 +15,11 @@
 	</select>
 	
 	<select id="proverbTotRecCnt" resultType="int">
-		SELECT count(*) FROM bo_proverb;
+		SELECT COUNT(*) FROM bo_proverb;
 	</select>
 	
 	<select id="bookTotRecCnt" resultType="int">
-		SELECT count(*) FROM bo_book;
+		SELECT COUNT(*) FROM bo_book;
 	</select>
 	
 	<select id="getBooks" resultType="com.spring.javaweb8S.vo.BookVO">
@@ -27,7 +27,7 @@
 	</select>
 	
 	<select id="bookTotRecCntSearch" resultType="int">
-		SELECT count(*) FROM bo_book WHERE ${search} LIKE CONCAT('%',#{searchString},'%');
+		SELECT COUNT(*) FROM bo_book WHERE ${search} LIKE CONCAT('%',#{searchString},'%');
 	</select>
 
 	<select id="getDBBooks" resultType="com.spring.javaweb8S.vo.BookVO">
@@ -35,7 +35,7 @@
 	</select>
 	
 	<select id="magazineTotRecCnt" resultType="int">
-		SELECT count(*) FROM bo_magazine;
+		SELECT COUNT(*) FROM bo_magazine;
 	</select>
 	
 	<select id="getMagazineList" resultType="com.spring.javaweb8S.vo.MagazineVO">
@@ -44,13 +44,13 @@
 	
 	<select id="magazineTotRecCntWithPeriod" resultType="int">
 		<if test='searchString != "" and startDate == ""'>
-			SELECT count(*) FROM bo_magazine WHERE ${search} LIKE CONCAT('%',#{searchString},'%');
+			SELECT COUNT(*) FROM bo_magazine WHERE ${search} LIKE CONCAT('%',#{searchString},'%');
 		</if>
 		<if test='searchString == "" and startDate != ""'>
-			SELECT count(*) FROM bo_magazine WHERE date_format(maDate, '%Y-%m-%d') BETWEEN #{startDate} AND #{endDate};
+			SELECT COUNT(*) FROM bo_magazine WHERE date_format(maDate, '%Y-%m-%d') BETWEEN #{startDate} AND #{endDate};
 		</if>
 		<if test='searchString != "" and startDate != ""'>
-			SELECT count(*) FROM bo_magazine WHERE ${search} LIKE CONCAT('%',#{searchString},'%') AND date_format(maDate, '%Y-%m-%d') BETWEEN #{startDate} AND #{endDate};
+			SELECT COUNT(*) FROM bo_magazine WHERE ${search} LIKE CONCAT('%',#{searchString},'%') AND date_format(maDate, '%Y-%m-%d') BETWEEN #{startDate} AND #{endDate};
 		</if>
 	</select>
 	
@@ -70,7 +70,7 @@
 	</select>
 	
 	<select id="magazineTypeTotRecCnt" resultType="int">
-		SELECT count(*) FROM bo_magazine WHERE maType = #{maType};
+		SELECT COUNT(*) FROM bo_magazine WHERE maType = #{maType};
 	</select>
 	
 	<select id="getMagazineTypeList" resultType="com.spring.javaweb8S.vo.MagazineVO">
@@ -89,7 +89,7 @@
 	</select>
 	
 	<select id="colCategoryTotRecCnt" resultType="int">
-		SELECT count(*) FROM bo_collection;
+		SELECT COUNT(*) FROM bo_collection;
 	</select>
 	
 	<select id="getColCategoryList" resultType="com.spring.javaweb8S.vo.CollectionVO">
@@ -105,7 +105,7 @@
 	</select>
 	
 	<select id="colProductTotRecCnt" resultType="int">
-		SELECT count(*) FROM bo_product;
+		SELECT COUNT(*) FROM bo_product;
 	</select>
 	
 	<select id="getColProductList" resultType="com.spring.javaweb8S.vo.ProductVO">
@@ -129,7 +129,7 @@
 	
 	<select id="colProdTotRecCntWithPeriod" resultType="int">
 		<if test='searchString == "" and startDate == ""'>
-			SELECT count(*) FROM bo_product 
+			SELECT COUNT(*) FROM bo_product 
 			
 			<if test='sort != "" and (sort == "판매" or sort == "품절")'>
 				WHERE prodStatus = #{sort}
@@ -140,7 +140,7 @@
 			;
 		</if>
 		<if test='searchString != "" and startDate == ""'>
-			SELECT count(*) FROM bo_product WHERE 
+			SELECT COUNT(*) FROM bo_product WHERE 
 			
 			<if test='sort != "" and (sort == "판매" or sort == "품절")'>
 				prodStatus = #{sort} AND 
@@ -152,7 +152,7 @@
 			${search} LIKE CONCAT('%',#{searchString},'%');
 		</if>
 		<if test='searchString == "" and startDate != ""'>
-			SELECT count(*) FROM bo_product WHERE
+			SELECT COUNT(*) FROM bo_product WHERE
 			
 			<if test='sort != "" and (sort == "판매" or sort == "품절")'>
 				prodStatus = #{sort} AND 
@@ -164,7 +164,7 @@
 			date_format(prodDate, '%Y-%m-%d') BETWEEN #{startDate} AND #{endDate};
 		</if>
 		<if test='searchString != "" and startDate != ""'>
-			SELECT count(*) FROM bo_product WHERE 
+			SELECT COUNT(*) FROM bo_product WHERE 
 			
 			<if test='sort != "" and (sort == "판매" or sort == "품절")'>
 				prodStatus = #{sort} AND 
@@ -234,7 +234,7 @@
 	<!-- 컬렉션 명으로 검색 -->
 	<select id="colProdColNameTotRecCntWithPeriod" resultType="int">
 		<if test='searchString == "" and startDate == ""'>
-			SELECT count(*) FROM bo_product 
+			SELECT COUNT(*) FROM bo_product 
 			
 			<if test='sort != "" and (sort == "판매" or sort == "품절")'>
 				WHERE prodStatus = #{sort}
@@ -245,7 +245,7 @@
 			;
 		</if>
 		<if test='searchString != "" and startDate == ""'>
-			SELECT count(*) 
+			SELECT COUNT(*) 
 			FROM bo_product p 
 			LEFT JOIN bo_collection c 
 			ON p.colIdx = c.idx WHERE 
@@ -259,7 +259,7 @@
 			c.${search} LIKE CONCAT('%',#{searchString},'%');
 		</if>
 		<if test='searchString == "" and startDate != ""'>
-			SELECT count(*) FROM bo_product WHERE
+			SELECT COUNT(*) FROM bo_product WHERE
 			
 			<if test='sort != "" and (sort == "판매" or sort == "품절")'>
 				prodStatus = #{sort} AND 
@@ -271,7 +271,7 @@
 			date_format(prodDate, '%Y-%m-%d') BETWEEN #{startDate} AND #{endDate};
 		</if>
 		<if test='searchString != "" and startDate != ""'>
-			SELECT count(*) 
+			SELECT COUNT(*) 
 			FROM bo_product p 
 			LEFT JOIN bo_collection c 
 			ON p.colIdx = c.idx WHERE 
@@ -286,7 +286,6 @@
 			c.${search} LIKE CONCAT('%',#{searchString},'%') AND date_format(p.prodDate, '%Y-%m-%d') BETWEEN #{startDate} AND #{endDate};
 		</if>
 	</select>
-	
 		
 	<select id="getColNameProdSearchList" resultType="com.spring.javaweb8S.vo.ProductVO">
 		<if test='searchString == "" and startDate == ""'>
@@ -349,7 +348,7 @@
 	</select>
 	
 	<select id="orderTotRecCnt" resultType="int">
-		SELECT count(*) FROM bo_order;
+		SELECT COUNT(*) FROM bo_order;
 	</select>
 	
 	<select id="getOrderList" resultType="com.spring.javaweb8S.vo.OrderVO">
@@ -387,7 +386,7 @@
 	
 	<select id="orderTotRecCntWithPeriod" resultType="int">
 		<if test='searchString == "" and startDate == ""'>
-			SELECT count(*) FROM bo_order 
+			SELECT COUNT(*) FROM bo_order 
 			
 			<if test='sort != "" and sort != "전체"'>
 				WHERE orderStatus = #{sort}
@@ -395,7 +394,7 @@
 			;
 		</if>
 		<if test='searchString != "" and startDate == ""'>
-			SELECT count(*) FROM bo_order WHERE 
+			SELECT COUNT(*) FROM bo_order WHERE 
 			
 			<if test='sort != "" and sort != "전체"'>
 				orderStatus = #{sort} AND 
@@ -404,7 +403,7 @@
 			${search} LIKE CONCAT('%',#{searchString},'%');
 		</if>
 		<if test='searchString == "" and startDate != ""'>
-			SELECT count(*) FROM bo_order WHERE
+			SELECT COUNT(*) FROM bo_order WHERE
 			
 			<if test='sort != "" and sort != "전체"'>
 				orderStatus = #{sort} AND 
@@ -413,7 +412,7 @@
 			date_format(orderDate, '%Y-%m-%d') BETWEEN #{startDate} AND #{endDate};
 		</if>
 		<if test='searchString != "" and startDate != ""'>
-			SELECT count(*) FROM bo_order WHERE 
+			SELECT COUNT(*) FROM bo_order WHERE 
 			
 			<if test='sort != "" and sort != "전체"'>
 				orderStatus = #{sort} AND 
@@ -600,7 +599,7 @@
 				o.orderStatus = #{sort} AND 
 			</if>
 			
-			d.${search} LIKE CONCAT('%',#{searchString},'%') and date_format(o.orderDate, '%Y-%m-%d') BETWEEN #{startDate} AND #{endDate}
+			d.${search} LIKE CONCAT('%',#{searchString},'%') AND date_format(o.orderDate, '%Y-%m-%d') BETWEEN #{startDate} AND #{endDate}
 			GROUP BY o.orderCode
 			ORDER BY o.idx DESC LIMIT #{startIndexNo},#{pageSize};
 		</if>
@@ -610,8 +609,60 @@
 		SELECT * FROM bo_refund WHERE orderIdx = #{idx};
 	</select>
 	
+	<select id="memberListTotRecCnt" resultType="int">
+		<if test='searchString == ""'>
+			SELECT COUNT(*) FROM bo_member 
+			<if test='sort != "" and sort != "전체"'>
+				WHERE memberDel = #{sort}
+			</if>
+			;
+		</if>
+		<if test='searchString != ""'>
+			SELECT COUNT(*) FROM bo_member WHERE 
+			<if test='sort != "" and sort != "전체"'>
+				memberDel = #{sort} AND
+			</if>
+			${search} LIKE CONCAT('%',#{searchString},'%');
+		</if>
+	</select>
 	
+	<select id="getMemberList" resultType="com.spring.javaweb8S.vo.MemberVO">
+		<if test='searchString == ""'>
+			SELECT * FROM bo_member  
+			<if test='sort != "" and sort != "전체"'>
+				WHERE memberDel = #{sort}
+			</if>
+			ORDER BY idx DESC LIMIT #{startIndexNo},#{pageSize};
+		</if>
+		<if test='searchString != ""'>
+			SELECT * FROM bo_member WHERE 
+			<if test='sort != "" and sort != "전체"'>
+				memberDel = #{sort} AND
+			</if>
+			${search} LIKE CONCAT('%',#{searchString},'%')
+			ORDER BY idx DESC LIMIT #{startIndexNo},#{pageSize};
+		</if>
+	</select>
 	
+	<select id="getMemberAddressList" resultType="com.spring.javaweb8S.vo.AddressVO">
+		SELECT * FROM bo_address WHERE memNickname = #{nickname} ORDER BY addressDel DESC, idx DESC;
+	</select>
+	
+	<select id="getMemberPointList" resultType="com.spring.javaweb8S.vo.PointVO">
+		SELECT * FROM bo_point WHERE memNickname = #{nickname} ORDER BY idx DESC;
+	</select>
+	
+	<select id="getMemberPointUseList" resultType="com.spring.javaweb8S.vo.PointUseVO">
+		SELECT * FROM bo_pointUse WHERE memNickname = #{nickname} ORDER BY idx DESC;
+	</select>
+	
+	<select id="getMemberBooksletterList" resultType="com.spring.javaweb8S.vo.BooksletterVO">
+		SELECT * FROM bo_booksletter WHERE memNickname = #{nickname} ORDER BY idx DESC;
+	</select>
+	
+	<select id="getMemberSubscribeList" resultType="com.spring.javaweb8S.vo.SubscribeVO">
+		SELECT * FROM bo_subscribe WHERE memNickname = #{nickname} ORDER BY idx DESC;
+	</select>
 	
 	<insert id="memberDefaultPhotoInsert">
 		INSERT INTO bo_defaultPhoto VALUES (default, #{vo.photoName}, #{vo.memo}, default); 
@@ -638,7 +689,6 @@
 	<insert id="setColCategoryInsert">
 		INSERT INTO bo_collection VALUES(default,#{vo.colName},#{vo.colDetail},#{vo.colThumbnail},default,default);
 	</insert>
-	
 	
 	<insert id="setProdInsert">
 		INSERT INTO bo_product VALUES(default,#{vo.colIdx},
@@ -702,7 +752,6 @@
 		WHERE idx = #{vo.idx};
 	</update>
 	
-	<!-- separator="," 이 구분자가 필요하지 않다!!!!! -->
 	<update id="setProdOpUpdate" parameterType="java.util.ArrayList">
 		<foreach item="item" index="index" collection="optionList">
 			UPDATE bo_option SET 
@@ -714,7 +763,9 @@
 		UPDATE bo_product SET prodStatus = #{prodStatus} WHERE idx = #{idx};
 	</update>
 	
-	
+	<update id="setMemberForcedDelete">
+		UPDATE bo_member SET memberDel = "탈퇴", memberDelReason = #{memberDelReason} WHERE idx = #{idx};
+	</update>
 	
 	<delete id="memberDefaultPhotoDelete">
 		DELETE FROM bo_defaultPhoto WHERE 1=1 AND 

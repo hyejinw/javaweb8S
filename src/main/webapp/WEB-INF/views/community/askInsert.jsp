@@ -149,8 +149,17 @@
 			  }
 				
 			}
-			alert(sessionStorage.getItem('myPageAskInsertSW'));
+			// 등록 완료 후, 마이페이지로!
+			if(sessionStorage.getItem('myPageAskInsertSW') == 'ON') {
+				document.getElementById('returnPath').value = '마이페이지';
+			}
+			
 			insertForm.submit();
+		}
+		
+		// 책(의)세계 문의창으로 이동
+		function move() {
+			if(confirm('책(의)세계 문의창으로 이동하시겠습니까?')) location.href = "${ctp}/about/ask";
 		}
   </script>
 </head>
@@ -205,6 +214,7 @@
 							</span>&nbsp;&nbsp;&nbsp;&nbsp;
 							
 							<input type="hidden" name="askHostIp" value="${pageContext.request.remoteAddr}"/>
+							<input type="hidden" name="returnPath" id="returnPath"/>
 
 							<button class="btn btn-secondary" type="button" onclick="askInsert()">작성</button>
 						</div>
@@ -213,7 +223,7 @@
 					<hr style="border:0px; height:1.0px; background:#41644A; margin:10px 0px"/>
 		 		</div>
 				<div style="padding:0px 0px 50px 50px">
-					<span><i class="fa-solid fa-circle-info" style="font-size:20px"></i>&nbsp;&nbsp;&nbsp;<b>커뮤니티 관련 문의만 남겨주세요:) 그외 문의는 책(의)세계 문의를 이용해주세요.</b></span>
+					<span><i class="fa-solid fa-circle-info" style="font-size:20px"></i>&nbsp;&nbsp;&nbsp;<b>커뮤니티 관련 문의만 남겨주세요:) 그외 문의는 <a href="javascript:move()"><u>책(의)세계 문의</u></a>를 이용해주세요.</b></span>
 				</div>
 				
 				<c:if test="${empty sNickname}">

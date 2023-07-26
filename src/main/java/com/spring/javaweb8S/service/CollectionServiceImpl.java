@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.spring.javaweb8S.dao.CollectionDAO;
+import com.spring.javaweb8S.vo.AskVO;
 import com.spring.javaweb8S.vo.CartVO;
 import com.spring.javaweb8S.vo.CollectionVO;
 import com.spring.javaweb8S.vo.OptionVO;
@@ -94,6 +95,12 @@ public class CollectionServiceImpl implements CollectionService {
 	@Override
 	public void setProdSaveNumUpdate(int prodIdx, int prodSaveNum) {
 		collectionDAO.setProdSaveNumUpdate(prodIdx, prodSaveNum);
+	}
+
+	// 상품 상세창, 상품 문의
+	@Override
+	public ArrayList<AskVO> getProductAsk(int idx, String category) {
+		return collectionDAO.getProductAsk(idx, category);
 	}
 	
 	

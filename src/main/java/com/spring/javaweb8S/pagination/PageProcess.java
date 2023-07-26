@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.spring.javaweb8S.dao.AboutDAO;
 import com.spring.javaweb8S.dao.AdminDAO;
 import com.spring.javaweb8S.dao.CollectionDAO;
 import com.spring.javaweb8S.dao.CommunityDAO;
@@ -27,6 +28,9 @@ public class PageProcess {
 	
 	@Autowired
 	OrderDAO orderDAO;
+	
+	@Autowired
+	AboutDAO aboutDAO;
 	
 	@Autowired
 	CommunityDAO communityDAO;
@@ -88,8 +92,25 @@ public class PageProcess {
 			String nickname = searchString;
 			totRecCnt = memberDAO.myPagePointUseTotRecCnt(nickname);
 		}
-		
-		
+		else if(section.equals("aboutAskSearch")) {
+			String sort = search.split("/")[0];
+			search = search.split("/")[1];
+			
+			totRecCnt = aboutDAO.AskSearchTotRecCnt(sort, search, searchString);
+		}
+		else if(section.equals("myPageAskSearch")) {
+			String memNickname = search.split("/")[0];
+			String sort = search.split("/")[1];
+			search = search.split("/")[2];
+			
+			totRecCnt = memberDAO.myPageAskSearchTotRecCnt(memNickname, sort, search, searchString);
+		}
+		else if(section.equals("adminMemberList")) {
+			String sort = search.split("/")[0];
+			search = search.split("/")[1];
+			
+			totRecCnt = adminDAO.memberListTotRecCnt(sort, search, searchString);
+		}
 //		else if(section.equals("board")) {
 //			if(part.equals("")) totRecCnt = boardDAO.totRecCnt();
 //			else {

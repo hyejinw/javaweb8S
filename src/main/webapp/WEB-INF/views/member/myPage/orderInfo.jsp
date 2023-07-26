@@ -153,7 +153,7 @@
 					    <tbody>
 								<tr>
 									<th>반품 상품 개수</th>
-									<td>${refundVO.refundNum}</td>
+									<td>${refundVO.refundNum} 개</td>
 								<tr>
 								<tr>
 									<th>반품 사유</th>
@@ -170,8 +170,12 @@
 									<tr>
 								</c:if>
 								<tr>
-									<th>환불 금액&nbsp;/&nbsp;반환 포인트</th>
-									<td><fmt:formatNumber value="${refundVO.refundPrice}" pattern="#,###"/> 원&nbsp;/&nbsp;${refundVO.refundPoint}</td>
+									<th>환불 금액</th>
+									<td><fmt:formatNumber value="${refundVO.refundPrice}" pattern="#,###"/> 원</td>
+								<tr>
+								<tr>
+									<th>반환 포인트</th>
+									<td>${refundVO.refundPoint}</td>
 								<tr>
 								<tr>
 									<th>배송비</th>

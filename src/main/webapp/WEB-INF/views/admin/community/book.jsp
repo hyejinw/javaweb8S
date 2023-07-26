@@ -130,7 +130,7 @@
     	location.href = "${ctp}/admin/community/bookDB?search="+search+"&searchString="+searchString;
 		}
 		
- 		function bookDetail(idx,title,contents,url,isbn,datetime,authors,publisher,translators,price,sale_price,thumbnail,status,bookRate,save,bookUpdate) {
+ 		function bookDetail(idx,title,contents,url,isbn,datetime,authors,publisher,translators,price,sale_price,thumbnail,status,save,bookUpdate) {
 			$("#bookDetailIdx").text(idx);
 			$("#bookDetailTitle").text(title);
 			$("#bookDetailContents").text(contents);
@@ -161,7 +161,6 @@
 			$("#bookDetailSale_price").text(sale_price);
 			
 			$("#bookDetailStatus").text(status);
-			$("#bookDetailBookRate").text("평점 : " + bookRate);
 			$("#bookDetailSave").text("저장 수 : " + save);
 			$("#bookDetailBookUpdate").text("저장일 : " + bookUpdate.substring(0,19));
 		} 
@@ -242,7 +241,6 @@
 			        <th>제목</th>
 			        <th>출판날짜</th>
 			        <th>저자</th>
-			        <th>평점</th>
 			        <th>저장 등록 수</th>
 			        <th>저장 날짜</th>
 			      </tr>
@@ -254,18 +252,17 @@
 				        <td><label for="chk${vo.idx}"><input type="checkbox" name="checkRow" id="chk${vo.idx}" class="form-check-input chkGrp" value="${vo.idx}" />&nbsp;&nbsp;&nbsp;&nbsp;${curScrStartNo}</label></td>
 				        <td>
 				        	<a href="#" id="bookDetail" data-toggle="modal" data-target="#bookModal" 
-				        		onclick="javascript:bookDetail('${vo.idx}','${vo.title}','${fn:replace(vo.contents,'\'', '\\\'')}','${vo.url}','${vo.isbn}','${vo.datetime}','${vo.authors}','${vo.publisher}','${vo.translators}','${vo.price}','${vo.sale_price}','${vo.thumbnail}','${vo.status}','${vo.bookRate}','${vo.save}','${vo.bookUpdate}')">
+				        		onclick="javascript:bookDetail('${vo.idx}','${vo.title}','${fn:replace(vo.contents,'\'', '\\\'')}','${vo.url}','${vo.isbn}','${vo.datetime}','${vo.authors}','${vo.publisher}','${vo.translators}','${vo.price}','${vo.sale_price}','${vo.thumbnail}','${vo.status}','${vo.save}','${vo.bookUpdate}')">
 				        	${vo.title}</a>
 				        </td>
 				        <td>${fn:substring(vo.datetime,0,9)}</td>
 				        <td>${vo.authors}</td>
-				        <td>${vo.bookRate}</td>
 				        <td>${vo.save}</td>
 				        <td>${fn:substring(vo.bookUpdate,0,19)}</td>
 				      </tr>
 				    	<c:set var="curScrStartNo" value="${curScrStartNo - 1}"/>
 			    	</c:forEach>
-			    	<tr><td colspan="7"></td></tr> 
+			    	<tr><td colspan="6"></td></tr> 
 			    </tbody>
 			  </table>
 		  </div>
@@ -318,7 +315,7 @@
 		  				<a id="bookDetailUrl2" href="#" target="_blank"><img src="#" id="bookDetailThumbnail"/></a>
 		  			</div>
 		  			<div class="col-9 text-center">
-		  				<div class="row"><div class="col"><span id="bookDetailBookRate"></span>&nbsp;&nbsp;|&nbsp;&nbsp;<span id="bookDetailSave"></span></div></div>
+		  				<div class="row"><div class="col"><span id="bookDetailSave"></span></div></div>
 		  				<div class="row"><div class="col" id="bookDetailBookUpdate"></div></div>
 		  				<div class="row m-3"><div class="col" id="bookDetailContents"></div></div>
 		  			</div>

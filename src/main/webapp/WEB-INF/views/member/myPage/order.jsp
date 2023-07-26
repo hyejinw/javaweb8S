@@ -592,7 +592,7 @@
 					  			<div>
 					  				<br/>
 					  				<div style="color:red"><i class="fa-solid fa-triangle-exclamation" style="font-size:17px; margin-bottom:15px"></i>&nbsp;&nbsp;반품 철회는 불가능합니다.  배송비는 상품 하자일 경우만 무료입니다.</div>
-					  				<p><i class="fa-solid fa-triangle-exclamation" style="font-size:17px; margin-bottom:15px"></i>&nbsp;&nbsp;일부 반품의 경우에 나머지 상품은 자동으로 구매확정됩니다.</p>
+					  				<p><i class="fa-solid fa-triangle-exclamation" style="font-size:17px; margin-bottom:15px"></i>&nbsp;&nbsp;부분 반품의 경우에 나머지 상품은 자동으로 구매확정됩니다.</p>
 					  				<span>신청자 : <b>${sNickname}</b></span><br/>
 					  				<span>배송비 : <b><input type="text" id="deliveryPrice" value='0  원' style="background-color:transparent; border:0px" readonly/></b></span>
 					  				<span>환불 상품 개수 : <b><input type="number" name="refundNum" id="refundNum" min="1" style="width:50px" onchange="refundNumChange()"/></b></span><br/>

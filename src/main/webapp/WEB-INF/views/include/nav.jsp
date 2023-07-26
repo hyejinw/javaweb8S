@@ -80,7 +80,7 @@
 		      <a class="w3-hover-white w3-round-xxlarge navContent"><span class="detailContent">책(의)세계란</span>&nbsp;<i class="fa-solid fa-caret-down"></i></a>
 		      <div class="w3-dropdown-content w3-bar-block w3-card-4">
 		        <a href="${ctp}/about/about" class="w3-bar-item w3-button">소개</a>
-		        <a href="#" class="w3-bar-item w3-button">뉴스레터</a>
+		        <a href="${ctp}/about/ask" class="w3-bar-item w3-button">문의</a>
 		      </div>
 		    </div>
 		    

@@ -1,6 +1,11 @@
 package com.spring.javaweb8S.service;
 
+import java.util.ArrayList;
 import java.util.List;
+
+import com.spring.javaweb8S.vo.AskVO;
+import com.spring.javaweb8S.vo.MagazineVO;
+import com.spring.javaweb8S.vo.ProductVO;
 
 public interface AboutService {
 
@@ -11,5 +16,19 @@ public interface AboutService {
 	public void getBooksletterInsert(String email, String memNickname);
 
 	public String getBooksletterCheck(String email, String memNickname);
+
+	public ProductVO getProductInfo(String originIdx);
+
+	public MagazineVO getMagazineInfo(String originIdx);
+
+	public String[] getMagazineTitle(String maType);
+
+	public String[] getProductName();
+
+	public int setAskInsert(AskVO vo);
+
+	public ArrayList<AskVO> getAskSearch(int startIndexNo, int pageSize, String sort, String search, String searchString);
+
+	public AskVO getAskDetail(int idx);
 
 }

@@ -25,6 +25,7 @@ import com.spring.javaweb8S.pagination.PageVO;
 import com.spring.javaweb8S.service.AdminService;
 import com.spring.javaweb8S.vo.AddressVO;
 import com.spring.javaweb8S.vo.BookVO;
+import com.spring.javaweb8S.vo.BooksletterVO;
 import com.spring.javaweb8S.vo.CollectionVO;
 import com.spring.javaweb8S.vo.DefaultPhotoVO;
 import com.spring.javaweb8S.vo.DeliveryVO;
@@ -32,6 +33,8 @@ import com.spring.javaweb8S.vo.MagazineVO;
 import com.spring.javaweb8S.vo.MemberVO;
 import com.spring.javaweb8S.vo.OptionVO;
 import com.spring.javaweb8S.vo.OrderVO;
+import com.spring.javaweb8S.vo.PointUseVO;
+import com.spring.javaweb8S.vo.PointVO;
 import com.spring.javaweb8S.vo.ProductVO;
 import com.spring.javaweb8S.vo.ProverbVO;
 import com.spring.javaweb8S.vo.RefundVO;
@@ -64,12 +67,6 @@ public class AdminController {
 		//autoUpdate.booksletterAutoSend();
 		
 		return "admin/adminPage";
-	}
-	
-	// 회원관리 창
-	@RequestMapping(value = "/member/memberList", method = RequestMethod.GET)
-	public String memberListGet() {
-		return "admin/member/memberList";
 	}
 	
 	// 회원 기본 프로필 사진 관리 창
@@ -119,7 +116,7 @@ public class AdminController {
 				file.delete();
 			}
 		}
-		// 해당 이미지 사용 회원, 프로필 'defaultImage.png'로 변경
+		// 해당 이미지 사용 회원, 프로필 'defaultImage.jpg'로 변경
 		adminService.setChangeMemberPhotos(defaultPhotoList);
 		
 		return Integer.toString(res);
@@ -837,6 +834,69 @@ public class AdminController {
 		return "admin/order/orderListSearch";
 	}
 	
+	// 회원리스트 
+	@RequestMapping(value = "/member/memberList", method = RequestMethod.GET)
+	public String memberListGet(Model model,
+			@RequestParam(name="sort", defaultValue = "전체", required = false) String sort,
+			@RequestParam(name="search", defaultValue = "nickname", required = false) String search,
+			@RequestParam(name="searchString", defaultValue = "", required = false) String searchString,
+			@RequestParam(name="pag", defaultValue = "1", required = false) int pag,
+			@RequestParam(name="pageSize", defaultValue = "15", required = false) int pageSize) {
+		
+		// sort에 들어갈 값: 전체, 탈퇴, 미탈퇴
+		PageVO pageVO = pageProcess.totRecCnt(pag, pageSize, "adminMemberList", sort+"/"+search, searchString);
+		ArrayList<MemberVO> vos = adminService.getMemberList(sort, search, searchString, pageVO.getStartIndexNo(), pageSize);
+		
+		model.addAttribute("sort", sort);
+		model.addAttribute("search", search);
+		model.addAttribute("searchString", searchString);
+		
+		model.addAttribute("vos", vos);
+		model.addAttribute("pageVO", pageVO);
+		
+		return "admin/member/memberList";
+	}
+	
+	// 회원 상세정보창(팝업)
+	@RequestMapping(value = "/member/memInfo", method = RequestMethod.GET)
+	public String memberListGet(Model model, String nickname) {
+		
+		// 1) 회원정보
+		MemberVO memberVO = adminService.getMemberInfo(nickname);
+		model.addAttribute("memberVO", memberVO);
+		
+		// 2) 배송지 주소록   (+삭제한 것도 전부)
+		ArrayList<AddressVO> addressVOS = adminService.getMemberAddressList(nickname);
+		model.addAttribute("addressVOS", addressVOS);
+		
+		// 3-1) 포인트 사용 내역
+		ArrayList<PointVO> pointVOS = adminService.getMemberPointList(nickname);
+		model.addAttribute("pointVOS", pointVOS);
+		
+		// 3-2) 포인트 적립 내역
+		ArrayList<PointUseVO> pointUseVOS = adminService.getMemberPointUseList(nickname);
+		model.addAttribute("pointUseVOS", pointUseVOS);
+		
+		// 4-1) 뉴스레터 구독  (+삭제한 것도 전부)
+		ArrayList<BooksletterVO> booksletterVOS = adminService.getMemberBooksletterList(nickname);
+		model.addAttribute("booksletterVOS", booksletterVOS);
+		
+		// 4-2) 매거진 정기구독 
+		ArrayList<SubscribeVO> subscribeVOS = adminService.getMemberSubscribeList(nickname);
+		model.addAttribute("subscribeVOS", subscribeVOS);
+		
+		return "admin/member/memInfo";
+	}
+	
+	// 회원 상세정보창(팝업), 회원 강제탈퇴
+	@ResponseBody
+	@RequestMapping(value = "/member/memberForcedDelete", method = RequestMethod.POST)
+	public String memberForcedDeletePost(int idx, String memberDelReason) {
+		
+		adminService.setMemberForcedDelete(idx, memberDelReason);
+		
+		return "";
+	}
 	
 	
 }

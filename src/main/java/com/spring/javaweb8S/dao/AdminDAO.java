@@ -6,6 +6,7 @@ import org.apache.ibatis.annotations.Param;
 
 import com.spring.javaweb8S.vo.AddressVO;
 import com.spring.javaweb8S.vo.BookVO;
+import com.spring.javaweb8S.vo.BooksletterVO;
 import com.spring.javaweb8S.vo.CollectionVO;
 import com.spring.javaweb8S.vo.DefaultPhotoVO;
 import com.spring.javaweb8S.vo.DeliveryVO;
@@ -13,6 +14,8 @@ import com.spring.javaweb8S.vo.MagazineVO;
 import com.spring.javaweb8S.vo.MemberVO;
 import com.spring.javaweb8S.vo.OptionVO;
 import com.spring.javaweb8S.vo.OrderVO;
+import com.spring.javaweb8S.vo.PointUseVO;
+import com.spring.javaweb8S.vo.PointVO;
 import com.spring.javaweb8S.vo.ProductVO;
 import com.spring.javaweb8S.vo.ProverbVO;
 import com.spring.javaweb8S.vo.RefundVO;
@@ -42,6 +45,7 @@ public interface AdminDAO {
 			@Param("endDate") String endDate);
 	public ArrayList<OrderVO> orderWithInvoiceTotRecCntWithPeriod(@Param("sort") String sort, @Param("search") String search, @Param("searchString") String searchString, @Param("startDate") String startDate,
 			@Param("endDate") String endDate);
+	public int memberListTotRecCnt(@Param("sort") String sort, @Param("search") String search, @Param("searchString") String searchString);
 
 	public ArrayList<DefaultPhotoVO> getDefaultPhoto();
 
@@ -151,6 +155,20 @@ public interface AdminDAO {
 			@Param("endDate") String endDate, @Param("startIndexNo") int startIndexNo, @Param("pageSize") int pageSize);
 	
 	public RefundVO getRefundInfo(@Param("idx") int idx);
+	
+	public ArrayList<MemberVO> getMemberList(@Param("sort") String sort, @Param("search") String search, @Param("searchString") String searchString, @Param("startIndexNo") int startIndexNo, @Param("pageSize") int pageSize);
+	
+	public ArrayList<AddressVO> getMemberAddressList(@Param("nickname") String nickname);
+	
+	public ArrayList<PointVO> getMemberPointList(@Param("nickname") String nickname);
+	
+	public ArrayList<PointUseVO> getMemberPointUseList(@Param("nickname") String nickname);
+	
+	public ArrayList<BooksletterVO> getMemberBooksletterList(@Param("nickname") String nickname);
+	
+	public ArrayList<SubscribeVO> getMemberSubscribeList(@Param("nickname") String nickname);
+	
+	public void setMemberForcedDelete(@Param("idx") int idx, @Param("memberDelReason") String memberDelReason);
 	
 
 	

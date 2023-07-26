@@ -14,6 +14,85 @@
 		SELECT booksletterDate FROM bo_booksletter WHERE email = #{email} AND memNickname = #{memNickname} AND booksletterStatus != "구독취소";
 	</select>
 	
+	<select id="getProductInfo" resultType="com.spring.javaweb8S.vo.ProductVO">
+		SELECT * FROM bo_product WHERE idx = #{originIdx};
+	</select>
+	
+	<select id="getMagazineInfo" resultType="com.spring.javaweb8S.vo.MagazineVO">
+		SELECT * FROM bo_magazine WHERE idx = #{originIdx};
+	</select>
+	
+	<select id="getMagazineTitle" resultType="String">
+		SELECT maTitle FROM bo_magazine WHERE maOpen = "공개" AND maType = #{maType} ORDER BY idx DESC;
+	</select>
+	
+	<select id="getProductName" resultType="String">
+		SELECT prodName FROM bo_product WHERE prodOpen = "공개" ORDER BY idx DESC;
+	</select>
+
+	<select id="AskSearchTotRecCnt" resultType="int">
+		<if test='searchString == ""'><!-- 검색어가 없으면 전체! -->
+		 	SELECT count(*) FROM bo_ask 
+		 	
+		 	WHERE askDel != "삭제" AND category != "커뮤니티" 
+		 	
+		 	<if test='sort != "" and (sort == "답변완료" or sort == "답변전")'>
+				AND answeredAsk = #{sort}
+			</if>
+		 	<if test='sort != "" and (sort == "공개" or sort == "비공개")'>
+				AND secret = #{sort}
+			</if>
+			;
+		</if>
+		<if test='searchString != ""'>
+		 	SELECT count(*) FROM bo_ask 
+		 	
+		 	WHERE askDel != "삭제" AND category != "커뮤니티" 
+		 	
+		 	<if test='sort != "" and (sort == "답변완료" or sort == "답변전")'>
+				AND answeredAsk = #{sort}
+			</if>
+		 	<if test='sort != "" and (sort == "공개" or sort == "비공개")'>
+				AND secret = #{sort}
+			</if>
+			AND ${search} LIKE CONCAT('%',#{searchString},'%');
+		</if>
+	</select>
+	
+	<select id="getAskSearch" resultType="com.spring.javaweb8S.vo.AskVO">
+		<if test='searchString == ""'><!-- 검색어가 없으면 전체! -->
+		 	SELECT * FROM bo_ask 
+		 	
+		 	WHERE askDel != "삭제" AND category != "커뮤니티" 
+		 	
+		 	<if test='sort != "" and (sort == "답변완료" or sort == "답변전")'>
+				AND answeredAsk = #{sort}
+			</if>
+		 	<if test='sort != "" and (sort == "공개" or sort == "비공개")'>
+				AND secret = #{sort}
+			</if>
+			ORDER BY idx DESC LIMIT #{startIndexNo},#{pageSize};
+		</if>
+		<if test='searchString != ""'>
+		 	SELECT * FROM bo_ask 
+		 	
+		 	WHERE askDel != "삭제" AND category != "커뮤니티" 
+		 	
+		 	<if test='sort != "" and (sort == "답변완료" or sort == "답변전")'>
+				AND answeredAsk = #{sort}
+			</if>
+		 	<if test='sort != "" and (sort == "공개" or sort == "비공개")'>
+				AND secret = #{sort}
+			</if>
+			AND ${search} LIKE CONCAT('%',#{searchString},'%')
+			ORDER BY idx DESC LIMIT #{startIndexNo},#{pageSize};
+		</if>
+	</select>
+		
+	<select id="getAskDetail" resultType="com.spring.javaweb8S.vo.AskVO">
+		SELECT * FROM bo_ask WHERE idx = #{idx};
+	</select>
+	
 	<insert id="getBooksletterInsert" >
 		<if test='memNickname == ""'>
 			INSERT INTO bo_booksletter(idx,email,booksletterDate,sendNum,booksletterStatus) VALUES
@@ -22,6 +101,35 @@
 		<if test='memNickname != ""'>
 			INSERT INTO bo_booksletter VALUES
 			(default, #{memNickname}, #{email}, default, default, default);
+		</if>
+	</insert>
+	
+	<insert id="setAskInsert" parameterType="com.spring.javaweb8S.vo.AskVO">
+		<if test="vo.memNickname == null">
+			INSERT INTO bo_ask(idx,email,pwd,category,originIdx,askTitle,askContent,secret,askDate,answeredAsk,askHostIp,askDel) 
+			VALUES 
+			(default,#{vo.email},#{vo.pwd},#{vo.category},
+			<if test='vo.category != null and vo.category != "컬렉션상품"'>
+				(SELECT idx FROM bo_magazine WHERE maTitle = #{vo.originName}),
+			</if>
+			<if test='vo.category != null and vo.category == "컬렉션상품"'>
+				(SELECT idx FROM bo_product WHERE prodName = #{vo.originName}),
+			</if>
+			
+			#{vo.askTitle},#{vo.askContent},#{vo.secret},default,default,#{vo.askHostIp},default);
+		</if>
+		<if test="vo.memNickname != null">
+			INSERT INTO bo_ask(idx,memNickname,category,originIdx,askTitle,askContent,secret,askDate,answeredAsk,askHostIp,askDel) 
+			VALUES 
+			(default,#{vo.memNickname},#{vo.category},
+			<if test='vo.category != null and vo.category != "컬렉션상품"'>
+				(SELECT idx FROM bo_magazine WHERE maTitle = #{vo.originName}),
+			</if>
+			<if test='vo.category != null and vo.category == "컬렉션상품"'>
+				(SELECT idx FROM bo_product WHERE prodName = #{vo.originName}),
+			</if>
+			
+			#{vo.askTitle},#{vo.askContent},#{vo.secret},default,default,#{vo.askHostIp},default);
 		</if>
 	</insert>
 	

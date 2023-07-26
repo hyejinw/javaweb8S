@@ -300,7 +300,7 @@
 					<div style="padding:20px 20px 0px 20px">
 					-  &nbsp;매달 15일 일괄 발송되며, 구독권 기간에 따라 6/12개월 동안 지속됩니다.<br/>
 					-  &nbsp;구독취소 신청 승인 후, 환불금과 반환 포인트가 지급됩니다.<br/>
-					-  &nbsp;구독종료 후, 결제액의 5% 가 포인트가 적립됩니다.  (구독취소 시, 결제액과 환불금 차액의 5%가 적립.)<br/><br/>
+					-  &nbsp;구독종료 후, 결제액의 5% 가 포인트가 적립됩니다.  (구독취소 시, 결제액과 환불금 차액의 5% 적립.)<br/><br/>
 						<c:if test="${!empty subscribeVOS}">
 							<table class="table text-center">
 								<thead>

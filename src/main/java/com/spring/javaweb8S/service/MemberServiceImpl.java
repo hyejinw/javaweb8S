@@ -10,6 +10,7 @@ import org.springframework.web.multipart.MultipartFile;
 import com.spring.javaweb8S.common.JavawebProvide;
 import com.spring.javaweb8S.dao.MemberDAO;
 import com.spring.javaweb8S.vo.AddressVO;
+import com.spring.javaweb8S.vo.AskVO;
 import com.spring.javaweb8S.vo.BooksletterVO;
 import com.spring.javaweb8S.vo.MemberVO;
 import com.spring.javaweb8S.vo.OrderVO;
@@ -290,6 +291,12 @@ public class MemberServiceImpl implements MemberService {
 	@Override
 	public void setOrderAddressIdxChange(OrderVO vo) {
 		memberDAO.setOrderAddressIdxChange(vo);
+	}
+
+	// 마이페이지, 문의관리창
+	@Override
+	public ArrayList<AskVO> getMemAskSearch(int startIndexNo, int pageSize, String memNickname, String sort, String search, String searchString) {
+		return memberDAO.getMemAskSearch(startIndexNo, pageSize, memNickname, sort, search, searchString);
 	}
 
 

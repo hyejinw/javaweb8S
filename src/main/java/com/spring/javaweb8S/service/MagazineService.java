@@ -2,6 +2,7 @@ package com.spring.javaweb8S.service;
 
 import java.util.ArrayList;
 
+import com.spring.javaweb8S.vo.AskVO;
 import com.spring.javaweb8S.vo.CartVO;
 import com.spring.javaweb8S.vo.MagazineVO;
 import com.spring.javaweb8S.vo.SaveVO;
@@ -27,5 +28,7 @@ public interface MagazineService {
 	public void setMagazineCartInsert(CartVO vo);
 
 	public void setMaSaveNumUpdate(int maIdx, int maSaveNum);
+
+	public ArrayList<AskVO> getMagazineAsk(int idx, String category);
 
 }
