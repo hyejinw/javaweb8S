@@ -178,7 +178,7 @@
 	<!-- 서재 -->
 	<div style="padding:30px">
 		<div>
-			<span style="font-size:20px">이 책이 인생책인 회원&nbsp;&nbsp;&nbsp;</span><span style="color:grey; font-size:20px">${bookSave1VOSNum}</span>&nbsp;&nbsp;&nbsp;	
+			<span style="font-size:18px">이 책이 인생책인 회원&nbsp;&nbsp;&nbsp;</span><span style="color:grey; font-size:20px">${bookSave1VOSNum}</span>&nbsp;&nbsp;&nbsp;	
 			<span class="w3-tooltip"><i class="fa-regular fa-circle-question" style="font-size:16px"></i>&nbsp;&nbsp;&nbsp;
 				<span class="w3-text w3-tag" style="font-style:italic;"><b>내 인생에 영향을 준 책 30권</b></span>
 			</span>	
@@ -195,7 +195,7 @@
 			</c:if>
 		</div>
 		<div>
-			<span style="font-size:20px">이 책이 추천책인 회원&nbsp;&nbsp;&nbsp;</span><span style="color:grey; font-size:20px">${bookSave2VOSNum}</span>&nbsp;&nbsp;&nbsp;	
+			<span style="font-size:18px">이 책이 추천책인 회원&nbsp;&nbsp;&nbsp;</span><span style="color:grey; font-size:20px">${bookSave2VOSNum}</span>&nbsp;&nbsp;&nbsp;	
 			<span class="w3-tooltip"><i class="fa-regular fa-circle-question" style="font-size:16px"></i>&nbsp;&nbsp;&nbsp;
 				<span class="w3-text w3-tag" style="font-style:italic;"><b>알리고 싶은 좋은 책 99권</b></span>
 			</span>	
@@ -212,7 +212,7 @@
 			</c:if>
 		</div>
 		<div>
-			<span style="font-size:20px">이 책이 읽은책인 회원&nbsp;&nbsp;&nbsp;</span><span style="color:grey; font-size:20px">${bookSave3VOSNum}</span>&nbsp;&nbsp;&nbsp;	
+			<span style="font-size:18px">이 책이 읽은책인 회원&nbsp;&nbsp;&nbsp;</span><span style="color:grey; font-size:20px">${bookSave3VOSNum}</span>&nbsp;&nbsp;&nbsp;	
 			<span class="w3-tooltip"><i class="fa-regular fa-circle-question" style="font-size:16px"></i>&nbsp;&nbsp;&nbsp;
 				<span class="w3-text w3-tag" style="font-style:italic;"><b>읽었어요. 같이 이야기해요.</b></span>
 			</span>	
@@ -229,7 +229,7 @@
 			</c:if>
 		</div>
 		<div>
-			<span style="font-size:20px">이 책이 관심책인 회원&nbsp;&nbsp;&nbsp;</span><span style="color:grey; font-size:20px">${bookSave4VOSNum}</span>&nbsp;&nbsp;&nbsp;	
+			<span style="font-size:18px">이 책이 관심책인 회원&nbsp;&nbsp;&nbsp;</span><span style="color:grey; font-size:20px">${bookSave4VOSNum}</span>&nbsp;&nbsp;&nbsp;	
 			<span class="w3-tooltip"><i class="fa-regular fa-circle-question" style="font-size:16px"></i>&nbsp;&nbsp;&nbsp;
 				<span class="w3-text w3-tag" style="font-style:italic;"><b>아직 읽지 않았지만 관심있어요.</b></span>
 			</span>	

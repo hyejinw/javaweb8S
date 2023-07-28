@@ -135,7 +135,7 @@
 								<th>구독 유지 유무</th>
 								<td>${subscribeVO.subStatus}</td>
 							</tr>
-							<c:if test="${!empty subscribeVO.subRefund}">
+							<c:if test="${subscribeVO.subStatus == '구독취소'}">
 								<tr>
 									<th>구독 취소 환불금</th>
 									<td><fmt:formatNumber value="${subscribeVO.subRefund}" pattern="#,###"/> 원</td>

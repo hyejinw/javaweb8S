@@ -9,16 +9,12 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 
-import javax.mail.MessagingException;
-import javax.mail.internet.MimeMessage;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.javamail.JavaMailSender;
-import org.springframework.mail.javamail.MimeMessageHelper;
-import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -28,10 +24,12 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.spring.javaweb8S.common.BookInsertSearch;
 import com.spring.javaweb8S.dao.AutoUpdateDAO;
+import com.spring.javaweb8S.service.CommunityService;
 import com.spring.javaweb8S.service.HomeService;
 import com.spring.javaweb8S.vo.BookVO;
-import com.spring.javaweb8S.vo.BooksletterVO;
+import com.spring.javaweb8S.vo.InspiredVO;
 import com.spring.javaweb8S.vo.MagazineVO;
+import com.spring.javaweb8S.vo.NoticeVO;
 
 @Controller
 public class HomeController {
@@ -39,6 +37,9 @@ public class HomeController {
 	@Autowired
 	HomeService homeService;
 	
+	@Autowired
+	CommunityService communityService;
+
 	@Autowired
 	BookInsertSearch bookInsert;
 	
@@ -55,7 +56,6 @@ public class HomeController {
 		ArrayList<MagazineVO> magazineVOS = homeService.getNewMagazines();
 		model.addAttribute("magazineVOS", magazineVOS);
 		
-		
 		// 장바구니 제품 수 
 		String nickname = (String) session.getAttribute("sNickname");
 		if(nickname != "") {
@@ -63,6 +63,25 @@ public class HomeController {
 			session.setAttribute("sCartNum", cartNum);
 		}
 		
+		// 공지사항(3개) 고정된 공지가 3개미만이면, 일반공지에서 가져오기!
+		ArrayList<NoticeVO> noticeVOS = homeService.getImportantNotice();
+		model.addAttribute("noticeVOS", noticeVOS);
+		
+		if(noticeVOS.size() < 3) {
+			ArrayList<NoticeVO> extraNoticeVOS = homeService.getExtraNotice(3 - noticeVOS.size());
+			model.addAttribute("extraNoticeVOS", extraNoticeVOS);
+		}
+
+		// 방문 수 10회 이하 반갑습니다 메시지
+		if(nickname != null) {
+			String totCnt = homeService.getTotCnt(nickname);
+			if(Integer.parseInt(totCnt) <= 10) model.addAttribute("totCnt", totCnt);
+		} 
+		
+		// 최근 문장수집(10개)
+		ArrayList<InspiredVO> inspiredVOS = communityService.getNewInspired(nickname);
+		model.addAttribute("inspiredVOS", inspiredVOS);
+			
 		return "home";
 	}
 	

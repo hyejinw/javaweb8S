@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import com.spring.javaweb8S.dao.AboutDAO;
 import com.spring.javaweb8S.vo.AskVO;
 import com.spring.javaweb8S.vo.MagazineVO;
+import com.spring.javaweb8S.vo.NoticeVO;
 import com.spring.javaweb8S.vo.ProductVO;
 
 @Service
@@ -82,6 +83,36 @@ public class AboutServiceImpl implements AboutService {
 	@Override
 	public AskVO getAskDetail(int idx) {
 		return aboutDAO.getAskDetail(idx);
+	}
+
+	// 문의 상품명 가져오기
+	@Override
+	public String getAskProdName(int originIdx, String category) {
+		return aboutDAO.getAskProdName(originIdx, category);
+	}
+
+	// 문의 수정
+	@Override
+	public int setAskUpdate(AskVO vo) {
+		return aboutDAO.setAskUpdate(vo);
+	}
+	
+	// 전체 공지사항 내역
+	@Override
+	public ArrayList<NoticeVO> getNoticeSearch(int startIndexNo, int pageSize, String search, String searchString) {
+		return aboutDAO.getNoticeSearch(startIndexNo, pageSize, search, searchString);
+	}
+
+	// 공지사항 상세창
+	@Override
+	public NoticeVO getNoticeInfo(int idx) {
+		return aboutDAO.getNoticeInfo(idx);
+	}
+
+	// 공지사항 조회수 증가
+	@Override
+	public void setNoticeViewUpdate(int idx) {
+		aboutDAO.setNoticeViewUpdate(idx);
 	}
 	
 }

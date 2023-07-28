@@ -7,6 +7,7 @@ create table bo_notice (
 	noticeContent text not null,                  /* 내용 */
   noticeView int default 0 not null,						/* 조회수 */
   noticeDate datetime default now() not null,   /* 등록 날짜 */
+  important int default 0,                      /* 상단 고정 */ 
   noticeOpen char(5) default '공개',							/* 공개 유무 */
 	
 	primary key(idx)

@@ -97,18 +97,14 @@
 								<th>상품 정보</th>
 								<c:if test="${vo.type == '컬렉션 상품'}">
 									<td>
-										<a href="${ctp}/collection/colProduct?idx=${vo.prodIdx}">
-											${vo.prodName}<br/>
-											[옵션]  ${vo.opName}&nbsp;&nbsp;&nbsp;
-										</a>
+										${vo.prodName}<br/>
+										[옵션]  ${vo.opName}&nbsp;&nbsp;&nbsp;
 										(<fmt:formatNumber value="${vo.opPrice}" pattern="#,###"/> 원)
 									</td>
 								</c:if>
 								<c:if test="${vo.type != '컬렉션 상품'}">
 									<td>
-										<a href="${ctp}/magazine/maProduct?idx=${vo.maIdx}">
-											${vo.prodName}&nbsp;&nbsp;&nbsp;(<fmt:formatNumber value="${vo.prodPrice}" pattern="#,###"/> 원)
-										</a>
+										${vo.prodName}&nbsp;&nbsp;&nbsp;(<fmt:formatNumber value="${vo.prodPrice}" pattern="#,###"/> 원)
 									</td>
 								</c:if>
 							</tr>
@@ -140,7 +136,7 @@
 								<th>구독 유지 유무</th>
 								<td>${subscribeVO.subStatus}</td>
 							</tr>
-							<c:if test="${!empty subscribeVO.subRefund}">
+							<c:if test="${subscribeVO.subStatus == '구독취소'}">
 								<tr>
 									<th>구독 취소 환불금</th>
 									<td><fmt:formatNumber value="${subscribeVO.subRefund}" pattern="#,###"/> 원</td>

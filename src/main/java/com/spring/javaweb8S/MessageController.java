@@ -140,6 +140,16 @@ public class MessageController {
 			model.addAttribute("msg", "재시도 부탁드립니다.");
 			model.addAttribute("url", "/community/myPage/memInfo?memNickname="+nickname);
 		}
+		else if(msgFlag.equals("adminMemPhotoUpdateOk")) {
+			model.addAttribute("msg", "프로필 사진이 변경되었습니다.");
+			model.addAttribute("url", "/admin/member/memInfo?nickname="+nickname);
+		}
+		else if(msgFlag.equals("adminMemPhotoUpdateOk")) {
+			model.addAttribute("msg", "재시도 부탁드립니다.");
+			model.addAttribute("url", "/admin/member/memInfo?nickname="+nickname);
+		}
+		
+		
 		else if(msgFlag.equals("askInsertOk")) {
 			model.addAttribute("msg", "문의가 등록되었습니다.");
 			model.addAttribute("url", "/community/ask");
@@ -215,7 +225,30 @@ public class MessageController {
 //			if(returnPath.equals("컬렉션상품")) model.addAttribute("url", "/collection/colProduct?idx="+returnOriginIdx);
 //			else model.addAttribute("url", "/magazine/maProduct?idx="+returnOriginIdx);
 		}
-		
+		else if(msgFlag.equals("aboutAskUpdateOk")) {
+			model.addAttribute("msg", "문의가 수정되었습니다.");
+			model.addAttribute("url", "/about/askDetail?idx="+idx);
+		}
+		else if(msgFlag.equals("aboutAskUpdateNo")) {
+			model.addAttribute("msg", "재시도 부탁드립니다.");
+			model.addAttribute("url", "/about/askUpdate?idx="+idx);
+		}
+		else if(msgFlag.equals("adminNoticeInsertOk")) {
+			model.addAttribute("msg", "공지사항이 등록되었습니다.");
+			model.addAttribute("url", "/admin/manage/noticeList");
+		}
+		else if(msgFlag.equals("adminNoticeInsertNo")) {
+			model.addAttribute("msg", "재시도 부탁드립니다.");
+			model.addAttribute("url", "/admin/manage/noticeInsert");
+		}
+		else if(msgFlag.equals("adminNoticeUpdateOk")) {
+			model.addAttribute("msg", "공지사항이 수정되었습니다.");
+			model.addAttribute("url", "/admin/manage/noticeList");
+		}
+		else if(msgFlag.equals("adminNoticeUpdateNo")) {
+			model.addAttribute("msg", "재시도 부탁드립니다.");
+			model.addAttribute("url", "/admin/manage/noticeUpdate?idx="+idx);
+		}
 		
 		
 		

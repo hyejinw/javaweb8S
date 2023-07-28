@@ -62,7 +62,9 @@
 		      </div>
 		      <div id="collapseTwo" class="collapse" data-parent="#accordion">
 		        <div class="card-body" style="margin:10px">  <!-- 판매관리로 가는 링크, 매거진 문의로 가는 링크 -->
-			        <a href="${ctp}/admin/magazine/magazineList">매거진 정보 관리</a>
+			        <a href="${ctp}/admin/magazine/magazineList">매거진 정보 관리</a><hr/>
+			        <a href="${ctp}/admin/magazine/subscribeList">매거진 정기구독 관리</a><hr/>
+			        <a href="${ctp}/admin/magazine/subscribeList">뉴스레터 구독 관리</a>
 		        </div>
 		      </div>
 		    </div>
@@ -70,14 +72,15 @@
 		    <div class="card">
 		      <div class="card-header" style="padding:0px">
 	  			  <a href="#collapseThree" class="collapsed card-link w3-bar-item w3-button w3-padding dropdown-toggle" data-toggle="collapse">
-	  			 		<i class="fa fa-bullseye fa-fw"></i>  3개의 책
+	  			 		<i class="fa fa-bank fa-fw"></i>  3개의 책
   			  	</a>
 		      </div>
 		      <div id="collapseThree" class="collapse" data-parent="#accordion">
 		        <div class="card-body" style="margin:10px">
-			        <a href="${ctp}/admin/memberList">한 줄 ___ 관리</a><hr/>
+			        <a href="${ctp}/admin/memberList">기록 관리</a><hr/>
+			        <a href="${ctp}/admin/memberList">문장수집 관리</a><hr/>
 			        <a href="${ctp}/admin/community/book">등록 책 관리</a><hr/>
-			        <a href="${ctp}/admin/community/proverb">책 명언 관리</a> <!-- 함 -->
+			        <a href="${ctp}/admin/community/proverb">책 명언 관리</a> 
 		        </div>
 		      </div>
 		    </div>
@@ -85,7 +88,7 @@
 		    <div class="card">
 		      <div class="card-header" style="padding:0px">
 	  			  <a href="#collapseFour" class="collapsed card-link w3-bar-item w3-button w3-padding dropdown-toggle" data-toggle="collapse">
-	  			 		<i class="fa fa-cog fa-fw"></i>  컬렉션
+	  			 		<i class="fa fa-bullseye fa-fw"></i>  컬렉션
   			  	</a>
 		      </div>
 		      <div id="collapseFour" class="collapse" data-parent="#accordion">
@@ -106,16 +109,15 @@
 		      <div id="collapseFive" class="collapse" data-parent="#accordion">
 		        <div class="card-body" style="margin:10px">
 			        <a href="${ctp}/admin/order/orderList">통합 주문 관리</a><hr/>
-			        <a href="${ctp}/admin/memberList">통합 배송 관리(뺄 가능성 높음)</a><hr/>
-			        <a href="${ctp}/admin/memberList">환불 관리</a>
+			        <a href="${ctp}/admin/order/refundList">반품 관리</a>
 		        </div>
 		      </div>
 		    </div>
 		    
-		    <div class="card">
+		    <%-- <div class="card">
 		      <div class="card-header" style="padding:0px">
 	  			  <a href="#collapseSix" class="collapsed card-link w3-bar-item w3-button w3-padding dropdown-toggle" data-toggle="collapse">
-	  			 		<i class="fa fa-bank fa-fw"></i>  독립서점
+	  			 		<i class="fa fa-cog fa-fw"></i>  독립서점
   			  	</a>
 		      </div>
 		      <div id="collapseSix" class="collapse" data-parent="#accordion">
@@ -123,7 +125,7 @@
 			        <a href="${ctp}/admin/memberList">독립서점 관리</a>
 		        </div>
 		      </div>
-		    </div>
+		    </div> --%>
 		    
 		    <div class="card">
 		      <div class="card-header" style="padding:0px">
@@ -147,9 +149,9 @@
 		      </div>
 		      <div id="collapseEight" class="collapse" data-parent="#accordion">
 		        <div class="card-body" style="margin:10px">
-			        <a href="${ctp}/admin/memberList">문의 관리</a><hr/>
-			        <a href="${ctp}/admin/memberList">공지사항</a><hr/>
-			        <a href="${ctp}/admin/memberList">임시 파일 관리</a>
+			        <a href="${ctp}/admin/manage/askList">문의 관리</a><hr/>
+			        <a href="${ctp}/admin/manage/noticeList">공지사항</a><hr/>
+			        <a href="${ctp}/admin/manage/tempFileList">임시 파일 관리</a>
 		        </div>
 		      </div>
 		    </div>

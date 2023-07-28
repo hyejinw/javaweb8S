@@ -19,48 +19,195 @@
 	
 	  <!-- Header -->
 	  <header class="w3-container" style="padding-top:60px">
-	    <h5><b><i class="fa fa-dashboard"></i> My Dashboard</b></h5>
+	    <h5><b><i class="fa fa-dashboard"></i> 주요 통계</b></h5>
 	  </header>
 	
 	  <div class="w3-row-padding w3-margin-bottom">
 	    <div class="w3-quarter">
 	      <div class="w3-container w3-red w3-padding-16">
-	        <div class="w3-left"><i class="fa fa-comment w3-xxxlarge"></i></div>
-	        <div class="w3-right">
-	          <h3>52</h3>
-	        </div>
-	        <div class="w3-clear"></div>
-	        <h4>Messages</h4>
+	        <div style="font-size:20px">매거진 정기구독</div>
+	        <table class="table text-center mt-3" style="background-color:white">
+	        	<thead style="background-color:#eee">
+		        	<tr>
+			        	<td><a href="${ctp}/admin/magazine/subscribeList?sort=구독중">구독중</a></td>
+			        	<td><a href="${ctp}/admin/magazine/subscribeList?sort=구독종료">구독종료</a></td>
+			        	<td><a href="${ctp}/admin/magazine/subscribeList?sort=구독취소신청">구독취소신청</a></td>
+			        	<td><a href="${ctp}/admin/magazine/subscribeList?sort=구독취소">구독취소</a></td>
+		        	</tr>
+	        	</thead>
+	        	<tbody>
+		        	<tr>
+		        		<td><a href="${ctp}/admin/magazine/subscribeList?sort=구독중">${s1}</a></td>
+		        		<td><a href="${ctp}/admin/magazine/subscribeList?sort=구독종료">${s2}</a></td>
+		        		<td><a href="${ctp}/admin/magazine/subscribeList?sort=구독취소신청">${s3}</a></td>
+		        		<td><a href="${ctp}/admin/magazine/subscribeList?sort=구독취소">${s4}</a></td>
+		        	</tr>
+	        	</tbody>
+	        </table>
 	      </div>
 	    </div>
 	    <div class="w3-quarter">
 	      <div class="w3-container w3-blue w3-padding-16">
-	        <div class="w3-left"><i class="fa fa-eye w3-xxxlarge"></i></div>
-	        <div class="w3-right">
-	          <h3>99</h3>
-	        </div>
-	        <div class="w3-clear"></div>
-	        <h4>Views</h4>
+	      	<div style="font-size:20px">주문</div>
+	      	<table class="table text-center mt-3" style="background-color:white">
+	        	<thead style="background-color:#eee">
+		        	<tr>
+			        	<td><a href="${ctp}/admin/order/orderListSearch?sort=결제완료">결제완료</a></td>
+			        	<td><a href="${ctp}/admin/order/orderListSearch?sort=배송준비중">배송준비중</a></td>
+			        	<td><a href="${ctp}/admin/order/orderListSearch?sort=배송중">배송중</a></td>
+		        	</tr>
+	        	</thead>
+	        	<tbody>
+		        	<tr>
+		        		<td><a href="${ctp}/admin/order/orderListSearch?sort=결제완료">${o1}</a></td>
+		        		<td><a href="${ctp}/admin/order/orderListSearch?sort=배송준비중">${o2}</a></td>
+		        		<td><a href="${ctp}/admin/order/orderListSearch?sort=배송중">${o3}</a></td>
+		        	</tr>
+	        	</tbody>
+	        </table>
 	      </div>
 	    </div>
 	    <div class="w3-quarter">
-	      <div class="w3-container w3-teal w3-padding-16">
-	        <div class="w3-left"><i class="fa fa-share-alt w3-xxxlarge"></i></div>
-	        <div class="w3-right">
-	          <h3>23</h3>
-	        </div>
-	        <div class="w3-clear"></div>
-	        <h4>Shares</h4>
+	    	<div class="w3-container w3-teal w3-padding-16">
+	      	<div style="font-size:20px">미확인 문의</div>
+	      	<table class="table text-center mt-3" style="background-color:white">
+	        	<thead style="background-color:#eee">
+		        	<tr>
+			        	<td><a href="${ctp}/admin/manage/askList">책(의)세계</a></td>
+			        	<td><a href="${ctp}/admin/manage/askList?sort=커뮤니티">3개의 책</a></td>
+		        	</tr>
+	        	</thead>
+	        	<tbody>
+		        	<tr>
+		        		<td><a href="${ctp}/admin/manage/askList">${a1}</a></td>
+		        		<td><a href="${ctp}/admin/manage/askList?sort=커뮤니티">${a2}</a></td>
+		        	</tr>
+	        	</tbody>
+	        </table>
 	      </div>
 	    </div>
 	    <div class="w3-quarter">
 	      <div class="w3-container w3-orange w3-text-white w3-padding-16">
-	        <div class="w3-left"><i class="fa fa-users w3-xxxlarge"></i></div>
-	        <div class="w3-right">
-	          <h3>50</h3>
-	        </div>
-	        <div class="w3-clear"></div>
-	        <h4>Users</h4>
+	  	    <div style="font-size:20px">3개의 책 (최근 1개월)</div>
+	  	    <table class="table text-center mt-3" style="background-color:white">
+	        	<thead style="background-color:#eee">
+		        	<tr>
+			        	<td>최신 기록</td>
+			        	<td>최신 문장수집</td>
+		        	</tr>
+	        	</thead>
+	        	<tbody>
+		        	<tr>
+		        		<td>${c1}</td>
+		        		<td>${c2}</td>
+		        	</tr>
+<%-- 		        	<tr>
+			        	<td><a href="${ctp}/admin/order/orderListSearch?sort=반품신청">최신 기록</a></td>
+			        	<td><a href="${ctp}/admin/order/orderListSearch?sort=반품중">최신 문장수집</a></td>
+		        	</tr>
+	        	</thead>
+	        	<tbody>
+		        	<tr>
+		        		<td><a href="${ctp}/admin/order/orderListSearch?sort=반품신청">${c1}</a></td>
+		        		<td><a href="${ctp}/admin/order/orderListSearch?sort=반품중">${c2}</a></td>
+		        	</tr> --%>
+	        	</tbody>
+	        </table>
+	      </div>
+	    </div>
+	  </div>
+	  
+	  <div class="w3-row-padding w3-margin-bottom">
+	    <div class="w3-quarter">
+	      <div class="w3-container w3-red w3-padding-16">
+	        <div style="font-size:20px">뉴스레터 구독</div>
+	        <table class="table text-center mt-3" style="background-color:white">
+	        	<thead style="background-color:#eee">
+		        	<tr><!-- 수정 필요! -->
+			        	<td><a href="${ctp}/admin/magazine/subscribeList?sort=구독중">구독중</a></td>
+			        	<td><a href="${ctp}/admin/magazine/subscribeList?sort=구독종료">구독취소</a></td>
+		        	</tr>
+	        	</thead>
+	        	<tbody>
+		        	<tr>
+		        		<td><a href="${ctp}/admin/magazine/subscribeList?sort=구독중">${l1}</a></td>
+		        		<td><a href="${ctp}/admin/magazine/subscribeList?sort=구독종료">${l2}</a></td>
+		        	</tr>
+	        	</tbody>
+	        </table>
+	      </div>
+	    </div>
+	    <div class="w3-quarter">
+	      <div class="w3-container w3-blue w3-padding-16">
+	      	<div style="font-size:20px">반품</div>
+	      	<table class="table text-center mt-3" style="background-color:white">
+	        	<thead style="background-color:#eee">
+		        	<tr>
+			        	<td><a href="${ctp}/admin/order/orderListSearch?sort=반품신청">반품신청</a></td>
+			        	<td><a href="${ctp}/admin/order/orderListSearch?sort=반품중">반품중</a></td>
+			        	<td><a href="${ctp}/admin/order/orderListSearch?sort=반품완료">반품완료</a></td>
+		        	</tr>
+	        	</thead>
+	        	<tbody>
+		        	<tr>
+		        		<td><a href="${ctp}/admin/order/orderListSearch?sort=반품신청">${r1}</a></td>
+		        		<td><a href="${ctp}/admin/order/orderListSearch?sort=반품중">${r2}</a></td>
+		        		<td><a href="${ctp}/admin/order/orderListSearch?sort=반품완료">${r3}</a></td>
+		        	</tr>
+	        	</tbody>
+	        </table>
+	      </div>
+	    </div>
+	    <div class="w3-quarter">
+	      <div class="w3-container w3-teal w3-padding-16">
+	      	<div style="font-size:20px">미확인 신고</div>
+	      	<table class="table text-center mt-3" style="background-color:white">
+	        	<thead style="background-color:#eee">
+		        	<tr>
+			        	<td><a href="${ctp}/admin/order/orderListSearch?sort=반품신청">기록</a></td>
+			        	<td><a href="${ctp}/admin/order/orderListSearch?sort=반품중">댓글</a></td>
+			        	<td><a href="${ctp}/admin/order/orderListSearch?sort=반품완료">문장수집</a></td>
+			        	<td><a href="${ctp}/admin/order/orderListSearch?sort=반품완료">회원</a></td>
+		        	</tr>
+	        	</thead>
+	        	<tbody>
+		        	<tr>
+		        		<td><a href="${ctp}/admin/order/orderListSearch?sort=반품신청">${p1}</a></td>
+		        		<td><a href="${ctp}/admin/order/orderListSearch?sort=반품중">${p2}</a></td>
+		        		<td><a href="${ctp}/admin/order/orderListSearch?sort=반품완료">${p3}</a></td>
+		        		<td><a href="${ctp}/admin/order/orderListSearch?sort=반품완료">${p4}</a></td>
+		        	</tr>
+	        	</tbody>
+	        </table>
+	      </div>
+	    </div>
+	    <div class="w3-quarter">
+	      <div class="w3-container w3-orange w3-text-white w3-padding-16">
+	  	    <div style="font-size:20px">3개의 책 (최근 1개월)</div>
+	  	    <table class="table text-center mt-3" style="background-color:white">
+	        	<thead style="background-color:#eee">
+		        	<tr>
+			        	<td>최신 기록</td>
+			        	<td>최신 문장수집</td>
+		        	</tr>
+	        	</thead>
+	        	<tbody>
+		        	<tr>
+		        		<td>${c1}</td>
+		        		<td>${c2}</td>
+		        	</tr>
+<%-- 		        	<tr>
+			        	<td><a href="${ctp}/admin/order/orderListSearch?sort=반품신청">최신 기록</a></td>
+			        	<td><a href="${ctp}/admin/order/orderListSearch?sort=반품중">최신 문장수집</a></td>
+		        	</tr>
+	        	</thead>
+	        	<tbody>
+		        	<tr>
+		        		<td><a href="${ctp}/admin/order/orderListSearch?sort=반품신청">${c1}</a></td>
+		        		<td><a href="${ctp}/admin/order/orderListSearch?sort=반품중">${c2}</a></td>
+		        	</tr> --%>
+	        	</tbody>
+	        </table>
 	      </div>
 	    </div>
 	  </div>

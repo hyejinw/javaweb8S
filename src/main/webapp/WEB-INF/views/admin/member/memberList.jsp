@@ -81,7 +81,7 @@
     	location.href = "${ctp}/admin/member/memberList?pag=${pageVO.pag}&pageSize="+pageSize+"&sort=${sort}&search=${search}&searchString=${searchString}";
     }
 		
-		// 상품 검색(날짜 기간으로도 가능)
+		// 검색
 		function searchCheck() {
 			let searchString = $("#searchString").val();
 			let search = $("#search").val();
@@ -207,7 +207,14 @@
 					        <td>${vo.totCnt}</td>
 					        <td>${fn:substring(vo.firstVisit,0,10)}</td>
 					        <td>${fn:substring(vo.lastVisit,0,10)}</td>
-					        <td>${vo.memberDel}</td>
+					        <td>
+					        	<c:if test="${vo.memberDel == '탈퇴'}">
+						       	 	<span style="color:red">${vo.memberDel}</span>
+					       	 	</c:if>
+					        	<c:if test="${vo.memberDel != '탈퇴'}">
+						       	 	${vo.memberDel}
+					       	 	</c:if>
+					        </td>
 					        <td>
 					        	<button id="memInfo${vo.idx}" style="border:0px; background-color:transparent;" onclick="memInfo('${vo.nickname}')"><i class="fa-solid fa-circle-info" title="자세히" style="font-size:22px"></i></button>
 					        </td>

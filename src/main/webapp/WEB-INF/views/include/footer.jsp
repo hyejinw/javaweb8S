@@ -1,21 +1,41 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <c:set var="ctp" value="${pageContext.request.contextPath}"/>
-
+<style>
+	a:link {text-decoration: none !important;}
+	a:visited {text-decoration: none !important;}
+	a:hover {text-decoration: none !important;}
+	a:active {text-decoration: none !important;}
+</style>
+<script>
+	'use strict';
+	
+	// 3개의 책으로 이동하기
+	function move() {
+		if(confirm('3개의 책으로 이동하시겠습니까?')) {
+			location.href = "${ctp}/community/communityMain";
+		}	
+	}
+	
+	// 게임, 준비 중
+	function preparing() {
+		alert('서비스 준비 중입니다.');
+	}
+</script>
 <!-- Footer -->
 <footer class="w3-container" style="background-color:#282828; color:#DDDDDD">
 	<div class="row" style="margin-top: 20px">
 		<div class="col text-center">
-			<a href="/"><span style="font-size:20px; font-weight:bold">책(의)세계란</span></a>
+			<a href="${ctp}/about/about"><span style="font-size:20px; font-weight:bold">책(의)세계란</span></a>
 		</div>
 		<div class="col text-center">
-			<a href="/"><span style="font-size:20px; font-weight:bold">책 Chaeg 매거진</span></a>
+			<a href="${ctp}/magazine/magazineList"><span style="font-size:20px; font-weight:bold">책 Chaeg 매거진</span></a>
 		</div>
 		<div class="col text-center">
-			<a href="/"><span style="font-size:20px; font-weight:bold">3개의 책</span></a>
+			<a href="javascript:move()"><span style="font-size:20px; font-weight:bold">3개의 책</span></a>
 		</div>
 		<div class="col text-center">
-			<a href="/"><span style="font-size:20px; font-weight:bold">게임</span></a>
+			<a href="javascript:preparing()"><span style="font-size:20px; font-weight:bold">게임</span></a>
 		</div>
 	</div>
 	<hr/>

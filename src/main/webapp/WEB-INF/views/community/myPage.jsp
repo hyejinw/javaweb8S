@@ -9,7 +9,6 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>책(의)세계</title>
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css">
-  <script src="https://cdn.jsdelivr.net/npm/jquery@3.6.4/dist/jquery.slim.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.bundle.min.js"></script>
   <jsp:include page="/WEB-INF/views/include/bs4.jsp" />
@@ -278,7 +277,7 @@
 		function bookSaveEditOpen(id, flag) {
 		  document.getElementById('bookSaveOpen'+flag).disabled = true;
 		  
-		  $('.bookEditBtn'+flag).css('display','block');
+		  $('.bookEditBtn'+flag).css('display','inline-block');
 		  $('#bookSaveUpdate'+flag).css('display','block');
 		  $('#bookSaveBtnDone'+flag).css('display','inline-block');
 		  $('#bookSaveBtnEdit'+flag).css('display','none');

@@ -206,6 +206,10 @@
 			else if(localStorage.getItem('memMyPageAskSW') == 'ON') {
 				location.href="${ctp}/member/myPage/ask";
 			}
+			// 관리자창
+			else if(localStorage.getItem('adminAskSW') == 'ON') {
+				location.href="${ctp}/admin/manage/askList";
+			}
 			else {
 				location.href="${ctp}/about/ask"
 			}
@@ -346,10 +350,16 @@
 					
 					</div>
 					<hr style="border:0px; height:1.0px; background:#41644A; margin:10px 0px"/>
-					<div class="infoBox text-right">
-						<span style="font-size:18px">문의 종류)</span>&nbsp;&nbsp;<b class="mr-5">${vo.category}</b>			
-						<c:if test="${vo.category == '컬렉션상품'}"><a href="${ctp}/collection/colProduct?idx=${vo.originIdx}"><u><i class="fa-solid fa-magnifying-glass"></i>상품보기</u></a></c:if>		
-						<c:if test="${(vo.category == '매거진') || (vo.category == '정기구독')}"><a href="${ctp}/magazine/maProduct?idx=${vo.originIdx}"><u><i class="fa-solid fa-magnifying-glass"></i>상품보기</u></a></c:if>		
+					<div class="infoBox">
+						<div class="row">
+							<div class="col">
+								<span style="font-size:16px">문의 종류)</span>&nbsp;&nbsp;<b class="mr-5">${vo.category}</b>			
+							</div>
+							<div class="col text-right">
+								<c:if test="${vo.category == '컬렉션상품'}"><a href="${ctp}/collection/colProduct?idx=${vo.originIdx}"><u><i class="fa-solid fa-magnifying-glass"></i>${vo.originName}</u></a></c:if>		
+								<c:if test="${(vo.category == '매거진') || (vo.category == '정기구독')}"><a href="${ctp}/magazine/maProduct?idx=${vo.originIdx}"><u><i class="fa-solid fa-magnifying-glass"></i>${vo.originName}</u></a></c:if>		
+							</div>
+						</div>
 					</div>
 		 		</div>
 				

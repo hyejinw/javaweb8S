@@ -234,76 +234,59 @@
 					<div class="text-center" style="border-radius:10px; margin:0px auto; font-size:30px; font-weight:bold; padding:20px 0px; background-color:white; color:#282828;">
 						<div class="row">
 							<div class="col-3"></div>
-							<div class="col-6">한 줄 독서 미리보기</div>                                         <!-- 다른 한 줄 독서 가져오기 -->
-							<div class="col-3 text-left"><button type="button" class="btn btn-success" onclick="randomOLR()">더보기</button></div>
+							<div class="col-6">최근 수집된 문장</div>                                      
+							<div class="col-3 text-left"></div>
 						</div>
 		  	  	
 						<hr style="background-color:#9BA4B5; width:50%; height: 1px; margin:5px auto;"/>
-						<p class="w3-text w3-tag" style="margin:0px auto; font-size:15px; font-style:italic;">에디터와 회원이 직접 선정한 구절을 소개합니다.</p>
+						<p class="w3-text w3-tag" style="margin:0px auto; font-size:15px; font-style:italic;">회원이 직접 선정한 구절을 소개합니다.</p>
 					</div>
 		  	</div>
-		  	<div id="OLRDemo"></div><!-- 여기에 넣을 예정! -->
-		  	
-
-				<br/><br/>
-				<div class="row" style="padding:20px">
-					<div class="col-4 text-center">
-						<div class="row">
-							<div class="col-10">
-								<a href="https://search.daum.net/search?w=bookpage&bookId=1371704&q=%EB%88%84%EA%B5%B0%EA%B0%80%EC%97%90%EA%B2%8C+%EB%AC%B4%EC%97%87%EC%9D%B4+%EB%90%98%EC%96%B4" target="_blank">
-									<img src="https://search1.kakaocdn.net/thumb/R120x174.q85/?fname=http%3A%2F%2Ft1.daumcdn.net%2Flbook%2Fimage%2F1371704%3Ftimestamp%3D20221025124858" style="width:100%; max-width:300px" />
-								</a>
-							</div>
-							<div class="col-2" style="padding:0px">
-								<button onclick="bookSave()" style="border:0px; background-color:transparent;">
-									<c:if test="${empty bookSaveVO}"><i class="fa-solid fa-solid fa-heart-circle-plus" style="font-size:30px" title="관심 책 등록"></i></c:if>
-									<c:if test="${!empty bookSaveVO}"><i class="fa-solid fa-solid fa-heart-circle-minus" style="font-size:30px; color:#8D8DAA" title="관심 책 등록해제"></i></c:if>
-								</button>
-							</div>				
+		  	<div style="overflow:scroll; width:100%; max-width:1000px; height:400px; padding:20px; background-color:#eee; margin-top:20px">
+					
+					<c:forEach var="inspiredVO" items="${inspiredVOS}" varStatus="st">
+						<div class="row" style="padding:5px">
+							<div class="w3-panel w3-sand" style="margin:10px; width:100%; max-width:800px">
+			        	<div class="row">
+						    	<div class="col">
+								    <span style="font-size:80px; line-height:0.6em; opacity:0.2">❝</span>
+								    <p class="w3-xlarge" style="margin:-40px 0px 0px 0px; padding:10px">
+								    	<i style="font-size:15px;">${inspiredVO.insContent}</i>
+								    </p>
+						    	</div>
+						    </div>
+			
+					    	<p class="ml-4" style="color:grey;">
+				    			『 ${inspiredVO.bookTitle} 』(${inspiredVO.authors})&nbsp;&nbsp;${inspiredVO.page}
+				    		</p>
+						    <hr style="margin:0px"/>
+						    <div class="row">
+						    	<div class="col">
+								    <div style="padding:10px">
+								    	<span>by. ${inspiredVO.memNickname}</span>
+								    	<c:if test="${inspiredVO.explanation!= ''}">
+								    		&nbsp;&nbsp;&nbsp;
+								    		<span class="dropdown dropright">
+											    <button type="button" class="dropdown-toggle" data-toggle="dropdown" style="border:0px; background-color:transparent;">
+											      <i class="fa-solid fa-circle-info" style="font-size:20px; padding:5px"></i>
+											    </button>
+											    <div class="dropdown-menu" style="padding:5px">
+											      <p>${inspiredVO.explanation}</p>
+											    </div>
+											  </span>
+								    	</c:if>
+								    </div>
+						    	</div>
+						    </div>
+						  </div>
 						</div>
-					</div>
-					<div class="col-8 text-center">
-						<div class="row">
-							<div class="col" id="OLRBookTitle">                    <!-- OLRBookVO 로! -->
-								<a href="#" id="bookDetail" data-toggle="modal" data-target="#bookModal" 
-			        		onclick="javascript:bookDetail('${OLRBookVO.idx}','${OLRBookVO.title}','${fn:replace(OLRBookVO.contents,'\'', '\\\'')}','${OLRBookVO.url}','${OLRBookVO.isbn}','${OLRBookVO.datetime}','${OLRBookVO.authors}','${OLRBookVO.publisher}','${OLRBookVO.translators}','${OLRBookVO.price}','${OLRBookVO.sale_price}','${OLRBookVO.thumbnail}','${OLRBookVO.status}','${OLRBookVO.bookRate}','${OLRBookVO.save}','${OLRBookVO.bookUpdate}')">
-								<b style="font-size:18px">누군가에게 무엇이 되어</b></a>
-								&nbsp;&nbsp;&nbsp;&nbsp;   <!-- 작성 상세페이지로 -->
-								<button onclick="location.href='${ctp}/community';" style="border:0px; background-color:transparent;">
-									<i class="fa-solid fa-magnifying-glass-plus" style="font-size:25px" title="자세히"></i>
-								</button>
-							</div>
-						</div>
-						<div class="row"><div class="col">예반&nbsp;&nbsp; | &nbsp;&nbsp;토파즈</div></div>
-						<div class="row m-3">
-							<div class="col">
-								<div id="OLRBox">
-									이 시집 「누군가에게 잊혀지지 않는 무엇이 되어」는 잔잔한 감흥과 아름다운 시어로 많은 이들에게 오래도록 기억되고 있는 예반의 대표작으로 마음 한구석에 잠들어 있는 인간의 본성을 자극하고, 우리의 일상에서 소홀하기 쉬운 존재의 소중함과 타인과의 관계, 자아의식 등을 진지하면서도 자유롭게 표현해내고 있다. 그리고 간결한 시행과 시행 사이를 넘나들며 시인이 전해주고자 하는 의미는 씹을수록 부드러워지고, 초록빛 향기가 나고, 바람에 묻어오는 피리소리처럼...
-								</div>
-							</div>
-						</div>
-					</div>
+					</c:forEach>
 				</div>
-			
-			
 			</div>
+			
+			
 		</div>
 	</div>
-	
-<!-- 	정기구독
-	<div class="container text-center" style="margin-bottom:150px">
-		<div id="subscribeBox">
-			<div><i class="fa-solid fa-diagram-next" style="font-size:30px"></i></div><br/>
-			<div style="font-size:25px"><b>정기구독문의</b></div>
-			<button type="button" class="btn btn-outline-danger">온라인 신청 바로가기</button><br/><br/>
-			<div>
-				예금주 : 주식회사 책(의)세계<br/>
-				하나은행 298-910034-05304<br/>	
-				이메일 : info@chaeg.co.kr<br/>	
-				전화번호 : 02-6228-5589<br/>
-			</div>
-		</div>
-	</div> -->
 	
 	<!-- 뉴스레터 -->
 	<div class="container text-center" style="margin-bottom:180px">

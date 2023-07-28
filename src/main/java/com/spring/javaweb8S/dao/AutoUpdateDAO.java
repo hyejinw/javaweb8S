@@ -79,4 +79,7 @@ public interface AutoUpdateDAO {
 	// 매거진 정기구독 구독종료 시, 포인트 지급: 2) 회원 테이블 포인트 수정
 	public void setSubMemPointUpdate(@Param("subPointVOS") ArrayList<SubscribeVO> subPointVOS);
 
+	// 탈퇴 1개월 경과 회원 영구탈퇴
+	public void setMemberPermanentDelete();
+
 }

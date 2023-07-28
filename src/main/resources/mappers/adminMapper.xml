@@ -644,8 +644,28 @@
 		</if>
 	</select>
 	
+	<select id="noticeListTotRecCnt" resultType="int">
+		<if test='searchString == ""'>
+			SELECT COUNT(*) FROM bo_notice;
+		</if>
+		<if test='searchString != ""'>
+			SELECT COUNT(*) FROM bo_notice WHERE 
+			${search} LIKE CONCAT('%',#{searchString},'%');
+		</if>
+	</select>
+	
+	<select id="getNoticeSearchList" resultType="com.spring.javaweb8S.vo.NoticeVO">
+		<if test='searchString == ""'>
+			SELECT * FROM bo_notice ORDER BY idx DESC LIMIT #{startIndexNo},#{pageSize};
+		</if>
+		<if test='searchString != ""'>
+			SELECT * FROM bo_notice WHERE 
+			${search} LIKE CONCAT('%',#{searchString},'%') ORDER BY idx DESC LIMIT #{startIndexNo},#{pageSize};
+		</if>
+	</select>
+	
 	<select id="getMemberAddressList" resultType="com.spring.javaweb8S.vo.AddressVO">
-		SELECT * FROM bo_address WHERE memNickname = #{nickname} ORDER BY addressDel DESC, idx DESC;
+		SELECT * FROM bo_address WHERE memNickname = #{nickname} ORDER BY addressDel ASC, idx DESC;
 	</select>
 	
 	<select id="getMemberPointList" resultType="com.spring.javaweb8S.vo.PointVO">
@@ -661,7 +681,258 @@
 	</select>
 	
 	<select id="getMemberSubscribeList" resultType="com.spring.javaweb8S.vo.SubscribeVO">
-		SELECT * FROM bo_subscribe WHERE memNickname = #{nickname} ORDER BY idx DESC;
+		SELECT s.*, o.prodName AS prodName
+		FROM bo_subscribe s
+		LEFT JOIN bo_order o
+			ON s.orderIdx = o.idx
+		
+		WHERE s.memNickname = #{nickname} ORDER BY idx DESC;
+	</select>
+	
+	<select id="subscribeTotRecCntWithPeriod" resultType="int">
+		<if test='searchString == "" and startDate == ""'>
+			SELECT COUNT(*) FROM bo_subscribe
+			
+			<if test='sort != "" and sort != "전체"'>
+				WHERE subStatus = #{sort}
+			</if>
+			;
+		</if>
+		<if test='searchString != "" and startDate == ""'>
+			SELECT COUNT(*) FROM bo_subscribe WHERE 
+			
+			<if test='sort != "" and sort != "전체"'>
+				subStatus = #{sort} AND 
+			</if>
+			
+			${search} LIKE CONCAT('%',#{searchString},'%');
+		</if>
+		<if test='searchString == "" and startDate != ""'>
+			SELECT COUNT(*) FROM bo_subscribe WHERE
+			
+			<if test='sort != "" and sort != "전체"'>
+				subStatus = #{sort} AND 
+			</if> 
+			
+			date_format(subStartDate, '%Y-%m-%d') BETWEEN #{startDate} AND #{endDate};
+		</if>
+		<if test='searchString != "" and startDate != ""'>
+			SELECT COUNT(*) FROM bo_subscribe WHERE 
+			
+			<if test='sort != "" and sort != "전체"'>
+				subStatus = #{sort} AND 
+			</if>
+			
+			${search} LIKE CONCAT('%',#{searchString},'%') and date_format(subStartDate, '%Y-%m-%d') BETWEEN #{startDate} AND #{endDate};
+		</if>
+	</select>
+	
+	<select id="getSubscribeSearchList" resultType="com.spring.javaweb8S.vo.SubscribeVO">
+		<if test='searchString == "" and startDate == ""'>
+	 		SELECT s.*, o.prodName AS prodName, o.maIdx AS maIdx
+	 		
+			FROM bo_subscribe s
+			LEFT JOIN bo_order o
+				ON s.orderIdx = o.idx
+				 
+			<if test='sort != "" and sort != "전체"'>
+				WHERE s.subStatus = #{sort}
+			</if>
+			ORDER BY s.idx DESC LIMIT #{startIndexNo},#{pageSize};
+		</if>
+		
+		<if test='searchString != "" and startDate == ""'>
+			SELECT s.*, o.prodName AS prodName, o.maIdx AS maIdx
+	 		
+			FROM bo_subscribe s
+			LEFT JOIN bo_order o
+				ON s.orderIdx = o.idx
+				 
+			WHERE
+			
+			<if test='sort != "" and sort != "전체"'>
+				s.subStatus = #{sort} AND 
+			</if>
+			
+			s.${search} LIKE CONCAT('%',#{searchString},'%')
+			ORDER BY s.idx DESC LIMIT #{startIndexNo},#{pageSize};
+		</if>
+		<if test='searchString == "" and startDate != ""'>
+			SELECT s.*, o.prodName AS prodName, o.maIdx AS maIdx
+	 		
+			FROM bo_subscribe s
+			LEFT JOIN bo_order o
+				ON s.orderIdx = o.idx
+				 
+			WHERE 
+			
+			<if test='sort != "" and sort != "전체"'>
+				s.subStatus = #{sort} AND 
+			</if> 
+			
+			date_format(s.subStartDate, '%Y-%m-%d') BETWEEN #{startDate} AND #{endDate}
+			ORDER BY s.idx DESC LIMIT #{startIndexNo},#{pageSize};
+		</if>
+		<if test='searchString != "" and startDate != ""'>
+			SELECT s.*, o.prodName AS prodName, o.maIdx AS maIdx 
+	 		
+			FROM bo_subscribe s
+			LEFT JOIN bo_order o
+				ON s.orderIdx = o.idx
+				 
+			WHERE 
+			
+			<if test='sort != "" and sort != "전체"'>
+				s.subStatus = #{sort} AND 
+			</if>
+			
+			s.${search} LIKE CONCAT('%',#{searchString},'%') and date_format(s.subStartDate, '%Y-%m-%d') BETWEEN #{startDate} AND #{endDate}
+			ORDER BY s.idx DESC LIMIT #{startIndexNo},#{pageSize};
+		</if>
+	</select>
+	
+	<select id="refundListTotRecCnt" resultType="int">
+		<if test='searchString == ""'>
+			SELECT COUNT(*) FROM bo_refund
+			
+			<if test='sort != "" and sort != "전체"'>
+				<if test='sort.contains("반품")'>
+					WHERE refundStatus = #{sort}
+				</if>
+				<if test='!sort.contains("반품")'>
+					WHERE refundReason = #{sort}
+				</if>
+			</if>
+			;
+		</if>
+		<if test='searchString != ""'>
+			SELECT COUNT(*) FROM bo_refund WHERE 
+			
+			<if test='sort != "" and sort != "전체"'>
+				<if test='sort.contains("반품")'>
+					refundStatus = #{sort} AND
+				</if>
+				<if test='!sort.contains("반품")'>
+					refundReason = #{sort} AND
+				</if>
+			</if>
+			
+			${search} LIKE CONCAT('%',#{searchString},'%');
+		</if>
+	</select>
+	
+	<select id="getRefundSearchList" resultType="com.spring.javaweb8S.vo.RefundVO">
+		<if test='searchString == ""'>
+			SELECT r.*, o.prodName AS prodName
+			FROM bo_refund r
+			LEFT JOIN bo_order o
+				ON r.orderIdx = o.idx
+			
+			<if test='sort != "" and sort != "전체"'>
+				<if test='sort.contains("반품")'>
+					WHERE r.refundStatus = #{sort}
+				</if>
+				<if test='!sort.contains("반품")'>
+					WHERE r.refundReason = #{sort}
+				</if>
+			</if>
+			ORDER BY r.idx DESC LIMIT #{startIndexNo},#{pageSize};
+		</if>
+		<if test='searchString != ""'>
+			SELECT r.*, o.prodName AS prodName
+			FROM bo_refund r
+			LEFT JOIN bo_order o
+				ON r.orderIdx = o.idx
+				
+			WHERE 
+			
+			<if test='sort != "" and sort != "전체"'>
+				<if test='sort.contains("반품")'>
+					r.refundStatus = #{sort} AND
+				</if>
+				<if test='!sort.contains("반품")'>
+					r.refundReason = #{sort} AND
+				</if>
+			</if>
+			
+			r.${search} LIKE CONCAT('%',#{searchString},'%') ORDER BY r.idx DESC LIMIT #{startIndexNo},#{pageSize};
+		</if>
+	</select>
+	
+	<select id="askListTotRecCnt" resultType="int">
+		<if test='searchString == ""'>
+			SELECT COUNT(*) FROM bo_ask
+			
+			<if test='sort != "" and sort != "전체"'>
+				WHERE category = #{sort}
+			</if>
+			;
+		</if>
+		<if test='searchString != ""'>
+			SELECT COUNT(*) FROM bo_ask WHERE 
+			
+			<if test='sort != "" and sort != "전체"'>
+				category = #{sort} AND
+			</if>
+			${search} LIKE CONCAT('%',#{searchString},'%');
+		</if>
+	</select>
+	
+	<select id="getAskSearchList" resultType="com.spring.javaweb8S.vo.AskVO">
+		<if test='searchString == ""'>
+			SELECT * FROM bo_ask
+			
+			<if test='sort != "" and sort != "전체"'>
+				WHERE category = #{sort}
+			</if>
+			ORDER BY idx DESC LIMIT #{startIndexNo},#{pageSize};
+		</if>
+		<if test='searchString != ""'>
+			SELECT * FROM bo_ask WHERE 
+			
+			<if test='sort != "" and sort != "전체"'>
+				category = #{sort} AND
+			</if>
+			${search} LIKE CONCAT('%',#{searchString},'%') ORDER BY idx DESC LIMIT #{startIndexNo},#{pageSize};
+		</if>
+	</select>
+	
+	<select id="getNoticeInfo" resultType="com.spring.javaweb8S.vo.NoticeVO">
+		SELECT * FROM bo_notice WHERE idx = #{idx};
+	</select>
+	
+	<select id="getMagazineStat" resultType="int">
+		SELECT COUNT(*) FROM bo_subscribe WHERE subStatus = #{subStatus};
+	</select>
+	
+	<select id="getBooksletterStat" resultType="int">
+		SELECT COUNT(*) FROM bo_booksletter WHERE booksletterStatus = #{booksletterStatus};
+	</select>
+	
+	<select id="getOrderStat" resultType="int">
+		SELECT COUNT(*) FROM bo_order WHERE orderStatus = #{orderStatus};
+	</select>
+	
+	<select id="getCommunityStat" resultType="int">
+		<if test="flag != null and flag == '기록'">
+			SELECT COUNT(*) FROM bo_reflection WHERE refDate BETWEEN date_add(now(), interval -1 month) AND NOW();
+		</if>
+		<if test="flag != null and flag == '문장수집'">
+			SELECT COUNT(*) FROM bo_inspired WHERE insDate BETWEEN date_add(now(), interval -1 month) AND NOW();
+		</if>
+	</select>
+	
+	<select id="getAskStat" resultType="int">
+		<if test="category != null and category == '커뮤니티'">
+			SELECT COUNT(*) FROM bo_ask WHERE answeredAsk = "답변전" AND category = "커뮤니티";
+		</if>
+		<if test="category != null and category != '커뮤니티'">
+			SELECT COUNT(*) FROM bo_ask WHERE answeredAsk = "답변전" AND category != "커뮤니티";
+		</if>
+	</select>
+	
+	<select id="getReportStat" resultType="int">
+		SELECT COUNT(*) FROM bo_report WHERE reportCategory = #{reportCategory} AND reportDone = "처리 전";
 	</select>
 	
 	<insert id="memberDefaultPhotoInsert">
@@ -704,6 +975,20 @@
     </foreach>
 	</insert>
 	
+	<insert id="setOrderPointInsert">
+		INSERT INTO bo_point VALUES
+		(default, #{vo.memNickname}, #{vo.orderIdx}, (SELECT ROUND(#{point} * 0.05) FROM dual), #{pointReason}, default);
+	</insert>
+	
+	<insert id="setPointInsert">
+		INSERT INTO bo_point VALUES
+		(default, #{vo.memNickname}, #{vo.orderIdx}, #{vo.subRefundPoint}, #{pointReason}, default);
+	</insert>
+	
+	<insert id="setNoticeInsert">
+		INSERT INTO bo_notice VALUES 
+		(default, #{vo.category}, #{vo.noticeTitle}, #{vo.noticeContent}, default, default, #{vo.important}, #{vo.noticeOpen});
+	</insert>
 	
 	<update id="setChangeMemberPhotos">
 		UPDATE bo_member SET memPhoto = default WHERE memPhoto IN
@@ -767,6 +1052,23 @@
 		UPDATE bo_member SET memberDel = "탈퇴", memberDelReason = #{memberDelReason} WHERE idx = #{idx};
 	</update>
 	
+	<update id="setAddressForcedDelete">
+		UPDATE bo_address SET addressDel = "삭제" WHERE idx = #{idx};
+	</update>
+	
+	<update id="setSubscribeCancelUpdate">
+		UPDATE bo_subscribe SET subStatus = "구독취소", subRefund = #{vo.subRefund}, subRefundPoint = #{vo.subRefundPoint} WHERE idx = #{vo.idx};
+	</update>
+	
+	<update id="setMemPointUpdate">
+		UPDATE bo_member SET point = point + #{vo.subRefundPoint} WHERE nickname = #{vo.memNickname};
+	</update>
+	
+	<update id="setNoticeUpdate">
+		UPDATE bo_notice SET category = #{vo.category}, noticeTitle = #{vo.noticeTitle}, noticeContent = #{vo.noticeContent}, important = #{vo.important},
+		noticeOpen = #{vo.noticeOpen} WHERE idx = #{vo.idx};
+	</update> 
+	
 	<delete id="memberDefaultPhotoDelete">
 		DELETE FROM bo_defaultPhoto WHERE 1=1 AND 
 		photoName IN
@@ -812,6 +1114,10 @@
     <foreach collection="colProdList" item="colProdList" open="(" close=")" separator=",">
    		#{colProdList}
     </foreach>
+	</delete>
+	
+	<delete id="setNoticeDelete">
+		DELETE FROM bo_notice WHERE idx = #{idx};
 	</delete>
 	
 </mapper>

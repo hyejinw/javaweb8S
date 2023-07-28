@@ -15,7 +15,10 @@ create table bo_subscribe (
 	primary key(idx),
 	foreign key(memNickname) references bo_member(nickname)     /* 외래키 설정: 반드시 고유한 키여야만 한다. */
 	on update cascade												               		  /* 원본의 변경을 따라간다. */
-	on delete set null
+	on delete cascade,
+	foreign key(orderIdx) references bo_order(idx)     /* 외래키 설정: 반드시 고유한 키여야만 한다. */
+	on update cascade												               		  /* 원본의 변경을 따라간다. */
+	on delete cascade
 );
 
 desc bo_subscribe;

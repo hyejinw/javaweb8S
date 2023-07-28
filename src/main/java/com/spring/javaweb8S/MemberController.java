@@ -100,6 +100,8 @@ public class MemberController {
 		session.setAttribute("sMid", vo.getMid());
 		session.setAttribute("sNickname", vo.getNickname());
 		session.setAttribute("sMemType", vo.getMemType());
+		// 커뮤니티 메뉴에 띄울 회원 사진, 세션에 저장
+		session.setAttribute("sMemPhoto", vo.getMemPhoto());
 		
 		if(idSave.equals("on")) {
 			Cookie cookie = new Cookie("cMid", mid);

@@ -3,11 +3,24 @@
 <mapper namespace="com.spring.javaweb8S.dao.HomeDAO">
 
 	<select id="getNewMagazines" resultType="com.spring.javaweb8S.vo.MagazineVO">
-		select * from bo_magazine order by idx desc limit 0,20;
+		SELECT * FROM bo_magazine ORDER BY idx DESC LIMIT 0,20;
 	</select>
 
 	<select id="getCartNum" resultType="int">
-		select count(*) from bo_cart where memNickname = #{nickname};
+		SELECT count(*) FROM bo_cart where memNickname = #{nickname};
 	</select>
+	
+	<select id="getImportantNotice" resultType="com.spring.javaweb8S.vo.NoticeVO">
+		SELECT * FROM bo_notice WHERE important = 1 AND category = "책(의)세계" ORDER BY idx DESC LIMIT 3;
+	</select>
+	
+	<select id="getExtraNotice" resultType="com.spring.javaweb8S.vo.NoticeVO">
+		SELECT * FROM bo_notice WHERE important = 0 AND category = "책(의)세계" ORDER BY idx DESC LIMIT #{limitNum};
+	</select>
+	
+	<select id="getTotCnt" resultType="String">
+		SELECT totCnt FROM bo_member WHERE nickname = #{nickname};
+	</select>
+	
 	
 </mapper>

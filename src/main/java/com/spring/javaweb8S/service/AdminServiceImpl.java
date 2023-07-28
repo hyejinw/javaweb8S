@@ -9,7 +9,6 @@ import java.util.UUID;
 import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
@@ -18,6 +17,7 @@ import org.springframework.web.multipart.MultipartFile;
 import com.spring.javaweb8S.common.JavawebProvide;
 import com.spring.javaweb8S.dao.AdminDAO;
 import com.spring.javaweb8S.vo.AddressVO;
+import com.spring.javaweb8S.vo.AskVO;
 import com.spring.javaweb8S.vo.BookVO;
 import com.spring.javaweb8S.vo.BooksletterVO;
 import com.spring.javaweb8S.vo.CollectionVO;
@@ -25,6 +25,7 @@ import com.spring.javaweb8S.vo.DefaultPhotoVO;
 import com.spring.javaweb8S.vo.DeliveryVO;
 import com.spring.javaweb8S.vo.MagazineVO;
 import com.spring.javaweb8S.vo.MemberVO;
+import com.spring.javaweb8S.vo.NoticeVO;
 import com.spring.javaweb8S.vo.OptionVO;
 import com.spring.javaweb8S.vo.OrderVO;
 import com.spring.javaweb8S.vo.PointUseVO;
@@ -32,6 +33,7 @@ import com.spring.javaweb8S.vo.PointVO;
 import com.spring.javaweb8S.vo.ProductVO;
 import com.spring.javaweb8S.vo.ProverbVO;
 import com.spring.javaweb8S.vo.RefundVO;
+import com.spring.javaweb8S.vo.StatisticVO안씀;
 import com.spring.javaweb8S.vo.SubscribeVO;
 
 @Service
@@ -557,6 +559,121 @@ public class AdminServiceImpl implements AdminService {
 	public void setMemberForcedDelete(int idx, String memberDelReason) {
 		adminDAO.setMemberForcedDelete(idx, memberDelReason);
 	}
+
+	// 회원 상세창, 배송지 강제삭제
+	@Override
+	public void setAddressForcedDelete(int idx) {
+		adminDAO.setAddressForcedDelete(idx);
+	}
+
+	// 매거진 정기구독 리스트
+	@Override
+	public ArrayList<OrderVO> getSubscribeSearchList(String sort, String search, String searchString, String startDate, String endDate, int startIndexNo, int pageSize) {
+		return adminDAO.getSubscribeSearchList(sort, search, searchString, startDate, endDate, startIndexNo, pageSize);
+	}
+
+	// 구독취소 시, 결제액과 환불금 차액의 5% 포인트 적립
+	@Override
+	public void setOrderPointInsert(SubscribeVO vo, String pointReason, int point) {
+		adminDAO.setOrderPointInsert(vo, pointReason, point);
+	}
+
+	// 매거진 정기구독 취소신청 승인, 구독테이블 수정
+	@Override
+	public void setSubscribeCancelUpdate(SubscribeVO vo) {
+		adminDAO.setSubscribeCancelUpdate(vo);
+	}
+
+	// 매거진 정기구독 취소신청 승인, 환불포인트 지급
+	@Override
+	public void setPointInsert(SubscribeVO vo, String pointReason) {
+		adminDAO.setPointInsert(vo, pointReason);
+	}
+
+	// 매거진 정기구독 취소신청 승인, 회원테이블 포인트 변경
+	@Override
+	public void setMemPointUpdate(SubscribeVO vo) {
+		adminDAO.setMemPointUpdate(vo);
+	}
+
+	// 상품 반품 리스트
+	@Override
+	public ArrayList<OrderVO> getRefundSearchList(String sort, String search, String searchString, int startIndexNo, int pageSize) {
+		return adminDAO.getRefundSearchList(sort, search, searchString, startIndexNo, pageSize);
+	}
+
+	// 문의 리스트
+	@Override
+	public ArrayList<AskVO> getAskSearchList(String sort, String search, String searchString, int startIndexNo, int pageSize) {
+		return adminDAO.getAskSearchList(sort, search, searchString, startIndexNo, pageSize);
+	}
+
+	// 공지사항 리스트
+	@Override
+	public ArrayList<AskVO> getNoticeSearchList(String search, String searchString, int startIndexNo, int pageSize) {
+		return adminDAO.getNoticeSearchList(search, searchString, startIndexNo, pageSize);
+	}
+
+	// 공지사항 등록
+	@Override
+	public int setNoticeInsert(NoticeVO vo) {
+		return adminDAO.setNoticeInsert(vo);
+	}
+
+	// 공지사항 수정용, 상세정보
+	@Override
+	public NoticeVO getNoticeInfo(int idx) {
+		return adminDAO.getNoticeInfo(idx);
+	}
+
+	// 공지사항 수정
+	@Override
+	public int setNoticeUpdate(NoticeVO vo) {
+		return adminDAO.setNoticeUpdate(vo);
+	}
+
+	// 공지사항 삭제
+	@Override
+	public void setNoticeDelete(int idx) {
+		adminDAO.setNoticeDelete(idx);
+	}
+
+	// 관리자창 메인, 매거진 정기구독 일반통계
+	@Override
+	public int getMagazineStat(String subStatus) {
+		return adminDAO.getMagazineStat(subStatus);
+	}
+
+	// 관리자창 메인, 뉴스레터 구독 일반통계
+	@Override
+	public int getBooksletterStat(String booksletterStatus) {
+		return adminDAO.getBooksletterStat(booksletterStatus);
+	}
+
+	// 관리자창 메인, 주문/반품 일반통계
+	@Override
+	public int getOrderStat(String orderStatus) {
+		return adminDAO.getOrderStat(orderStatus);
+	}
+
+	// 관리자창 메인, 3개의 책(최근 1개월) 일반통계
+	@Override
+	public int getCommunityStat(String flag) {
+		return adminDAO.getCommunityStat(flag);
+	}
+
+	// 관리자창 메인, 미확인 문의 일반통계
+	@Override
+	public int getAskStat(String category) {
+		return adminDAO.getAskStat(category);
+	}
+
+	// 관리자창 메인, 미확인 신고 일반통계
+	@Override
+	public int getReportStat(String reportCategory) {
+		return adminDAO.getReportStat(reportCategory);
+	}
+
 
 			
 

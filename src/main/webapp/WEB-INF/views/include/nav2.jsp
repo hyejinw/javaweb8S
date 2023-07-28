@@ -17,9 +17,12 @@
 	.rolling {position:relative; width:100%; height:auto;}
 	.rolling li {width:100%; height:50px; line-height:50px; color:#282828}
 	
+	.navContentForFont {
+		font-weight:bold;
+	}
 	.navContent {
 		color: black;
-		font-size: 17px;
+		font-size: 18px;
 		margin-right: 7px
 	}
 	.navContent:hover {
@@ -39,15 +42,21 @@
 			location.href = '${ctp}/member/memberLogin';
 		}
 		else if(flag == 'memPage') {
-			location.href = '${ctp}/member/memberPage';
+			location.href = '${ctp}/member/myPage';
 		}
 		else if(flag == 'cart') {
-			location.href = '${ctp}/member/memberCart';
+			location.href = '${ctp}/order/cart';
 		}
+	}
+	
+	// 게임, 준비 중
+	function preparing() {
+		alert('서비스 준비 중입니다.');
 	}
 </script>
 
 <div class="topNav">
+
  <!-- Navbar (sit on top) -->
   <div class="w3-bar w3-white w3-card" id="myNavbar">
     <!-- Right-sided navbar links -->
@@ -59,30 +68,32 @@
     	</div>
     
 	    <div class="w3-right w3-hide-small w3-cell w3-cell-middle l8 m4 s3">
-	      <div class="w3-dropdown-hover w3-white" style="padding: 8px 16px">
+	      <div class="w3-dropdown-hover w3-white" style="padding:16px">
 		      <!-- <a href="#team" class="w3-bar-item w3-button w3-hover-white w3-round-xxlarge navContent">책(의)세계란</a> -->
-		      <a class="w3-hover-white w3-round-xxlarge navContent"><span class="detailContent">책(의)세계란</span>&nbsp;<i class="fa-solid fa-caret-down"></i></a>
+		      <a class="w3-hover-white w3-round-xxlarge navContent"><span class="detailContent navContentForFont">책(의)세계란</span>&nbsp;<i class="fa-solid fa-caret-down"></i></a>
 		      <div class="w3-dropdown-content w3-bar-block w3-card-4">
-		        <a href="#" class="w3-bar-item w3-button">소개</a>
-		        <a href="#" class="w3-bar-item w3-button">뉴스레터</a>
+		        <a href="${ctp}/about/about" class="w3-bar-item w3-button navContentForFont">소개</a>
+		        <a href="${ctp}/about/notice" class="w3-bar-item w3-button navContentForFont">공지사항</a>
 		      </div>
 		    </div>
 		    
-	      <a href="#about" class="w3-bar-item w3-button w3-hover-white w3-round-xxlarge navContent"><b><span class="detailContent">매거진</span></b></a>
+	      <a href="${ctp}/magazine/magazineList" class="w3-bar-item w3-button w3-hover-white w3-round-xxlarge navContent mt-2"><b><span class="detailContent navContentForFont">매거진</span></b></a>
 	      
-	      <div class="w3-dropdown-hover w3-white" style="padding:8px 16px">
+	      <div class="w3-dropdown-hover w3-white" style="padding:16px">
 		      <!-- <a href="#team" class="w3-bar-item w3-button w3-hover-white w3-round-xxlarge navContent">책(의)세계란</a> -->
-		      <a class="w3-hover-white w3-round-xxlarge navContent"><b><span class="detailContent">3개의 책</span></b>&nbsp;<i class="fa-solid fa-caret-down"></i></a>
+		      <a class="w3-hover-white w3-round-xxlarge navContent"><b><span class="detailContent navContentForFont">3개의 책</span></b>&nbsp;<i class="fa-solid fa-caret-down"></i></a>
 		      <div class="w3-dropdown-content w3-bar-block w3-card-4">
-		        <a href="#" class="w3-bar-item w3-button">입장</a>
-		        <a href="#" class="w3-bar-item w3-button">커뮤니티 가이드</a>
+		        <a href="${ctp}/community/communityMain" class="w3-bar-item w3-button navContentForFont">입장</a>
+		        <a href="${ctp}/community/guide" class="w3-bar-item w3-button navContentForFont">커뮤니티 가이드</a>
 		      </div>
 		    </div>
 		    
 		    
-	      <a href="#work" class="w3-bar-item w3-button w3-hover-white w3-round-xxlarge navContent"><span class="detailContent">컬렉션</span></a>
-	      <a href="#pricing" class="w3-bar-item w3-button w3-hover-white w3-round-xxlarge navContent"><span class="detailContent">독립서점</span></a>
-	      <a href="#contact" class="w3-bar-item w3-button w3-hover-white w3-round-xxlarge navContent"><span class="detailContent">게임</span></a>
+	      <a href="${ctp}/collection/collectionList" class="w3-bar-item w3-button w3-hover-white w3-round-xxlarge navContent mt-2"><span class="detailContent navContentForFont">컬렉션</span></a>
+	      <a href="${ctp}/about/ask" class="w3-bar-item w3-button w3-hover-white w3-round-xxlarge navContent mt-2"><span class="detailContent navContentForFont">문의</span></a>
+	      
+	      <!-- <a href="#pricing" class="w3-bar-item w3-button w3-hover-white w3-round-xxlarge navContent"><span class="detailContent">독립서점</span></a> -->
+	      <a href="javascript:preparing()" class="w3-bar-item w3-button w3-hover-white w3-round-xxlarge navContent mr-5 mt-2"><span class="detailContent navContentForFont">게임</span></a>
 	      <c:if test="${memType == ''}">
 		      <a href="${ctp}/member/memberLogin" class="w3-bar-item w3-button w3-hover-white w3-round-xxlarge navContent" style="padding-right:0px">
 			      <span class="detailContent"><p class="w3-tooltip"><i class="fa-solid fa-person-running" style="color: #000000; font-size:25px" title="책(의)세계로 로그인"></i><br/>
@@ -99,7 +110,7 @@
 	      </c:if>
 	      <c:if test="${memType != '관리자'}">
 		      <a href="javascript:memCheck('${memType}', 'memPage')" class="w3-bar-item w3-button w3-hover-white w3-round-xxlarge navContent" style="padding-right:0px">
-			      <span class="detailContent"><p class="w3-tooltip"><i class="fa-regular fa-id-card" style="color: #000000; font-size:25px" title="마이페이지"></i><br/>
+			      <span class="detailContent"><p class="w3-tooltip"><i class="fa-regular fa-id-card" style="color: #557A46; font-size:25px" title="마이페이지"></i><br/>
 			      <font size="2" class="w3-center" style="font-weight:400">마이페이지</font>
 			      </p></span>
 		      </a>
@@ -114,9 +125,11 @@
 	      <a href="javascript:memCheck('${memType}', 'cart')" class="w3-bar-item w3-button w3-hover-white w3-round-xxlarge navContent">
 		      <span class="detailContent"><p class="w3-tooltip"><i class="fa-solid fa-cart-shopping" style="color: #000000; font-size:25px" title="장바구니"></i>
 		      <br/>
-		      <font size="2" class="w3-center" style="font-weight:400">장바구니</font>
+		      <font size="2" class="w3-center" style="font-weight:400">장바구니
+		      	<c:if test="${sCartNum != 0}"><span class="badge badge-pill badge-success">${sCartNum}</span></c:if>
+	      	</font>
 		      </p></span>
-	      </a>
+	      </a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 	    </div>
 		</div>
 		

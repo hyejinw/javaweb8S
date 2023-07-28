@@ -21,6 +21,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -95,7 +96,7 @@ public class CommunityController {
 		ArrayList<InspiredVO> inspiredVOS = communityService.getNewInspired(nickname);
 		model.addAttribute("inspiredVOS", inspiredVOS);
 		
-		// 가장 많이 저장된 책(10개)
+		// 가장 많이 저장된 책(20개)
 		ArrayList<BookVO> bookVOS = communityService.getPopularBook();
 		model.addAttribute("bookVOS", bookVOS);
 
@@ -723,7 +724,8 @@ public class CommunityController {
 	// 커뮤니티 마이페이지 회원정보 창에서 프로필 사진 변경
 	@RequestMapping(value = "/myPage/memPhotoUpdate", method = RequestMethod.POST)
 	public String myPagePhotoUpdatePost(MultipartFile file, MemberVO vo, 
-			String defaultPhoto, HttpSession session) throws UnsupportedEncodingException {
+			String defaultPhoto, HttpSession session,
+			@RequestParam(name = "flag", defaultValue = "", required = false) String flag) throws UnsupportedEncodingException {
 		
 		int res = 0;
 		
@@ -739,8 +741,15 @@ public class CommunityController {
 			session.setAttribute("sMemPhoto", defaultPhoto);
 		}
 		String nickname = URLEncoder.encode(vo.getNickname(), "UTF-8");
-		if(res != 0) return "redirect:/message/memPhotoUpdateOk?nickname=" + nickname;
-		else return "redirect:/message/memPhotoUpdateNo?nickname=" + nickname;
+		if(flag.equals("")) {
+			if(res != 0) return "redirect:/message/memPhotoUpdateOk?nickname=" + nickname;
+			else return "redirect:/message/memPhotoUpdateNo?nickname=" + nickname;
+		}
+		else {
+			if(res != 0) return "redirect:/message/adminMemPhotoUpdateOk?nickname=" + nickname;
+			else return "redirect:/message/adminMemPhotoUpdateNo?nickname=" + nickname;
+		}
+		
 	}
 	
 	// 커뮤니티 마이페이지 회원정보 창에서 소개글 수정

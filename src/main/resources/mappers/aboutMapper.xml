@@ -93,6 +93,47 @@
 		SELECT * FROM bo_ask WHERE idx = #{idx};
 	</select>
 	
+	<select id="getAskProdName" resultType="String">
+		<if test='category != null and category == "컬렉션상품"'>
+			SELECT prodName FROM bo_product WHERE idx = #{originIdx}; 
+		</if>
+		<if test='category != null and category != "컬렉션상품"'>
+			SELECT maTitle FROM bo_magazine WHERE idx = #{originIdx}; 
+		</if>
+	</select>
+	
+	<select id="noticeListTotRecCnt" resultType="int">
+		<if test='searchString == ""'><!-- 검색어가 없으면 전체! -->
+		 	SELECT count(*) FROM bo_notice 
+		 	WHERE noticeOpen = "공개" AND category != "3개의책";
+		</if>
+		<if test='searchString != ""'>
+		 	SELECT count(*) FROM bo_notice 
+		 	WHERE noticeOpen = "공개" AND category != "3개의책" 
+			AND ${search} LIKE CONCAT('%',#{searchString},'%');
+		</if>
+	</select>
+	
+	<select id="getNoticeSearch" resultType="com.spring.javaweb8S.vo.NoticeVO">
+		<if test='searchString == ""'><!-- 검색어가 없으면 전체! -->
+		 	SELECT * FROM bo_notice 
+		 	WHERE noticeOpen = "공개" AND category != "3개의책" 
+		 	
+		 	ORDER BY important DESC, idx DESC LIMIT #{startIndexNo},#{pageSize};
+		</if>
+		<if test='searchString != ""'>
+		 	SELECT * FROM bo_notice 
+		 	WHERE noticeOpen = "공개" AND category != "3개의책" 
+			AND ${search} LIKE CONCAT('%',#{searchString},'%') 
+			
+			ORDER BY important DESC, idx DESC LIMIT #{startIndexNo},#{pageSize};
+		</if>
+	</select>
+	
+	<select id="getNoticeInfo" resultType="com.spring.javaweb8S.vo.NoticeVO">
+		SELECT * FROM bo_notice WHERE idx = #{idx};
+	</select>
+	
 	<insert id="getBooksletterInsert" >
 		<if test='memNickname == ""'>
 			INSERT INTO bo_booksletter(idx,email,booksletterDate,sendNum,booksletterStatus) VALUES
@@ -132,5 +173,22 @@
 			#{vo.askTitle},#{vo.askContent},#{vo.secret},default,default,#{vo.askHostIp},default);
 		</if>
 	</insert>
+	
+	<update id="setAskUpdate" parameterType="com.spring.javaweb8S.vo.AskVO">
+		<if test="vo.memNickname == null">
+			UPDATE bo_ask SET 
+			email = #{vo.email}, pwd = #{vo.pwd}, askTitle = #{vo.askTitle}, askContent = #{vo.askContent}, secret = #{vo.secret} 
+			WHERE idx = #{vo.idx};
+		</if>
+		<if test="vo.memNickname != null">
+			UPDATE bo_ask SET 
+			askTitle = #{vo.askTitle}, askContent = #{vo.askContent}, secret = #{vo.secret} 
+			WHERE idx = #{vo.idx};
+		</if>
+	</update>	
+	
+	<update id="setNoticeViewUpdate">
+		UPDATE bo_notice SET noticeView = noticeView + 1 WHERE idx = #{idx};
+	</update>
 	
 </mapper>

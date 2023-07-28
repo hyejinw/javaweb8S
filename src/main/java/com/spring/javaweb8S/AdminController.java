@@ -2,15 +2,18 @@ package com.spring.javaweb8S;
 
 import java.io.File;
 import java.io.UnsupportedEncodingException;
-import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
 
 import javax.mail.MessagingException;
+import javax.mail.internet.MimeMessage;
 import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Controller;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -20,10 +23,12 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.spring.javaweb8S.common.AutoUpdate;
 import com.spring.javaweb8S.common.BookInsertSearch;
+import com.spring.javaweb8S.common.ImageManager;
 import com.spring.javaweb8S.pagination.PageProcess;
 import com.spring.javaweb8S.pagination.PageVO;
 import com.spring.javaweb8S.service.AdminService;
 import com.spring.javaweb8S.vo.AddressVO;
+import com.spring.javaweb8S.vo.AskVO;
 import com.spring.javaweb8S.vo.BookVO;
 import com.spring.javaweb8S.vo.BooksletterVO;
 import com.spring.javaweb8S.vo.CollectionVO;
@@ -31,6 +36,7 @@ import com.spring.javaweb8S.vo.DefaultPhotoVO;
 import com.spring.javaweb8S.vo.DeliveryVO;
 import com.spring.javaweb8S.vo.MagazineVO;
 import com.spring.javaweb8S.vo.MemberVO;
+import com.spring.javaweb8S.vo.NoticeVO;
 import com.spring.javaweb8S.vo.OptionVO;
 import com.spring.javaweb8S.vo.OrderVO;
 import com.spring.javaweb8S.vo.PointUseVO;
@@ -56,15 +62,71 @@ public class AdminController {
 	@Autowired
 	AutoUpdate autoUpdate;
 	
+	@Autowired
+	JavaMailSender mailSender;
+	
+	@Autowired
+	ImageManager imageManager;
+	
 	// 관리자 메인 창
 	@RequestMapping(value = "/adminPage", method = RequestMethod.GET)
-	public String adminPageGet() throws ParseException, MessagingException {
+	public String adminPageGet(Model model) {
 
-		// 아래내용은 전부 확인용으로 씀
-		//autoUpdate.orderAutoUpdate();
-		//autoUpdate.subDeliAutoUpdate();
-		//autoUpdate.subAutoUpdate();
-		//autoUpdate.booksletterAutoSend();
+		// 일반 통계
+		// 1) 구독관련
+		// 1-1) 매거진 정기구독
+		int s1 = adminService.getMagazineStat("구독중");
+		int s2 = adminService.getMagazineStat("구독종료");
+		int s3 = adminService.getMagazineStat("구독취소신청");
+		int s4 = adminService.getMagazineStat("구독취소");
+		model.addAttribute("s1", s1);
+		model.addAttribute("s2", s2);
+		model.addAttribute("s3", s3);
+		model.addAttribute("s4", s4);
+		
+		// 1-2) 뉴스레터 구독
+		int l1 = adminService.getBooksletterStat("구독중");
+		int l2 = adminService.getBooksletterStat("구독취소");
+		model.addAttribute("l1", l1);
+		model.addAttribute("l2", l2);
+	
+		// 2) 주문 / 반품
+		int o1 = adminService.getOrderStat("결제완료");
+		int o2 = adminService.getOrderStat("배송준비중");
+		int o3 = adminService.getOrderStat("배송중");
+		model.addAttribute("o1", o1);
+		model.addAttribute("o2", o2);
+		model.addAttribute("o3", o3);
+		
+		int r1 = adminService.getOrderStat("반품신청");
+		int r2 = adminService.getOrderStat("반품중");
+		int r3 = adminService.getOrderStat("반품완료");
+		model.addAttribute("r1", r1);
+		model.addAttribute("r2", r2);
+		model.addAttribute("r3", r3);
+		
+		// 3) 3개의 책(최근 1개월)
+		int c1 = adminService.getCommunityStat("기록");
+		int c2 = adminService.getCommunityStat("문장수집");
+		model.addAttribute("c1", c1);
+		model.addAttribute("c2", c2);
+		
+		// 4) 미확인 문의
+		int a1 = adminService.getAskStat("그외");
+		int a2 = adminService.getAskStat("커뮤니티");
+		model.addAttribute("a1", a1);
+		model.addAttribute("a2", a2);
+		
+		// 5) 미확인 신고
+		int p1 = adminService.getReportStat("기록");
+		int p2 = adminService.getReportStat("댓글");
+		int p3 = adminService.getReportStat("문장수집");
+		int p4 = adminService.getReportStat("회원");
+		model.addAttribute("p1", p1);
+		model.addAttribute("p2", p2);
+		model.addAttribute("p3", p3);
+		model.addAttribute("p4", p4);
+		
 		
 		return "admin/adminPage";
 	}
@@ -356,7 +418,7 @@ public class AdminController {
 		return "admin/magazine/magazineInsert";
 	}
 	
-	// 매거진 등록 (여기 정기구독 부분 오류있음 400)
+	// 매거진 등록
 	@RequestMapping(value = "/magazine/magazineInsert", method = RequestMethod.POST)
 	public String magazineInsertPost(MultipartFile thumbnailFile, MultipartFile detailFile, MagazineVO vo) {
 		
@@ -707,7 +769,6 @@ public class AdminController {
 		return "1";
 	}
 	
-	
 	// 상품 검색
 	@RequestMapping(value = "/collection/colProdListSearch", method = RequestMethod.GET)
 	public String colProdListSearchGet(Model model,
@@ -743,7 +804,6 @@ public class AdminController {
 		
 		return "admin/collection/colProdListSearch";
 	}
-	
 	
 	// 주문 관리창
 	@RequestMapping(value = "/order/orderList", method = RequestMethod.GET)
@@ -859,7 +919,7 @@ public class AdminController {
 	
 	// 회원 상세정보창(팝업)
 	@RequestMapping(value = "/member/memInfo", method = RequestMethod.GET)
-	public String memberListGet(Model model, String nickname) {
+	public String memInfoGet(Model model, String nickname) {
 		
 		// 1) 회원정보
 		MemberVO memberVO = adminService.getMemberInfo(nickname);
@@ -869,11 +929,11 @@ public class AdminController {
 		ArrayList<AddressVO> addressVOS = adminService.getMemberAddressList(nickname);
 		model.addAttribute("addressVOS", addressVOS);
 		
-		// 3-1) 포인트 사용 내역
+		// 3-1) 포인트 적립 내역
 		ArrayList<PointVO> pointVOS = adminService.getMemberPointList(nickname);
 		model.addAttribute("pointVOS", pointVOS);
 		
-		// 3-2) 포인트 적립 내역
+		// 3-2) 포인트 사용 내역
 		ArrayList<PointUseVO> pointUseVOS = adminService.getMemberPointUseList(nickname);
 		model.addAttribute("pointUseVOS", pointUseVOS);
 		
@@ -894,9 +954,296 @@ public class AdminController {
 	public String memberForcedDeletePost(int idx, String memberDelReason) {
 		
 		adminService.setMemberForcedDelete(idx, memberDelReason);
+		return "";
+	}
+	
+	// 회원 상세정보창(팝업), 배송지 강제 삭제
+	@ResponseBody
+	@RequestMapping(value = "/member/addressForcedDelete", method = RequestMethod.POST)
+	public String addressForcedDeletePost(int idx) {
+		
+		adminService.setAddressForcedDelete(idx);
+		return "";
+	}
+	
+	// 매거진 정기구독 관리창
+	@RequestMapping(value = "/magazine/subscribeList", method = RequestMethod.GET)
+	public String subscribeListGet(Model model,
+			@RequestParam(name="sort", defaultValue = "전체", required = false) String sort,
+			@RequestParam(name="search", defaultValue = "memNickname", required = false) String search,
+			@RequestParam(name="searchString", defaultValue = "", required = false) String searchString,
+			@RequestParam(name="startDate", defaultValue = "", required = false) String startDate,
+			@RequestParam(name="endDate", defaultValue = "", required = false) String endDate,
+			@RequestParam(name="pag", defaultValue = "1", required = false) int pag,
+			@RequestParam(name="pageSize", defaultValue = "10", required = false) int pageSize) {
+		
+		// sort에 들어올 수 있는 값: 전체, 구독중, 구독취소신청, 구독취소, 구독종료
+		PageVO pageVO = pageProcess.totRecCntWithPeriodAndSort(pag, pageSize, "adminSubscribe", sort, search, searchString, startDate, endDate);
+		ArrayList<OrderVO> vos = adminService.getSubscribeSearchList(sort, search, searchString, startDate, endDate, pageVO.getStartIndexNo(), pageSize);
+		
+		model.addAttribute("sort", sort);
+		model.addAttribute("search", search);
+		model.addAttribute("searchString", searchString);
+		model.addAttribute("startDate", startDate);
+		model.addAttribute("endDate", endDate);
+		
+		model.addAttribute("vos", vos);
+		model.addAttribute("pageVO", pageVO);
+		
+		return "admin/magazine/subscribeList";
+	}
+	
+	// 매거진 구독취소 승인창(팝업)
+	@RequestMapping(value = "/magazine/subscribeCancel", method = RequestMethod.GET)
+	public String subscribeCancelGet(int idx, String memNickname, Model model) {
+		
+		OrderVO vo = adminService.getOrderInfo(idx);
+		
+		ArrayList<DeliveryVO> deliveryVOS = adminService.getSubDeliveryInfo(idx);
+		MemberVO memberVO = adminService.getMemberInfo(memNickname);
+		AddressVO addressVO = adminService.getAddressInfo(vo.getAddressIdx());
+		SubscribeVO subscribeVO = adminService.getSubscribeInfo(idx);
+		
+		model.addAttribute("vo", vo);
+		model.addAttribute("deliveryVOS", deliveryVOS);
+		model.addAttribute("memberVO", memberVO);
+		model.addAttribute("addressVO", addressVO);
+		model.addAttribute("subscribeVO", subscribeVO);
+		
+		return "admin/magazine/subscribeCancel";
+	}
+	
+	// 매거진 구독취소 승인
+	@Transactional
+	@ResponseBody
+	@RequestMapping(value = "/magazine/subscribeCancel", method = RequestMethod.POST)
+	public String subscribeCancelPost(SubscribeVO vo, String email, int paidPrice, HttpServletRequest request) throws MessagingException {
+		
+		// 1) 매거진 구독테이블 수정
+		adminService.setSubscribeCancelUpdate(vo);
+		
+		// 2-0) 구독취소 시, 결제액과 환불금 차액의 5% 포인트 적립.
+		if(paidPrice - vo.getSubRefund() > 0) {
+			adminService.setOrderPointInsert(vo, "상품구매확정", paidPrice - vo.getSubRefund());
+		}
+		
+		if(vo.getSubRefundPoint() != 0) {
+			// 2-1) 포인트 업데이트(정기구독취소 포인트반환)
+			adminService.setPointInsert(vo, "정기구독취소 포인트반환");
+
+			// 2-2) 회원 테이블 포인트 수정
+			adminService.setMemPointUpdate(vo);
+		}
+		
+		// 3) 이메일 전송
+		String title = "[책(의)세계] 매거진 Chaeg 정기구독 취소신청이 승인되었습니다.";
+		
+		// 메일 전송을 위한 객체 : MimeMessage(), MimeMessageHelper()
+		MimeMessage message = mailSender.createMimeMessage();
+		MimeMessageHelper messageHelper = new MimeMessageHelper(message, true, "UTF-8");
+		
+		// 메일보관함에 회원이 보내온 메세지들의 정보를 모두 저장시킨후 작업처리
+		messageHelper.setTo(email);
+		messageHelper.setSubject(title);
+		String content = "";
+		
+		// 메세지 보관함의 내용(content)에 필요한 정보를 추가로 담아서 전송
+		content += "<p><img src=\"cid:logo.png\" width='300px'></p>";
+		content += "<br><h4>안녕하세요. "+vo.getMemNickname()+"님 책(의)세계입니다.<br>매거진 Chaeg 정기구독 취소신청이 승인되었습니다.</h4><br>";
+		content += "<br><h4>환불금액) "+vo.getSubRefund()+"원 , 환불 포인트) "+vo.getSubRefundPoint()+" </h4>";
+		content += "<h3>기쁜 마음으로, 책(의)세계 드림</h3><br>";
+		messageHelper.setText(content, true);
+		
+		// 본문에 기재된 그림파일의 경로를 별도로 표시시켜준다. 그런 후, 다시 보관함에 담기
+		String realPath = request.getSession().getServletContext().getRealPath("/resources/images/");
+		File file = new File(realPath + "logo.png");
+		messageHelper.addInline("logo.png", file);
+
+		// 메일 전송
+		mailSender.send(message);
 		
 		return "";
 	}
+	
+	// 반품 관리창
+	@RequestMapping(value = "/order/refundList", method = RequestMethod.GET)
+	public String refundListGet(Model model,
+			@RequestParam(name="sort", defaultValue = "전체", required = false) String sort,
+			@RequestParam(name="search", defaultValue = "memNickname", required = false) String search,
+			@RequestParam(name="searchString", defaultValue = "", required = false) String searchString,
+			@RequestParam(name="pag", defaultValue = "1", required = false) int pag,
+			@RequestParam(name="pageSize", defaultValue = "10", required = false) int pageSize) {
+		
+		// sort에 들어올 수 있는 값: 전체, 반품신청, 반품진행중, 반품완료, 상품하자, 단순변심, 기타
+		PageVO pageVO = pageProcess.totRecCnt(pag, pageSize, "adminRefundList", sort+"/"+search, searchString);
+		ArrayList<OrderVO> vos = adminService.getRefundSearchList(sort, search, searchString, pageVO.getStartIndexNo(), pageSize);
+		
+		model.addAttribute("sort", sort);
+		model.addAttribute("search", search);
+		model.addAttribute("searchString", searchString);
+		model.addAttribute("vos", vos);
+		model.addAttribute("pageVO", pageVO);
+		
+		return "admin/order/refundList";
+	}
+	
+	// 문의 관리창
+	@RequestMapping(value = "/manage/askList", method = RequestMethod.GET)
+	public String askListGet(Model model,
+			@RequestParam(name="sort", defaultValue = "전체", required = false) String sort,
+			@RequestParam(name="search", defaultValue = "askTitle", required = false) String search,
+			@RequestParam(name="searchString", defaultValue = "", required = false) String searchString,
+			@RequestParam(name="pag", defaultValue = "1", required = false) int pag,
+			@RequestParam(name="pageSize", defaultValue = "10", required = false) int pageSize) {
+		
+		// sort에 들어올 수 있는 값: 전체, 커뮤니티, 컬렉션상품, 매거진, 정기구독, 뉴스레터, 포인트, 게임, 기타
+		PageVO pageVO = pageProcess.totRecCnt(pag, pageSize, "adminAskList", sort+"/"+search, searchString);
+		ArrayList<AskVO> vos = adminService.getAskSearchList(sort, search, searchString, pageVO.getStartIndexNo(), pageSize);
+		
+		model.addAttribute("sort", sort);
+		model.addAttribute("search", search);
+		model.addAttribute("searchString", searchString);
+		model.addAttribute("vos", vos);
+		model.addAttribute("pageVO", pageVO);
+		
+		return "admin/manage/askList";
+	}
+	
+	// 공지사항 관리창
+	@RequestMapping(value = "/manage/noticeList", method = RequestMethod.GET)
+	public String noticeListGet(Model model,
+			@RequestParam(name="search", defaultValue = "noticeTitle", required = false) String search,
+			@RequestParam(name="searchString", defaultValue = "", required = false) String searchString,
+			@RequestParam(name="pag", defaultValue = "1", required = false) int pag,
+			@RequestParam(name="pageSize", defaultValue = "10", required = false) int pageSize) {
+		
+		PageVO pageVO = pageProcess.totRecCnt(pag, pageSize, "adminNoticeList", search, searchString);
+		ArrayList<AskVO> vos = adminService.getNoticeSearchList(search, searchString, pageVO.getStartIndexNo(), pageSize);
+		
+		model.addAttribute("search", search);
+		model.addAttribute("searchString", searchString);
+		model.addAttribute("vos", vos);
+		model.addAttribute("pageVO", pageVO);
+		
+		return "admin/manage/noticeList";
+	}
+	
+	// 공지사항 등록창
+	@RequestMapping(value = "/manage/noticeInsert", method = RequestMethod.GET)
+	public String noticeInsertGet(Model model) {
+		
+		return "admin/manage/noticeInsert";
+	}
+	
+	// 공지사항 등록
+	@RequestMapping(value = "/manage/noticeInsert", method = RequestMethod.POST)
+	public String noticeInsertPost(NoticeVO vo) {
+		
+		// 상단 고정
+		if(vo.getImportant() == null) vo.setImportant("0");
+		else vo.setImportant("1");
+		
+		// content에 이미지가 저장되어 있다면, 저장된 이미지만 골라서 /resources/data/notice/폴더에 저장시켜준다.
+		imageManager.imgCheck(vo.getNoticeContent(), "notice");
+		
+		// 이미지들의 모든 복사작업을 마치면, ckeditor폴더경로를 notice폴더 경로로 변경한다.
+		vo.setNoticeContent(vo.getNoticeContent().replace("/data/ckeditor/", "/data/notice/"));
+
+		// content안의 내용정리가 끝나면 변경된 vo를 DB에 저장시켜준다.
+		int res = adminService.setNoticeInsert(vo);
+		
+		if(res != 0)  return "redirect:/message/adminNoticeInsertOk";
+		else return "redirect:/message/adminNoticeInsertOk";
+	}
+	
+	// 공지사항 수정창
+	@RequestMapping(value = "/manage/noticeUpdate", method = RequestMethod.GET)
+	public String noticeUpdateGet(int idx, Model model) {
+	
+		// 수정창으로 이동시에는 먼저 원본파일에 그림파일이 있다면, 현재폴더(ask)의 그림파일들을 ckeditor폴더로 복사시켜둔다.
+		NoticeVO vo = adminService.getNoticeInfo(idx);
+		if(vo.getNoticeContent().indexOf("src=\"/") != -1) imageManager.imgCheckUpdate(vo.getNoticeContent(), "notice", 27);
+		model.addAttribute("vo", vo);
+		
+		return "admin/manage/noticeUpdate";
+	}
+	
+	// 공지사항 수정
+	@RequestMapping(value = "/manage/noticeUpdate", method = RequestMethod.POST)
+	public String noticeUpdatePost(NoticeVO vo) {
+
+		// 수정된 자료가 원본자료와 완전히 동일하다면 수정할 필요가 없기에, 먼저 DB에 저장된 원본자료를 불러와서 비교처리한다.
+		NoticeVO originVO = adminService.getNoticeInfo(vo.getIdx());
+		
+		// content의 내용이 조금이라도 변경된것이 있다면 내용을 수정처리한다.
+		if(!originVO.getNoticeContent().equals(vo.getNoticeContent())) {
+			
+			// 실제로 수정하기 버튼을 클릭하게되면, 기존의 community폴더에 저장된, 현재 content의 그림파일 모두를 삭제 시킨다.
+			if(originVO.getNoticeContent().indexOf("src=\"/") != -1) imageManager.imgDelete(originVO.getNoticeContent(), "notice", 27);
+			
+			// ask폴더에는 이미 그림파일이 삭제되어 있으므로(ckeditor폴더로 복사해놓았음), vo.getAskContent()에 있는 그림파일경로 'ask'를 'ckeditor'경로로 변경해줘야한다.
+			vo.setNoticeContent(vo.getNoticeContent().replace("/data/notice/", "/data/ckeditor/"));
+			
+			// 앞의 작업이 끝나면 파일을 처음 업로드한것과 같은 작업을 처리시켜준다.
+			// content에 이미지가 저장되어 있다면, 저장된 이미지만 골라서 /resources/data/notice/폴더에 저장시켜준다.
+			imageManager.imgCheck(vo.getNoticeContent(), "notice");
+			
+			// 이미지들의 모든 복사작업을 마치면, ckeditor폴더경로를 ask폴더 경로로 변경한다.
+			vo.setNoticeContent(vo.getNoticeContent().replace("/data/ckeditor/", "/data/notice/"));
+		}
+		
+		// 상단 고정
+		if(vo.getImportant() == null) vo.setImportant("0");
+		else vo.setImportant("1");
+		
+		int res = adminService.setNoticeUpdate(vo);
+		
+		if(res != 0)  return "redirect:/message/adminNoticeUpdateOk";
+		else return "redirect:/message/adminNoticeUpdateNo?idx="+vo.getIdx();
+	}
+	
+	// 공지사항 삭제
+	@ResponseBody
+	@RequestMapping(value = "/manage/noticeDelete", method = RequestMethod.POST)
+	public String noticeDeletePost(int idx) {
+	
+		adminService.setNoticeDelete(idx);
+		return "";
+	}
+	
+	// 임시파일 관리
+	@SuppressWarnings("deprecation")
+	@RequestMapping(value = "/manage/tempFileList", method = RequestMethod.GET)
+	public String tempFileListGet(HttpServletRequest request, Model model) {
+		
+		String realPath = request.getRealPath("/resources/data/ckeditor/");
+		
+		String[] files = new File(realPath).list();
+		
+		model.addAttribute("files", files);
+		
+		return "admin/manage/tempFileList";
+	}
+	
+	// 선택된 파일 삭제처리하기
+	@SuppressWarnings("deprecation")
+	@ResponseBody
+	@RequestMapping(value = "/manage/tempFileDelete", method = RequestMethod.POST)
+	public String tempFileDeletePost(HttpServletRequest request, String delItems) {
+
+		String realPath = request.getRealPath("/resources/data/ckeditor/");
+		delItems = delItems.substring(0, delItems.length()-1);
+		
+		String[] fileNames = delItems.split("/");
+		
+		for(String fileName : fileNames) {
+			String realPathFile = realPath + fileName;
+			new File(realPathFile).delete();
+		}
+		
+		return "1";
+	}
+	
 	
 	
 }

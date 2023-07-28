@@ -7,7 +7,6 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>책(의)세계</title>
-  <jsp:include page="/WEB-INF/views/include/bs4.jsp" />
   <style>
 		/* Set the width of the sidebar to 120px */
 		.w3-sidebar {width: 120px;background: #222;}

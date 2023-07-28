@@ -224,7 +224,7 @@
 				          <option <c:if test="${search == 'maCode'}">selected</c:if> value="maCode">상품 코드</option>
 				        </select>
 				    	</div>
-				      <input type="text" name="searchString" id="searchString" value="${searchString}" class="form-control mr-sm-2" autofocus placeholder="검색어를 입력해주세요"/>
+				      <input type="text" name="searchString" id="searchString" value="${searchString}" class="form-control mr-sm-2" placeholder="검색어를 입력해주세요"/>
 				      <div class="input-group-append">
 				     		<a href="#" class="btn btn-success my-2 my-sm-0" onclick="javascript:searchCheck()"><i class="fa-solid fa-magnifying-glass" style="color:#282828;"></i></a>
 				     	</div>

@@ -10,5 +10,6 @@ public class NoticeVO {
 	private String noticeContent;
 	private int noticeView;
 	private String noticeDate;
+	private String important;
 	private String noticeOpen;
 }

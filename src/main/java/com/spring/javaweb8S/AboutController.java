@@ -4,6 +4,8 @@ import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.util.ArrayList;
 
+import javax.servlet.http.HttpSession;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
@@ -19,6 +21,7 @@ import com.spring.javaweb8S.pagination.PageVO;
 import com.spring.javaweb8S.service.AboutService;
 import com.spring.javaweb8S.vo.AskVO;
 import com.spring.javaweb8S.vo.MagazineVO;
+import com.spring.javaweb8S.vo.NoticeVO;
 import com.spring.javaweb8S.vo.ProductVO;
 
 @Controller
@@ -125,7 +128,6 @@ public class AboutController {
 			@RequestParam(name = "returnPath", defaultValue = "", required = false) String returnPath,
 			@RequestParam(name = "returnOriginIdx", defaultValue = "", required = false) String returnOriginIdx) throws UnsupportedEncodingException {
 		
-		System.out.println("vo : " +vo);
 		// 비회원 비밀번호 암호화
 		if(vo.getPwd() != null) vo.setPwd(passwordEncoder.encode(vo.getPwd()));
 
@@ -159,7 +161,7 @@ public class AboutController {
 	@RequestMapping(value = "/ask", method = RequestMethod.GET)
 	public String ask(Model model,
 			@RequestParam(name="sort", defaultValue = "전체", required = false) String sort,
-			@RequestParam(name="search", defaultValue = "제목", required = false) String search,
+			@RequestParam(name="search", defaultValue = "askTitle", required = false) String search,
 			@RequestParam(name="searchString", defaultValue = "", required = false) String searchString,
 			@RequestParam(name="pag", defaultValue = "1", required = false) int pag,
 			@RequestParam(name="pageSize", defaultValue = "20", required = false) int pageSize) {
@@ -185,6 +187,116 @@ public class AboutController {
 		AskVO vo = aboutService.getAskDetail(idx);
 		model.addAttribute("vo", vo);
 		
+		// 상품명 가져오기
+		if(vo.getCategory().equals("컬렉션상품")) {
+			vo.setOriginName(aboutService.getAskProdName(vo.getOriginIdx(), "컬렉션상품"));
+		}
+		else if((vo.getCategory().equals("매거진")) || (vo.getCategory().equals("정기구독"))) {
+			vo.setOriginName(aboutService.getAskProdName(vo.getOriginIdx(), ""));
+		}
 		return "about/askDetail";
+	}
+	
+	// 문의 수정창
+	@RequestMapping(value = "/askUpdate", method = RequestMethod.GET)
+	public String askUpdateGet(int idx, Model model) {
+		
+		// 수정창으로 이동시에는 먼저 원본파일에 그림파일이 있다면, 현재폴더(ask)의 그림파일들을 ckeditor폴더로 복사시켜둔다.
+		AskVO vo = aboutService.getAskDetail(idx);
+		if(vo.getAskContent().indexOf("src=\"/") != -1) imageManager.imgCheckUpdate(vo.getAskContent(), "ask", 24);
+		model.addAttribute("vo", vo);
+		
+		// 상품명 가져오기
+		if(vo.getCategory().equals("컬렉션상품")) {
+			vo.setOriginName(aboutService.getAskProdName(vo.getOriginIdx(), "컬렉션상품"));
+		}
+		else if((vo.getCategory().equals("매거진")) || (vo.getCategory().equals("정기구독"))) {
+			vo.setOriginName(aboutService.getAskProdName(vo.getOriginIdx(), ""));
+		}
+		
+		return "about/askUpdate";
+	}
+	
+	// 문의 수정
+	@RequestMapping(value = "/askUpdate", method = RequestMethod.POST)
+	public String askUpdatePost(AskVO vo) {
+
+		// 수정된 자료가 원본자료와 완전히 동일하다면 수정할 필요가 없기에, 먼저 DB에 저장된 원본자료를 불러와서 비교처리한다.
+		AskVO originVO = aboutService.getAskDetail(vo.getIdx());
+		
+		// content의 내용이 조금이라도 변경된것이 있다면 내용을 수정처리한다.
+		if(!originVO.getAskContent().equals(vo.getAskContent())) {
+			
+			// 실제로 수정하기 버튼을 클릭하게되면, 기존의 community폴더에 저장된, 현재 content의 그림파일 모두를 삭제 시킨다.
+			if(originVO.getAskContent().indexOf("src=\"/") != -1) imageManager.imgDelete(originVO.getAskContent(), "ask", 24);
+			
+			// ask폴더에는 이미 그림파일이 삭제되어 있으므로(ckeditor폴더로 복사해놓았음), vo.getAskContent()에 있는 그림파일경로 'ask'를 'ckeditor'경로로 변경해줘야한다.
+			vo.setAskContent(vo.getAskContent().replace("/data/ask/", "/data/ckeditor/"));
+			
+			// 앞의 작업이 끝나면 파일을 처음 업로드한것과 같은 작업을 처리시켜준다.
+			// content에 이미지가 저장되어 있다면, 저장된 이미지만 골라서 /resources/data/ask/폴더에 저장시켜준다.
+			imageManager.imgCheck(vo.getAskContent(), "ask");
+			
+			// 이미지들의 모든 복사작업을 마치면, ckeditor폴더경로를 ask폴더 경로로 변경한다.
+			vo.setAskContent(vo.getAskContent().replace("/data/ckeditor/", "/data/ask/"));
+		}
+		
+		// 비회원 비밀번호 암호화
+		if(vo.getPwd() != null) vo.setPwd(passwordEncoder.encode(vo.getPwd()));
+
+		// 공개, 비공개 처리
+		if(vo.getSecret() == null) vo.setSecret("비공개");
+		else vo.setSecret("공개");
+		vo.setCategory("커뮤니티");
+		
+		int res = aboutService.setAskUpdate(vo);
+		
+		if(res != 0)  return "redirect:/message/aboutAskUpdateOk?idx="+vo.getIdx();
+		else return "redirect:/message/aboutAskUpdateNo?idx="+vo.getIdx();
+	}
+	
+	// 공지사항 리스트
+	@RequestMapping(value = "/notice", method = RequestMethod.GET)
+	public String notice(Model model,
+			@RequestParam(name="search", defaultValue = "noticeTitle", required = false) String search,
+			@RequestParam(name="searchString", defaultValue = "", required = false) String searchString,
+			@RequestParam(name="pag", defaultValue = "1", required = false) int pag,
+			@RequestParam(name="pageSize", defaultValue = "10", required = false) int pageSize) {
+		
+		// 전체 공지사항 내역
+		PageVO pageVO = pageProcess.totRecCnt(pag, pageSize, "aboutNoticeSearch", search, searchString);
+		ArrayList<NoticeVO> vos = aboutService.getNoticeSearch(pageVO.getStartIndexNo(), pageSize, search, searchString);
+
+		model.addAttribute("pageVO", pageVO);
+		model.addAttribute("vos", vos);
+		model.addAttribute("search", search);
+		model.addAttribute("searchString", searchString);
+		
+		return "about/notice";
+	}
+	
+	// 공지사항 상세창
+	@SuppressWarnings({ "rawtypes", "unchecked" })
+	@RequestMapping(value = "/noticeDetail", method = RequestMethod.GET)
+	public String noticeDetailGet(HttpSession session, Model model, int idx) {
+		
+		// 공지사항 조회수 1씩 증가시키기(조회수 중복방지 - 세션처리('sNoticeIdx+고유번호'를 객체배열에 추가시켜준다.)
+		ArrayList<String> noticeIdx = (ArrayList) session.getAttribute("sNoticeIdx");
+		if(noticeIdx == null) {
+			noticeIdx = new ArrayList<String>();
+		}
+		
+		String tempNoticeIdx = "notice" + idx;
+		if(!noticeIdx.contains(tempNoticeIdx)) {
+			// 조회수 증가하기	
+			aboutService.setNoticeViewUpdate(idx);
+			noticeIdx.add(tempNoticeIdx);
+		}
+		session.setAttribute("sNoticeIdx", noticeIdx);
+			
+		NoticeVO vo = aboutService.getNoticeInfo(idx);
+		model.addAttribute("vo", vo);
+		
+		return "about/noticeDetail";
 	}
 }

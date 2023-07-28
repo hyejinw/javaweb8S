@@ -111,6 +111,20 @@ public class PageProcess {
 			
 			totRecCnt = adminDAO.memberListTotRecCnt(sort, search, searchString);
 		}
+		else if(section.equals("adminRefundList")) {
+			String sort = search.split("/")[0];
+			search = search.split("/")[1];
+			
+			totRecCnt = adminDAO.refundListTotRecCnt(sort, search, searchString);
+		}
+		else if(section.equals("adminAskList")) {
+			String sort = search.split("/")[0];
+			search = search.split("/")[1];
+			
+			totRecCnt = adminDAO.askListTotRecCnt(sort, search, searchString);
+		}
+		else if(section.equals("adminNoticeList")) totRecCnt = adminDAO.noticeListTotRecCnt(search, searchString);
+		else if(section.equals("aboutNoticeSearch")) totRecCnt = aboutDAO.noticeListTotRecCnt(search, searchString);
 //		else if(section.equals("board")) {
 //			if(part.equals("")) totRecCnt = boardDAO.totRecCnt();
 //			else {
@@ -199,7 +213,9 @@ public class PageProcess {
 			search = search.split("/")[1];
 			totRecCnt = memberDAO.myPageOrderTotRecCntWithPeriod(sort, search, searchString, startDate, endDate, nickname);
 		}
+		if(section.equals("adminSubscribe")) totRecCnt = adminDAO.subscribeTotRecCntWithPeriod(sort, search, searchString, startDate, endDate);
 			
+		
 		int totPage = (totRecCnt % pageSize)==0 ? totRecCnt /pageSize : (totRecCnt / pageSize) + 1;
 		int startIndexNo = (pag - 1) * pageSize;
 		int curScrStartNo = totRecCnt - startIndexNo;

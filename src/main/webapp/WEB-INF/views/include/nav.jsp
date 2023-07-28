@@ -17,9 +17,12 @@
 	.rolling {position:relative; width:100%; height:auto;}
 	.rolling li {width:100%; height:50px; line-height:50px; color:#282828}
 	
+	.navContentForFont {
+		font-weight:bold;
+	}
 	.navContent {
 		color: black;
-		font-size: 17px;
+		font-size: 18px;
 		margin-right: 7px
 	}
 	.navContent:hover {
@@ -45,20 +48,34 @@
 			location.href = '${ctp}/order/cart';
 		}
 	}
+	
+	// 게임, 준비 중
+	function preparing() {
+		alert('서비스 준비 중입니다.');
+	}
 </script>
 
 <div class="topNav">
 <!-- 	<div class="w3-panel w3-round-xlarge" style="margin:0px; background-color:#E1ECC8"> -->
 <!-- 	<div class="w3-panel w3-round-xlarge" style="margin:0px; background-color:#F5EBE0"> -->
 	<div class="w3-panel w3-round-xlarge" style="margin:0px; background-color:rgba(254, 251, 232)">
-		<span onclick="this.parentElement.style.display='none'" class="w3-button w3-round-xlarge w3-large w3-display-topright popup-dismiss">X</span>
+		<span onclick="this.parentElement.style.display='none'" class="w3-button w3-round-xlarge w3-large w3-display-topright popup-dismiss"><i class="fa-solid fa-x"></i></span>
 		<div class="notice">
 			<ul class="rolling">
 				<c:if test="${!empty sTempPwd}">
-					<li><a href="${ctp}/member/memberPage">현재 임시비밀번호를 발급받아 사용 중입니다. 개인정보를 확인하시고 비밀번호를 변경해주세요.</a></li>
+					<li><a href="${ctp}/member/myPage/profile"><b>현재 임시비밀번호를 발급받아 사용 중입니다. 개인정보를 확인하시고 <u>비밀번호를 변경해주세요.</u></b></a></li>
 				</c:if>
-				<li><a href="#" class="link">[공지] 공지1 알려드립니다.</a></li>
-				<li><a href="#" class="link">[공지] 공지2 알려드립니다.</a></li>
+				<c:if test="${!empty totCnt}">
+					<li><a href="${ctp}/about/about">책(의)세계에 방문하신  <b>${sNickname}</b>님 환영합니다! 우리 책(의)세계에 대해 더 알아볼까요?</a></li>
+				</c:if>
+				<c:forEach var="noticeVO" items="${noticeVOS}">
+					<li><a href="${ctp}/about/noticeDetail?idx=${noticeVO.idx}" class="link">${noticeVO.noticeTitle}</a></li>
+				</c:forEach>
+				<c:if test="${!empty extraNoticeVOS}">
+					<c:forEach var="extraNoticeVO" items="${extraNoticeVOS}">
+						<li><a href="${ctp}/about/noticeDetail?idx=${extraNoticeVO.idx}" class="link">${extraNoticeVO.noticeTitle}</a></li>
+					</c:forEach>
+				</c:if>
 			</ul>
 		</div>
 	</div>	
@@ -75,30 +92,32 @@
     	</div>
     
 	    <div class="w3-right w3-hide-small w3-cell w3-cell-middle l8 m4 s3">
-	      <div class="w3-dropdown-hover w3-white" style="padding:16px">
+	      <div class="w3-dropdown-hover w3-white mt-2" style="padding:16px">
 		      <!-- <a href="#team" class="w3-bar-item w3-button w3-hover-white w3-round-xxlarge navContent">책(의)세계란</a> -->
-		      <a class="w3-hover-white w3-round-xxlarge navContent"><span class="detailContent">책(의)세계란</span>&nbsp;<i class="fa-solid fa-caret-down"></i></a>
+		      <a class="w3-hover-white w3-round-xxlarge navContent"><span class="detailContent navContentForFont">책(의)세계란</span>&nbsp;<i class="fa-solid fa-caret-down"></i></a>
 		      <div class="w3-dropdown-content w3-bar-block w3-card-4">
-		        <a href="${ctp}/about/about" class="w3-bar-item w3-button">소개</a>
-		        <a href="${ctp}/about/ask" class="w3-bar-item w3-button">문의</a>
+		        <a href="${ctp}/about/about" class="w3-bar-item w3-button navContentForFont">소개</a>
+		        <a href="${ctp}/about/notice" class="w3-bar-item w3-button navContentForFont">공지사항</a>
 		      </div>
 		    </div>
 		    
-	      <a href="${ctp}/magazine/magazineList" class="w3-bar-item w3-button w3-hover-white w3-round-xxlarge navContent"><b><span class="detailContent">매거진</span></b></a>
+	      <a href="${ctp}/magazine/magazineList" class="w3-bar-item w3-button w3-hover-white w3-round-xxlarge navContent mt-2"><b><span class="detailContent navContentForFont">매거진</span></b></a>
 	      
-	      <div class="w3-dropdown-hover w3-white" style="padding:16px">
+	      <div class="w3-dropdown-hover w3-white mt-2" style="padding:16px">
 		      <!-- <a href="#team" class="w3-bar-item w3-button w3-hover-white w3-round-xxlarge navContent">책(의)세계란</a> -->
-		      <a class="w3-hover-white w3-round-xxlarge navContent"><b><span class="detailContent">3개의 책</span></b>&nbsp;<i class="fa-solid fa-caret-down"></i></a>
+		      <a class="w3-hover-white w3-round-xxlarge navContent"><b><span class="detailContent navContentForFont">3개의 책</span></b>&nbsp;<i class="fa-solid fa-caret-down"></i></a>
 		      <div class="w3-dropdown-content w3-bar-block w3-card-4">
-		        <a href="${ctp}/community/communityMain" class="w3-bar-item w3-button">입장</a>
-		        <a href="${ctp}/community/guide" class="w3-bar-item w3-button">커뮤니티 가이드</a>
+		        <a href="${ctp}/community/communityMain" class="w3-bar-item w3-button navContentForFont">입장</a>
+		        <a href="${ctp}/community/guide" class="w3-bar-item w3-button navContentForFont">커뮤니티 가이드</a>
 		      </div>
 		    </div>
 		    
 		    
-	      <a href="${ctp}/collection/collectionList" class="w3-bar-item w3-button w3-hover-white w3-round-xxlarge navContent"><span class="detailContent">컬렉션</span></a>
-	      <a href="#pricing" class="w3-bar-item w3-button w3-hover-white w3-round-xxlarge navContent"><span class="detailContent">독립서점</span></a>
-	      <a href="#contact" class="w3-bar-item w3-button w3-hover-white w3-round-xxlarge navContent"><span class="detailContent">게임</span></a>
+	      <a href="${ctp}/collection/collectionList" class="w3-bar-item w3-button w3-hover-white w3-round-xxlarge navContent mt-2"><span class="detailContent navContentForFont">컬렉션</span></a>
+	      <a href="${ctp}/about/ask" class="w3-bar-item w3-button w3-hover-white w3-round-xxlarge navContent mt-2"><span class="detailContent navContentForFont">문의</span></a>
+	      
+	      <!-- <a href="#pricing" class="w3-bar-item w3-button w3-hover-white w3-round-xxlarge navContent"><span class="detailContent">독립서점</span></a> -->
+	      <a href="javascript:preparing()" class="w3-bar-item w3-button w3-hover-white w3-round-xxlarge navContent mr-5 mt-2"><span class="detailContent navContentForFont">게임</span></a>
 	      <c:if test="${memType == ''}">
 		      <a href="${ctp}/member/memberLogin" class="w3-bar-item w3-button w3-hover-white w3-round-xxlarge navContent" style="padding-right:0px">
 			      <span class="detailContent"><p class="w3-tooltip"><i class="fa-solid fa-person-running" style="color: #000000; font-size:25px" title="책(의)세계로 로그인"></i><br/>
@@ -115,7 +134,7 @@
 	      </c:if>
 	      <c:if test="${memType != '관리자'}">
 		      <a href="javascript:memCheck('${memType}', 'memPage')" class="w3-bar-item w3-button w3-hover-white w3-round-xxlarge navContent" style="padding-right:0px">
-			      <span class="detailContent"><p class="w3-tooltip"><i class="fa-regular fa-id-card" style="color: #000000; font-size:25px" title="마이페이지"></i><br/>
+			      <span class="detailContent"><p class="w3-tooltip"><i class="fa-regular fa-id-card" style="color: #557A46; font-size:25px" title="마이페이지"></i><br/>
 			      <font size="2" class="w3-center" style="font-weight:400">마이페이지</font>
 			      </p></span>
 		      </a>
@@ -174,7 +193,7 @@
 				};
 			});
 		};
-		noticeRollingOff = setInterval(noticeRolling,5000); //자동롤링답게 setInterval를 사용해서 1000 = 1초마다 함수 실행!!
+		noticeRollingOff = setInterval(noticeRolling,4000); //자동롤링답게 setInterval를 사용해서 1000 = 1초마다 함수 실행!!
 		$(".rolling").append($(".rolling li").first().clone()); //올리다보면 마지막이 안보여서 clone을 통해 첫번째li 복사!
 	
 		$(".rolling_stop").click(function(){

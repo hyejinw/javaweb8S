@@ -186,13 +186,12 @@ public class AutoUpdate {
 			autoUpdateDAO.setStockUpdate(level6);
 		}
 	}
-	
 
 	// 정기구독 발송
 	// 매월 15일 자정 마다!
 	@Transactional
-	//@Scheduled(cron = "0 0 0 15 * *")  
-	@Scheduled(cron = "0 35 11 * * 2")  
+	@Scheduled(cron = "0 0 0 15 * *")  
+	//@Scheduled(cron = "0 35 11 * * 2")  
 	public void subAutoUpdate() throws ParseException, MessagingException {
 
 		// 1) 매거진 발송 처리
@@ -244,7 +243,7 @@ public class AutoUpdate {
 		
 		for(int i=0; i<tempVOS.size(); i++) {
 			
-			String title = "책(의)세계에서 발송한 이메일입니다";
+			String title = "[책(의)세계] 매거진 Chaeg의 정기 구독이 종료될 예정입니다.";
 			String expireDate= vos.get(i).getSubExpireDate().substring(0,10);
 			String startDate= vos.get(i).getSubStartDate().substring(0,10);
 			
@@ -285,7 +284,6 @@ public class AutoUpdate {
 		autoUpdateDAO.setSubDeliAutoUpdate();
 	}
 	
-	
 	// 뉴스레터 발송
 	// 매주 월요일 오후 3시
 	//@Transactional
@@ -297,7 +295,7 @@ public class AutoUpdate {
 
 		for(int i=0; i<vos.size(); i++) {
 			//emailSender(vos.get(i).getEmail());
-			String title = "책(의)편지 뉴스레터";
+			String title = "[책(의)편지] 뉴스레터";
 			
 			// 메일 전송을 위한 객체 : MimeMessage(), MimeMessageHelper()
 			MimeMessage message = mailSender.createMimeMessage();
@@ -340,6 +338,14 @@ public class AutoUpdate {
 		}
 		// 발송횟수 증가
 		autoUpdateDAO.setBooksletterSendNumUpdate(vos);
+	}
+	
+	// 탈퇴한 지 1개월 지난 회원 영구삭제
+	// 매 시간마다 실시(정각)
+	@Transactional
+	@Scheduled(cron = "0 0 0/1 * * *")  
+	public void memberAutoDelete() throws ParseException {
+		autoUpdateDAO.setMemberPermanentDelete();
 	}
 	
 

@@ -29,4 +29,7 @@ public class RefundVO {
 	
 	// 초기 상품 주문 실제 구매가격
 	private int originPaidPrice;
+	
+	// 반품 상품명
+	private String prodName;
 }

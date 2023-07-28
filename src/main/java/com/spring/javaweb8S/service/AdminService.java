@@ -6,6 +6,7 @@ import java.util.List;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.spring.javaweb8S.vo.AddressVO;
+import com.spring.javaweb8S.vo.AskVO;
 import com.spring.javaweb8S.vo.BookVO;
 import com.spring.javaweb8S.vo.BooksletterVO;
 import com.spring.javaweb8S.vo.CollectionVO;
@@ -13,6 +14,7 @@ import com.spring.javaweb8S.vo.DefaultPhotoVO;
 import com.spring.javaweb8S.vo.DeliveryVO;
 import com.spring.javaweb8S.vo.MagazineVO;
 import com.spring.javaweb8S.vo.MemberVO;
+import com.spring.javaweb8S.vo.NoticeVO;
 import com.spring.javaweb8S.vo.OptionVO;
 import com.spring.javaweb8S.vo.OrderVO;
 import com.spring.javaweb8S.vo.PointUseVO;
@@ -20,6 +22,7 @@ import com.spring.javaweb8S.vo.PointVO;
 import com.spring.javaweb8S.vo.ProductVO;
 import com.spring.javaweb8S.vo.ProverbVO;
 import com.spring.javaweb8S.vo.RefundVO;
+import com.spring.javaweb8S.vo.StatisticVO안씀;
 import com.spring.javaweb8S.vo.SubscribeVO;
 
 public interface AdminService {
@@ -146,6 +149,45 @@ public interface AdminService {
 	public ArrayList<SubscribeVO> getMemberSubscribeList(String nickname);
 
 	public void setMemberForcedDelete(int idx, String memberDelReason);
+
+	public void setAddressForcedDelete(int idx);
+
+	public ArrayList<OrderVO> getSubscribeSearchList(String sort, String search, String searchString, String startDate, String endDate, int startIndexNo, int pageSize);
+
+	public void setSubscribeCancelUpdate(SubscribeVO vo);
+
+	public void setPointInsert(SubscribeVO vo, String pointReason);
+
+	public void setMemPointUpdate(SubscribeVO vo);
+
+	public ArrayList<OrderVO> getRefundSearchList(String sort, String search, String searchString, int startIndexNo,
+			int pageSize);
+
+	public void setOrderPointInsert(SubscribeVO vo, String pointReason, int point);
+
+	public ArrayList<AskVO> getAskSearchList(String sort, String search, String searchString, int startIndexNo, int pageSize);
+
+	public ArrayList<AskVO> getNoticeSearchList(String search, String searchString, int startIndexNo, int pageSize);
+
+	public int setNoticeInsert(NoticeVO vo);
+
+	public NoticeVO getNoticeInfo(int idx);
+
+	public int setNoticeUpdate(NoticeVO vo);
+
+	public void setNoticeDelete(int idx);
+
+	public int getMagazineStat(String subStatus);
+
+	public int getBooksletterStat(String booksletterStatus);
+
+	public int getOrderStat(String orderStatus);
+
+	public int getCommunityStat(String flag);
+
+	public int getAskStat(String category);
+
+	public int getReportStat(String reportCategory);
 
 
 

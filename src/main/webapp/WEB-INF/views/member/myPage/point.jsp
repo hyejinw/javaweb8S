@@ -281,6 +281,14 @@
 							        	<button id="orderInfo${vo.idx}" style="border:0px; background-color:transparent;" onclick="subOrderInfo('${vo.orderIdx}','${vo.memNickname}')"><i class="fa-solid fa-circle-info" title="자세히" style="font-size:17px; color:#FD8D14"></i></button>
 											</c:if>
 					      		</c:if>
+					      		<c:if test="${vo.pointReason == '정기구독취소 포인트반환'}">
+					      			<c:if test="${vo.type != '정기 구독'}">
+							        	<button id="orderInfo${vo.idx}" style="border:0px; background-color:transparent;" onclick="orderInfo('${vo.orderIdx}','${vo.memNickname}')"><i class="fa-solid fa-circle-info" title="자세히" style="font-size:17px; color:#FD8D14"></i></button>
+											</c:if>
+											<c:if test="${vo.type == '정기 구독'}">
+							        	<button id="orderInfo${vo.idx}" style="border:0px; background-color:transparent;" onclick="subOrderInfo('${vo.orderIdx}','${vo.memNickname}')"><i class="fa-solid fa-circle-info" title="자세히" style="font-size:17px; color:#FD8D14"></i></button>
+											</c:if>
+					      		</c:if>
 				      		</td>
 					      	<td>${fn:substring(vo.pointStartDate,0,10)}</td>
 					      </tr>

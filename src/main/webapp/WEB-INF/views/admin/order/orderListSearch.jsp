@@ -222,7 +222,7 @@
 					  data-content="구매확정 후, 결제액의 5% 포인트 지급 (구매자 직접 구매확정 or 배송완료 후, 7일 이후)">포인트 처리</a>
 						<hr style="margin:8px"/>
 					  <a href="#" title="매거진 정기구독 정보" data-toggle="popover"  
-					  data-content="①문의로 구독 취소 신청이 가능 ②교환 가능, 반품 불가능 ③매달 15일 일괄 배송 ④구독권 기간에 따라 6/12개월 간 지속 ⑤구독 종료 후, 회원 이메일로 구독 유도 메일 발송">
+					  data-content="①마이페이지에서 구독 취소 신청이 가능 ②문의로 교환 가능, 반품 불가능 ③매달 15일 일괄 배송 ④구독권 기간에 따라 6/12개월 간 지속 ⑤구독 종료 후, 회원 이메일로 구독 유도 메일 발송">
 					  매거진 정기구독 정보</a>
 						<hr style="margin:8px 8px 0px 8px"/> 	 
 			  	</div>
@@ -322,7 +322,10 @@
 			    	<c:set var="curScrStartNo" value="${pageVO.curScrStartNo}" />
 	 		    	<c:forEach var="vo" items="${vos}" varStatus="st">
 				      <tr>
-				        <td>${vo.memNickname}</td>
+				        <td>
+				        	<c:if test="${(!empty vo.memNickname) || (vo.memNickname != '')}">${vo.memNickname}</c:if>
+				        	<c:if test="${(empty vo.memNickname) || (vo.memNickname == '')}"><b>탈퇴회원</b></c:if>
+			        	</td>
 				        <td>${vo.orderCode}</td>
 				        <td>
 				        	<c:if test="${vo.type == '컬렉션 상품'}">

@@ -152,4 +152,7 @@
 		</foreach>
 	</update>
 	
+	<delete id="setMemberPermanentDelete">
+		DELETE FROM bo_member WHERE memberDel = "탈퇴" AND <![CDATA[lastVisit < date_add(now(), interval -1 month)]]>;
+	</delete>
 </mapper>

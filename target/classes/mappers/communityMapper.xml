@@ -364,7 +364,7 @@
 	</select>
 	
 	<select id="getPopularBook" resultType="com.spring.javaweb8S.vo.BookVO">
-		SELECT * FROM bo_book ORDER BY save DESC, idx DESC LIMIT 10;
+		SELECT * FROM bo_book ORDER BY save DESC, idx DESC LIMIT 20;
 	</select>
 	
 	<select id="getNewReflection" resultType="com.spring.javaweb8S.vo.ReflectionVO">

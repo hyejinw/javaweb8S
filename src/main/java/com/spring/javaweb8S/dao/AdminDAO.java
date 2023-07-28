@@ -5,6 +5,7 @@ import java.util.List;
 import org.apache.ibatis.annotations.Param;
 
 import com.spring.javaweb8S.vo.AddressVO;
+import com.spring.javaweb8S.vo.AskVO;
 import com.spring.javaweb8S.vo.BookVO;
 import com.spring.javaweb8S.vo.BooksletterVO;
 import com.spring.javaweb8S.vo.CollectionVO;
@@ -12,6 +13,7 @@ import com.spring.javaweb8S.vo.DefaultPhotoVO;
 import com.spring.javaweb8S.vo.DeliveryVO;
 import com.spring.javaweb8S.vo.MagazineVO;
 import com.spring.javaweb8S.vo.MemberVO;
+import com.spring.javaweb8S.vo.NoticeVO;
 import com.spring.javaweb8S.vo.OptionVO;
 import com.spring.javaweb8S.vo.OrderVO;
 import com.spring.javaweb8S.vo.PointUseVO;
@@ -36,16 +38,16 @@ public interface AdminDAO {
 	public int magazineTypeTotRecCnt(@Param("maType") String maType);
 	public int colCategoryTotRecCnt();
 	public int colProductTotRecCnt();
-	public int colProdTotRecCntWithPeriod(@Param("sort") String sort, @Param("search") String search, @Param("searchString") String searchString, @Param("startDate") String startDate,
-			@Param("endDate") String endDate);
-	public int colProdColNameTotRecCntWithPeriod(@Param("sort") String sort, @Param("search") String search, @Param("searchString") String searchString, @Param("startDate") String startDate,
-			@Param("endDate") String endDate);
+	public int colProdTotRecCntWithPeriod(@Param("sort") String sort, @Param("search") String search, @Param("searchString") String searchString, @Param("startDate") String startDate, @Param("endDate") String endDate);
+	public int colProdColNameTotRecCntWithPeriod(@Param("sort") String sort, @Param("search") String search, @Param("searchString") String searchString, @Param("startDate") String startDate, @Param("endDate") String endDate);
 	public int orderTotRecCnt();
-	public int orderTotRecCntWithPeriod(@Param("sort") String sort, @Param("search") String search, @Param("searchString") String searchString, @Param("startDate") String startDate,
-			@Param("endDate") String endDate);
-	public ArrayList<OrderVO> orderWithInvoiceTotRecCntWithPeriod(@Param("sort") String sort, @Param("search") String search, @Param("searchString") String searchString, @Param("startDate") String startDate,
-			@Param("endDate") String endDate);
+	public int orderTotRecCntWithPeriod(@Param("sort") String sort, @Param("search") String search, @Param("searchString") String searchString, @Param("startDate") String startDate, @Param("endDate") String endDate);
+	public ArrayList<OrderVO> orderWithInvoiceTotRecCntWithPeriod(@Param("sort") String sort, @Param("search") String search, @Param("searchString") String searchString, @Param("startDate") String startDate, @Param("endDate") String endDate);
 	public int memberListTotRecCnt(@Param("sort") String sort, @Param("search") String search, @Param("searchString") String searchString);
+	public int subscribeTotRecCntWithPeriod(@Param("sort") String sort, @Param("search") String search, @Param("searchString") String searchString, @Param("startDate") String startDate, @Param("endDate") String endDate);
+	public int refundListTotRecCnt(@Param("sort") String sort, @Param("search") String search, @Param("searchString") String searchString);
+	public int askListTotRecCnt(@Param("sort") String sort, @Param("search") String search, @Param("searchString") String searchString);
+	public int noticeListTotRecCnt(@Param("search") String search, @Param("searchString") String searchString);	
 
 	public ArrayList<DefaultPhotoVO> getDefaultPhoto();
 
@@ -170,9 +172,48 @@ public interface AdminDAO {
 	
 	public void setMemberForcedDelete(@Param("idx") int idx, @Param("memberDelReason") String memberDelReason);
 	
+	public void setAddressForcedDelete(@Param("idx") int idx);
+	
+	public ArrayList<OrderVO> getSubscribeSearchList(@Param("sort") String sort, @Param("search") String search, @Param("searchString") String searchString, @Param("startDate") String startDate,
+			@Param("endDate") String endDate, @Param("startIndexNo") int startIndexNo, @Param("pageSize") int pageSize);
+
+	public void setSubscribeCancelUpdate(@Param("vo") SubscribeVO vo);
+	
+	public void setPointInsert(@Param("vo") SubscribeVO vo, @Param("pointReason") String pointReason);
+	
+	public void setMemPointUpdate(@Param("vo") SubscribeVO vo);
+	
+	public ArrayList<OrderVO> getRefundSearchList(@Param("sort") String sort, @Param("search") String search, @Param("searchString") String searchString, @Param("startIndexNo") int startIndexNo, @Param("pageSize") int pageSize);
+	
+	public void setOrderPointInsert(@Param("vo") SubscribeVO vo, @Param("pointReason") String pointReason, @Param("point") int point);
+	
+	public ArrayList<AskVO> getAskSearchList(@Param("sort") String sort, @Param("search") String search, @Param("searchString") String searchString, @Param("startIndexNo") int startIndexNo, @Param("pageSize") int pageSize);
+	
+	public ArrayList<AskVO> getNoticeSearchList(@Param("search") String search, @Param("searchString") String searchString, @Param("startIndexNo") int startIndexNo, @Param("pageSize") int pageSize);
+	
+	public int setNoticeInsert(@Param("vo") NoticeVO vo);
+	
+	public NoticeVO getNoticeInfo(@Param("idx") int idx);
+	
+	public int setNoticeUpdate(@Param("vo") NoticeVO vo);
+	
+	public void setNoticeDelete(@Param("idx") int idx);
+	
+	public int getMagazineStat(@Param("subStatus") String subStatus);
+	
+	public int getBooksletterStat(@Param("booksletterStatus") String booksletterStatus);
+	
+	public int getOrderStat(@Param("orderStatus") String orderStatus);
+	
+	public int getCommunityStat(@Param("flag") String flag);
+	
+	public int getAskStat(@Param("category") String category);
+	
+	public int getReportStat(@Param("reportCategory") String reportCategory);
+
 
 	
-
+	
 
 
 
