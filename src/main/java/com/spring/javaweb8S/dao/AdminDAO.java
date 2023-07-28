@@ -11,6 +11,7 @@ import com.spring.javaweb8S.vo.BooksletterVO;
 import com.spring.javaweb8S.vo.CollectionVO;
 import com.spring.javaweb8S.vo.DefaultPhotoVO;
 import com.spring.javaweb8S.vo.DeliveryVO;
+import com.spring.javaweb8S.vo.InspiredVO;
 import com.spring.javaweb8S.vo.MagazineVO;
 import com.spring.javaweb8S.vo.MemberVO;
 import com.spring.javaweb8S.vo.NoticeVO;
@@ -20,7 +21,10 @@ import com.spring.javaweb8S.vo.PointUseVO;
 import com.spring.javaweb8S.vo.PointVO;
 import com.spring.javaweb8S.vo.ProductVO;
 import com.spring.javaweb8S.vo.ProverbVO;
+import com.spring.javaweb8S.vo.ReflectionVO;
 import com.spring.javaweb8S.vo.RefundVO;
+import com.spring.javaweb8S.vo.ReplyVO;
+import com.spring.javaweb8S.vo.ReportVO;
 import com.spring.javaweb8S.vo.SubscribeVO;
 
 public interface AdminDAO {
@@ -210,6 +214,26 @@ public interface AdminDAO {
 	public int getAskStat(@Param("category") String category);
 	
 	public int getReportStat(@Param("reportCategory") String reportCategory);
+	
+	public ArrayList<BooksletterVO> getBooksletterSearchList(@Param("sort") String sort, @Param("search") String search, @Param("searchString") String searchString);
+	
+	public ArrayList<ReportVO> getReportSearchList(@Param("sort") String sort, @Param("search") String search, @Param("searchString") String searchString);
+	
+	public ReportVO getReportInfo(@Param("idx") int idx);
+	
+	public ReflectionVO getReflectionInfo(@Param("originIdx") int originIdx);
+	
+	public ReplyVO getReplyInfo(@Param("originIdx") int originIdx);
+	
+	public InspiredVO getInspiredInfo(@Param("originIdx") int originIdx);
+	
+	public MemberVO getMemberInfoWithIdx(@Param("originIdx") int originIdx);
+	
+	public String getOriginNickname(@Param("originIdx") int originIdx);
+	
+	public String getOriginRefIdx(@Param("originIdx") int originIdx);
+	
+	public void setReportReplyInsert(@Param("idx") String idx, @Param("reply") String reply);
 
 
 	

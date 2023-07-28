@@ -34,6 +34,7 @@ import com.spring.javaweb8S.vo.BooksletterVO;
 import com.spring.javaweb8S.vo.CollectionVO;
 import com.spring.javaweb8S.vo.DefaultPhotoVO;
 import com.spring.javaweb8S.vo.DeliveryVO;
+import com.spring.javaweb8S.vo.InspiredVO;
 import com.spring.javaweb8S.vo.MagazineVO;
 import com.spring.javaweb8S.vo.MemberVO;
 import com.spring.javaweb8S.vo.NoticeVO;
@@ -43,7 +44,10 @@ import com.spring.javaweb8S.vo.PointUseVO;
 import com.spring.javaweb8S.vo.PointVO;
 import com.spring.javaweb8S.vo.ProductVO;
 import com.spring.javaweb8S.vo.ProverbVO;
+import com.spring.javaweb8S.vo.ReflectionVO;
 import com.spring.javaweb8S.vo.RefundVO;
+import com.spring.javaweb8S.vo.ReplyVO;
+import com.spring.javaweb8S.vo.ReportVO;
 import com.spring.javaweb8S.vo.SubscribeVO;
 
 @Controller
@@ -126,7 +130,6 @@ public class AdminController {
 		model.addAttribute("p2", p2);
 		model.addAttribute("p3", p3);
 		model.addAttribute("p4", p4);
-		
 		
 		return "admin/adminPage";
 	}
@@ -1244,6 +1247,92 @@ public class AdminController {
 		return "1";
 	}
 	
+	// 뉴스레터 구독 관리창 
+	@RequestMapping(value = "/magazine/booksletterList", method = RequestMethod.GET)
+	public String booksletterListGet(Model model,
+			@RequestParam(name="sort", defaultValue = "전체", required = false) String sort,
+			@RequestParam(name="search", defaultValue = "memNickname", required = false) String search,
+			@RequestParam(name="searchString", defaultValue = "", required = false) String searchString) {
+		
+		ArrayList<BooksletterVO> vos = adminService.getBooksletterSearchList(sort, search, searchString);
+		
+		model.addAttribute("sort", sort);
+		model.addAttribute("search", search);
+		model.addAttribute("searchString", searchString);
+		model.addAttribute("vos", vos);
+		
+		return "admin/magazine/booksletterList";
+	}
+	
+	
+	// 신고 관리창 
+	@RequestMapping(value = "/community/report", method = RequestMethod.GET)
+	public String reportGet(Model model,
+			@RequestParam(name="sort", defaultValue = "전체", required = false) String sort,
+			@RequestParam(name="search", defaultValue = "memNickname", required = false) String search,
+			@RequestParam(name="searchString", defaultValue = "", required = false) String searchString) {
+		
+		ArrayList<ReportVO> vos = adminService.getReportSearchList(sort, search, searchString);
+		
+		// 신고 출처 확인용
+		for(int i=0; i<vos.size(); i++) {
+			if(vos.get(i).getReportCategory().equals("회원")) {
+				String originNickname = adminService.getOriginNickname(vos.get(i).getOriginIdx());
+				ReportVO tempVO = vos.get(i);
+				tempVO.setOriginNickname(originNickname);
+				vos.set(i, tempVO);
+			}
+			else if(vos.get(i).getReportCategory().equals("댓글")) {
+				String originRefIdx = adminService.getOriginRefIdx(vos.get(i).getOriginIdx());
+				ReportVO tempVO = vos.get(i);
+				tempVO.setOriginRefIdx(originRefIdx);
+				vos.set(i, tempVO);
+			}
+		}
+		model.addAttribute("sort", sort);
+		model.addAttribute("search", search);
+		model.addAttribute("searchString", searchString);
+		model.addAttribute("vos", vos);
+		
+		return "admin/community/report";
+	}
+	
+	// 신고 상세창
+	@RequestMapping(value = "/community/reportInfo", method = RequestMethod.GET)
+	public String reportInfoGet(Model model, int idx) {
+		
+		ReportVO vo = adminService.getReportInfo(idx);
+		model.addAttribute("vo", vo);
+		
+		if(vo.getReportCategory().equals("기록")) {
+			ReflectionVO originVO = adminService.getReflectionInfo(vo.getOriginIdx());
+			model.addAttribute("originVO", originVO);
+		}
+		else if(vo.getReportCategory().equals("댓글")) {
+			ReplyVO originVO = adminService.getReplyInfo(vo.getOriginIdx());
+			model.addAttribute("originVO", originVO);
+		}
+		else if(vo.getReportCategory().equals("문장수집")) {
+			InspiredVO originVO = adminService.getInspiredInfo(vo.getOriginIdx());
+			model.addAttribute("originVO", originVO);
+		}
+		else {
+			MemberVO originVO = adminService.getMemberInfoWithIdx(vo.getOriginIdx());
+			model.addAttribute("originVO", originVO);
+		}
+		return "admin/community/reportInfo";
+	}
+	
+	// 신고 답변 등록
+	@ResponseBody
+	@RequestMapping(value = "/community/reportReplyInsert", method = RequestMethod.POST)
+	public String reportReplyInsertPost(
+			@RequestParam(name = "idx", defaultValue = "", required = false) String idx, 
+			@RequestParam(name = "reply", defaultValue = "", required = false) String reply) {
+		
+		adminService.setReportReplyInsert(idx, reply);
+		return "";
+	}
 	
 	
 }

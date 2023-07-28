@@ -13,4 +13,9 @@ public class ReportVO {
 	private String reportDate;
 	private String reportDone;
 	private String reportHostIp;
+	
+	// 신고 출처 확인용
+	private String originNickname;
+	private String originRefIdx;
+	
 }

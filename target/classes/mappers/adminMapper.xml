@@ -935,6 +935,67 @@
 		SELECT COUNT(*) FROM bo_report WHERE reportCategory = #{reportCategory} AND reportDone = "처리 전";
 	</select>
 	
+	<select id="getBooksletterSearchList" resultType="com.spring.javaweb8S.vo.BooksletterVO">
+		SELECT * FROM bo_booksletter WHERE 
+		<if test='sort != "" and sort != "전체"'>
+			<if test='sort.contains("구독")'>
+				booksletterStatus = #{sort} AND
+			</if>
+			<if test='!sort.contains("구독")'>
+				<if test='sort != "" and sort == "회원"'>
+					memNickname IS NOT NULL AND
+				</if>
+				<if test='sort != "" and sort != "회원"'>
+					memNickname IS NULL AND
+				</if>
+			</if>
+		</if>
+		${search} LIKE CONCAT('%',#{searchString},'%') 
+		ORDER BY booksletterStatus, idx DESC;
+	</select>
+	
+	<select id="getReportSearchList" resultType="com.spring.javaweb8S.vo.ReportVO">
+		SELECT * FROM bo_report WHERE 
+		<if test='sort != "" and sort != "전체"'>
+			<if test='sort.contains("처리")'>
+				reportDone = #{sort} AND
+			</if>
+			<if test='!sort.contains("처리")'>
+				reportCategory = #{sort} AND
+			</if>
+		</if>
+		${search} LIKE CONCAT('%',#{searchString},'%') 
+		ORDER BY reportDone, idx DESC;
+	</select>
+	
+	<select id="getReportInfo" resultType="com.spring.javaweb8S.vo.ReportVO">
+		SELECT * FROM bo_report WHERE idx = #{idx};
+	</select>
+	
+	<select id="getReflectionInfo" resultType="com.spring.javaweb8S.vo.ReflectionVO">
+		SELECT * FROM bo_reflection WHERE idx = #{originIdx};
+	</select>
+	
+	<select id="getReplyInfo" resultType="com.spring.javaweb8S.vo.ReplyVO">
+		SELECT * FROM bo_reply WHERE idx = #{originIdx};
+	</select>
+	
+	<select id="getInspiredInfo" resultType="com.spring.javaweb8S.vo.InspiredVO">
+		SELECT * FROM bo_inspired WHERE idx = #{originIdx};
+	</select>
+	
+	<select id="getMemberInfoWithIdx" resultType="com.spring.javaweb8S.vo.MemberVO">
+		SELECT * FROM bo_member WHERE idx = #{originIdx};
+	</select>
+	
+	<select id="getOriginNickname" resultType="String">
+		SELECT nickname FROM bo_member WHERE idx = #{originIdx};
+	</select>
+	
+	<select id="getOriginRefIdx" resultType="String">
+		SELECT refIdx FROM bo_reply WHERE idx = #{originIdx};
+	</select>
+	
 	<insert id="memberDefaultPhotoInsert">
 		INSERT INTO bo_defaultPhoto VALUES (default, #{vo.photoName}, #{vo.memo}, default); 
 	</insert>
@@ -1067,6 +1128,10 @@
 	<update id="setNoticeUpdate">
 		UPDATE bo_notice SET category = #{vo.category}, noticeTitle = #{vo.noticeTitle}, noticeContent = #{vo.noticeContent}, important = #{vo.important},
 		noticeOpen = #{vo.noticeOpen} WHERE idx = #{vo.idx};
+	</update> 
+	
+	<update id="setReportReplyInsert">
+		UPDATE bo_report SET reply = #{reply}, reportDone = "처리완료" WHERE idx = #{idx};
 	</update> 
 	
 	<delete id="memberDefaultPhotoDelete">

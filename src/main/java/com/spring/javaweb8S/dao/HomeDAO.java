@@ -19,4 +19,6 @@ public interface HomeDAO {
 
 	public String getTotCnt(@Param("nickname") String nickname);
 
+	public String getPwdUpdateDate(@Param("nickname") String nickname);
+
 }

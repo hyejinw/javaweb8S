@@ -110,7 +110,7 @@
 					</div>
 					<div id="login" style="display:none;">
 						<div class="row text-center" style="margin-top:30px">
-							<div class="col text-right"><button type="button" onclick="idFinderCheck()" class="btn" style="background-color:#FFDB7E; font-size: 0.8em;">재검색</button></div>
+							<div class="col text-right"><button type="button" onclick="location.reload();" class="btn" style="background-color:#FFDB7E; font-size: 0.8em;">재검색</button></div>
 							<div class="col text-left"><button type="button" onclick="location.href='${ctp}/member/memberLogin';" class="btn" style="background-color:#F5EBE0; font-size: 0.8em;">로그인 창</button></div>
 						</div>
 					</div>

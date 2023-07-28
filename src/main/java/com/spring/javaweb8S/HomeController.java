@@ -82,6 +82,14 @@ public class HomeController {
 		ArrayList<InspiredVO> inspiredVOS = communityService.getNewInspired(nickname);
 		model.addAttribute("inspiredVOS", inspiredVOS);
 			
+		// 비밀번호 변경 6개월 경과 시, 비밀번호 변경 유도
+		if(nickname != null) {
+			String pwdUpdateDate = homeService.getPwdUpdateDate(nickname);
+			System.out.println("pwdUpdateDate : " +pwdUpdateDate);
+			if(pwdUpdateDate != null) session.setAttribute("sPwdUpdateDate", pwdUpdateDate);
+			else session.removeAttribute("sPwdUpdateDate");
+		} 
+		
 		return "home";
 	}
 	

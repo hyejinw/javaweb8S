@@ -164,18 +164,18 @@
 	      	<table class="table text-center mt-3" style="background-color:white">
 	        	<thead style="background-color:#eee">
 		        	<tr>
-			        	<td><a href="${ctp}/admin/order/orderListSearch?sort=반품신청">기록</a></td>
-			        	<td><a href="${ctp}/admin/order/orderListSearch?sort=반품중">댓글</a></td>
-			        	<td><a href="${ctp}/admin/order/orderListSearch?sort=반품완료">문장수집</a></td>
-			        	<td><a href="${ctp}/admin/order/orderListSearch?sort=반품완료">회원</a></td>
+			        	<td><a href="${ctp}/admin/community/report?sort=기록">기록</a></td>
+			        	<td><a href="${ctp}/admin/community/report?sort=댓글">댓글</a></td>
+			        	<td><a href="${ctp}/admin/community/report?sort=문장수집">문장수집</a></td>
+			        	<td><a href="${ctp}/admin/community/report?sort=회원">회원</a></td>
 		        	</tr>
 	        	</thead>
 	        	<tbody>
 		        	<tr>
-		        		<td><a href="${ctp}/admin/order/orderListSearch?sort=반품신청">${p1}</a></td>
-		        		<td><a href="${ctp}/admin/order/orderListSearch?sort=반품중">${p2}</a></td>
-		        		<td><a href="${ctp}/admin/order/orderListSearch?sort=반품완료">${p3}</a></td>
-		        		<td><a href="${ctp}/admin/order/orderListSearch?sort=반품완료">${p4}</a></td>
+		        		<td><a href="${ctp}/admin/community/report?sort=기록">${p1}</a></td>
+		        		<td><a href="${ctp}/admin/community/report?sort=댓글">${p2}</a></td>
+		        		<td><a href="${ctp}/admin/community/report?sort=문장수집">${p3}</a></td>
+		        		<td><a href="${ctp}/admin/community/report?sort=회원">${p4}</a></td>
 		        	</tr>
 	        	</tbody>
 	        </table>

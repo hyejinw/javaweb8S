@@ -23,6 +23,7 @@ import com.spring.javaweb8S.vo.BooksletterVO;
 import com.spring.javaweb8S.vo.CollectionVO;
 import com.spring.javaweb8S.vo.DefaultPhotoVO;
 import com.spring.javaweb8S.vo.DeliveryVO;
+import com.spring.javaweb8S.vo.InspiredVO;
 import com.spring.javaweb8S.vo.MagazineVO;
 import com.spring.javaweb8S.vo.MemberVO;
 import com.spring.javaweb8S.vo.NoticeVO;
@@ -32,7 +33,10 @@ import com.spring.javaweb8S.vo.PointUseVO;
 import com.spring.javaweb8S.vo.PointVO;
 import com.spring.javaweb8S.vo.ProductVO;
 import com.spring.javaweb8S.vo.ProverbVO;
+import com.spring.javaweb8S.vo.ReflectionVO;
 import com.spring.javaweb8S.vo.RefundVO;
+import com.spring.javaweb8S.vo.ReplyVO;
+import com.spring.javaweb8S.vo.ReportVO;
 import com.spring.javaweb8S.vo.StatisticVO안씀;
 import com.spring.javaweb8S.vo.SubscribeVO;
 
@@ -672,6 +676,66 @@ public class AdminServiceImpl implements AdminService {
 	@Override
 	public int getReportStat(String reportCategory) {
 		return adminDAO.getReportStat(reportCategory);
+	}
+
+	// 뉴스레터 구독 리스트
+	@Override
+	public ArrayList<BooksletterVO> getBooksletterSearchList(String sort, String search, String searchString) {
+		return adminDAO.getBooksletterSearchList(sort, search, searchString);
+	}
+
+	// 신고 리스트
+	@Override
+	public ArrayList<ReportVO> getReportSearchList(String sort, String search, String searchString) {
+		return adminDAO.getReportSearchList(sort, search, searchString);
+	}
+
+	// 신고 상세창
+	@Override
+	public ReportVO getReportInfo(int idx) {
+		return adminDAO.getReportInfo(idx);
+	}
+
+	// 신고 상세창, 신고된 기록 정보
+	@Override
+	public ReflectionVO getReflectionInfo(int originIdx) {
+		return adminDAO.getReflectionInfo(originIdx);
+	}
+
+	// 신고 상세창, 신고된 댓글 정보
+	@Override
+	public ReplyVO getReplyInfo(int originIdx) {
+		return adminDAO.getReplyInfo(originIdx);
+	}
+
+	// 신고 상세창, 신고된 문장수집 정보
+	@Override
+	public InspiredVO getInspiredInfo(int originIdx) {
+		return adminDAO.getInspiredInfo(originIdx);
+	}
+
+	// 신고 상세창, 신고된 회원 정보
+	@Override
+	public MemberVO getMemberInfoWithIdx(int originIdx) {
+		return adminDAO.getMemberInfoWithIdx(originIdx);
+	}
+
+	// 신고 출처 확인용, 회원 별명 가져오기
+	@Override
+	public String getOriginNickname(int originIdx) {
+		return adminDAO.getOriginNickname(originIdx);
+	}
+
+	// 신고 출처 확인용, 기록 고유번호 가져오기
+	@Override
+	public String getOriginRefIdx(int originIdx) {
+		return adminDAO.getOriginRefIdx(originIdx);
+	}
+
+	// 신고 답변 등록
+	@Override
+	public void setReportReplyInsert(String idx, String reply) {
+		adminDAO.setReportReplyInsert(idx, reply);
 	}
 
 

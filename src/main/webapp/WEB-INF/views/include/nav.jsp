@@ -65,6 +65,10 @@
 				<c:if test="${!empty sTempPwd}">
 					<li><a href="${ctp}/member/myPage/profile"><b>현재 임시비밀번호를 발급받아 사용 중입니다. 개인정보를 확인하시고 <u>비밀번호를 변경해주세요.</u></b></a></li>
 				</c:if>
+				<c:if test="${!empty sPwdUpdateDate}">
+					<li><a href="${ctp}/member/myPage/profile"><b>비밀번호 변경 후, 6개월이 경과되었습니다. 비밀번호를 변경해주세요.</b></a></li>
+				</c:if>
+				
 				<c:if test="${!empty totCnt}">
 					<li><a href="${ctp}/about/about">책(의)세계에 방문하신  <b>${sNickname}</b>님 환영합니다! 우리 책(의)세계에 대해 더 알아볼까요?</a></li>
 				</c:if>
@@ -193,7 +197,7 @@
 				};
 			});
 		};
-		noticeRollingOff = setInterval(noticeRolling,4000); //자동롤링답게 setInterval를 사용해서 1000 = 1초마다 함수 실행!!
+		noticeRollingOff = setInterval(noticeRolling,3500); //자동롤링답게 setInterval를 사용해서 1000 = 1초마다 함수 실행!!
 		$(".rolling").append($(".rolling li").first().clone()); //올리다보면 마지막이 안보여서 clone을 통해 첫번째li 복사!
 	
 		$(".rolling_stop").click(function(){

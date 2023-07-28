@@ -17,4 +17,6 @@ public interface HomeService {
 
 	public String getTotCnt(String nickname);
 
+	public String getPwdUpdateDate(String nickname);
+
 }

@@ -45,5 +45,11 @@ public class HomeServiceImpl implements HomeService {
 		return homeDAO.getTotCnt(nickname);
 	}
 
+	// 비밀번호 변경 6개월 경과 되었는지 확인용
+	@Override
+	public String getPwdUpdateDate(String nickname) {
+		return homeDAO.getPwdUpdateDate(nickname);
+	}
+
 	
 }

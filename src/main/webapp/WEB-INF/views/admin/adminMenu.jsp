@@ -64,7 +64,7 @@
 		        <div class="card-body" style="margin:10px">  <!-- 판매관리로 가는 링크, 매거진 문의로 가는 링크 -->
 			        <a href="${ctp}/admin/magazine/magazineList">매거진 정보 관리</a><hr/>
 			        <a href="${ctp}/admin/magazine/subscribeList">매거진 정기구독 관리</a><hr/>
-			        <a href="${ctp}/admin/magazine/subscribeList">뉴스레터 구독 관리</a>
+			        <a href="${ctp}/admin/magazine/booksletterList">뉴스레터 구독 관리</a>
 		        </div>
 		      </div>
 		    </div>
@@ -77,8 +77,9 @@
 		      </div>
 		      <div id="collapseThree" class="collapse" data-parent="#accordion">
 		        <div class="card-body" style="margin:10px">
-			        <a href="${ctp}/admin/memberList">기록 관리</a><hr/>
-			        <a href="${ctp}/admin/memberList">문장수집 관리</a><hr/>
+			        <%-- <a href="${ctp}/admin/memberList">기록 관리</a><hr/>
+			        <a href="${ctp}/admin/memberList">문장수집 관리</a><hr/> --%>
+			        <a href="${ctp}/admin/community/report">신고 관리</a><hr/>
 			        <a href="${ctp}/admin/community/book">등록 책 관리</a><hr/>
 			        <a href="${ctp}/admin/community/proverb">책 명언 관리</a> 
 		        </div>
