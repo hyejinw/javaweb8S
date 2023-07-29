@@ -184,6 +184,13 @@
 		$(document).ready(function(){
 		  $('[data-toggle="popover"]').popover();   
 		});
+		
+		// 문의창으로 이동
+		function move() {
+			if(confirm('문의창으로 이동하시겠습니까?')) {
+				location.href = '${ctp}/admin/manage/askList';
+			}
+		}
 	</script>
 </head>
 <body class="w3-light-grey">
@@ -241,7 +248,7 @@
 		        <option <c:if test="${sort == '반품처리중'}">selected</c:if> value="반품처리중">반품처리중</option>
 		        <option <c:if test="${sort == '반품완료'}">selected</c:if> value="반품완료">반품완료</option>
 		      </select>
-					<a class="btn btn-secondary mr-3 mb-4" href="${ctp}/">주문 문의</a>
+					<a class="btn btn-secondary mr-3 mb-4" href="javascript:move()">주문 문의</a>
 				</div>
 				<div class="col-5 text-right">
 					<form name="searchForm" class="text-right">

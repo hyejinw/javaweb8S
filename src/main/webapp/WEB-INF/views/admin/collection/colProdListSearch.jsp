@@ -211,7 +211,12 @@
 	  	});
 		}
 		
-		
+		// 상품 문의창으로 이동
+		function move() {
+			if(confirm('상품 문의창으로 이동하시겠습니까?')) {
+				location.href = '${ctp}/admin/manage/askList?sort=컬렉션상품';
+			}
+		}
 	</script>
 </head>
 <body class="w3-light-grey">
@@ -246,7 +251,7 @@
 		        <option <c:if test="${sort == '비공개'}">selected</c:if> value="비공개">비공개</option>
 		      </select>
 					<a class="btn btn-dark mr-3 mb-4" href="javascript:deleteAction()">선택 삭제</a>
-					<a class="btn btn-secondary mr-3 mb-4" href="${ctp}/">상품 문의</a>
+					<a class="btn btn-secondary mr-3 mb-4" href="javascript:move()">상품 문의</a>
 				</div>
 				<div class="col-5 text-right">
 					<form name="searchForm" class="text-right">

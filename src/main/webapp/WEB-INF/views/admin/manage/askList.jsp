@@ -141,7 +141,7 @@
 				<div style="text-align:center"><span class="text-center" style="font-size:30px; text-align:center; font-weight:500">문의 관리</span></div>
 			  <div style="text-align:center;">
 				  <span class="text-center" style="font-size:15px; text-align:center; font-weight:300;">
-					 	<br/><i class="fa-solid fa-check"></i>&nbsp;답변 수정은 지양해주시길 바랍니다.
+					 	<br/><i class="fa-solid fa-check"></i>&nbsp;답변 수정은 지양해주시길 바랍니다. (제목 클릭 시, 답변 가능)
 					 	<br/><i class="fa-solid fa-check"></i>&nbsp;답변 등록 후, 작성자에게 답변 등록 이메일이 전송됩니다. 작성 후, 화면 전환까지 잠시 기다려주시길 바랍니다.
 				  </span>
 			  </div>

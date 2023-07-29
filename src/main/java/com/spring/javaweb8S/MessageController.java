@@ -148,8 +148,6 @@ public class MessageController {
 			model.addAttribute("msg", "재시도 부탁드립니다.");
 			model.addAttribute("url", "/admin/member/memInfo?nickname="+nickname);
 		}
-		
-		
 		else if(msgFlag.equals("askInsertOk")) {
 			model.addAttribute("msg", "문의가 등록되었습니다.");
 			model.addAttribute("url", "/community/ask");
@@ -249,7 +247,15 @@ public class MessageController {
 			model.addAttribute("msg", "재시도 부탁드립니다.");
 			model.addAttribute("url", "/admin/manage/noticeUpdate?idx="+idx);
 		}
-		
+		// 인터셉터 처리
+		else if(msgFlag.equals("restrictedPageForAdmin")) {
+			model.addAttribute("msg", "관리자 전용 페이지입니다.");
+			model.addAttribute("url", "/");
+		}
+		else if(msgFlag.equals("restrictedPageForMember")) {
+			model.addAttribute("msg", "로그인이 필요합니다.");
+			model.addAttribute("url", "/");
+		}
 		
 		
 		

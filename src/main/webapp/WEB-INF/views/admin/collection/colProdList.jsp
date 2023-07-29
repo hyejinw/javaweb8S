@@ -191,8 +191,6 @@
     	location.href = "${ctp}/admin/collection/colProdListSearch?search="+search+"&searchString="+searchString+"&startDate="+startDate+"&endDate="+endDate+"&sort="+sort;
 		}
 		
-		
-		
 		// 상품 공개/비공개 변경
 		function openChange(idx, prodOpen) {
 			if(prodOpen == '비공개') alert('컬렉션이 비공개일 경우, 상품 공개 전환 후의 전시 상태는 동일합니다.');
@@ -211,6 +209,13 @@
 	  			alert("전송 오류! 재시도 부탁드립니다.");
 	  		}
 	  	});
+		}
+		
+		// 상품 문의창으로 이동
+		function move() {
+			if(confirm('상품 문의창으로 이동하시겠습니까?')) {
+				location.href = '${ctp}/admin/manage/askList?sort=컬렉션상품';
+			}
 		}
 	</script>
 </head>
@@ -246,7 +251,7 @@
 		        <option <c:if test="${sort == '비공개'}">selected</c:if> value="비공개">비공개</option>
 		      </select>
 					<a class="btn btn-dark mr-3 mb-4" href="javascript:deleteAction()">선택 삭제</a>
-					<a class="btn btn-secondary mr-3 mb-4" href="${ctp}/">상품 문의</a>
+					<a class="btn btn-secondary mr-3 mb-4" href="javascript:move()">상품 문의</a>
 				</div>
 				<div class="col-5 text-right">
 					<form name="searchForm" class="text-right">

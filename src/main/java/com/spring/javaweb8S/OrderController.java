@@ -502,10 +502,7 @@ public class OrderController {
 			session.setAttribute("sCartNum", cartNum - cartVOS.size());
 		}
 		
-		// 원래 return 할 곳은 해당 회원의 (마이페이지 안) 주문 내역
-		return "order/cart";
-		
-		// 아니면 order/orderInfo를 만들어서 결제를 한 번 더 보여주는 것도 좋다
+		return "member/myPage/order";
 	}
 	
 	

@@ -91,7 +91,6 @@ public class MagazineController {
 		if(vo.getMaType().equals("매거진")) askVOS = magazineService.getMagazineAsk(idx, "매거진");
 		else askVOS = magazineService.getMagazineAsk(idx, "정기구독");
 		model.addAttribute("askVOS", askVOS);
-			
 		
 		return "magazine/maProduct";
 	}

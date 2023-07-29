@@ -44,10 +44,30 @@
   	<beans:property name="defaultEncoding" value="utf-8" />
   </beans:bean>
   
-  	<!-- 트래잭션을 어노테이션으로 처리하기위해 참조하는 클래스를 등록시켜준다. -->
+
+	<!-- Interceptor 설정 -->
+	<beans:bean id="adminInterceptor" class="com.spring.javaweb8S.interceptor.AdminInterceptor" />
+	<beans:bean id="memberInterceptor" class="com.spring.javaweb8S.interceptor.MemberInterceptor" />
+
+	<interceptors>
+	  <interceptor>
+	    <mapping path="/admin/**"/>
+	    <beans:ref bean="adminInterceptor" />	<!-- 관리자 페이지 -->
+	  </interceptor>
+	  
+	  <interceptor>
+	    <mapping path="/member/myPage"/>
+	    <mapping path="/member/myPage/**"/>
+	    <mapping path="/order/**"/>
+	    <mapping path="/community/reflectionInsert"/>
+	    <mapping path="/community/reflectionUpdate"/>
+	    <beans:ref bean="memberInterceptor" />	<!-- 회원 페이지: 마이페이지, 장바구니, 주문, 주소록, 기록 작성/수정 -->
+	  </interceptor>
+	  
+	</interceptors>
+
+
+ 	<!-- 트래잭션을 어노테이션으로 처리하기위해 참조하는 클래스를 등록시켜준다. -->
 	<tx:annotation-driven transaction-manager="transactionManager" />
-
-
-
 
 </beans:beans>

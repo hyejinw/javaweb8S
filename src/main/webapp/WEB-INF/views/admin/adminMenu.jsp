@@ -145,13 +145,25 @@
 		    <div class="card">
 		      <div class="card-header" style="padding:0px">
 	  			  <a href="#collapseEight" class="collapsed card-link w3-bar-item w3-button w3-padding dropdown-toggle" data-toggle="collapse">
-	  			 		<i class="fa fa-bell fa-fw"></i>  문의 / 공지 / 기타
+	  			 		<i class="fa fa-bell fa-fw"></i>  문의 / 공지
   			  	</a>
 		      </div>
 		      <div id="collapseEight" class="collapse" data-parent="#accordion">
 		        <div class="card-body" style="margin:10px">
 			        <a href="${ctp}/admin/manage/askList">문의 관리</a><hr/>
-			        <a href="${ctp}/admin/manage/noticeList">공지사항</a><hr/>
+			        <a href="${ctp}/admin/manage/noticeList">공지사항 관리</a>
+		        </div>
+		      </div>
+		    </div>
+		    
+		    <div class="card">
+		      <div class="card-header" style="padding:0px">
+	  			  <a href="#collapseNine" class="collapsed card-link w3-bar-item w3-button w3-padding dropdown-toggle" data-toggle="collapse">
+	  			 		<i class="fa fa-cog fa-fw"></i>  기타
+  			  	</a>
+		      </div>
+		      <div id="collapseNine" class="collapse" data-parent="#accordion">
+		        <div class="card-body" style="margin:10px">
 			        <a href="${ctp}/admin/manage/tempFileList">임시 파일 관리</a>
 		        </div>
 		      </div>

@@ -179,6 +179,13 @@
 	  		}
 	  	});
 		}
+		
+		// 매거진 문의창으로 이동
+		function move() {
+			if(confirm('매거진 문의창으로 이동하시겠습니까?')) {
+				location.href = '${ctp}/admin/manage/askList?sort=매거진';
+			}
+		}
 	</script>
 </head>
 <body class="w3-light-grey">
@@ -207,7 +214,7 @@
 				<div class="col-7 text-left">
 					<a class="btn btn-dark mb-4" href="javascript:deleteAction()" style="margin-right:20px;">선택 삭제</a>
 					<a class="btn btn-info mb-4" href="${ctp}/admin/magazine/magazineListSearch?maType=정기 구독" style="margin-right:20px;">정기구독 상품만</a>
-					<a class="btn btn-secondary mb-4" href="${ctp}/" style="margin-right:100px;">매거진 문의</a>
+					<a class="btn btn-secondary mb-4" href="javascript:move()" style="margin-right:100px;">매거진 문의</a>
 				</div>
 				<div class="col-5 text-right">
 					<form name="searchForm" class="text-right">

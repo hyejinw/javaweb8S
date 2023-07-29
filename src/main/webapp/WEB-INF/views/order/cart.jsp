@@ -97,7 +97,37 @@
 				document.getElementById("cartPrice").value = numberWithCommas(res)+ "  원";
 		});
 		
-		function numChange(opPrice, idx, flag) {
+		function numChange(opPrice, idx, flag, stock) {
+			let num = document.getElementById("num"+idx).value;
+			
+			if(flag == 'minus') {
+				if(num <= 1) {
+					alert('최소 주문수량은 1개 입니다.');
+					num = 1;
+				}
+				else num--;
+			}
+			
+			if(flag == 'plus') {
+				if(num >= stock) {
+					alert('현 상품의 재고 수량은 '+stock+'개 입니다.');
+					document.getElementById("num" + idx).focus();
+				}
+				else if(num >= 99) {
+					alert('최대 주문수량은 99개 입니다.');
+					num = 99;
+				}
+				else num++;
+			}
+			
+			document.getElementById("num"+idx).value = num;
+    	let price = opPrice * num;
+    	document.getElementById("price"+idx).value = price;
+    	document.getElementById("totalPrice"+idx).value = numberWithCommas(price) + " 원";
+    }
+		
+		// 매거진 정기구독용: 재고 제한 없음
+		function numChange2(opPrice, idx, flag) {
 			let num = document.getElementById("num"+idx).value;
 			
 			if(flag == 'minus') {
@@ -303,7 +333,68 @@
 		    alert("주문할 상품을 선택해주세요.");
 		    return false;
 		  }
+		  
+		  // 재고 확인
+		  let stockCheckIdx = 0;
+		  let type = '';
+		  let prodName = '';
+		  let opName = '';
+		  let stock = 0;
+		  let num = 0;
+		  
+		  $( "input[name='checkRow']:checked" ).each (function() {
+			  stockCheckIdx = $(this).val();
+			  type = document.getElementById('type' + stockCheckIdx).value;
+			  num = document.getElementById("num" + stockCheckIdx).value;
+			  
+			  if(type == '컬렉션 상품') {
+				  prodName = document.getElementById("prodName" + stockCheckIdx).value;
+				  opName = document.getElementById("opName" + stockCheckIdx).value;
+				  stock = document.getElementById("stock" + stockCheckIdx).value;
+				  if(num > stock) {
+					  alert( prodName+'\n[옵션]'+opName+' 의 재고 수량은 '+stock+'개 입니다.');
+					  document.getElementById("num" + stockCheckIdx).focus();
+						return false;
+				  }
+			  }
+			  if(type == '매거진') {
+				  prodName = document.getElementById("prodName" + stockCheckIdx).value;
+				  stock = document.getElementById("stock" + stockCheckIdx).value;
+				  if(num > stock) {
+					  alert( prodName+'\n상품의 재고 수량은 '+stock+'개 입니다.');
+					  document.getElementById("num" + stockCheckIdx).focus();
+						return false;
+				  }
+			  }
+		  });
+		  
 		  location.href = "${ctp}/order/order?checkRow="+checkRow;
+		}
+		
+		// 주문하기 확인용 
+		function orderCheck(idx) {
+			let type = document.getElementById('type' + idx).value;
+		  let num = document.getElementById("num" + idx).value;
+		  let prodName = document.getElementById("prodName" + idx).value;
+		  let stock = document.getElementById("stock" + idx).value;
+		  
+		  if(type == '컬렉션 상품') {
+			  let opName = document.getElementById("opName" + idx).value;
+			  
+			  if(num > stock) {
+				  alert( prodName+'\n[옵션]'+opName+' 의 재고 수량은 '+stock+'개 입니다.');
+				  document.getElementById("num" + idx).focus();
+					return false;
+			  }
+		  }
+		  if(type == '매거진') {
+			  if(num > stock) {
+				  alert( prodName+'\n상품의 재고 수량은 '+stock+'개 입니다.');
+				  document.getElementById("num" + idx).focus();
+					return false;
+			  }
+		  }
+		  location.href='${ctp}/order/order?checkRow='+idx;
 		}
 	</script>
 </head>
@@ -394,7 +485,13 @@
 						        <td><label for="chk${cartProdVO.idx}"><input type="checkbox" disabled class="form-check-input" value="${cartProdVO.idx}" />&nbsp;&nbsp;${st.count}</label></td>
 					      	</c:if>
 					      	<c:if test="${cartProdVO.stock != 0}">
-						        <td><label for="chk${cartProdVO.idx}"><input type="checkbox" name="checkRow" id="chk${cartProdVO.idx}" onclick="tempTotalPriceChange()" class="form-check-input" value="${cartProdVO.idx}" />&nbsp;&nbsp;${st.count}</label></td>
+						        <td>
+						        	<label for="chk${cartProdVO.idx}"><input type="checkbox" name="checkRow" id="chk${cartProdVO.idx}" onclick="tempTotalPriceChange()" class="form-check-input" value="${cartProdVO.idx}" />&nbsp;&nbsp;${st.count}</label>
+						        	<input type="hidden" id="prodName${cartProdVO.idx}" value="${cartProdVO.prodName}"/>
+						        	<input type="hidden" id="opName${cartProdVO.idx}" value="${cartProdVO.opName}"/>
+						        	<input type="hidden" id="type${cartProdVO.idx}" value="${cartProdVO.type}"/>
+						        	<input type="hidden" id="stock${cartProdVO.idx}" value="${cartProdVO.stock}"/>
+						        </td>
 					      	</c:if>
 					        <td>
 					        	<a href="${ctp}/collection/colProduct?idx=${cartProdVO.prodIdx}">
@@ -415,14 +512,18 @@
 					        <td><fmt:formatNumber value="${cartProdVO.opPrice}" pattern="#,###"/>원</td>
 					        <td>
 					        	<!-- 수량 변경 내용 -->
-					        	<button type="button" class="btn btn-sm btn-outline-secondary" onclick="numChange('${cartProdVO.opPrice}','${cartProdVO.idx}', 'minus')"><i class="fa-solid fa-minus"></i></button>
-										<input type="text" class="text-center opNum num" name="num" id="num${cartProdVO.idx}" value="${cartProdVO.num}" readonly style="width:50px;"/>
-										<button type="button" class="btn btn-sm btn-outline-secondary" onclick="numChange('${cartProdVO.opPrice}','${cartProdVO.idx}', 'plus')"><i class="fa-solid fa-plus"></i></button>
-										<br/><hr style="margin:10px;"/>
 										<c:if test="${cartProdVO.stock == 0}">
+						        	<button type="button" class="btn btn-sm btn-outline-secondary" disabled><i class="fa-solid fa-minus"></i></button>
+											<input type="text" class="text-center opNum num" name="num" id="num${cartProdVO.idx}" value="${cartProdVO.num}" readonly style="width:50px;"/>
+											<button type="button" class="btn btn-sm btn-outline-secondary" disabled><i class="fa-solid fa-plus"></i></button>
+											<br/><hr style="margin:10px;"/>
 					        		<button class="btn btn-outline-primary btn-sm" disabled>변경</button>
 					        	</c:if>
 										<c:if test="${cartProdVO.stock != 0}">
+						        	<button type="button" class="btn btn-sm btn-outline-secondary" onclick="numChange('${cartProdVO.opPrice}','${cartProdVO.idx}', 'minus', '${cartProdVO.stock}')"><i class="fa-solid fa-minus"></i></button>
+											<input type="text" class="text-center opNum num" name="num" id="num${cartProdVO.idx}" value="${cartProdVO.num}" readonly style="width:50px;"/>
+											<button type="button" class="btn btn-sm btn-outline-secondary" onclick="numChange('${cartProdVO.opPrice}','${cartProdVO.idx}', 'plus', '${cartProdVO.stock}')"><i class="fa-solid fa-plus"></i></button>
+											<br/><hr style="margin:10px;"/>
 					        		<button class="btn btn-outline-primary btn-sm" onclick="numUpdate('${cartProdVO.idx}')">변경</button>
 					        	</c:if>
 					        	<input type="hidden" id="price${cartProdVO.idx}" name="totalPrice" value="${cartProdVO.opPrice}"/>
@@ -435,7 +536,7 @@
 					        		<div class="mb-1"><button class="btn btn-sm btn-dark" disabled>주문하기 <i class="fa-solid fa-chevron-right"></i></button></div>
 					        	</c:if>
 					        	<c:if test="${cartProdVO.stock != 0}">
-					        		<div class="mb-1"><button class="btn btn-sm btn-dark" onclick="location.href='${ctp}/order/order?checkRow=${cartProdVO.idx}';">주문하기 <i class="fa-solid fa-chevron-right"></i></button></div>
+					        		<div class="mb-1"><button class="btn btn-sm btn-dark" onclick="orderCheck(${cartProdVO.idx})">주문하기 <i class="fa-solid fa-chevron-right"></i></button></div>
 					        	</c:if>
 					        	<c:if test="${cartProdVO.saveIdx == 0}"><div class="mb-1"><button class="btn btn-sm btn-secondary" onclick="saveInsert('${cartProdVO.type}','${cartProdVO.prodIdx}','${cartProdVO.prodName}','${cartProdVO.prodPrice}','${cartProdVO.prodThumbnail}')">관심상품 추가</button></div></c:if>
 					        	<c:if test="${cartProdVO.saveIdx != 0}"><div class="mb-1"><button class="btn btn-sm btn-outline-secondary" onclick="saveDelete('${cartProdVO.saveIdx}','${cartProdVO.type}','${cartProdVO.prodIdx}')">관심상품 취소</button></div></c:if>
@@ -474,7 +575,12 @@
 						        <td><label for="chk${cartMagazineVO.idx}"><input type="checkbox" disabled class="form-check-input" value="${cartMagazineVO.idx}" />&nbsp;&nbsp;${st.count}</label></td>
 					      	</c:if>
 					      	<c:if test="${cartMagazineVO.stock != 0}">
-						        <td><label for="chk${cartMagazineVO.idx}"><input type="checkbox" name="checkRow" id="chk${cartMagazineVO.idx}" onclick="tempTotalPriceChange()" class="form-check-input" value="${cartMagazineVO.idx}" />&nbsp;&nbsp;${st.count}</label></td>
+						        <td>
+						        	<label for="chk${cartMagazineVO.idx}"><input type="checkbox" name="checkRow" id="chk${cartMagazineVO.idx}" onclick="tempTotalPriceChange()" class="form-check-input" value="${cartMagazineVO.idx}" />&nbsp;&nbsp;${st.count}</label>
+						        	<input type="hidden" id="prodName${cartMagazineVO.idx}" value="${cartMagazineVO.prodName}"/>
+						        	<input type="hidden" id="type${cartMagazineVO.idx}" value="${cartMagazineVO.type}"/>
+						        	<input type="hidden" id="stock${cartMagazineVO.idx}" value="${cartMagazineVO.stock}"/>	
+					        	</td>
 					      	</c:if>
 					        <td>
 					        	<a href="${ctp}/magazine/maProduct?idx=${cartMagazineVO.maIdx}">
@@ -494,14 +600,18 @@
 					        <td><fmt:formatNumber value="${cartMagazineVO.prodPrice}" pattern="#,###"/>원</td>
 					        <td>
 					        	<!-- 수량 변경 내용 -->
-					        	<button type="button" class="btn btn-sm btn-outline-secondary" onclick="numChange('${cartMagazineVO.prodPrice}','${cartMagazineVO.idx}', 'minus')"><i class="fa-solid fa-minus"></i></button>
-										<input type="text" class="text-center opNum num" name="num" id="num${cartMagazineVO.idx}" value="${cartMagazineVO.num}" readonly style="width:50px;"/>
-										<button type="button" class="btn btn-sm btn-outline-secondary" onclick="numChange('${cartMagazineVO.prodPrice}','${cartMagazineVO.idx}', 'plus')"><i class="fa-solid fa-plus"></i></button>
-										<br/><hr style="margin:10px;"/>
 										<c:if test="${cartMagazineVO.stock == 0}">
+						        	<button type="button" class="btn btn-sm btn-outline-secondary" disabled><i class="fa-solid fa-minus"></i></button>
+											<input type="text" class="text-center opNum num" name="num" id="num${cartMagazineVO.idx}" value="${cartMagazineVO.num}" readonly style="width:50px;"/>
+											<button type="button" class="btn btn-sm btn-outline-secondary" disabled><i class="fa-solid fa-plus"></i></button>
+											<br/><hr style="margin:10px;"/>
 						        	<button class="btn btn-outline-primary btn-sm" disabled>변경</button>
 										</c:if>
 										<c:if test="${cartMagazineVO.stock != 0}">
+						        	<button type="button" class="btn btn-sm btn-outline-secondary" onclick="numChange('${cartMagazineVO.prodPrice}','${cartMagazineVO.idx}', 'minus', '${cartMagazineVO.stock}')"><i class="fa-solid fa-minus"></i></button>
+											<input type="text" class="text-center opNum num" name="num" id="num${cartMagazineVO.idx}" value="${cartMagazineVO.num}" readonly style="width:50px;"/>
+											<button type="button" class="btn btn-sm btn-outline-secondary" onclick="numChange('${cartMagazineVO.prodPrice}','${cartMagazineVO.idx}', 'plus', '${cartMagazineVO.stock}')"><i class="fa-solid fa-plus"></i></button>
+											<br/><hr style="margin:10px;"/>
 						        	<button class="btn btn-outline-primary btn-sm" onclick="numUpdate('${cartMagazineVO.idx}')">변경</button>
 										</c:if>
 					        	<input type="hidden" id="price${cartMagazineVO.idx}" name="totalPrice" value="${cartMagazineVO.prodPrice}"/>
@@ -514,7 +624,7 @@
 						        	<div class="mb-1"><button class="btn btn-sm btn-dark" disabled>주문하기 <i class="fa-solid fa-chevron-right"></i></button></div>
 					        	</c:if>
 					        	<c:if test="${cartMagazineVO.stock != 0}">
-						        	<div class="mb-1"><button class="btn btn-sm btn-dark" onclick="location.href='${ctp}/order/order?checkRow=${cartMagazineVO.idx}';">주문하기 <i class="fa-solid fa-chevron-right"></i></button></div>
+						        	<div class="mb-1"><button class="btn btn-sm btn-dark" onclick="orderCheck(${cartMagazineVO.idx})">주문하기 <i class="fa-solid fa-chevron-right"></i></button></div>
 					        	</c:if>
 										<c:if test="${cartMagazineVO.saveIdx == 0}"><div class="mb-1"><button class="btn btn-sm btn-secondary" onclick="saveInsert('${cartMagazineVO.type}','${cartMagazineVO.maIdx}','${cartMagazineVO.prodName}','${cartMagazineVO.prodPrice}','${cartMagazineVO.prodThumbnail}')">관심상품 추가</button></div></c:if>
 					        	<c:if test="${cartMagazineVO.saveIdx != 0}"><div class="mb-1"><button class="btn btn-sm btn-outline-secondary" onclick="saveDelete('${cartMagazineVO.saveIdx}','${cartMagazineVO.type}','${cartMagazineVO.maIdx}')">관심상품 취소</button></div></c:if>
@@ -556,7 +666,10 @@
 				    <tbody>
 		 		    	<c:forEach var="cartSubscribeVO" items="${cartSubscribeVOS}" varStatus="st">
 					      <tr>
-					        <td><label for="chk${cartSubscribeVO.idx}"><input type="checkbox" name="checkRow" id="chk${cartSubscribeVO.idx}" onclick="tempTotalPriceChange()" class="form-check-input" value="${cartSubscribeVO.idx}" />&nbsp;&nbsp;${st.count}</label></td>
+					        <td>
+					        	<label for="chk${cartSubscribeVO.idx}"><input type="checkbox" name="checkRow" id="chk${cartSubscribeVO.idx}" onclick="tempTotalPriceChange()" class="form-check-input" value="${cartSubscribeVO.idx}" />&nbsp;&nbsp;${st.count}</label>
+				        		<input type="hidden" id="type${cartSubscribeVO.idx}" value="${cartSubscribeVO.type}"/>
+				        	</td>
 					        <td>
 					        	<a href="${ctp}/magazine/maProduct?idx=${cartSubscribeVO.maIdx}">
 					        	<img src="${ctp}/magazine/${cartSubscribeVO.prodThumbnail}" style="width:100%; max-width:100px"/>
@@ -570,9 +683,9 @@
 					        <td><fmt:formatNumber value="${cartSubscribeVO.prodPrice}" pattern="#,###"/>원</td>
 					        <td>
 					        	<!-- 수량 변경 내용 -->
-					        	<button type="button" class="btn btn-sm btn-outline-secondary" onclick="numChange('${cartSubscribeVO.prodPrice}','${cartSubscribeVO.idx}', 'minus')"><i class="fa-solid fa-minus"></i></button>
+					        	<button type="button" class="btn btn-sm btn-outline-secondary" onclick="numChange2('${cartSubscribeVO.prodPrice}','${cartSubscribeVO.idx}', 'minus')"><i class="fa-solid fa-minus"></i></button>
 										<input type="text" class="text-center opNum num" name="num" id="num${cartSubscribeVO.idx}" value="${cartSubscribeVO.num}" readonly style="width:50px;"/>
-										<button type="button" class="btn btn-sm btn-outline-secondary" onclick="numChange('${cartSubscribeVO.prodPrice}','${cartSubscribeVO.idx}', 'plus')"><i class="fa-solid fa-plus"></i></button>
+										<button type="button" class="btn btn-sm btn-outline-secondary" onclick="numChange2('${cartSubscribeVO.prodPrice}','${cartSubscribeVO.idx}', 'plus')"><i class="fa-solid fa-plus"></i></button>
 										<br/><hr style="margin:10px;"/>
 					        	<button class="btn btn-outline-primary btn-sm" onclick="numUpdate('${cartSubscribeVO.idx}')">변경</button>
 					        	<input type="hidden" id="price${cartSubscribeVO.idx}" name="totalPrice" value="${cartSubscribeVO.prodPrice}"/>
@@ -581,7 +694,7 @@
 					        	<input type=text id="totalPrice${cartSubscribeVO.idx}" class="text-center" value='<fmt:formatNumber value="${cartSubscribeVO.totalPrice}" pattern="#,###"/> 원' style="font-weight:bold; width:150px; border:0px; outline: none;" readonly/>
 					        	<input type=hidden id="tempTotalPrice${cartSubscribeVO.idx}" name="tempTotalPrice" value="${cartSubscribeVO.totalPrice}"/>
 					        <td>
-					        	<div class="mb-1"><button class="btn btn-sm btn-dark" onclick="location.href='${ctp}/order/order?checkRow=${cartMagazineVO.idx}';">주문하기 <i class="fa-solid fa-chevron-right"></i></button></div>
+					        	<div class="mb-1"><button class="btn btn-sm btn-dark" onclick="location.href='${ctp}/order/order?checkRow=${cartSubscribeVO.idx}';">주문하기 <i class="fa-solid fa-chevron-right"></i></button></div>
 										<c:if test="${cartSubscribeVO.saveIdx == 0}"><div class="mb-1"><button class="btn btn-sm btn-secondary" onclick="saveInsert('${cartSubscribeVO.type}','${cartSubscribeVO.maIdx}','${cartSubscribeVO.prodName}','${cartSubscribeVO.prodPrice}','${cartSubscribeVO.prodThumbnail}')">관심상품 추가</button></div></c:if>
 					        	<c:if test="${cartSubscribeVO.saveIdx != 0}"><div class="mb-1"><button class="btn btn-sm btn-outline-secondary" onclick="saveDelete('${cartSubscribeVO.saveIdx}','${cartSubscribeVO.type}','${cartSubscribeVO.maIdx}')">관심상품 취소</button></div></c:if>
 										<div><button class="btn btn-sm btn-outline-dark" onclick="deleteOne(${cartSubscribeVO.idx})">삭제하기</button></div>
