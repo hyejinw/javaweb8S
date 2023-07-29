@@ -149,7 +149,7 @@
 			let detailExt = prodDetail.substring(prodDetail.lastIndexOf(".")+1).toUpperCase();
 			let maxSize = 1024 * 1024 * 20; // 업로드 가능 파일은 20MByte까지
 			
-			if(colIdx == "" || bookTitle == "" || prodName == "" || prodPrice == "" || prodThumbnail == "" || prodDetail == "") {
+			if(colIdx == "" || prodName == "" || prodPrice == "" || prodThumbnail == "" || prodDetail == "") {
 				alert('필수 입력을 완성해주세요.');
 				return false;
 			}
@@ -313,7 +313,7 @@
 				        </td>
 				      </tr>
 				      <tr>
-				        <th>관련 도서 <span class="must">*</span>
+				        <th>관련 도서
 				       		&nbsp;&nbsp;&nbsp;<a class="btn btn-danger btn-sm" href="#" id="bookBtn" data-toggle="modal" data-target="#myModal">자료 검색</a>
 				        </th>
 				        <td>

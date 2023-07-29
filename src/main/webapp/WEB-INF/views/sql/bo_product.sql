@@ -6,7 +6,7 @@ create table bo_product (
 	
 	colIdx int not null,                  /* 컬렉션 고유번호 */
 	bookIdx int,              					  /* 도서 고유번호 */
-	bookTitle varchar(200) not null,		  /* 도서 제목 */
+	bookTitle varchar(200),	          	  /* 도서 제목 */
 	
 	prodCode varchar(20) not null,        /* 상품 코드 */
 	prodName varchar(100) not null,       /* 상품명 */

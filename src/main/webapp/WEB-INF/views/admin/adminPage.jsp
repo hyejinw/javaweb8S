@@ -8,11 +8,38 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>책(의)세계</title>
   <jsp:include page="/WEB-INF/views/include/bs4.jsp" />
+  <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+  <script type="text/javascript">
+  google.charts.load('current', {'packages':['corechart']});
+  google.charts.setOnLoadCallback(drawVisualization);
+
+  function drawVisualization() {
+    // Some raw data (not necessarily accurate)
+    var data = google.visualization.arrayToDataTable([
+      ['Month', '컬렉션 상품', '매거진', '매거진 정기구독', '평균'],
+      ['2004/05',  165,      938,         522,      614.6],
+      ['2005/06',  135,      1120,        599,      682],
+      ['2006/07',  157,      1167,        587,      623],
+      ['2007/08',  139,      1110,        615,      609.4],
+      ['2008/09',  136,      691,         629,      569.6]
+    ]);
+
+    var options = {
+      title : '판매량',
+      vAxis: {title: '판매량'},
+      hAxis: {title: '기간'},
+      seriesType: 'bars',
+      series: {3: {type: 'line'}}
+    };
+
+    var chart = new google.visualization.ComboChart(document.getElementById('chart_div'));
+    chart.draw(data, options);
+  }
+  </script>
 </head>
 <body class="w3-light-grey">
   <jsp:include page="/WEB-INF/views/admin/adminMenu.jsp" />
 	
-
 	
 	<!-- !PAGE CONTENT! -->
 	<div class="w3-main" style="margin-left:300px; margin-top:43px;">
@@ -211,56 +238,18 @@
 	      </div>
 	    </div>
 	  </div>
+	  
+	  
 	
 	  <div class="w3-panel">
-	    <div class="w3-row-padding" style="margin:0 -16px">
-	      <div class="w3-third">
-	        <h5>Regions</h5>
-	        <img src="/w3images/region.jpg" style="width:100%" alt="Google Regional Map">
-	      </div>
-	      <div class="w3-twothird">
-	        <h5>Feeds</h5>
-	        <table class="w3-table w3-striped w3-white">
-	          <tr>
-	            <td><i class="fa fa-user w3-text-blue w3-large"></i></td>
-	            <td>New record, over 90 views.</td>
-	            <td><i>10 mins</i></td>
-	          </tr>
-	          <tr>
-	            <td><i class="fa fa-bell w3-text-red w3-large"></i></td>
-	            <td>Database error.</td>
-	            <td><i>15 mins</i></td>
-	          </tr>
-	          <tr>
-	            <td><i class="fa fa-users w3-text-yellow w3-large"></i></td>
-	            <td>New record, over 40 users.</td>
-	            <td><i>17 mins</i></td>
-	          </tr>
-	          <tr>
-	            <td><i class="fa fa-comment w3-text-red w3-large"></i></td>
-	            <td>New comments.</td>
-	            <td><i>25 mins</i></td>
-	          </tr>
-	          <tr>
-	            <td><i class="fa fa-bookmark w3-text-blue w3-large"></i></td>
-	            <td>Check transactions.</td>
-	            <td><i>28 mins</i></td>
-	          </tr>
-	          <tr>
-	            <td><i class="fa fa-laptop w3-text-red w3-large"></i></td>
-	            <td>CPU overload.</td>
-	            <td><i>35 mins</i></td>
-	          </tr>
-	          <tr>
-	            <td><i class="fa fa-share-alt w3-text-green w3-large"></i></td>
-	            <td>New shares.</td>
-	            <td><i>39 mins</i></td>
-	          </tr>
-	        </table>
-	      </div>
+	    <div class="w3-row-padding" style="margin:50px">
+	      <h2>수평 막대 차트</h2>
+	 			<div id="chart_div" style="width: 1000px; height: 500px;"></div>
 	    </div>
 	  </div>
 	  <hr>
+	  
+	  
 	  <div class="w3-container">
 	    <h5>General Stats</h5>
 	    <p>New Visitors</p>

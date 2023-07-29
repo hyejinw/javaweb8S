@@ -8,6 +8,7 @@ import com.spring.javaweb8S.vo.AddressVO;
 import com.spring.javaweb8S.vo.AskVO;
 import com.spring.javaweb8S.vo.BookVO;
 import com.spring.javaweb8S.vo.BooksletterVO;
+import com.spring.javaweb8S.vo.ChartVO;
 import com.spring.javaweb8S.vo.CollectionVO;
 import com.spring.javaweb8S.vo.DefaultPhotoVO;
 import com.spring.javaweb8S.vo.DeliveryVO;
@@ -234,6 +235,8 @@ public interface AdminDAO {
 	public String getOriginRefIdx(@Param("originIdx") int originIdx);
 	
 	public void setReportReplyInsert(@Param("idx") String idx, @Param("reply") String reply);
+	
+	public int getChartStat(@Param("type") String type, @Param("term") int term);
 
 
 	

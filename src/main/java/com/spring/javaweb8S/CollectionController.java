@@ -63,7 +63,7 @@ public class CollectionController {
 			@RequestParam(name="search", defaultValue = "최신순", required = false) String search,
 			@RequestParam(name="sort", defaultValue = "상품", required = false) String sort,
 			@RequestParam(name="pag", defaultValue = "1", required = false) int pag,
-			@RequestParam(name="pageSize", defaultValue = "10", required = false) int pageSize) {
+			@RequestParam(name="pageSize", defaultValue = "12", required = false) int pageSize) {
 		
 		PageVO pageVO = pageProcess.totRecCnt(pag, pageSize, "colProductList", search, colIdx);
 		ArrayList<CollectionVO>	vos = collectionService.getProductList(search, colIdx, pageVO.getStartIndexNo(), pageSize);

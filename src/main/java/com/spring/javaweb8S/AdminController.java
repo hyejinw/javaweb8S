@@ -31,6 +31,7 @@ import com.spring.javaweb8S.vo.AddressVO;
 import com.spring.javaweb8S.vo.AskVO;
 import com.spring.javaweb8S.vo.BookVO;
 import com.spring.javaweb8S.vo.BooksletterVO;
+import com.spring.javaweb8S.vo.ChartVO;
 import com.spring.javaweb8S.vo.CollectionVO;
 import com.spring.javaweb8S.vo.DefaultPhotoVO;
 import com.spring.javaweb8S.vo.DeliveryVO;
@@ -130,6 +131,26 @@ public class AdminController {
 		model.addAttribute("p2", p2);
 		model.addAttribute("p3", p3);
 		model.addAttribute("p4", p4);
+		
+		// 차트 통계
+		ArrayList<ChartVO> chartVOS = new ArrayList<ChartVO>();
+		int colCnt = 0, maCnt = 0, subCnt = 0;
+		double average = 0;
+		for(int i=1; i<=5; i++) {
+			ChartVO chartVO = new ChartVO(); 
+			colCnt = adminService.getChartStat("컬렉션 상품", i);
+			maCnt = adminService.getChartStat("매거진", i);
+			subCnt = adminService.getChartStat("정기 구독", i);
+			average = (colCnt + maCnt + subCnt) / 3;
+			chartVO.setColCnt(colCnt);
+			chartVO.setMaCnt(maCnt);
+			chartVO.setSubCnt(subCnt);
+			chartVO.setAverage(String.format("%.0f", average));
+			
+			chartVOS.add(chartVO);
+		}
+		System.out.println("chartVOS : " + chartVOS);
+		
 		
 		return "admin/adminPage";
 	}
@@ -597,7 +618,7 @@ public class AdminController {
 		else {
 			vo.setProdStatus("판매");
 		}
-		
+		if(vo.getBookTitle().equals("")) vo.setBookTitle(null);
 		res = adminService.setProdInsert(thumbnailFile, detailFile, vo);
 		
 		// 2. 상품 옵션 등록
@@ -628,11 +649,48 @@ public class AdminController {
 		
 		PageVO pageVO = pageProcess.totRecCnt(pag, pageSize, "adminColProduct", "", "");
 		ArrayList<ProductVO> vos =	adminService.getColProductList(pageVO.getStartIndexNo(), pageSize);
-		
+		System.out.println("pageVO : " + pageVO);
+		System.out.println("vos : " + vos);
 		model.addAttribute("vos", vos);
 		model.addAttribute("pageVO", pageVO);
 		
 		return "admin/collection/colProdList";
+	}
+	
+	// 상품 검색
+	@RequestMapping(value = "/collection/colProdListSearch", method = RequestMethod.GET)
+	public String colProdListSearchGet(Model model,
+			@RequestParam(name="sort", defaultValue = "전체", required = false) String sort,
+			@RequestParam(name="searchString", defaultValue = "", required = false) String searchString,
+			@RequestParam(name="search", defaultValue = "", required = false) String search,
+			@RequestParam(name="startDate", defaultValue = "", required = false) String startDate,
+			@RequestParam(name="endDate", defaultValue = "", required = false) String endDate,
+			@RequestParam(name="pag", defaultValue = "1", required = false) int pag,
+			@RequestParam(name="pageSize", defaultValue = "10", required = false) int pageSize) {
+		
+		PageVO pageVO = new PageVO();
+		ArrayList<ProductVO> vos = new ArrayList<ProductVO>();
+		
+		if(search.equals("colName")) {
+			pageVO = pageProcess.totRecCntWithPeriodAndSort(pag, pageSize, "adminColNameProduct", sort, search, searchString, startDate, endDate);
+			vos = adminService.getColNameProdSearchList(sort, search, searchString, startDate, endDate, pageVO.getStartIndexNo(), pageSize);
+		}
+		
+		else {
+			pageVO = pageProcess.totRecCntWithPeriodAndSort(pag, pageSize, "adminColProduct", sort, search, searchString, startDate, endDate);
+			vos = adminService.getColProdSearchList(sort, search, searchString, startDate, endDate, pageVO.getStartIndexNo(), pageSize);
+		}
+		
+		model.addAttribute("sort", sort);
+		model.addAttribute("search", search);
+		model.addAttribute("searchString", searchString);
+		model.addAttribute("startDate", startDate);
+		model.addAttribute("endDate", endDate);
+		
+		model.addAttribute("vos", vos);
+		model.addAttribute("pageVO", pageVO);
+		
+		return "admin/collection/colProdListSearch";
 	}
 
 	// 컬렉션 상품 공개 변경
@@ -674,7 +732,6 @@ public class AdminController {
 		adminService.setProdOptionDelete(idx);
 		return "";
 	}
-	
 	
 	// 컬렉션 상품 정보 수정
 	@RequestMapping(value = "/collection/colProdUpdate", method = RequestMethod.POST)
@@ -772,41 +829,6 @@ public class AdminController {
 		return "1";
 	}
 	
-	// 상품 검색
-	@RequestMapping(value = "/collection/colProdListSearch", method = RequestMethod.GET)
-	public String colProdListSearchGet(Model model,
-			@RequestParam(name="sort", defaultValue = "전체", required = false) String sort,
-			@RequestParam(name="searchString", defaultValue = "", required = false) String searchString,
-			@RequestParam(name="search", defaultValue = "", required = false) String search,
-			@RequestParam(name="startDate", defaultValue = "", required = false) String startDate,
-			@RequestParam(name="endDate", defaultValue = "", required = false) String endDate,
-			@RequestParam(name="pag", defaultValue = "1", required = false) int pag,
-			@RequestParam(name="pageSize", defaultValue = "10", required = false) int pageSize) {
-		
-		PageVO pageVO = new PageVO();
-		ArrayList<ProductVO> vos = new ArrayList<ProductVO>();
-		
-		if(search.equals("colName")) {
-			pageVO = pageProcess.totRecCntWithPeriodAndSort(pag, pageSize, "adminColNameProduct", sort, search, searchString, startDate, endDate);
-			vos = adminService.getColNameProdSearchList(sort, search, searchString, startDate, endDate, pageVO.getStartIndexNo(), pageSize);
-		}
-		
-		else {
-			pageVO = pageProcess.totRecCntWithPeriodAndSort(pag, pageSize, "adminColProduct", sort, search, searchString, startDate, endDate);
-			vos = adminService.getColProdSearchList(sort, search, searchString, startDate, endDate, pageVO.getStartIndexNo(), pageSize);
-		}
-		
-		model.addAttribute("sort", sort);
-		model.addAttribute("search", search);
-		model.addAttribute("searchString", searchString);
-		model.addAttribute("startDate", startDate);
-		model.addAttribute("endDate", endDate);
-		
-		model.addAttribute("vos", vos);
-		model.addAttribute("pageVO", pageVO);
-		
-		return "admin/collection/colProdListSearch";
-	}
 	
 	// 주문 관리창
 	@RequestMapping(value = "/order/orderList", method = RequestMethod.GET)

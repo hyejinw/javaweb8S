@@ -20,6 +20,7 @@ import com.spring.javaweb8S.vo.AddressVO;
 import com.spring.javaweb8S.vo.AskVO;
 import com.spring.javaweb8S.vo.BookVO;
 import com.spring.javaweb8S.vo.BooksletterVO;
+import com.spring.javaweb8S.vo.ChartVO;
 import com.spring.javaweb8S.vo.CollectionVO;
 import com.spring.javaweb8S.vo.DefaultPhotoVO;
 import com.spring.javaweb8S.vo.DeliveryVO;
@@ -736,6 +737,12 @@ public class AdminServiceImpl implements AdminService {
 	@Override
 	public void setReportReplyInsert(String idx, String reply) {
 		adminDAO.setReportReplyInsert(idx, reply);
+	}
+
+	// 판매량 차트용 
+	@Override
+	public int getChartStat(String type, int term) {
+		return adminDAO.getChartStat(type, term);
 	}
 
 

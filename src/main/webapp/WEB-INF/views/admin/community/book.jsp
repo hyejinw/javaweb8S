@@ -191,7 +191,7 @@
 				<div class="col text-right">
 					<form name="searchForm2" class="form-inline" style="flex-direction: row-reverse">
 			    	<div class="input-group">
-				      <input type="text" name="searchString" id="searchString2" value="${searchString2}" class="form-control mr-sm-2" autofocus placeholder="검색어를 입력해주세요" style="width:300px;"/>
+				      <input type="text" name="searchString" id="searchString2" value="${searchString2}" class="form-control mr-sm-2" placeholder="검색어를 입력해주세요" style="width:300px;"/>
 				      <div class="input-group-append">
 				     		<a href="#" class="btn btn-success my-2 my-sm-0" onclick="javascript:searchCheck2()"><i class="fa-solid fa-magnifying-glass" style="color:#282828;"></i></a>
 				     	</div>

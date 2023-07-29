@@ -9,6 +9,7 @@ import com.spring.javaweb8S.vo.AddressVO;
 import com.spring.javaweb8S.vo.AskVO;
 import com.spring.javaweb8S.vo.BookVO;
 import com.spring.javaweb8S.vo.BooksletterVO;
+import com.spring.javaweb8S.vo.ChartVO;
 import com.spring.javaweb8S.vo.CollectionVO;
 import com.spring.javaweb8S.vo.DefaultPhotoVO;
 import com.spring.javaweb8S.vo.DeliveryVO;
@@ -212,6 +213,8 @@ public interface AdminService {
 	public String getOriginRefIdx(int originIdx);
 
 	public void setReportReplyInsert(String idx, String reply);
+
+	public int getChartStat(String type, int term);
 
 
 
