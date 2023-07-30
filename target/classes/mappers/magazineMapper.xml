@@ -47,16 +47,15 @@
 			ORDER BY maPrice DESC, idx DESC LIMIT #{startIndexNo},#{pageSize};
 		</if>
 	</select>
-	
+	<!-- 
 	<select id="getMaDate" resultType="String">
 		SELECT distinct YEAR(maDate) FROM bo_magazine ORDER BY maDate DESC;  
-	</select>
+	</select> 이렇게 하면 맥에서는 오류가 뜬다! 	
+	 -->
 	
-	
-<!-- 이렇게 하면 맥에서는 오류가 뜬다! 	
   <select id="getMaDate" resultType="String">
 		select distinct YEAR(maDate) FROM bo_magazine;
-	</select> -->
+	</select> 
 	
 	
 	<select id="getMagazineProduct" resultType="com.spring.javaweb8S.vo.MagazineVO">

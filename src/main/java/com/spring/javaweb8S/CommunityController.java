@@ -188,6 +188,7 @@ public class CommunityController {
 		vo.setContent(vo.getContent().replace("/data/ckeditor/", "/data/community/"));
 
 		// content안의 내용정리가 끝나면 변경된 vo를 DB에 저장시켜준다.
+		if(vo.getBookTitle() == "") vo.setBookTitle(null);
 		int res = communityService.setReflectionInsert(vo);
 		if(res != 0)  return "redirect:/message/reflectionInsertOk";
 		else return "redirect:/message/reflectionInsertNo";

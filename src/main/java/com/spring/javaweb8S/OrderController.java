@@ -10,6 +10,7 @@ import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -370,7 +371,7 @@ public class OrderController {
 	}
 
 	// 상품 주문
-	//@Transactional
+	@Transactional
 	@RequestMapping(value = "/orderInsert", method = RequestMethod.POST)
 	public String orderPost(OrderVO orderVO, HttpSession session,
 			@RequestParam(name="checkRow", defaultValue = "", required = false) String checkRow, 
@@ -391,7 +392,6 @@ public class OrderController {
 		Date today = new Date();
 		String res = format.format(today);
 		
-		UUID uid = UUID.randomUUID();
 
 		// 주문에 담기(일반 주문, 상품)
 		ArrayList<OrderVO> prodOrderVOS = new ArrayList<OrderVO>();
@@ -403,10 +403,11 @@ public class OrderController {
 		ArrayList<OrderVO> pointUseVOS = new ArrayList<OrderVO>();
 		
 		for(int i=0; i<cartVOS.size(); i++) {
-			
 			OrderVO tempVO = new OrderVO();
 			tempVO.setMemNickname(orderVO.getMemNickname());
 			tempVO.setType(cartVOS.get(i).getType());
+			
+			UUID uid = UUID.randomUUID();
 			tempVO.setOrderCode(res + uid.toString().substring(0,5));
 			
 			tempVO.setAddressIdx(orderVO.getAddressIdx());
@@ -471,9 +472,6 @@ public class OrderController {
 			orderService.setMemberPointUpdate(totalUsedPoint, pointUseVOS.get(0).getMemNickname());
 		}
 		
-		System.out.println("prodOrderVOS : " +prodOrderVOS);
-		System.out.println("maOrderVOS : " +maOrderVOS);
-		
 		
 		// 5. 재고 변경
 		if(prodOrderVOS.size() != 0) {
@@ -485,7 +483,6 @@ public class OrderController {
 			
 			// 현 재고 0인 상품 고유번호
 			ArrayList<String> ProdStockUpdateIdx = orderService.getProdStockUpdateIdx();
-			System.out.println("ProdStockUpdateIdx : " +ProdStockUpdateIdx);
 			
 			if(ProdStockUpdateIdx.size() != 0) orderService.setProdStockUpdate(ProdStockUpdateIdx);  // 상품 품절로 상태 변경
 		}
@@ -502,7 +499,7 @@ public class OrderController {
 			session.setAttribute("sCartNum", cartNum - cartVOS.size());
 		}
 		
-		return "member/myPage/order";
+		return "redirect:/member/myPage/order";
 	}
 	
 	

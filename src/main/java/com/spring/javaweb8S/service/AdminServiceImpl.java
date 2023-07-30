@@ -32,13 +32,14 @@ import com.spring.javaweb8S.vo.OptionVO;
 import com.spring.javaweb8S.vo.OrderVO;
 import com.spring.javaweb8S.vo.PointUseVO;
 import com.spring.javaweb8S.vo.PointVO;
+import com.spring.javaweb8S.vo.ProdAskChartVO;
 import com.spring.javaweb8S.vo.ProductVO;
 import com.spring.javaweb8S.vo.ProverbVO;
 import com.spring.javaweb8S.vo.ReflectionVO;
 import com.spring.javaweb8S.vo.RefundVO;
 import com.spring.javaweb8S.vo.ReplyVO;
 import com.spring.javaweb8S.vo.ReportVO;
-import com.spring.javaweb8S.vo.StatisticVO안씀;
+import com.spring.javaweb8S.vo.SubChartVO;
 import com.spring.javaweb8S.vo.SubscribeVO;
 
 @Service
@@ -741,8 +742,32 @@ public class AdminServiceImpl implements AdminService {
 
 	// 판매량 차트용 
 	@Override
-	public int getChartStat(String type, int term) {
+	public ChartVO getChartStat(String type, int term) {
 		return adminDAO.getChartStat(type, term);
+	}
+
+	// 매거진 구독자 차트용 
+	@Override
+	public ArrayList<SubChartVO> getSubChartStat() {
+		return adminDAO.getSubChartStat();
+	}
+
+	// 뉴스레터 구독자 차트용 
+	@Override
+	public ArrayList<SubChartVO> getLetterChartStat() {
+		return adminDAO.getLetterChartStat();
+	}
+
+	// 컬렉션 상품 판매량 차트용
+	@Override
+	public ArrayList<ProdAskChartVO> getProdChartStat() {
+		return adminDAO.getProdChartStat();
+	}
+
+	// 문의 차트용
+	@Override
+	public ArrayList<ProdAskChartVO> getAskChartStat() {
+		return adminDAO.getAskChartStat();
 	}
 
 

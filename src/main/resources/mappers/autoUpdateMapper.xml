@@ -3,7 +3,8 @@
 <mapper namespace="com.spring.javaweb8S.dao.AutoUpdateDAO">
 	
 	<select id="getAutoOrderList" resultType="com.spring.javaweb8S.vo.OrderVO">
-		SELECT idx, orderStatus, manageDate FROM bo_order WHERE type != "정기 구독" AND orderStatus != "구매확정";
+		SELECT * FROM bo_order WHERE type != "정기 구독" AND orderStatus != "구매확정";
+<!-- 		SELECT idx, orderStatus, manageDate FROM bo_order WHERE type != "정기 구독" AND orderStatus != "구매확정"; -->
 	</select>
 	
 	<select id="getAutoSubList" resultType="com.spring.javaweb8S.vo.SubscribeVO">
@@ -92,7 +93,7 @@
 	
 	<update id="setSubDeliAutoUpdate">
 		UPDATE bo_delivery SET deliveryStatus = "배송완료", deliveryDate = default 
-		WHERE deliveryReason = "정기구독" AND deliveryStatus != "배송완료";
+		WHERE deliveryReason = "정기 구독" AND deliveryStatus != "배송완료";
 	</update>	
 	
 	<update id="setRefundAutoUpdate">

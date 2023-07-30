@@ -119,6 +119,7 @@
 				},
 				success : function() {
 					alert('주소가 등록되었습니다.');
+					opener.document.location.reload();
 					window.close();
 				},
 				error : function() {
@@ -129,6 +130,7 @@
 		
 		// 등록 취소
 		function addressInsertCancel() {
+			opener.document.location.reload();
 			window.close();
 		}
 	</script>

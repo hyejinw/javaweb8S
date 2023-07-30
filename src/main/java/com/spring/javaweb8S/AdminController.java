@@ -43,12 +43,14 @@ import com.spring.javaweb8S.vo.OptionVO;
 import com.spring.javaweb8S.vo.OrderVO;
 import com.spring.javaweb8S.vo.PointUseVO;
 import com.spring.javaweb8S.vo.PointVO;
+import com.spring.javaweb8S.vo.ProdAskChartVO;
 import com.spring.javaweb8S.vo.ProductVO;
 import com.spring.javaweb8S.vo.ProverbVO;
 import com.spring.javaweb8S.vo.ReflectionVO;
 import com.spring.javaweb8S.vo.RefundVO;
 import com.spring.javaweb8S.vo.ReplyVO;
 import com.spring.javaweb8S.vo.ReportVO;
+import com.spring.javaweb8S.vo.SubChartVO;
 import com.spring.javaweb8S.vo.SubscribeVO;
 
 @Controller
@@ -133,26 +135,68 @@ public class AdminController {
 		model.addAttribute("p4", p4);
 		
 		// 차트 통계
+		// 1) 최근 5개월 판매량 추이
 		ArrayList<ChartVO> chartVOS = new ArrayList<ChartVO>();
-		int colCnt = 0, maCnt = 0, subCnt = 0;
 		double average = 0;
-		for(int i=1; i<=5; i++) {
+		
+		for(int i=4; i>=0; i--) {
 			ChartVO chartVO = new ChartVO(); 
-			colCnt = adminService.getChartStat("컬렉션 상품", i);
-			maCnt = adminService.getChartStat("매거진", i);
-			subCnt = adminService.getChartStat("정기 구독", i);
-			average = (colCnt + maCnt + subCnt) / 3;
-			chartVO.setColCnt(colCnt);
-			chartVO.setMaCnt(maCnt);
-			chartVO.setSubCnt(subCnt);
-			chartVO.setAverage(String.format("%.0f", average));
+			ChartVO tempVO = new ChartVO(); 
+			tempVO = adminService.getChartStat("컬렉션 상품", i);
+			chartVO.setColCnt(tempVO.getCnt());
 			
+			tempVO = adminService.getChartStat("매거진", i);
+			chartVO.setMaCnt(tempVO.getCnt());
+
+			tempVO = adminService.getChartStat("정기 구독", i);
+			chartVO.setSubCnt(tempVO.getCnt());
+			chartVO.setDate(tempVO.getDate());
+			
+			average = (chartVO.getColCnt() + chartVO.getMaCnt() + chartVO.getSubCnt()) / 3;
+			
+			chartVO.setAverage(String.format("%.0f", average));
 			chartVOS.add(chartVO);
 		}
-		System.out.println("chartVOS : " + chartVOS);
+		model.addAttribute("chartVOS", chartVOS);
 		
+		// 2) 매거진 구독자 수 확인, 뉴스레터 구독자 수 확인
+		ArrayList<SubChartVO> subChartVOS = adminService.getSubChartStat();
 		
+		for(int i=0; i<subChartVOS.size(); i++) {
+			SubChartVO tempVO = new SubChartVO();
+			tempVO = subChartVOS.get(i);
+			tempVO.setYear(subChartVOS.get(i).getSubDate().split("-")[0]);
+			tempVO.setMonth(subChartVOS.get(i).getSubDate().split("-")[1]);
+			tempVO.setDay(subChartVOS.get(i).getSubDate().split("-")[2]);
+			
+			subChartVOS.set(i, tempVO);
+		}
+		
+		ArrayList<SubChartVO> letterVOS = adminService.getLetterChartStat();
+		for(int i=0; i<letterVOS.size(); i++) {
+			SubChartVO tempVO = new SubChartVO();
+			tempVO = subChartVOS.get(i);
+			tempVO.setLetterNum(letterVOS.get(i).getLetterNum());
+			subChartVOS.set(i, tempVO);
+		}
+		model.addAttribute("subChartVOS", subChartVOS);
+		
+		// 3) 판매량 높은 컬렉션 상품 순
+		ArrayList<ProdAskChartVO> prodChartVOS = adminService.getProdChartStat();
+		System.out.println("prodChartVOS : "+ prodChartVOS);
+		model.addAttribute("prodChartVOS", prodChartVOS);
+		
+		// 4) 문의 카테고리별 순
+		ArrayList<ProdAskChartVO> askVOS = adminService.getAskChartStat();
+		System.out.println("askVOS : "+ askVOS);
+		model.addAttribute("askVOS", askVOS);
 		return "admin/adminPage";
+	}
+	
+	@RequestMapping(value = "/test", method = RequestMethod.GET)
+	public String testGet() {
+		
+		return "admin/test";
 	}
 	
 	// 회원 기본 프로필 사진 관리 창

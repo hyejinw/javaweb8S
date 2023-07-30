@@ -121,7 +121,8 @@
 				},
 				success : function() {
 					alert('주소가 수정되었습니다.');
-					addressList();
+					opener.document.location.reload();
+					window.close();
 				},
 				error : function() {
 					alert("전송 오류! 재시도 부탁드립니다.")
@@ -129,22 +130,10 @@
 			});
 		}
 		
-		// 주소록 리스트 열기
-		function addressList() {
-			let url = "${ctp}/order/addressList";
-
-			let popupWidth = 800;
-			let popupHeight = 600;
-
-			let popupX = (window.screen.width / 2) - (popupWidth / 2);
-			let popupY= (window.screen.height / 2) - (popupHeight / 2);
-			
-			window.open(url, 'player', 'status=no, height=' + popupHeight  + ', width=' + popupWidth  + ', left='+ popupX + ', top='+ popupY);
-		}
-		
 		// 등록 취소
 		function addressUpdateCancel() {
-			addressList();
+			opener.document.location.reload();
+			window.close();
 		}
 	</script>
 </head>

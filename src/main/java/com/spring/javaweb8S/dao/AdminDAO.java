@@ -20,12 +20,14 @@ import com.spring.javaweb8S.vo.OptionVO;
 import com.spring.javaweb8S.vo.OrderVO;
 import com.spring.javaweb8S.vo.PointUseVO;
 import com.spring.javaweb8S.vo.PointVO;
+import com.spring.javaweb8S.vo.ProdAskChartVO;
 import com.spring.javaweb8S.vo.ProductVO;
 import com.spring.javaweb8S.vo.ProverbVO;
 import com.spring.javaweb8S.vo.ReflectionVO;
 import com.spring.javaweb8S.vo.RefundVO;
 import com.spring.javaweb8S.vo.ReplyVO;
 import com.spring.javaweb8S.vo.ReportVO;
+import com.spring.javaweb8S.vo.SubChartVO;
 import com.spring.javaweb8S.vo.SubscribeVO;
 
 public interface AdminDAO {
@@ -236,7 +238,15 @@ public interface AdminDAO {
 	
 	public void setReportReplyInsert(@Param("idx") String idx, @Param("reply") String reply);
 	
-	public int getChartStat(@Param("type") String type, @Param("term") int term);
+	public ChartVO getChartStat(@Param("type") String type, @Param("term") int term);
+	
+	public ArrayList<SubChartVO> getSubChartStat();
+	
+	public ArrayList<SubChartVO> getLetterChartStat();
+	
+	public ArrayList<ProdAskChartVO> getProdChartStat();
+	
+	public ArrayList<ProdAskChartVO> getAskChartStat();
 
 
 	

@@ -58,10 +58,11 @@
 	  <interceptor>
 	    <mapping path="/member/myPage"/>
 	    <mapping path="/member/myPage/**"/>
+	    <mapping path="/member/memberLogout"/>
 	    <mapping path="/order/**"/>
 	    <mapping path="/community/reflectionInsert"/>
 	    <mapping path="/community/reflectionUpdate"/>
-	    <beans:ref bean="memberInterceptor" />	<!-- 회원 페이지: 마이페이지, 장바구니, 주문, 주소록, 기록 작성/수정 -->
+	    <beans:ref bean="memberInterceptor" />	<!-- 회원 페이지: 마이페이지, 로그아웃, 장바구니, 주문, 주소록, 기록 작성/수정 -->
 	  </interceptor>
 	  
 	</interceptors>

@@ -180,6 +180,13 @@
 			
 			window.open(url, 'subscribeCancel', 'status=no, height=' + popupHeight  + ', width=' + popupWidth  + ', left='+ popupX + ', top='+ popupY);
 		}
+		
+		// 매거진 정기구독 문의창으로 이동
+		function move() {
+			if(confirm('매거진 정기구독 문의창으로 이동하시겠습니까?')) {
+				location.href = '${ctp}/admin/manage/askList?sort=정기구독';
+			}
+		}
 	</script>
 </head>
 <body class="w3-light-grey">
@@ -220,7 +227,7 @@
 		        <option <c:if test="${sort == '구독취소'}">selected</c:if> value="구독취소">구독취소</option>
 		        <option <c:if test="${sort == '구독종료'}">selected</c:if> value="구독종료">구독종료</option>
 		      </select>
-					<a class="btn btn-secondary mr-3 mb-4" href="${ctp}/">정기구독 문의</a>
+					<a class="btn btn-secondary mr-3 mb-4" href="javascript:move()">정기구독 문의</a>
 				</div>
 				<div class="col-5 text-right">
 					<form name="searchForm" class="text-right">

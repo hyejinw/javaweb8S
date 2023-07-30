@@ -130,7 +130,7 @@
 		function plus(price) {
 			let num = document.getElementById("num").value;
 			
-			if(num >= ${vo.maStock}) {
+			if(('${vo.maType}' == '매거진') && (num >= ${vo.maStock})) {
 				alert('현 상품의 재고 수량은 '+${vo.maStock}+'개 입니다.');
 				num = ${vo.maStock};
 			}
@@ -162,7 +162,7 @@
 		function numCheck(price) {
 			let num = document.getElementById("num").value;
 			
-			if(num >= ${vo.maStock}) {
+			if(('${vo.maType}' == '매거진') && (num >= ${vo.maStock})) {
 				alert('현 상품의 재고 수량은 '+${vo.maStock}+'개 입니다.');
 				num = ${vo.maStock};
 			}

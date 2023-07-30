@@ -161,7 +161,7 @@ public class CollectionController {
 		
 		// 옵션 정보 담기
 		ArrayList<CartVO> optionList = new ArrayList<CartVO>();
-
+		
 		for(int i=0; i<opName.length; i++) {
 			CartVO optionVOi = new CartVO();
 			optionVOi.setOpIdx(opIdx[i]);

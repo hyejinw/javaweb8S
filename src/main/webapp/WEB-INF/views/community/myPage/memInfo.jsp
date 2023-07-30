@@ -177,8 +177,8 @@
 			
 			if(defaultPhoto == "defaultPhotoNone") {
 				let fileSize = memPhotoUpdate.file.files[0].size;
-				if(ext != "JPG" && ext != "PNG") {
-					alert("업로드 가능한 사진 파일은 'jpg 또는 png' 입니다.");
+				if(ext != "JPG" && ext != "PNG" && ext != "JPEG") {
+					alert("업로드 가능한 사진 파일은 'jpg/jpeg 또는 png' 입니다.");
 					return false;
 				}
 				if(fileSize > maxSize) {

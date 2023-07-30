@@ -35,10 +35,11 @@ public class AutoUpdate {
 	// 주문(배송) 관련 자동 처리
 	// 매 시간마다 실시(정각)
 	@Transactional
-	@Scheduled(cron = "0 0 0/1 * * *")  
+//	@Scheduled(cron = "0 0 0/1 * * *")  
+	@Scheduled(cron = "0 0/10 * * * *")  // 임시! 10분마다!
 	public void orderAutoUpdate() throws ParseException {
 		
-		// 정기구독 제외!!!!!!!!, 구매확정 제외한 모든 주문의 idx, orderStatus, manageDate
+		// 정기구독 제외!!!!!!!!, 구매확정 제외한 모든 주문의 정보
 		ArrayList<OrderVO> vos = autoUpdateDAO.getAutoOrderList();
 		System.out.println("orderAutoUpdate의 vos : " + vos);
 		// level (결제완료) 후, 1(배송준비중:24시간 후), 2(배송중:12시간 후), 3(배송완료:120시간 후(5일 후)), 4(구매확정:168시간 후(7일 후))
@@ -69,25 +70,30 @@ public class AutoUpdate {
 		
 		for(int i=0; i<vos.size(); i++) {
 			format2 = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse(vos.get(i).getManageDate());
-			long diffHor = (format1.getTime() - format2.getTime()) / 3600000; //시 차이
+			long diffHor = (format1.getTime() - format2.getTime()) / 60000; //분 차이
+//			long diffHor = (format1.getTime() - format2.getTime()) / 3600000; //시 차이
 			System.out.println("format2  : " + format2);
 			System.out.println("diffHor  : " + diffHor);
 			
 			// 1단계) 배송준비중
 			if(vos.get(i).getOrderStatus().equals("결제완료")) {
-				if(diffHor >= 24) level1.add(vos.get(i).getIdx());
+				if(diffHor >= 10) level1.add(vos.get(i).getIdx());
+//				if(diffHor >= 24) level1.add(vos.get(i).getIdx());
 			}
 			// 2단계) 배송중
 			if(vos.get(i).getOrderStatus().equals("배송준비중")) {
-				if(diffHor >= 12) level2.add(vos.get(i).getIdx());
+				if(diffHor >= 10) level2.add(vos.get(i).getIdx());
+//				if(diffHor >= 12) level2.add(vos.get(i).getIdx());
 			}
 			// 3단계) 배송완료
 			if(vos.get(i).getOrderStatus().equals("배송중")) {
-				if(diffHor >= 120) level3.add(vos.get(i).getIdx());
+				if(diffHor >= 10) level3.add(vos.get(i).getIdx());
+//				if(diffHor >= 120) level3.add(vos.get(i).getIdx());
 			}
 			// 4단계) 구매확정
 			if(vos.get(i).getOrderStatus().equals("배송완료")) {
-				if(diffHor >= 168) {
+				if(diffHor >= 60) {
+//					if(diffHor >= 168) {
 					level4.add(vos.get(i).getIdx());
 					level4_1.add(vos.get(i));
 				}
@@ -140,58 +146,65 @@ public class AutoUpdate {
 		ArrayList<RefundVO> level5 = new ArrayList<RefundVO>();
 		ArrayList<RefundVO> level6 = new ArrayList<RefundVO>();
 		
-		for(int i=0; i<refundVOS.size(); i++) {
-			format2 = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse(refundVOS.get(i).getManageDate());
-			long diffHor = (format1.getTime() - format2.getTime()) / 3600000; //시 차이
-			System.out.println("format2  : " + format2);
-			System.out.println("diffHor  : " + diffHor);
+		if(refundVOS.size() != 0) {
 			
-			System.out.println();
-			System.out.println();
-			System.out.println();
-			System.out.println();
-			System.out.println();
-			System.out.println("refundVOS : " + refundVOS);
-			
-			// 1단계) 반품처리중
-			if(refundVOS.get(i).getRefundStatus().equals("반품신청")) {
-				if(diffHor >= 24) level5.add(refundVOS.get(i));
+			for(int i=0; i<refundVOS.size(); i++) {
+				format2 = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse(refundVOS.get(i).getManageDate());
+				long diffHor = (format1.getTime() - format2.getTime()) / 3600000; //시 차이
+				System.out.println("format2  : " + format2);
+				System.out.println("diffHor  : " + diffHor);
+				
+				System.out.println();
+				System.out.println();
+				System.out.println();
+				System.out.println();
+				System.out.println();
+				System.out.println("refundVOS : " + refundVOS);
+				
+				// 1단계) 반품처리중
+				if(refundVOS.get(i).getRefundStatus().equals("반품신청")) {
+					if(diffHor >= 10) level5.add(refundVOS.get(i));
+//				if(diffHor >= 24) level5.add(refundVOS.get(i));
+				}
+				// 2단계) 반품완료
+				if(refundVOS.get(i).getRefundStatus().equals("반품진행중")) {
+					if(diffHor >= 10) level6.add(refundVOS.get(i));
+//				if(diffHor >= 120) level6.add(refundVOS.get(i));
+				}
 			}
-			// 2단계) 반품완료
-			if(refundVOS.get(i).getRefundStatus().equals("반품진행중")) {
-				if(diffHor >= 120) level6.add(refundVOS.get(i));
+			
+			if(level5.size() != 0) {
+				autoUpdateDAO.setRefundAutoUpdate(level5, "반품진행중");
+				// 주문 테이블도 변경
+				autoUpdateDAO.setRefundOrderAutoUpdate(level5, "반품진행중");
 			}
-		}
-		
-		if(level5.size() != 0) {
-			autoUpdateDAO.setRefundAutoUpdate(level5, "반품진행중");
-			// 주문 테이블도 변경
-			autoUpdateDAO.setRefundOrderAutoUpdate(level5, "반품진행중");
-		}
-		if(level6.size() != 0) {
-			autoUpdateDAO.setRefundAutoUpdate(level6, "반품완료");
-			// 주문 테이블도 변경
-			autoUpdateDAO.setRefundOrderAutoUpdate(level6, "반품완료");
-			
-			ArrayList<RefundVO> tempVOS = new ArrayList<RefundVO>();
-			
-			// 포인트 반환
-			for(int i=0; i<level6.size(); i++) {
-				if(level6.get(i).getRefundPoint() != 0) tempVOS.add(level6.get(i));
+			if(level6.size() != 0) {
+				autoUpdateDAO.setRefundAutoUpdate(level6, "반품완료");
+				// 주문 테이블도 변경
+				autoUpdateDAO.setRefundOrderAutoUpdate(level6, "반품완료");
+				
+				ArrayList<RefundVO> tempVOS = new ArrayList<RefundVO>();
+				
+				// 포인트 반환
+				for(int i=0; i<level6.size(); i++) {
+					if(level6.get(i).getRefundPoint() != 0) tempVOS.add(level6.get(i));
+				}
+				autoUpdateDAO.setPointReturn(tempVOS);          // 포인트 테이블
+				autoUpdateDAO.setMemPointReturn(tempVOS);       // 회원 테이블
+				
+				// 상품 재고 변경 + 판매수량 변경
+				autoUpdateDAO.setStockUpdate(level6);
 			}
-			autoUpdateDAO.setPointReturn(tempVOS);          // 포인트 테이블
-			autoUpdateDAO.setMemPointReturn(tempVOS);       // 회원 테이블
-			
-			// 상품 재고 변경 + 판매수량 변경
-			autoUpdateDAO.setStockUpdate(level6);
 		}
 	}
 
 	// 정기구독 발송
 	// 매월 15일 자정 마다!
 	@Transactional
-	@Scheduled(cron = "0 0 0 15 * *")  
-	//@Scheduled(cron = "0 35 11 * * 2")  
+	//@Scheduled(cron = "0 0 0 15 * *")  
+	
+	// 얘는 임시다!! 아래도 같이 변경해야 함!
+	@Scheduled(cron = "0 0 0/1 * * *")  
 	public void subAutoUpdate() throws ParseException, MessagingException {
 
 		// 1) 매거진 발송 처리
@@ -277,9 +290,23 @@ public class AutoUpdate {
 
 	// 정기구독 발송완료
 	// 매월 20일 오전 11시마다! (+ 발송 후, 5일 뒤) 
-	@Scheduled(cron = "0 0 11 20 * *")  
+	//@Scheduled(cron = "0 0 11 20 * *")  
+	@Scheduled(cron = "0 0 0/1 * * *")
 	public void subDeliAutoUpdate() throws ParseException {
-		
+		System.out.println("오니?");
+		System.out.println("오니?");
+		System.out.println("오니?");
+		System.out.println("오니?");
+		System.out.println("오니?");
+		System.out.println("오니?");
+		System.out.println("오니?");
+		System.out.println("오니?");
+		System.out.println("오니?");
+		System.out.println("오니?");
+		System.out.println("오니?");
+		System.out.println("오니?");
+		System.out.println("오니?");
+		System.out.println("오니?");
 		// 매거진 정기 구독 발송완료 처리
 		autoUpdateDAO.setSubDeliAutoUpdate();
 	}

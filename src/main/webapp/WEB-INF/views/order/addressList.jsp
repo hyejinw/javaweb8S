@@ -110,10 +110,11 @@
 		}
 		
 		// 배송 주소 적용
-		function addressChoose(idx,defaultAddress,addressName,name,postcode,roadAddress,detailAddress,extraAddress,addressMsg) {
+		function addressChoose(idx,tel,defaultAddress,addressName,name,postcode,roadAddress,detailAddress,extraAddress,addressMsg) {
 			if(defaultAddress == 0) addressName = addressName + "  (기본 배송지)";
 			
 			opener.window.document.getElementById('addressIdx').value = idx;
+			opener.window.document.getElementById('tel').value = tel;
 			opener.window.document.getElementById('addressName').value = addressName;
 			opener.window.document.getElementById('name').value = name;
 			opener.window.document.getElementById('postcode').value = postcode;
@@ -181,7 +182,7 @@
 										<c:if test="${empty vo.addressMsg}"><i class="fa-solid fa-text-slash"></i></c:if>
 									</td>
 									<td>
-										<button class="btn btn-sm btn-warning mb-2" onclick="addressChoose('${vo.idx}','${vo.defaultAddress}','${vo.addressName}','${vo.name}','${vo.postcode}','${vo.roadAddress}','${vo.detailAddress}','${vo.extraAddress}','${vo.addressMsg}')">적용</button>
+										<button class="btn btn-sm btn-warning mb-2" onclick="addressChoose('${vo.idx}','${vo.tel}','${vo.defaultAddress}','${vo.addressName}','${vo.name}','${vo.postcode}','${vo.roadAddress}','${vo.detailAddress}','${vo.extraAddress}','${vo.addressMsg}')">적용</button>
 										<button class="btn btn-sm btn-outline-secondary" onclick="addressUpdate(${vo.idx})">수정</button>
 									</td>
 								</tr>

@@ -215,10 +215,10 @@
 				      <tr <c:if test="${vo.memNickname == sNickname}">style="background-color:#F5F5F5"</c:if>>
 				      	<td class="text-center">${curScrStartNo}</td>
 				      	<td class="text-center"><!-- 책 상세 페이지 -->
-				        	<c:if test="${!empty vo.thumbnail}"><img src="${vo.thumbnail}" style="width:50px"/></c:if>
+				        	<c:if test="${!empty vo.thumbnail}"><a href="javascript:bookPage(${vo.bookIdx})"><img src="${vo.thumbnail}" style="width:50px"/></a></c:if>
 			        	</td>
 				        <td colspan="2">
-		        			<div class="col-6" style="font-size:18px; font-weight:bold;">
+		        			<div style="font-size:18px; font-weight:bold;">
 				        		<a href="${ctp}/community/reflectionDetail?idx=${vo.idx}&bookIdx=${vo.bookIdx}">${vo.title}</a><!-- 상세페이지 -->
 									</div>
 								</td>

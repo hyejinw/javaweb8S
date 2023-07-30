@@ -229,9 +229,10 @@
 		}
 		
 		// 대댓글 창 열기
-		function reReply(idx, mentionedNickname, content, groupId, level) {
+		function reReply(idx, mentionedNickname, groupId, level) {
+			let content = document.getElementById('content'+idx).value;
 			let subStringContent = content.substring(0,20);
-			
+			if(content.length > 20) subStringContent = subStringContent + '...';
 			let str = '';
 			
 			str += '<div style="padding:0px 16px 0px 16px;">';
@@ -705,7 +706,10 @@
 			    	<c:if test="${vo.replyOpen == 1}">댓글(${replyNum})</c:if>
 			    	<c:if test="${vo.replyOpen != 1}">댓글(X)</c:if>
 			    </button>
-			    <c:if test="${vo.bookIdx != ''}"><button id="inspiredBtn" class="w3-bar-item w3-button tablink" onclick="openCity(event,'inspired')">문장 수집(${inspiredNum})</button></c:if>
+			    <c:if test="${vo.bookIdx != ''}"><button id="inspiredBtn" class="w3-bar-item w3-button tablink" onclick="openCity(event,'inspired')">
+			   		<c:if test="${empty inspiredNum}">문장 수집(0)</c:if>
+			   		<c:if test="${!empty inspiredNum}">문장 수집(${inspiredNum})</c:if>
+			    </button></c:if>
 			  </div>
 			  
 		  <c:if test="${vo.replyOpen != 1}">
@@ -775,7 +779,7 @@
 				  			</p>
 				  		</div>
 				  		<div class="col-2">
-				  			<a href="javascript:reReply('${replyVO.idx}','${replyVO.memNickname}','${replyVO.content}','${replyVO.groupId}','${replyVO.level}')">
+				  			<a href="javascript:reReply('${replyVO.idx}','${replyVO.memNickname}','${replyVO.groupId}','${replyVO.level}')">
 				  				<i class="fa-solid fa-comments" style="font-size:18px"></i>
 				  				<!-- <i class="fa-regular fa-comments" style="font-size:18px"></i> -->
 			  				</a>&nbsp;&nbsp;&nbsp;
@@ -809,7 +813,7 @@
 		  			<div class="row ml-4 mr-3 mt-2 mb-4">
 		  				<div class="col">
 				  			<div>
-				  				<a href="${ctp}/community/bookPage?idx=${vo.bookIdx}">
+				  				<a href="javascript:bookPage(${vo.bookIdx})">
 					  				<h3><b>${vo.bookTitle}</b><br/></h3>
 				  				</a>
 				  				<span>출판사 : ${vo.publisher}</span><br/>

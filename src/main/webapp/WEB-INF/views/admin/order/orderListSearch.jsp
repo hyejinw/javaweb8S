@@ -313,7 +313,6 @@
 			        <th>결제 가격</th>
 			        <th>사용 포인트</th>
 			        <th>주문 상태</th>
-			        <th>주문 처리</th>
 			        <th>주문 일자</th>
 			        <th>상세</th>
 			      </tr>
@@ -346,7 +345,6 @@
 				        		<span style="color:blue">${vo.orderStatus}&nbsp;&nbsp;<b>(${vo.refundNum}개)</b></span>
 				        	</c:if>
 								</td>
-				        <td><button class="btn btn-sm btn-dark">관리</button></td>
 				        <td>${fn:substring(vo.orderDate,0,10)}</td>
 								<td>
 									<c:if test="${vo.type != '정기 구독'}">
@@ -359,7 +357,7 @@
 				      </tr>
 				    	<c:set var="curScrStartNo" value="${curScrStartNo - 1}"/>
 			    	</c:forEach>
-			    	<tr><td colspan="10"></td></tr> 
+			    	<tr><td colspan="9"></td></tr> 
 			    </tbody>
 			  </table>
 		  </div>

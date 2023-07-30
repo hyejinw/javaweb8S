@@ -182,7 +182,6 @@
 			        <th>별명</th>
 			        <th>성명</th>
 			        <th>이메일</th>
-			        <th>전화번호</th>
 			        <th>총 방문 수</th>
 			        <th>가입일</th>
 			        <th>마지막 방문일</th>
@@ -192,7 +191,7 @@
 			    </thead>
 			    <tbody>
 			    	<c:if test="${empty vos}">
-			    		<tr><td colspan="11" style="padding:30px"><b>해당 회원이 없습니다.</b></td></tr> 
+			    		<tr><td colspan="10" style="padding:30px"><b>해당 회원이 없습니다.</b></td></tr> 
 			    	</c:if>
 			    	<c:if test="${!empty vos}">
 				    	<c:set var="curScrStartNo" value="${pageVO.curScrStartNo}" />
@@ -203,7 +202,6 @@
 					        <td>${vo.nickname}</td>
 					        <td>${vo.name}</td>
 					        <td>${vo.email}</td>
-					        <td>${vo.tel}</td>
 					        <td>${vo.totCnt}</td>
 					        <td>${fn:substring(vo.firstVisit,0,10)}</td>
 					        <td>${fn:substring(vo.lastVisit,0,10)}</td>
@@ -222,7 +220,7 @@
 					    	<c:set var="curScrStartNo" value="${curScrStartNo - 1}"/>
 				    	</c:forEach>
 			    	</c:if>
-			    	<tr><td colspan="11"></td></tr> 
+			    	<tr><td colspan="10"></td></tr> 
 			    </tbody>
 			  </table>
 		  </div>

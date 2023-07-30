@@ -22,17 +22,19 @@
 	</style>
 	<script>
 		'use strict';
+		let sw = 0;
 		
 		// 포인트 작성 시
 		function pointCheck(idx) {
 			let point = document.getElementById('point'+idx).value;
 			let tempTotalPrice = document.getElementById('tempTotalPrice'+idx).value;
 			let totalPoint = 0;
-			
 			if(parseInt(point) > parseInt(tempTotalPrice)) {
 				alert("사용 포인트는 적용 상품의 합계를 초과할 수 없습니다.");
+				sw = 1;
 				return false;
 			}
+			else sw = 0;
 			 
 			$("input[name=point]").each(function(index, item){
 				
@@ -61,18 +63,19 @@
 				alert('보유 포인트를 초과했습니다.');
 				return false;
 			}
-			
-			let cartIdx = '${checkRow}'.split(',');
-			
-			for(let i=0; i<cartIdx.length; i++) {
-				if(document.getElementById('point'+cartIdx[i]).value == "") document.getElementById('point'+cartIdx[i]).value = 0;
-				opener.window.document.getElementById('usedPoint'+cartIdx[i]).value = document.getElementById('point'+cartIdx[i]).value;
+			if(sw == 0) {
+				let cartIdx = '${checkRow}'.split(',');
+				
+				for(let i=0; i<cartIdx.length; i++) {
+					if(document.getElementById('point'+cartIdx[i]).value == "") document.getElementById('point'+cartIdx[i]).value = 0;
+					opener.window.document.getElementById('usedPoint'+cartIdx[i]).value = document.getElementById('point'+cartIdx[i]).value;
+				}
+				// 총 포인트
+				opener.window.document.getElementById('totalUsedPoint').value = totalPoint;
+				window.opener.usedPointChange();
+				
+				window.close();
 			}
-			// 총 포인트
-			opener.window.document.getElementById('totalUsedPoint').value = totalPoint;
-			window.opener.usedPointChange();
-			
-			window.close();
 		}
 	</script>
 </head>
@@ -83,7 +86,7 @@
 			<div style="font-size:20px; background-color:#eee; font-weight:bold; padding:10px">포인트 사용 유의사항</div>
 			<div style="padding:20px">
 				- 사용 포인트는 적용 상품의 합계를 초과할 수 없습니다.<br/>
-	      - 환불 시, 해당 상품에 적용된 포인트는 환불 처리 완료 후에 재적립 됩니다.<br/>
+	      - 반품 시, 해당 상품에 적용된 포인트는 반품 처리 완료 후에 재적립 됩니다.<br/>
 	      - 보유 포인트 (<b>${memberVO.point}</b>)<br/>
 			</div>
 			</div>

@@ -1024,8 +1024,45 @@
 		SELECT refIdx FROM bo_reply WHERE idx = #{originIdx};
 	</select>
 	
-	<select id="getChartStat" resultType="int">
-		SELECT COUNT(*) FROM bo_order WHERE orderDate BETWEEN date_add(now(), interval -#{term} month) AND date_add(now(), interval -(#{term} - 1) month) AND type = #{type};
+	<select id="getChartStat" resultType="com.spring.javaweb8S.vo.ChartVO">
+		SELECT SUM(num) AS cnt, DATE_FORMAT(date_add(now(), interval -#{term} month),'%m') AS date FROM bo_order 
+		WHERE DATE_FORMAT(orderDate,'%Y-%m') = DATE_FORMAT(date_add(now(), interval -#{term} month),'%Y-%m') AND type = #{type};
+	</select>
+	
+	<select id="getSubChartStat" resultType="com.spring.javaweb8S.vo.SubChartVO">
+		SELECT date_list.subDate, COALESCE(COUNT(s.subStartDate), 0) AS subNum
+		FROM (
+		    SELECT DATE_SUB(CURDATE(), INTERVAL 5 WEEK) + INTERVAL (a.a) WEEK AS subDate
+		    FROM (SELECT 0 AS a UNION ALL SELECT 1 UNION ALL SELECT 2 UNION ALL SELECT 3 UNION ALL SELECT 4 UNION ALL SELECT 5 UNION ALL SELECT 6 UNION ALL SELECT 7 UNION ALL SELECT 8 UNION ALL SELECT 9) AS a
+		
+		    WHERE DATE_SUB(CURDATE(), INTERVAL 5 WEEK) + INTERVAL (a.a) WEEK <![CDATA[<=]]> CURDATE()
+		) AS date_list
+		LEFT JOIN bo_subscribe s ON DATE(s.subStartDate) <![CDATA[<=]]> date_list.subDate AND s.subStatus = '구독중'
+		
+		GROUP BY date_list.subDate
+		ORDER BY date_list.subDate;
+	</select>
+	
+	<select id="getLetterChartStat" resultType="com.spring.javaweb8S.vo.SubChartVO">
+		SELECT date_list.subDate, COALESCE(COUNT(b.booksletterDate), 0) AS letterNum
+		FROM (
+		    SELECT DATE_SUB(CURDATE(), INTERVAL 5 WEEK) + INTERVAL (a.a) WEEK AS subDate
+		    FROM (SELECT 0 AS a UNION ALL SELECT 1 UNION ALL SELECT 2 UNION ALL SELECT 3 UNION ALL SELECT 4 UNION ALL SELECT 5 UNION ALL SELECT 6 UNION ALL SELECT 7 UNION ALL SELECT 8 UNION ALL SELECT 9) AS a
+		
+		    WHERE DATE_SUB(CURDATE(), INTERVAL 5 WEEK) + INTERVAL (a.a) WEEK <![CDATA[<=]]> CURDATE()
+		) AS date_list
+		LEFT JOIN bo_booksletter b ON DATE(b.booksletterDate) <![CDATA[<=]]> date_list.subDate AND b.booksletterStatus = '구독중'
+		
+		GROUP BY date_list.subDate
+		ORDER BY date_list.subDate;
+	</select>
+	
+	<select id="getProdChartStat" resultType="com.spring.javaweb8S.vo.ProdAskChartVO">
+		SELECT SUM(prodSaleQuantity) AS salesNum, prodName FROM bo_product GROUP BY prodName ORDER BY SUM(prodSaleQuantity) DESC LIMIT 5;
+	</select>
+	
+	<select id="getAskChartStat" resultType="com.spring.javaweb8S.vo.ProdAskChartVO">
+		SELECT COALESCE(COUNT(idx), 0) AS askNum, category FROM bo_ask GROUP BY category ORDER BY category DESC;
 	</select>
 	
 	<insert id="memberDefaultPhotoInsert">

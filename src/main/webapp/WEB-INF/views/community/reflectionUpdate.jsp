@@ -176,8 +176,8 @@
 		 				</div>
 		 			</div>
 					<div style="text-align:center">
-						<span class="text-center" style="font-size:30px; text-align:center; font-weight:500">
-							<input id="title" name="title" value="${vo.title}"/>
+						<span class="text-center">
+							<input id="title" name="title" value="${vo.title}" class="form-control" style="font-size:30px; text-align:center; font-weight:500"/>
 						</span><br/>
 						<span class="text-center" style="font-size:20px; text-align:center; color:grey">by. ${vo.memNickname}</span><br/>
 						<span class="text-center" style="font-size:14px; text-align:center;">${fn:substring(vo.refDate,0,19)}</span>

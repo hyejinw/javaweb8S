@@ -10,31 +10,126 @@
   <jsp:include page="/WEB-INF/views/include/bs4.jsp" />
   <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
   <script type="text/javascript">
-  google.charts.load('current', {'packages':['corechart']});
-  google.charts.setOnLoadCallback(drawVisualization);
+	  google.charts.load('current', {'packages':['corechart']});
+	  google.charts.setOnLoadCallback(drawVisualization);
+	
+	  function drawVisualization() {
+	    // Some raw data (not necessarily accurate)
+	    var data = google.visualization.arrayToDataTable([
+	      ['Month', '컬렉션 상품', '매거진', '매거진 정기구독', '평균'],
+	      <c:forEach var="chartVO" items="${chartVOS}">
+	      	[${chartVO.date}+'월', ${chartVO.colCnt}, ${chartVO.maCnt}, ${chartVO.subCnt}, ${chartVO.average}],
+	      </c:forEach>
+	    ]);
+	
+	    var options = {
+	      vAxis: {title: '판매량'},
+	      hAxis: {title: '기준 달'},
+	      seriesType: 'bars',
+	      series: {3: {type: 'line'}}
+	    };
+	
+	    var chart = new google.visualization.ComboChart(document.getElementById('chart_div'));
+	    chart.draw(data, options);
+	  }
+	  
+	  
+    google.charts.load('current', {'packages':['line']});
+    google.charts.setOnLoadCallback(drawChart2);
 
-  function drawVisualization() {
-    // Some raw data (not necessarily accurate)
-    var data = google.visualization.arrayToDataTable([
-      ['Month', '컬렉션 상품', '매거진', '매거진 정기구독', '평균'],
-      ['2004/05',  165,      938,         522,      614.6],
-      ['2005/06',  135,      1120,        599,      682],
-      ['2006/07',  157,      1167,        587,      623],
-      ['2007/08',  139,      1110,        615,      609.4],
-      ['2008/09',  136,      691,         629,      569.6]
-    ]);
+	  function drawChart2() {
+	
+			//날짜형식 변경하고 싶으시면 이 부분 수정하세요.
+      var chartDateformat 	= 'yyyy-MM-dd';
+      //라인차트의 라인 수
+      var chartLineCount    = 10;
+      //컨트롤러 바 차트의 라인 수
+      var controlLineCount	= 10;
+	    var data = new google.visualization.DataTable();
+	    data.addColumn('datetime', '날짜');
+	    data.addColumn('number', '매거진 정기구독 구독자');
+	    data.addColumn('number', '뉴스레터 구독자');
+	
+	    data.addRows([
+ 	    	<c:forEach var="subChartVO" items="${subChartVOS}">
+	    	 [new Date(${subChartVO.year}, ${subChartVO.month-1}, ${subChartVO.day}, '10'), ${subChartVO.subNum},  ${subChartVO.letterNum}],
+	      </c:forEach> 
+	    ]);
+	
+	    var options = {
+    		chart: {
+	        title: ' ',
+	        subtitle: ' '
+	      },
+	      width: 900,
+	      height: 500,
+	      hAxis			  : {format: chartDateformat, gridlines:{count:chartLineCount,units: {
+              years : {format: ['yyyy년']},
+              months: {format: ['MM월']},
+              days  : {format: ['dd일']},
+              hours : {format: ['HH시']}}
+            },textStyle: {fontSize:12}},
+	      axes: {
+	        x: {
+	          0: {side: 'top'}
+	        }
+	      }
+	    };
+	
+	    var chart = new google.charts.Line(document.getElementById('line_top_x'));
+	
+	    chart.draw(data, google.charts.Line.convertOptions(options));
+	  }
+	  
+	  
+	  google.charts.load("current", {packages:["corechart"]});
+    google.charts.setOnLoadCallback(drawChart3);
+    function drawChart3() {
+      var data = google.visualization.arrayToDataTable([
+        ['Task', 'Hours per Day'],
+        <c:forEach var="askVO" items="${askVOS}">
+		   	 ['${askVO.category}', ${askVO.askNum}],
+		    </c:forEach> 
+      ]);
 
-    var options = {
-      title : '판매량',
-      vAxis: {title: '판매량'},
-      hAxis: {title: '기간'},
-      seriesType: 'bars',
-      series: {3: {type: 'line'}}
-    };
+      var options = {
+        title: '',
+        is3D: true,
+      };
 
-    var chart = new google.visualization.ComboChart(document.getElementById('chart_div'));
-    chart.draw(data, options);
-  }
+      var chart = new google.visualization.PieChart(document.getElementById('piechart_3d'));
+      chart.draw(data, options);
+    }
+    
+    google.charts.load('current', {'packages':['bar']});
+    google.charts.setOnLoadCallback(drawChart4);
+
+    function drawChart4() {
+      var data = google.visualization.arrayToDataTable([
+        ['상품명', '총 판매량'],
+        <c:forEach var="prodChartVO" items="${prodChartVOS}">
+		   	 ['${prodChartVO.prodName}', ${prodChartVO.salesNum}],
+		    </c:forEach> 
+      ]);
+
+      var options = {
+        chart: {
+          title: ' ',
+          subtitle: ' ',
+        },
+        bars: 'horizontal' // Required for Material Bar Charts.
+      };
+
+      var chart = new google.charts.Bar(document.getElementById('barchart_material'));
+
+      chart.draw(data, google.charts.Bar.convertOptions(options));
+    }
+	  /* $(document).ready(function() {
+		  <c:forEach var="subChartVO" items="${subChartVOS}">
+		  	alert('전체 : '+${subChartVO.year}+ '-'+${subChartVO.month}+'-'+${subChartVO.day})
+		  	alert('${subChartVO.subNum} : '+${subChartVO.subNum})
+      </c:forEach>
+	  }) */
   </script>
 </head>
 <body class="w3-light-grey">
@@ -210,18 +305,18 @@
 	    </div>
 	    <div class="w3-quarter">
 	      <div class="w3-container w3-orange w3-text-white w3-padding-16">
-	  	    <div style="font-size:20px">3개의 책 (최근 1개월)</div>
+	  	    <div style="font-size:20px">게임 (미완)</div>
 	  	    <table class="table text-center mt-3" style="background-color:white">
 	        	<thead style="background-color:#eee">
 		        	<tr>
-			        	<td>최신 기록</td>
-			        	<td>최신 문장수집</td>
+			        	<td>게임 성공률</td>
+			        	<td>게임 지급 포인트</td>
 		        	</tr>
 	        	</thead>
 	        	<tbody>
 		        	<tr>
-		        		<td>${c1}</td>
-		        		<td>${c2}</td>
+		        		<td>-</td>
+		        		<td>-</td>
 		        	</tr>
 <%-- 		        	<tr>
 			        	<td><a href="${ctp}/admin/order/orderListSearch?sort=반품신청">최신 기록</a></td>
@@ -241,137 +336,39 @@
 	  
 	  
 	
-	  <div class="w3-panel">
-	    <div class="w3-row-padding" style="margin:50px">
-	      <h2>수평 막대 차트</h2>
-	 			<div id="chart_div" style="width: 1000px; height: 500px;"></div>
+	  <div class="w3-panel mt-5">
+	    <div class="w3-row-padding text-center" style="margin:50px">
+	      <h3 class="mb-3"><b>최근 5개월 판매량 추이</b></h3>
+	 			<div id="chart_div" style="width: 1000px; margin:0px auto; height: 500px;"></div>
 	    </div>
 	  </div>
 	  <hr>
 	  
-	  
-	  <div class="w3-container">
-	    <h5>General Stats</h5>
-	    <p>New Visitors</p>
-	    <div class="w3-grey">
-	      <div class="w3-container w3-center w3-padding w3-green" style="width:25%">+25%</div>
-	    </div>
-	
-	    <p>New Users</p>
-	    <div class="w3-grey">
-	      <div class="w3-container w3-center w3-padding w3-orange" style="width:50%">50%</div>
-	    </div>
-	
-	    <p>Bounce Rate</p>
-	    <div class="w3-grey">
-	      <div class="w3-container w3-center w3-padding w3-red" style="width:75%">75%</div>
+	  <div class="w3-panel mt-5" style="margin:0px auto;">
+	    <div class="w3-row-padding text-center" style="margin:50px;">
+	      <h3 class="mb-3"><b>구독자 추이</b></h3>
+	 			<div id="line_top_x" style="width: 1000px; margin:0px auto; height: 500px;"></div>
 	    </div>
 	  </div>
 	  <hr>
-	
-	  <div class="w3-container">
-	    <h5>Countries</h5>
-	    <table class="w3-table w3-striped w3-bordered w3-border w3-hoverable w3-white">
-	      <tr>
-	        <td>United States</td>
-	        <td>65%</td>
-	      </tr>
-	      <tr>
-	        <td>UK</td>
-	        <td>15.7%</td>
-	      </tr>
-	      <tr>
-	        <td>Russia</td>
-	        <td>5.6%</td>
-	      </tr>
-	      <tr>
-	        <td>Spain</td>
-	        <td>2.1%</td>
-	      </tr>
-	      <tr>
-	        <td>India</td>
-	        <td>1.9%</td>
-	      </tr>
-	      <tr>
-	        <td>France</td>
-	        <td>1.5%</td>
-	      </tr>
-	    </table><br>
-	    <button class="w3-button w3-dark-grey">More Countries  <i class="fa fa-arrow-right"></i></button>
-	  </div>
-	  <hr>
-	  <div class="w3-container">
-	    <h5>Recent Users</h5>
-	    <ul class="w3-ul w3-card-4 w3-white">
-	      <li class="w3-padding-16">
-	        <img src="/w3images/avatar2.png" class="w3-left w3-circle w3-margin-right" style="width:35px">
-	        <span class="w3-xlarge">Mike</span><br>
-	      </li>
-	      <li class="w3-padding-16">
-	        <img src="/w3images/avatar5.png" class="w3-left w3-circle w3-margin-right" style="width:35px">
-	        <span class="w3-xlarge">Jill</span><br>
-	      </li>
-	      <li class="w3-padding-16">
-	        <img src="/w3images/avatar6.png" class="w3-left w3-circle w3-margin-right" style="width:35px">
-	        <span class="w3-xlarge">Jane</span><br>
-	      </li>
-	    </ul>
-	  </div>
-	  <hr>
-	
-	  <div class="w3-container">
-	    <h5>Recent Comments</h5>
-	    <div class="w3-row">
-	      <div class="w3-col m2 text-center">
-	        <img class="w3-circle" src="/w3images/avatar3.png" style="width:96px;height:96px">
-	      </div>
-	      <div class="w3-col m10 w3-container">
-	        <h4>John <span class="w3-opacity w3-medium">Sep 29, 2014, 9:12 PM</span></h4>
-	        <p>Keep up the GREAT work! I am cheering for you!! Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p><br>
-	      </div>
-	    </div>
-	
-	    <div class="w3-row">
-	      <div class="w3-col m2 text-center">
-	        <img class="w3-circle" src="/w3images/avatar1.png" style="width:96px;height:96px">
-	      </div>
-	      <div class="w3-col m10 w3-container">
-	        <h4>Bo <span class="w3-opacity w3-medium">Sep 28, 2014, 10:15 PM</span></h4>
-	        <p>Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p><br>
-	      </div>
-	    </div>
-	  </div>
-	  <br>
-	  <div class="w3-container w3-dark-grey w3-padding-32">
-	    <div class="w3-row">
-	      <div class="w3-container w3-third">
-	        <h5 class="w3-bottombar w3-border-green">Demographic</h5>
-	        <p>Language</p>
-	        <p>Country</p>
-	        <p>City</p>
-	      </div>
-	      <div class="w3-container w3-third">
-	        <h5 class="w3-bottombar w3-border-red">System</h5>
-	        <p>Browser</p>
-	        <p>OS</p>
-	        <p>More</p>
-	      </div>
-	      <div class="w3-container w3-third">
-	        <h5 class="w3-bottombar w3-border-orange">Target</h5>
-	        <p>Users</p>
-	        <p>Active</p>
-	        <p>Geo</p>
-	        <p>Interests</p>
-	      </div>
-	    </div>
-	  </div>
-	
-	  <!-- Footer -->
-	  <footer class="w3-container w3-padding-16 w3-light-grey">
-	    <h4>FOOTER</h4>
-	    <p>Powered by <a href="https://www.w3schools.com/w3css/default.asp" target="_blank">w3.css</a></p>
-	  </footer>
-	  <!-- End page content -->
+		
+		<div class="row" style="margin-bottom:100px">
+			<div class="col">
+		    <div class="w3-row-padding text-center" style="margin:50px;">
+		      <h3 class="mb-3"><b>문의 카테고리</b></h3>
+		 			<div id="piechart_3d" style="width:100%; max-width:500px; margin:0px auto; height: 500px;"></div>
+			  </div>
+			
+			</div>
+			<div class="col">
+		    <div class="w3-row-padding text-center" style="margin:50px;">
+		      <h3 class="mb-3"><b>컬렉션 상품 판매율 TOP5</b></h3>
+		 			<div id="barchart_material" style="width:100%; max-width:500px; margin:0px auto; height: 500px;"></div>
+			  </div>
+			
+			</div>
+		</div>	  
+
 	</div>
 	
 

@@ -140,9 +140,8 @@
 			
 			let str = '<h4><b>『 '+title+' 』</b></h4>';
 			str += '<img src="'+thumbnail+'" /><br/><br/>';
-			
 			document.getElementById('bookInsertDemo').innerHTML = str;
-			document.getElementById('bookTitle').value = bookTitle;
+			document.getElementById('bookTitle').value = title;
     	document.getElementById('publisher').value = publisher;
 		}
 		
@@ -189,7 +188,7 @@
 		 			</div>
 					<div style="text-align:center">
 						<span class="text-center" style="font-size:30px; text-align:center; font-weight:500">
-							<input id="title" class="text-center" name="title" value="${title}" style="width:500px" placeholder="제목을 입력해주세요."/>
+							<input id="title" class="text-center" name="title" value="${title}" class="form-control" style="font-size:30px; text-align:center; font-weight:500" placeholder="제목을 입력해주세요."/>
 						</span><br/>
 						<span class="text-center" style="font-size:20px; text-align:center; color:grey">by. ${sNickname}</span><br/>
 						<input type="hidden" name="memNickname" id="memNickname" value="${sNickname}"/>
@@ -203,7 +202,7 @@
 								&nbsp;댓글 허용&nbsp;&nbsp;&nbsp;</label>
 							</span>&nbsp;&nbsp;&nbsp;&nbsp;
 							
-							<input type="hidden" name="bookTitle" id="bookTitle" value="없음"/>
+							<input type="hidden" name="bookTitle" id="bookTitle"/>
 							<input type="hidden" name="publisher" id="publisher"/>
 							<input type="hidden" name="refHostIp" value="${pageContext.request.remoteAddr}"/>
 

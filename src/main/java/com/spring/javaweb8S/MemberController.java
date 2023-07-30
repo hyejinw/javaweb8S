@@ -233,7 +233,6 @@ public class MemberController {
 		String nickname = (String) session.getAttribute("sNickname");
 		
 		session.invalidate();
-		
 		nickname = URLEncoder.encode(nickname, "UTF-8");
 		return "redirect:/message/memberLogout?nickname="+nickname;
 	}

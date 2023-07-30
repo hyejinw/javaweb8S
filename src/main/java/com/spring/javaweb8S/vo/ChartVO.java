@@ -8,5 +8,8 @@ public class ChartVO {
 	private int maCnt;
 	private int subCnt;
 	private String average;
+	private String date;
 	
+	// 임시용
+	private int cnt;
 }

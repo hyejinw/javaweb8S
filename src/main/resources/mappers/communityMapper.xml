@@ -455,12 +455,12 @@
 	</select>
 	
 	<insert id="setReflectionInsert" parameterType="com.spring.javaweb8S.vo.ReflectionVO">
- 		<if test='vo.bookTitle != null and vo.bookTitle=="없음"'>
+ 		<if test='vo.bookTitle == null'>
 			INSERT INTO bo_reflection(idx, memNickname, title, content, refSave, refView, replyOpen, refDate, refHostIp, refDel)
 			VALUES
 			(default, #{vo.memNickname}, #{vo.title}, #{vo.content}, default, default, #{vo.replyOpen}, default, #{vo.refHostIp}, default);
 		</if>
-		<if test='vo.bookTitle != null and vo.bookTitle!="없음"'>
+		<if test='vo.bookTitle != null'>
 			INSERT INTO bo_reflection	VALUES 
 			(default, (SELECT idx FROM bo_book WHERE title = #{vo.bookTitle} and publisher = #{vo.publisher} LIMIT 1),
 			 #{vo.memNickname}, #{vo.title}, #{vo.content}, default, default, #{vo.replyOpen}, default, #{vo.refHostIp}, default);

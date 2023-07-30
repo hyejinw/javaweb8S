@@ -134,12 +134,11 @@
   	// 옵션 선택
 		function optionSelect() {
 			let option = $('#option').val();
-			let opIdx = option.split(',')[0];
-			let opName = option.split(',')[1];
-			let opPrice = option.split(',')[2];
-			let opStock = option.split(',')[3];
+			let opIdx = option.split('/')[0];
+			let opName = option.split('/')[1];
+			let opPrice = option.split('/')[2];
+			let opStock = option.split('/')[3];
 			let commaOpPrice = numberWithCommas(opPrice);			// 콤마 붙인 옵션 가격
-			
 			
 			// 옵션박스의 내용을 한 개라도 선택한다면 선택된 옵션의 '옵션명/콤마붙인가격'을 화면에 출력
 			if($("#layer"+opIdx).length == 0 && option != "") {   // 옵션이 하나라도 있으면 처리
@@ -490,7 +489,7 @@
 					<select id="option" class="form-control" onchange="optionSelect()">
 						<option selected disabled>옵션 선택</option>
 						<c:forEach var="optionVO" items="${optionVOS}">
-							<option value="${optionVO.idx},${optionVO.opName},${optionVO.opPrice},${optionVO.opStock}" <c:if test="${optionVO.opStock == 0}">disabled</c:if>>
+							<option value="${optionVO.idx}/${optionVO.opName}/${optionVO.opPrice}/${optionVO.opStock}" <c:if test="${optionVO.opStock == 0}">disabled</c:if>>
 								${optionVO.opName}&nbsp;&nbsp;&nbsp;(<fmt:formatNumber value="${optionVO.opPrice}" pattern="#,###"/>원)
 								<c:if test="${(optionVO.opStock != 0) && (optionVO.opStock <= 20)}">&nbsp;&nbsp;&nbsp;[품절임박]</c:if>
 								<c:if test="${optionVO.opStock == 0}">&nbsp;&nbsp;&nbsp;[품절]</c:if>

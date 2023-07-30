@@ -433,7 +433,7 @@
 	</insert>
 	
 	<update id="setMemberPoint">
-		UPDATE bo_member SET point = point + #{point};
+		UPDATE bo_member SET point = point + #{point} WHERE mid = #{recoMid};
 	</update>
 	
 	<update id="setMemberLoginProcess">

@@ -142,7 +142,7 @@
 						      저장&nbsp;&nbsp;<i class="fa-regular fa-folder-closed"></i>
 						    </button>
 						    <div class="dropdown-menu">
-						      <a class="dropdown-item" href="javascript:bookSelection('인생책','${bookVO.title}','${bookVO.publisher}')">추천책</a>
+						      <a class="dropdown-item" href="javascript:bookSelection('인생책','${bookVO.title}','${bookVO.publisher}')">인생책</a>
 						      <a class="dropdown-item" href="javascript:bookSelection('추천책','${bookVO.title}','${bookVO.publisher}')">추천책</a>
 						      <a class="dropdown-item" href="javascript:bookSelection('읽은책','${bookVO.title}','${bookVO.publisher}')">읽은책</a>
 						      <a class="dropdown-item" href="javascript:bookSelection('관심책','${bookVO.title}','${bookVO.publisher}')">관심책</a>
