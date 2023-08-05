@@ -697,11 +697,15 @@
 	</select>
 	
 	<select id="getMemberPointList" resultType="com.spring.javaweb8S.vo.PointVO">
-		SELECT * FROM bo_point WHERE memNickname = #{nickname} ORDER BY idx DESC;
+		SELECT *, (SELECT type FROM bo_order WHERE idx = p.orderIdx) AS type  
+		FROM bo_point p
+		WHERE memNickname = #{nickname} ORDER BY idx DESC;
 	</select>
 	
 	<select id="getMemberPointUseList" resultType="com.spring.javaweb8S.vo.PointUseVO">
-		SELECT * FROM bo_pointUse WHERE memNickname = #{nickname} ORDER BY idx DESC;
+		SELECT *, (SELECT type FROM bo_order WHERE idx = p.orderIdx) AS type  
+		FROM bo_pointUse p
+		WHERE memNickname = #{nickname} ORDER BY idx DESC;
 	</select>
 	
 	<select id="getMemberBooksletterList" resultType="com.spring.javaweb8S.vo.BooksletterVO">
@@ -964,22 +968,41 @@
 	</select>
 	
 	<select id="getBooksletterSearchList" resultType="com.spring.javaweb8S.vo.BooksletterVO">
-		SELECT * FROM bo_booksletter WHERE 
-		<if test='sort != "" and sort != "전체"'>
-			<if test='sort.contains("구독")'>
-				booksletterStatus = #{sort} AND
-			</if>
-			<if test='!sort.contains("구독")'>
-				<if test='sort != "" and sort == "회원"'>
-					memNickname IS NOT NULL AND
+		<if test='searchString != ""'>
+			SELECT * FROM bo_booksletter WHERE 
+			<if test='sort != "" and sort != "전체"'>
+				<if test='sort.contains("구독")'>
+					booksletterStatus = #{sort} AND
 				</if>
-				<if test='sort != "" and sort != "회원"'>
-					memNickname IS NULL AND
+				<if test='!sort.contains("구독")'>
+					<if test='sort != "" and sort == "회원"'>
+						memNickname IS NOT NULL AND
+					</if>
+					<if test='sort != "" and sort != "회원"'>
+						memNickname IS NULL AND
+					</if>
 				</if>
 			</if>
+			${search} LIKE CONCAT('%',#{searchString},'%') 
+			ORDER BY booksletterStatus, idx DESC;
 		</if>
-		${search} LIKE CONCAT('%',#{searchString},'%') 
-		ORDER BY booksletterStatus, idx DESC;
+		<if test='searchString == ""'>
+			SELECT * FROM bo_booksletter 
+			<if test='sort != "" and sort != "전체"'>
+				<if test='sort.contains("구독")'>
+					WHERE booksletterStatus = #{sort}
+				</if>
+				<if test='!sort.contains("구독")'>
+					<if test='sort != "" and sort == "회원"'>
+						WHERE memNickname IS NOT NULL
+					</if>
+					<if test='sort != "" and sort != "회원"'>
+						WHERE memNickname IS NULL
+					</if>
+				</if>
+			</if>
+			ORDER BY booksletterStatus, idx DESC;
+		</if>
 	</select>
 	
 	<select id="getReportSearchList" resultType="com.spring.javaweb8S.vo.ReportVO">

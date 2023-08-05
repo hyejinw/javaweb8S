@@ -64,7 +64,6 @@
 						// 홀수, 짝수 문자열에 따라 *의 개수 구분
 						let starter = 0;
 						if((res.length / 2) % 2 != 0) {
-							console.log('here');
 							starter = 1;
 						}
 						
@@ -72,7 +71,6 @@
 						res = res.substring(0, starLength);
 						for(let i = starter; i < Math.floor(starLength); i++) {
 							res += '*';
-							console.log("1");
 						} 
 						
 						document.getElementById('demo').style.display = 'block';

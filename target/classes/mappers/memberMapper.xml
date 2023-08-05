@@ -165,7 +165,8 @@
 				o.orderStatus = #{sort} AND 
 			</if>
 			
-			d.${search} LIKE CONCAT('%',#{searchString},'%') and date_format(o.orderDate, '%Y-%m-%d') BETWEEN #{startDate} AND #{endDate}
+			d.${search} LIKE CONCAT('%',#{searchString},'%') AND 
+			date_format(o.orderDate, '%Y-%m-%d') BETWEEN #{startDate} AND #{endDate}
 			GROUP BY o.orderCode
 			ORDER BY o.idx DESC LIMIT #{startIndexNo},#{pageSize};
 		</if>

@@ -93,7 +93,7 @@
 	  </c:if>
 	  <c:if test="${!empty sNickname}">
 	  	<a href="javascript:memPage('${sNickname}')">
-		  	<img src="${ctp}/admin/member/${sMemPhoto}" class="rounded-circle" style="width:100%; max-width:80px">
+		  	<img src="${ctp}/resources/data/admin/member/${sMemPhoto}" class="rounded-circle" style="width:100%; max-width:80px">
 		  </a>
 	  </c:if>
 	  <br/><br/>

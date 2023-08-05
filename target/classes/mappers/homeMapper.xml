@@ -23,7 +23,7 @@
 	</select>
 	
 	<select id="getPwdUpdateDate" resultType="String">
-		SELECT pwdUpdateDate FROM bo_member WHERE nickname = '이상' AND <![CDATA[pwdUpdateDate < date_add(now(), interval -6 month)]]>;
+		SELECT pwdUpdateDate FROM bo_member WHERE nickname = #{nickname} AND <![CDATA[pwdUpdateDate < date_add(now(), interval -6 month)]]>;
 	</select>
 	
 </mapper>

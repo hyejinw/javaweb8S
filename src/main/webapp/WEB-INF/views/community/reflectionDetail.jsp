@@ -754,7 +754,7 @@
 				  	<div class="row mt-4" <c:if test="${replyVO.level != 0}">style="margin:0px 0px 0px 50px"</c:if>> 
 				  		<div class="col-2 text-right">
 					  		<a href="javascript:memPage('${replyVO.memNickname}')">
-					  			<img src="${ctp}/admin/member/${replyVO.memPhoto}" class="rounded-circle" style="width:30px"/>
+					  			<img src="${ctp}/resources/data/admin/member/${replyVO.memPhoto}" class="rounded-circle" style="width:30px"/>
 				  			</a>
 				  		</div>
 				  		<div class="col-8">

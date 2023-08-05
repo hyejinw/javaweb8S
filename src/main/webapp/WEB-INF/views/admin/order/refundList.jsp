@@ -217,7 +217,7 @@
 					        	${vo.memNickname}
 					        	<button id="memInfo${vo.idx}" style="border:0px; background-color:transparent;" onclick="memInfo('${vo.memNickname}')"><i class="fa-solid fa-circle-info" title="자세히" style="font-size:18px; color:grey"></i></button>
 					        </td>
-					        <td>${vo.prodName} (${vo.refundNum})</td>
+					        <td>${vo.prodName} (${vo.refundNum}개)</td>
 					        <td>
 					        	<c:if test="${vo.refundReason == '상품하자'}">
 						       	 	<span style="color:red">${vo.refundReason}</span>

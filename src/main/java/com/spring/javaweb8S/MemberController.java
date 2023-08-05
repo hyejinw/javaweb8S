@@ -825,22 +825,5 @@ public class MemberController {
 		return "member/myPage/ask";
 	}
 	
-	// 임시 비밀번호 받고 확인한 다음에 삭제하자
-	// 이게 뭐지?????????
-//	비밀번호 변경  
-//	@RequestMapping(value = "/memberPwdUpdate", method = RequestMethod.GET)
-//	public String memberPwdUpdateGet(HttpSession session, String pwdFlag) {
-//		if(!pwdFlag.equals("")) session.setAttribute("sPwdFlag", "pwdFlag");
-//		return "member/memberPwdUpdate";
-//	}
-//	
-//	@RequestMapping(value = "/memberPwdUpdate", method = RequestMethod.POST)
-//	public String memberPwdUpdatePost(String mid, String pwd, HttpSession session) {
-//		
-//		memberService.setMemberPwdUpdate(mid, passwordEncoder.encode(pwd));
-//		if(session.getAttribute("sTempPwd") != null) session.removeAttribute("sTempPwd");
-//		
-//		return "redirect:/message/memberPwdUpdateOk";
-//	}
 	
 }

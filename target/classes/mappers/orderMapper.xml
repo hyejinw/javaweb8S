@@ -47,7 +47,7 @@
 		FROM bo_cart cart 
 		
 		LEFT JOIN bo_save s 
-			ON cart.maIdx = s.maIdx 
+			ON cart.memNickname = s.memNickname AND cart.maIdx = s.maIdx
 			
 		WHERE cart.memNickname = #{memNickname} AND cart.type = "정기 구독";
 	</select>

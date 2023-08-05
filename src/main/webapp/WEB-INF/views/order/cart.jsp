@@ -351,10 +351,6 @@
 				  prodName = document.getElementById("prodName" + stockCheckIdx).value;
 				  opName = document.getElementById("opName" + stockCheckIdx).value;
 				  stock = document.getElementById("stock" + stockCheckIdx).value;
-					alert('num : ' + num);
-					alert('stock : ' + stock);
-					alert('stockCheckIdx : ' + stockCheckIdx);
-					alert('num > stock : ' +parseInt(num) > parseInt(stock));
 				  
 				  if(parseInt(num) > parseInt(stock)) {
 					  alert( prodName+'\n[옵션]'+opName+' 의 재고 수량은 '+stock+'개 입니다.');

@@ -157,9 +157,6 @@
 				<span style="margin:0px auto; font-size:18px; font-style:italic;"><i class="fa-solid fa-quote-left"></i>&nbsp;&nbsp;&nbsp;책 세계 함께 다다르기(differeach)&nbsp;&nbsp;&nbsp;<i class="fa-solid fa-quote-right"></i><br/>
 					<span class="w3-text w3-tag"  style="margin:0px auto; font-size:14px; font-style:italic;"><b>우리는 다 다르고, 그래서 서로에게 다다를 수 있어요.</b></span>
 				</span>
-<!-- 				<span class="w3-tooltip" style="margin:0px auto; font-size:18px; font-style:italic;"><i class="fa-solid fa-quote-left"></i>&nbsp;&nbsp;&nbsp;책 세계 쉽게 다다르기(differeach)&nbsp;&nbsp;&nbsp;<i class="fa-solid fa-quote-right"></i><br/>
-					<span class="w3-text w3-tag"  style="margin:0px auto; font-size:14px; font-style:italic;"><b>우리는 다 다르고, 서로에게 다다를 수 있어요.</b></span>
-				</span> -->
 			</div>
 		
 		
@@ -198,7 +195,7 @@
 						<div class="text-center" style=" margin-top:10px">
 							<span style="font-size:20px; font-weight:bold">${vo.colName}</span>
 							<span style="font-size:17px;"><br/>${fn:substring(vo.colDate,0,10)}</span>
-							<br/><span class="badge badge-pill badge-dark" style="font-size:18px; margin-top:10px; width:60px"><i class="fa-solid fa-gift"></i>&nbsp;&nbsp;&nbsp;${vo.colProdNum}</span>
+							<br/><span class="badge badge-pill badge-dark" style="font-size:18px; margin-top:10px; width:70px"><i class="fa-solid fa-gift"></i>&nbsp;&nbsp;&nbsp;${vo.colProdNum}</span>
 						</div>
 					</a>
 				</div>

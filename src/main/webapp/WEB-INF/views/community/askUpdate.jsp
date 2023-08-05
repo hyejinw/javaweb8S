@@ -174,7 +174,7 @@
 		 			</div>
 					<div style="text-align:center">
 						<span class="text-center" style="font-size:30px; text-align:center; font-weight:500">
-							<input id="askTitle" class="text-center" name="askTitle" style="width:500px" placeholder="제목을 입력해주세요." value="${vo.askTitle}"/>
+							<input id="askTitle" name="askTitle"  class="form-control" style="font-size:30px; text-align:center; font-weight:500" placeholder="제목을 입력해주세요." value="${vo.askTitle}"/>
 						</span><br/>
 						<c:if test="${!empty sNickname}">
 							<span class="text-center" style="font-size:20px; text-align:center; color:grey">by. ${sNickname}</span><br/>

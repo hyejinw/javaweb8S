@@ -120,11 +120,11 @@
 		<foreach collection="level" item="level">
 			<if test="level.maIdx != null">
 				UPDATE bo_magazine SET maStock = maStock + #{level.refundNum}, 
-				maSaleQuantity = maSaleQuantity - #{level.refundNum} 
+				maSaleQuantity = maSaleQuantity - #{level.refundNum}
 				WHERE idx = #{level.maIdx};
 			</if>
 			<if test="level.opIdx != null">
-				UPDATE bo_product SET prodSaleQuantity = prodSaleQuantity - #{level.refundNum} 
+				UPDATE bo_product SET prodSaleQuantity = prodSaleQuantity - #{level.refundNum}, prodStatus = "판매" 
 				WHERE idx = (SELECT prodIdx FROM bo_option WHERE idx = #{level.opIdx});
 				
 				UPDATE bo_option SET opStock = opStock + #{level.refundNum} 

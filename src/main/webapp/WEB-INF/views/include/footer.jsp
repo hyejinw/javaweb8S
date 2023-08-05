@@ -16,11 +16,6 @@
 			location.href = "${ctp}/community/communityMain";
 		}	
 	}
-	
-	// 게임, 준비 중
-	function preparing() {
-		alert('서비스 준비 중입니다.');
-	}
 </script>
 <!-- Footer -->
 <footer class="w3-container" style="background-color:#282828; color:#DDDDDD">
@@ -35,7 +30,7 @@
 			<a href="javascript:move()"><span style="font-size:20px; font-weight:bold">3개의 책</span></a>
 		</div>
 		<div class="col text-center">
-			<a href="javascript:preparing()"><span style="font-size:20px; font-weight:bold">게임</span></a>
+			<a href="${ctp}/game/main"><span style="font-size:20px; font-weight:bold">게임</span></a>
 		</div>
 	</div>
 	<hr/>

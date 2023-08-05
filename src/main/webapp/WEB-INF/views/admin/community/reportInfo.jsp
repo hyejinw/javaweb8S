@@ -40,7 +40,7 @@
 				type : "post",
 				url : "${ctp}/admin/community/reportReplyInsert",
 				data : {
-					idx : ${vo.idx},
+					idx : '${vo.idx}',
 					reply : reply
 				},
 			 	success : function() {

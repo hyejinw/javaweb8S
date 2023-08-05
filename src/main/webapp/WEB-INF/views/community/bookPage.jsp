@@ -188,7 +188,7 @@
 				<div class="infoBox" style="margin:30px 0px">
 		  		<div>
 				  	<c:forEach var="bookSave1VO" items="${bookSave1VOS}" varStatus="st">
-				  		<a href="javascript:memPage('${bookSave1VO.memNickname}')"><span><img src="${ctp}/admin/member/${bookSave1VO.memPhoto}"title="${bookSave1VO.memNickname}" style="width:80px"/></span></a>
+				  		<a href="javascript:memPage('${bookSave1VO.memNickname}')"><span><img src="${ctp}/resources/data/admin/member/${bookSave1VO.memPhoto}"title="${bookSave1VO.memNickname}" class="rounded-circle" style="width:80px"/></span></a>
 				  	</c:forEach>
 		  		</div>
 			  </div>
@@ -205,7 +205,7 @@
 				<div class="infoBox" style="margin:30px 0px">
 		  		<div>
 				  	<c:forEach var="bookSave2VO" items="${bookSave2VOS}" varStatus="st">
-				  		<a href="javascript:memPage('${bookSave2VO.memNickname}')"><span><img src="${ctp}/admin/member/${bookSave2VO.memPhoto}" title="${bookSave2VO.memNickname}" style="width:80px"/></span></a>
+				  		<a href="javascript:memPage('${bookSave2VO.memNickname}')"><span><img src="${ctp}/resources/data/admin/member/${bookSave2VO.memPhoto}" title="${bookSave2VO.memNickname}" class="rounded-circle" style="width:80px"/></span></a>
 				  	</c:forEach>
 		  		</div>
 			  </div>
@@ -222,7 +222,7 @@
 				<div class="infoBox" style="margin:30px 0px">
 		  		<div>
 				  	<c:forEach var="bookSave3VO" items="${bookSave3VOS}" varStatus="st">
-				  		<a href="javascript:memPage('${bookSave3VO.memNickname}')"><span><img src="${ctp}/admin/member/${bookSave3VO.memPhoto}" title="${bookSave3VO.memNickname}" style="width:80px"/></span></a>
+				  		<a href="javascript:memPage('${bookSave3VO.memNickname}')"><span><img src="${ctp}/resources/data/admin/member/${bookSave3VO.memPhoto}" title="${bookSave3VO.memNickname}" class="rounded-circle" style="width:80px"/></span></a>
 				  	</c:forEach>
 		  		</div>
 			  </div>
@@ -239,7 +239,7 @@
 				<div class="infoBox" style="margin:30px 0px">
 		  		<div>
 				  	<c:forEach var="bookSave4VO" items="${bookSave4VOS}" varStatus="st">
-				  		<a href="javascript:memPage('${bookSave4VO.memNickname}')"><span><img src="${ctp}/admin/member/${bookSave4VO.memPhoto}" title="${bookSave4VO.memNickname}" style="width:80px"/></span></a>
+				  		<a href="javascript:memPage('${bookSave4VO.memNickname}')"><span><img src="${ctp}/resources/data/admin/member/${bookSave4VO.memPhoto}" title="${bookSave4VO.memNickname}" class="rounded-circle" style="width:80px"/></span></a>
 				  	</c:forEach>
 		  		</div>
 			  </div>
@@ -282,7 +282,7 @@
 								</td>
 								<td class="text-center">
 			        		<a href="javascript:memPage('${vo.memNickname}')">  <!-- 회원 페이지 -->
-				        		<img src="${ctp}/admin/member/${vo.memPhoto}" class="rounded-circle" style="width:35px"/>&nbsp;&nbsp;&nbsp;
+				        		<img src="${ctp}/resources/data/admin/member/${vo.memPhoto}" class="rounded-circle" style="width:35px"/>&nbsp;&nbsp;&nbsp;
 				        		${vo.memNickname}
 			        		</a>
 								</td>	        	

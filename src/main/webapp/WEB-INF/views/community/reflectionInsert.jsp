@@ -187,8 +187,8 @@
 		 				</div>
 		 			</div>
 					<div style="text-align:center">
-						<span class="text-center" style="font-size:30px; text-align:center; font-weight:500">
-							<input id="title" class="text-center" name="title" value="${title}" class="form-control" style="font-size:30px; text-align:center; font-weight:500" placeholder="제목을 입력해주세요."/>
+						<span class="text-center">
+							<input id="title" name="title" value="${title}" class="form-control" style="font-size:30px; text-align:center; font-weight:500" placeholder="제목을 입력해주세요."/>
 						</span><br/>
 						<span class="text-center" style="font-size:20px; text-align:center; color:grey">by. ${sNickname}</span><br/>
 						<input type="hidden" name="memNickname" id="memNickname" value="${sNickname}"/>

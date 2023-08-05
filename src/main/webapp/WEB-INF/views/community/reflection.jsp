@@ -239,7 +239,7 @@
 								</td>		
 								<td class="text-center">
 			        		<a href="javascript:memPage('${vo.memNickname}')">  <!-- 회원 페이지 -->
-				        		<img src="${ctp}/admin/member/${vo.memPhoto}" class="rounded-circle" style="width:35px"/>&nbsp;&nbsp;&nbsp;
+				        		<img src="${ctp}/resources/data/admin/member/${vo.memPhoto}" class="rounded-circle" style="width:35px"/>&nbsp;&nbsp;&nbsp;
 				        		${vo.memNickname}
 			        		</a>
 								</td>	        	

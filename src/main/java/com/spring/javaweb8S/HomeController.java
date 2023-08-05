@@ -111,8 +111,6 @@ public class HomeController {
 			randomAlphabet.add(String.valueOf(ch));
 		}
 		
-		// 숫자도 넣어주면 좋겠다.
-		
 		// 받침없는 한글
 		String[] temp = new String[] {"가", "나", "다", "라", "마", "바", "사", "아", "자", "차", "카", "타", "파", "하",
 				"갸", "냐", "댜", "랴", "먀", "뱌", "샤", "야", "쟈", "챠", "캬", "탸", "퍄", "햐",

@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.spring.javaweb8S.dao.GameDAO">
+	
+	<select id="getTodayDiceLuckyNum" resultType="String">
+		SELECT luckyNum FROM bo_todayDice WHERE DATE(todayDiceDate) = DATE(NOW());
+	</select>
+	
+	<select id="getGamePoint" resultType="com.spring.javaweb8S.vo.PointVO">
+		SELECT * FROM bo_point WHERE memNickname = #{nickname} AND pointReason = #{pointReason};
+	</select>
+	
+	<select id="getDiceList" resultType="com.spring.javaweb8S.vo.DiceVO">
+		SELECT * FROM bo_dice WHERE memNickname = #{nickname} ORDER BY idx DESC;
+	</select>
+	
+	<select id="getDiceTodayRes" resultType="com.spring.javaweb8S.vo.DiceVO">
+		SELECT * FROM bo_dice WHERE memNickname = #{nickname} AND DATE(diceDate) = DATE(NOW());
+	</select>
+	
+	
+	<insert id="setTodayDiceLuckyNum">
+		INSERT INTO bo_todayDice VALUES 
+		(default, (SELECT FLOOR(2 + RAND() * 11) FROM DUAL), default);
+	</insert>
+	
+	<insert id="setDiceTodayRes">
+		INSERT INTO bo_dice VALUES 
+		(default, #{nickname}, default, 0, default, default);
+	</insert>
+	
+	<insert id="setSuccessPointInsert">
+		INSERT INTO bo_point (idx, memNickname, point, pointReason, pointStartDate) 
+		VALUES
+		(default, #{memNickname}, #{point}, #{pointReason}, default);
+	</insert>
+	
+	<update id="setDiceFailUpdate">
+		UPDATE bo_dice SET trial = trial - 1
+		WHERE memNickname = #{memNickname} AND DATE(diceDate) = DATE(NOW());
+	</update>
+	
+	<update id="setDiceSuccessUpdate">
+		UPDATE bo_dice SET trial = trial - 1, totPoint = totPoint + 500, success = success + 1 
+		WHERE memNickname = #{memNickname} AND DATE(diceDate) = DATE(NOW());
+	</update>
+	
+	<update id="setMemberPointUpdate">
+		UPDATE bo_member SET point = point + #{point} 
+		WHERE nickname = #{memNickname};
+	</update>
+	
+</mapper>

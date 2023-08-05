@@ -183,12 +183,10 @@ public class AdminController {
 		
 		// 3) 판매량 높은 컬렉션 상품 순
 		ArrayList<ProdAskChartVO> prodChartVOS = adminService.getProdChartStat();
-		System.out.println("prodChartVOS : "+ prodChartVOS);
 		model.addAttribute("prodChartVOS", prodChartVOS);
 		
 		// 4) 문의 카테고리별 순
 		ArrayList<ProdAskChartVO> askVOS = adminService.getAskChartStat();
-		System.out.println("askVOS : "+ askVOS);
 		model.addAttribute("askVOS", askVOS);
 		return "admin/adminPage";
 	}
@@ -693,8 +691,6 @@ public class AdminController {
 		
 		PageVO pageVO = pageProcess.totRecCnt(pag, pageSize, "adminColProduct", "", "");
 		ArrayList<ProductVO> vos =	adminService.getColProductList(pageVO.getStartIndexNo(), pageSize);
-		System.out.println("pageVO : " + pageVO);
-		System.out.println("vos : " + vos);
 		model.addAttribute("vos", vos);
 		model.addAttribute("pageVO", pageVO);
 		
@@ -989,6 +985,7 @@ public class AdminController {
 	// 회원 상세정보창(팝업)
 	@RequestMapping(value = "/member/memInfo", method = RequestMethod.GET)
 	public String memInfoGet(Model model, String nickname) {
+		
 		
 		// 1) 회원정보
 		MemberVO memberVO = adminService.getMemberInfo(nickname);

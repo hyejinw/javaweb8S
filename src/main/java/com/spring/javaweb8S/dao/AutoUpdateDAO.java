@@ -82,4 +82,5 @@ public interface AutoUpdateDAO {
 	// 탈퇴 1개월 경과 회원 영구탈퇴
 	public void setMemberPermanentDelete();
 
+
 }

@@ -409,7 +409,7 @@
 	 		<div style="background-color:white; padding:20px; margin-bottom:30px">
 				<div class="row">
 					<div class="col ml-5">
-						<img src="${ctp}/admin/member/${memberVO.memPhoto}" class="rounded-circle" style="width:100%; max-width:80px">
+						<img src="${ctp}/resources/data/admin/member/${memberVO.memPhoto}" class="rounded-circle" style="width:100%; max-width:80px">
 						&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 						<span class="text-center" style="font-size:20px; text-align:center; font-weight:bold">${memberVO.nickname}</span>
 						&nbsp;&nbsp;&nbsp;
@@ -466,7 +466,7 @@
 						</th>
 		        <td>
 			        <a href="#" data-toggle="modal" data-target="#memPhotoEditModal">
-			        	<img src="${ctp}/admin/member/${memberVO.memPhoto}" class="rounded-circle" style="width:100%; max-width:80px"/>
+			        	<img src="${ctp}/resources/data/admin/member/${memberVO.memPhoto}" class="rounded-circle" style="width:100%; max-width:80px"/>
 			        </a>
 		       </td>
 		      </tr>
@@ -579,11 +579,11 @@
   								<label for="defaultPhotoNone"><span style="padding:20px; border-radius:50%; background-color:#ddd">직접 선택</span></label>
 				  				<input type="radio" id="defaultPhotoNone" name="defaultPhoto" value="defaultPhotoNone" checked/>
 				  				&nbsp;&nbsp;&nbsp;&nbsp;
-  								<label for="defaultImage"><img src="${ctp}/admin/member/defaultImage.jpg" style="width:80px"/></label>
+  								<label for="defaultImage"><img src="${ctp}/resources/data/admin/member/defaultImage.jpg" style="width:80px"/></label>
 				  				<input type="radio" id="defaultImage" name="defaultPhoto" value="defaultImage.jpg"/>
 				  				&nbsp;&nbsp;&nbsp;&nbsp;
 				  				<c:forEach var="i" begin="1" end="6">
-	  								<label for="defaultPhoto${i}"><img src="${ctp}/admin/member/defaultPhoto${i}.png" style="width:80px"/></label>
+	  								<label for="defaultPhoto${i}"><img src="${ctp}/resources/data/admin/member/defaultPhoto${i}.png" style="width:80px"/></label>
 					  				<input type="radio" id="defaultPhoto${i}" name="defaultPhoto" value="defaultPhoto${i}.png" />
 					  				&nbsp;&nbsp;&nbsp;&nbsp;
 				  				</c:forEach>

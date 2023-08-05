@@ -210,7 +210,7 @@
 		}
 		
 		// 3개의 책 문의창으로 이동
-		function move() {
+		function askMove() {
 			if(confirm('3개의 책 문의창으로 이동하시겠습니까?')) location.href = "${ctp}/community/ask";
 		}
 		
@@ -283,7 +283,7 @@
 			 		<div style="background-color:white; padding:20px; margin-bottom:30px">
 						<div style="text-align:center">
 							<span class="text-center" style="font-size:30px; text-align:center; font-weight:500">
-								<input id="askTitle" class="text-center" name="askTitle" style="width:500px" placeholder="제목을 입력해주세요."/>
+								<input id="askTitle" name="askTitle"  class="form-control" style="font-size:30px; text-align:center; font-weight:500" placeholder="제목을 입력해주세요."/>
 							</span><br/>
 							<c:if test="${!empty sNickname}">
 								<span class="text-center" style="font-size:20px; text-align:center; color:grey">by. ${sNickname}</span><br/>
@@ -316,7 +316,7 @@
 						<hr style="border:0px; height:1.0px; background:#41644A; margin:10px 0px"/>
 			 		</div>
 					<div style="padding:0px 0px 50px 50px">
-						<span><i class="fa-solid fa-circle-info" style="font-size:20px"></i>&nbsp;&nbsp;&nbsp;<b>커뮤니티 관련 문의는 <a href="javascript:move()"><u>3개의 책 문의</u></a>에 남겨주세요.</b></span>
+						<span><i class="fa-solid fa-circle-info" style="font-size:20px"></i>&nbsp;&nbsp;&nbsp;<b>커뮤니티 관련 문의는 <a href="javascript:askMove()"><u>3개의 책 문의</u></a>에 남겨주세요.</b></span>
 					</div>
 					
 					<div class="row">

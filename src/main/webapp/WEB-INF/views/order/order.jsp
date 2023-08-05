@@ -353,7 +353,7 @@
 			</div>
 			<hr style="margin:50px 0px 50px 0px"/>
 			
-			<div class="text-right mb-4 mr-4"><button class="btn btn-dark" onclick="order2()" style="font-size:25px">결제하기</button></div>
+			<div class="text-right mb-4 mr-4"><button class="btn btn-dark" onclick="order()" style="font-size:25px">결제하기</button></div>
 			
 			<div class="row" style="margin:10px 0px 50px 0px">
 				<div class="col">

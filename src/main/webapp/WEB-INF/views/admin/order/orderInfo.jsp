@@ -28,13 +28,13 @@
 	<div class="row" style="margin:10px 0px 30px 0px">
 		<div class="col">
 			<div class="infoBox">
-			<div style="font-size:20px; background-color:#eee; font-weight:bold; padding:10px">주문 관리 유의사항</div>
-			<div style="padding:20px">
-				- 결제완료 <i class="fa-solid fa-caret-right"></i> 배송준비중 <i class="fa-solid fa-caret-right"></i> 배송중 <i class="fa-solid fa-caret-right"></i> 
-				배송완료 <br/>
-	      - 반품은 배송완료 후, 7일 이내에 신청가능합니다.<br/>
-	      - 반품신청 <i class="fa-solid fa-caret-right"></i> 반품처리중 <i class="fa-solid fa-caret-right"></i> 반품완료<br/>
-			</div>
+				<div style="font-size:20px; background-color:#eee; font-weight:bold; padding:10px">주문 관리 유의사항</div>
+				<div style="padding:20px">
+					- 결제완료 <i class="fa-solid fa-caret-right"></i> 배송준비중 <i class="fa-solid fa-caret-right"></i> 배송중 <i class="fa-solid fa-caret-right"></i> 
+					배송완료 <br/>
+		      - 반품은 배송완료 후, 7일 이내에 신청가능합니다.<br/>
+		      - 반품신청 <i class="fa-solid fa-caret-right"></i> 반품처리중 <i class="fa-solid fa-caret-right"></i> 반품완료<br/>
+				</div>
 			</div>
 		</div>
 	</div>

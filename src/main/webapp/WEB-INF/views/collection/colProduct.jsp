@@ -291,19 +291,7 @@
 		
 		// 장바구니 담기
 		function cart() {
-			/* let opIdxes = document.getElementsByClassName('opIdx');
-			let opNames = document.getElementsByClassName('opName');
-			let opPrices = document.getElementsByClassName('opPrice');
-			let nums = document.getElementsByClassName('num');
 
-			for (let i = 0; i < opIdxes.length; i++) {
-			  // 각 box 요소 출력
-			  console.log(opIdxes[i]);
-			} */
-			
-			/* let opIdxes = $('input[name = opIdx]').eq('0').val();
-			console.log("opIdxes : " + opIdxes); */
-			
 			let totalPrice = document.getElementById("totalPrice").value;
     	if('${sNickname}' == "") {
     		alert('로그인 후 사용해주세요 😀');
@@ -452,7 +440,7 @@
 				else {
 					localStorage.setItem('productAskDetailSW', 'ON');
 					localStorage.setItem('productReturnOriginIdx2', originIdx);
-					location.href = "${ctp}/about/askDetail?idx"+idx;
+					location.href = "${ctp}/about/askDetail?idx="+idx;
 					return false;
 				}
 			}

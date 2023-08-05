@@ -234,7 +234,7 @@
 	 		<div style="background-color:white; padding:20px; margin-bottom:30px">
 				<div class="row">
 					<div class="col ml-5">
-						<img src="${ctp}/admin/member/${memberVO.memPhoto}" class="rounded-circle" style="width:100%; max-width:80px">
+						<img src="${ctp}/resources/data/admin/member/${memberVO.memPhoto}" class="rounded-circle" style="width:100%; max-width:80px">
 						&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 						<span class="text-center" style="font-size:20px; text-align:center; font-weight:bold">${memberVO.nickname}</span>
 						&nbsp;&nbsp;&nbsp;
@@ -300,7 +300,7 @@
 				    			<td style="width:90%">
 								  	<div class="row mt-4"> 
 								  		<div class="col-2 text-right">
-								  			<img src="${ctp}/admin/member/${memberVO.memPhoto}" class="rounded-circle" style="width:30px"/>
+								  			<img src="${ctp}/resources/data/admin/member/${memberVO.memPhoto}" class="rounded-circle" style="width:30px"/>
 								  		</div>
 								  		<div class="col-10">
 							  				<span style="color:grey; font-size:17px"><b>${vo.memNickname}</b></span>

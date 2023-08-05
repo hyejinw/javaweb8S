@@ -472,26 +472,22 @@ public class OrderController {
 			orderService.setMemberPointUpdate(totalUsedPoint, pointUseVOS.get(0).getMemNickname());
 		}
 		
-		
 		// 5. 재고 변경
 		if(prodOrderVOS.size() != 0) {
 			// 상품 옵션 재고 변경
 			orderService.setProdOpStockUpdate(prodOrderVOS);
-			
 			// 상품 판매 수량 변경
 			orderService.setProdSaleQuantityUpdate(prodOrderVOS);
-			
 			// 현 재고 0인 상품 고유번호
 			ArrayList<String> ProdStockUpdateIdx = orderService.getProdStockUpdateIdx();
-			
-			if(ProdStockUpdateIdx.size() != 0) orderService.setProdStockUpdate(ProdStockUpdateIdx);  // 상품 품절로 상태 변경
+			// 상품 품절로 상태 변경
+			if(ProdStockUpdateIdx.size() != 0) orderService.setProdStockUpdate(ProdStockUpdateIdx);  
 		}
 		
 		if(maOrderVOS.size() != 0) {
 			// 매거진 재고 변경 + 판매 수량 변경
 			orderService.setMaStockUpdate(maOrderVOS);
 		}
-		
 		
 		// 장바구니 개수 session 변경
 		if(session.getAttribute("sCartNum") != null) {

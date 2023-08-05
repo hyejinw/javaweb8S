@@ -253,7 +253,7 @@
 		        	<c:if test="${!empty reflectionVO.thumbnail}"><img src="${reflectionVO.thumbnail}" style="width:50px"/></c:if>
 	        	</td>
 		        <td colspan="2">
-        			<div class="col-6" style="font-size:16px; font-weight:bold;">
+        			<div style="font-size:16px; font-weight:bold;">
 		        		<a href="javascript:refDetail(${reflectionVO.idx}, ${reflectionVO.bookIdx})">${reflectionVO.title}</a><!-- 상세페이지 -->
 							</div>
 						</td>
@@ -269,7 +269,7 @@
 						</td>		
 						<td class="text-center">
 	        		<a href="javascript:memPage('${reflectionVO.memNickname}')">  <!-- 회원 페이지 -->
-		        		<img src="${ctp}/admin/member/${reflectionVO.memPhoto}" class="rounded-circle" style="width:35px"/>&nbsp;&nbsp;&nbsp;
+		        		<img src="${ctp}/resources/data/admin/member/${reflectionVO.memPhoto}" class="rounded-circle" style="width:35px"/>&nbsp;&nbsp;&nbsp;
 		        		${reflectionVO.memNickname}
 	        		</a>
 						</td>	        	

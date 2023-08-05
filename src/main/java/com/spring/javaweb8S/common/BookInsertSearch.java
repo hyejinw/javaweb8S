@@ -40,9 +40,6 @@ public class BookInsertSearch {
       connection.setRequestMethod("GET");
       connection.setRequestProperty("Authorization", "KakaoAK " + apiKey);
 
-//      int responseCode = connection.getResponseCode();
-//      System.out.println("Response Code: " + responseCode);
-
       BufferedReader reader = new BufferedReader(new InputStreamReader(connection.getInputStream()));
       String line;
       StringBuilder response = new StringBuilder();
@@ -107,7 +104,6 @@ public class BookInsertSearch {
 
       	vos.add(vo);
       }
-     //System.out.println("vos : " + vos);
 
     } catch (IOException e) {
         e.printStackTrace();

@@ -356,14 +356,14 @@
 			<div class="col">
 		    <div class="w3-row-padding text-center" style="margin:50px;">
 		      <h3 class="mb-3"><b>문의 카테고리</b></h3>
-		 			<div id="piechart_3d" style="width:100%; max-width:500px; margin:0px auto; height: 500px;"></div>
+		 			<div id="piechart_3d" style="width:100%; max-width:1000px; margin:0px auto; height: 500px;"></div>
 			  </div>
 			
 			</div>
 			<div class="col">
 		    <div class="w3-row-padding text-center" style="margin:50px;">
 		      <h3 class="mb-3"><b>컬렉션 상품 판매율 TOP5</b></h3>
-		 			<div id="barchart_material" style="width:100%; max-width:500px; margin:0px auto; height: 500px;"></div>
+		 			<div id="barchart_material" style="width:100%; max-width:1000px; margin:0px auto; height: 500px;"></div>
 			  </div>
 			
 			</div>

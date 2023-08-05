@@ -360,7 +360,7 @@
 				else {
 					localStorage.setItem('magazineAskDetailSW', 'ON');
 					localStorage.setItem('magazineReturnOriginIdx2', originIdx);
-					location.href = "${ctp}/about/askDetail?idx"+idx;
+					location.href = "${ctp}/about/askDetail?idx="+idx;
 					return false;
 				}
 			}

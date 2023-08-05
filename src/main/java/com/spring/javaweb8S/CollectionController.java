@@ -152,8 +152,8 @@ public class CollectionController {
 		
 		return "";
 	}
-	
-	// 상품 장바구니 저장  (ppt에 꼭 넣장!)
+	// (ppt에 꼭 넣장!)
+	// 상품 장바구니 저장
 	@ResponseBody
 	@RequestMapping(value = "/productCartInsert", method = RequestMethod.POST)
 	public String productCartInsertPost(CartVO vo, HttpSession session,
@@ -174,7 +174,8 @@ public class CollectionController {
 		}
 		
 		// 기존 장바구니 내역 중, 같은 상품 존재 확인(닉네임, 상품 고유번호, 옵션 고유번호로 검색)
-		ArrayList<Integer> reservedProdOpIdxes = collectionService.getProductOpCartSearch(vo.getMemNickname(), vo.getProdIdx(), optionList);
+		ArrayList<Integer> reservedProdOpIdxes = 
+				collectionService.getProductOpCartSearch(vo.getMemNickname(), vo.getProdIdx(), optionList);
 		
 		// 수량만 업데이트할 옵션
 		ArrayList<CartVO> updateOption = new ArrayList<CartVO>();
