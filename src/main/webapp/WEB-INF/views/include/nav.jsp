@@ -48,11 +48,6 @@
 			location.href = '${ctp}/order/cart';
 		}
 	}
-	
-	// 게임, 준비 중
-/* 	function preparing() {
-		alert('서비스 준비 중입니다.');
-	} */
 </script>
 
 <div class="topNav">
@@ -121,7 +116,7 @@
 	      <a href="${ctp}/about/ask" class="w3-bar-item w3-button w3-hover-white w3-round-xxlarge navContent mt-2"><span class="detailContent navContentForFont">문의</span></a>
 	      
 	      <!-- <a href="#pricing" class="w3-bar-item w3-button w3-hover-white w3-round-xxlarge navContent"><span class="detailContent">독립서점</span></a> -->
-	      <a href="${ctp}/game/main" class="w3-bar-item w3-button w3-hover-white w3-round-xxlarge navContent mr-5 mt-2"><span class="detailContent navContentForFont">게임</span></a>
+	      <a href="${ctp}/game/dice" class="w3-bar-item w3-button w3-hover-white w3-round-xxlarge navContent mr-5 mt-2"><span class="detailContent navContentForFont">게임</span></a>
 	      <c:if test="${memType == ''}">
 		      <a href="${ctp}/member/memberLogin" class="w3-bar-item w3-button w3-hover-white w3-round-xxlarge navContent" style="padding-right:0px">
 			      <span class="detailContent"><p class="w3-tooltip"><i class="fa-solid fa-person-running" style="color: #000000; font-size:25px" title="책(의)세계로 로그인"></i><br/>

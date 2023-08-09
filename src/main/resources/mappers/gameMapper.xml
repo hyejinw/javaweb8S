@@ -18,6 +18,13 @@
 		SELECT * FROM bo_dice WHERE memNickname = #{nickname} AND DATE(diceDate) = DATE(NOW());
 	</select>
 	
+	<select id="getRouletteList" resultType="com.spring.javaweb8S.vo.RouletteVO">
+		SELECT * FROM bo_roulette WHERE memNickname = #{nickname} ORDER BY idx DESC;
+	</select>
+	
+	<select id="getRouletteTodayRes" resultType="com.spring.javaweb8S.vo.RouletteVO">
+		SELECT * FROM bo_roulette WHERE memNickname = #{nickname} AND DATE(rouletteDate) = DATE(NOW());
+	</select>
 	
 	<insert id="setTodayDiceLuckyNum">
 		INSERT INTO bo_todayDice VALUES 
@@ -35,6 +42,11 @@
 		(default, #{memNickname}, #{point}, #{pointReason}, default);
 	</insert>
 	
+	<insert id="setRouletteTodayRes">
+		INSERT INTO bo_roulette VALUES 
+		(default, #{nickname}, default, 0, default, default);
+	</insert>
+	
 	<update id="setDiceFailUpdate">
 		UPDATE bo_dice SET trial = trial - 1
 		WHERE memNickname = #{memNickname} AND DATE(diceDate) = DATE(NOW());
@@ -48,6 +60,16 @@
 	<update id="setMemberPointUpdate">
 		UPDATE bo_member SET point = point + #{point} 
 		WHERE nickname = #{memNickname};
+	</update>
+	
+	<update id="setRouletteSuccessUpdate">
+		UPDATE bo_roulette SET trial = trial - 1, totPoint = totPoint + #{totPoint}, success = success + 1 
+		WHERE memNickname = #{memNickname} AND DATE(rouletteDate) = DATE(NOW());
+	</update>
+	
+	<update id="setRouletteFailUpdate">
+		UPDATE bo_roulette SET trial = trial - 1
+		WHERE memNickname = #{memNickname} AND DATE(rouletteDate) = DATE(NOW());
 	</update>
 	
 </mapper>

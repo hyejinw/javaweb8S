@@ -30,7 +30,7 @@
 			<a href="javascript:move()"><span style="font-size:20px; font-weight:bold">3개의 책</span></a>
 		</div>
 		<div class="col text-center">
-			<a href="${ctp}/game/main"><span style="font-size:20px; font-weight:bold">게임</span></a>
+			<a href="${ctp}/game/dice"><span style="font-size:20px; font-weight:bold">게임</span></a>
 		</div>
 	</div>
 	<hr/>

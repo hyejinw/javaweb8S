@@ -154,9 +154,6 @@
 		
 		<div class="row" style="margin: 100px 50px 200px 100px">
 			<div class="col-2" style="padding:20px;">
-				<a href="${ctp}/game/main">
-					<div class="navTitle">책나무 게임</div>
-				</a>
 				<hr/>
 				<a href="${ctp}/game/dice">
 					<div class="navTitle" style="color:#41644A;">주사위 게임</div>
@@ -209,7 +206,7 @@
 						<div style="padding:20px">
 							- 일 최대 3번 시도 가능<br/>
 				      - 오늘의 번호와 일치 성공 시, 즉시 포인트 지급됩니다.<br/>
-				      - 비회원은 참여가 불가능합니다.<br/>
+				      - <b>비회원은 참여가 불가능합니다.</b><br/>
 						</div>
 					</div>
 				</c:if>
@@ -349,7 +346,7 @@
 		var btnRolling = document.querySelector('#btnRolling');
 		btnRolling.onclick = function(){
 			
-			if(${diceVO.trial} == 0) {
+			if('${diceVO.trial}' == 0) {
 				alert('오늘 시도횟수를 다 사용하셨습니다:)');
 				return false;
 			}
@@ -372,21 +369,21 @@
 			  else {
 				 	alert('오늘의 번호와 달라요');
 			  }
-				  $.ajax({
-					  type : "post",
-					  url : "${ctp}/game/diceUpdate",
-					  data : {
-						  memNickname : '${sNickname}',
-						  flag : flag
-					  },
-					  success : function() {
-						  location.reload();
-					  },
-					  error : function() {
-						  alert('재시도 부탁드립니다. 오류가 계속되면 문의를 남겨주세요:)')
-					  }
-				  });
 			  
+			  $.ajax({
+				  type : "post",
+				  url : "${ctp}/game/diceUpdate",
+				  data : {
+					  memNickname : '${sNickname}',
+					  flag : flag
+				  },
+				  success : function() {
+					  location.reload();
+				  },
+				  error : function() {
+					  alert('재시도 부탁드립니다. 오류가 계속되면 문의를 남겨주세요:)')
+				  }
+			  });
 			  
 			}, 1000);
 		}
