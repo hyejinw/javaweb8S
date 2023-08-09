@@ -582,10 +582,10 @@ o 로그 기록
 					alert("별명 중복확인을 해주세요.");
 					document.getElementById("nicknameBtn").focus();
 				} 
-		   /*  else if(emailCheckSw == 0) {
+		    else if(emailCheckSw == 0) {
 					alert("이메일 인증을 완료 해주세요.");
 					document.getElementById("emailBtn").focus();
-				}  */
+				} 
 				else {
 			    myform.tel.value = tel;
 			    myform.email.value = email;
@@ -695,7 +695,7 @@ o 로그 기록
 		}
 		
 		// 이메일 인증버튼을 클릭했는지의 여부를 확인하기 위한 변수
-	/* 	let emailCheckSw = 0;
+	 	let emailCheckSw = 0;
 	      
 		let emailInput1 = document.getElementById('email1');
 		let emailInput2 = document.getElementById('email2');
@@ -822,7 +822,6 @@ o 로그 기록
 				enableCodeCheck();
 			}
 		}
-	 */
 	
 		function telCheck() {
 			let regex5 = /\d{2,3}-\d{3,4}-\d{4}$/g; //(전화번호)

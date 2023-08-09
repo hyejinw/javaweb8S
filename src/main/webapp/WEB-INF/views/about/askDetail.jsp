@@ -11,6 +11,7 @@
 	<title>책(의)세계</title>
 	<jsp:include page="/WEB-INF/views/include/bs4.jsp" />
 	<script src="${ctp}/ckeditor/ckeditor.js"></script>
+	<script src="https://t1.kakaocdn.net/kakao_js_sdk/2.3.0/kakao.min.js" integrity="sha384-70k0rrouSYPWJt7q9rSTKpiTfX6USlMYjZUtr1Du+9o4cGvhPAWxngdtVZDdErlh" crossorigin="anonymous"></script>
 	<style>
 		a:link {text-decoration: none !important;}
 		a:visited {text-decoration: none !important;}
@@ -293,6 +294,37 @@
 				location.href = "${ctp}/community/askDelete?idx="+idx+"&flag=about";
 			}
 		}
+		
+		// 카카오톡 공유하기
+		Kakao.init('2957b853b61482d92df3640d007c600f'); // 사용하려는 앱의 JavaScript 키 입력
+	  
+	  function shareMessage() {
+		  let tempTitle = '${vo.askTitle}';
+	    Kakao.Share.sendDefault({
+	      objectType: 'feed',
+	      content: {
+	        title: tempTitle,
+	        imageUrl:
+	          'http://localhost:9090/javaweb8S/resources/images/logo.png',
+	        link: {
+	          // [내 애플리케이션] > [플랫폼] 에서 등록한 사이트 도메인과 일치해야 함
+	          mobileWebUrl: 'http://49.142.157.251:9090/javaweb8S',
+	          webUrl: 'http://49.142.157.251:9090/javaweb8S', //http://49.142.157.251:9090
+	        },
+	      },
+	      buttons: [
+	        {
+	          title: '내용 확인',
+	          link: {
+	            /* mobileWebUrl: 'http://localhost:9090/javaweb8S/community/reflectionDetail?idx=${vo.idx}',
+	            webUrl: 'http://localhost:9090/javaweb8S/community/reflectionDetail?idx=${vo.idx}', */
+ 	            mobileWebUrl: 'http://49.142.157.251:9090/javaweb8S/about/askDetail?idx=${vo.idx}',
+	            webUrl: 'http://49.142.157.251:9090/javaweb8S/about/askDetail?idx=${vo.idx}', 
+	          },
+	        },
+	      ],
+	    });
+	  }
 	</script>
 </head>
 <body>
@@ -314,7 +346,7 @@
 							</a>
 		 				</div>
 		 				<div class="col-3 text-right">
-						  <a class="btn btn-warning" href="javascript:insert()" style="margin-right:20px;"><i class="fa-solid fa-share-from-square"></i>&nbsp;카카오톡 공유</a>
+						  <a class="btn btn-warning" href="javascript:shareMessage()" style="margin-right:20px;"><i class="fa-solid fa-share-from-square"></i>&nbsp;카카오톡 공유</a>
 		 				</div>
 		 			</div>
 					<div style="text-align:center">

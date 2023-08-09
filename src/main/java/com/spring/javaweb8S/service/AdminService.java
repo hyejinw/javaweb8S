@@ -13,6 +13,7 @@ import com.spring.javaweb8S.vo.ChartVO;
 import com.spring.javaweb8S.vo.CollectionVO;
 import com.spring.javaweb8S.vo.DefaultPhotoVO;
 import com.spring.javaweb8S.vo.DeliveryVO;
+import com.spring.javaweb8S.vo.GameStatVO;
 import com.spring.javaweb8S.vo.InspiredVO;
 import com.spring.javaweb8S.vo.MagazineVO;
 import com.spring.javaweb8S.vo.MemberVO;
@@ -224,6 +225,8 @@ public interface AdminService {
 	public ArrayList<ProdAskChartVO> getProdChartStat();
 
 	public ArrayList<ProdAskChartVO> getAskChartStat();
+
+	public GameStatVO getGameStat(String game);
 
 
 

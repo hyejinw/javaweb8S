@@ -41,7 +41,6 @@ public class AutoUpdate {
 		
 		// 정기구독 제외!!!!!!!!, 구매확정 제외한 모든 주문의 정보
 		ArrayList<OrderVO> vos = autoUpdateDAO.getAutoOrderList();
-		System.out.println("orderAutoUpdate의 vos : " + vos);
 		// level (결제완료) 후, 1(배송준비중:24시간 후), 2(배송중:12시간 후), 3(배송완료:120시간 후(5일 후)), 4(구매확정:168시간 후(7일 후))
 		// (구매확정)은 구매자 직접 또는 7일 후에 자동처리된다.
 		
@@ -53,14 +52,9 @@ public class AutoUpdate {
 		SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 		String now = formatter.format(tempNow);
 		 
-		System.out.println();
-		System.out.println();
-		System.out.println();
-		System.out.println("now  : " + now);
 		Date format1 = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse(now);
 		Date format2 = new Date();
 		
-		System.out.println("format1  : " + format1);
 		ArrayList<Integer> level1 = new ArrayList<Integer>();
 		ArrayList<Integer> level2 = new ArrayList<Integer>();
 		ArrayList<Integer> level3 = new ArrayList<Integer>();
@@ -72,8 +66,6 @@ public class AutoUpdate {
 			format2 = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse(vos.get(i).getManageDate());
 			//long diffHor = (format1.getTime() - format2.getTime()) / 60000; //분 차이
 			long diffHor = (format1.getTime() - format2.getTime()) / 3600000; //시 차이
-			System.out.println("format2  : " + format2);
-			System.out.println("diffHor  : " + diffHor);
 			
 			// 1단계) 배송준비중
 			if(vos.get(i).getOrderStatus().equals("결제완료")) {
@@ -152,15 +144,6 @@ public class AutoUpdate {
 				format2 = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse(refundVOS.get(i).getManageDate());
 				long diffHor = (format1.getTime() - format2.getTime()) / 3600000; //시 차이
 				//long diffHor = (format1.getTime() - format2.getTime()) / 60000; //분 차이
-				System.out.println("format2  : " + format2);
-				System.out.println("diffHor  : " + diffHor);
-				
-				System.out.println();
-				System.out.println();
-				System.out.println();
-				System.out.println();
-				System.out.println();
-				System.out.println("refundVOS : " + refundVOS);
 				
 				// 1단계) 반품처리중
 				if(refundVOS.get(i).getRefundStatus().equals("반품신청")) {
@@ -301,7 +284,7 @@ public class AutoUpdate {
 	// 뉴스레터 발송
 	// 매주 월요일 오후 3시
 	//@Transactional
-	@Scheduled(cron = "0 0 15 * * 1")  
+	//@Scheduled(cron = "0 0 15 * * 1") 안 보낼 예정
 	public void booksletterAutoSend() throws MessagingException {
 		
 		// 구독취소 제외 = 구독중만

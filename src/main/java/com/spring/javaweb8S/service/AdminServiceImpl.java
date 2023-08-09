@@ -24,6 +24,7 @@ import com.spring.javaweb8S.vo.ChartVO;
 import com.spring.javaweb8S.vo.CollectionVO;
 import com.spring.javaweb8S.vo.DefaultPhotoVO;
 import com.spring.javaweb8S.vo.DeliveryVO;
+import com.spring.javaweb8S.vo.GameStatVO;
 import com.spring.javaweb8S.vo.InspiredVO;
 import com.spring.javaweb8S.vo.MagazineVO;
 import com.spring.javaweb8S.vo.MemberVO;
@@ -768,6 +769,12 @@ public class AdminServiceImpl implements AdminService {
 	@Override
 	public ArrayList<ProdAskChartVO> getAskChartStat() {
 		return adminDAO.getAskChartStat();
+	}
+
+	// 게임 통계
+	@Override
+	public GameStatVO getGameStat(String game) {
+		return adminDAO.getGameStat(game);
 	}
 
 

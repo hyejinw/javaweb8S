@@ -9,10 +9,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>책(의)세계</title>
 	<jsp:include page="/WEB-INF/views/include/bs4.jsp" />
-<!--  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css">
-   <script src="https://cdn.jsdelivr.net/npm/jquery@3.6.4/dist/jquery.slim.min.js"></script> 
   <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.bundle.min.js"></script>-->
   <script src="https://t1.kakaocdn.net/kakao_js_sdk/2.3.0/kakao.min.js" integrity="sha384-70k0rrouSYPWJt7q9rSTKpiTfX6USlMYjZUtr1Du+9o4cGvhPAWxngdtVZDdErlh" crossorigin="anonymous"></script>
   <style>
  		html {scroll-behavior:smooth;}
@@ -862,7 +859,7 @@
 				    	<input type="hidden" id="page${inspiredVO.idx}" value="${inspiredVO.page}"/>
 					    <hr style="margin:0px"/>
 					    <div class="row">
-					    	<div class="col">
+					    	<div class="col-10">
 							    <div style="padding:10px">
 							    	<a href="javascript:memPage('${inspiredVO.memNickname}')"><span>by. ${inspiredVO.memNickname}</span></a>
 							    	<c:if test="${inspiredVO.explanation!= ''}">
@@ -871,19 +868,19 @@
 										    <button type="button" class="dropdown-toggle" data-toggle="dropdown" style="border:0px; background-color:transparent;">
 										      <i class="fa-solid fa-circle-info" style="font-size:20px; padding:5px"></i>
 										    </button>
-										    <div class="dropdown-menu" style="padding:5px">
+										    <div class="dropdown-menu" style="padding:5px; width:800px;">
 										      <p>${inspiredVO.explanation}</p>
 										      <input type="hidden" id="explanation${inspiredVO.idx}" value="${inspiredVO.explanation}"/>
 										    </div>
 										  </span>
-							    	</c:if>
+										 </c:if>
 							    	<c:if test="${inspiredVO.explanation == ''}">
 								      <input type="hidden" id="explanation${inspiredVO.idx}" value="${inspiredVO.explanation}"/>
 							    	</c:if>
 							    	
 							    </div>
 					    	</div>
-					    	<div class="col text-right">
+					    	<div class="col-2 text-right">
 					    		<div style="padding:10px">
 						    		<c:if test="${inspiredVO.insSaveIdx == 0}"><i class="fa-regular fa-bookmark save" style="font-size:25px" onclick="insSave('${inspiredVO.idx}', '${inspiredVO.insSaveIdx}')" title="관심등록되지 않은 문장수집 입니다"></i></c:if>
 										<c:if test="${inspiredVO.insSaveIdx != 0}"><i class="fa-solid fa-bookmark save" style="font-size:25px" onclick="insSave('${inspiredVO.idx}', '${inspiredVO.insSaveIdx}')" title="관심등록된 문장수집"></i></c:if>

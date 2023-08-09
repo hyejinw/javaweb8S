@@ -223,16 +223,6 @@
 		        		<td>${c1}</td>
 		        		<td>${c2}</td>
 		        	</tr>
-<%-- 		        	<tr>
-			        	<td><a href="${ctp}/admin/order/orderListSearch?sort=반품신청">최신 기록</a></td>
-			        	<td><a href="${ctp}/admin/order/orderListSearch?sort=반품중">최신 문장수집</a></td>
-		        	</tr>
-	        	</thead>
-	        	<tbody>
-		        	<tr>
-		        		<td><a href="${ctp}/admin/order/orderListSearch?sort=반품신청">${c1}</a></td>
-		        		<td><a href="${ctp}/admin/order/orderListSearch?sort=반품중">${c2}</a></td>
-		        	</tr> --%>
 	        	</tbody>
 	        </table>
 	      </div>
@@ -305,29 +295,19 @@
 	    </div>
 	    <div class="w3-quarter">
 	      <div class="w3-container w3-orange w3-text-white w3-padding-16">
-	  	    <div style="font-size:20px">게임 (미완)</div>
+	  	    <div style="font-size:20px">게임 <span style="font-size:17px">(성공률 / 지급 포인트)</span></div>
 	  	    <table class="table text-center mt-3" style="background-color:white">
 	        	<thead style="background-color:#eee">
 		        	<tr>
-			        	<td>게임 성공률</td>
-			        	<td>게임 지급 포인트</td>
+			        	<td>주사위 게임</td>
+			        	<td>룰렛 게임</td>
 		        	</tr>
 	        	</thead>
 	        	<tbody>
 		        	<tr>
-		        		<td>-</td>
-		        		<td>-</td>
+		        		<td>${diceStat.successPercentage} / ${diceStat.totPoint}p</td>
+		        		<td>${rouletteStat.successPercentage} / ${rouletteStat.totPoint}p</td>
 		        	</tr>
-<%-- 		        	<tr>
-			        	<td><a href="${ctp}/admin/order/orderListSearch?sort=반품신청">최신 기록</a></td>
-			        	<td><a href="${ctp}/admin/order/orderListSearch?sort=반품중">최신 문장수집</a></td>
-		        	</tr>
-	        	</thead>
-	        	<tbody>
-		        	<tr>
-		        		<td><a href="${ctp}/admin/order/orderListSearch?sort=반품신청">${c1}</a></td>
-		        		<td><a href="${ctp}/admin/order/orderListSearch?sort=반품중">${c2}</a></td>
-		        	</tr> --%>
 	        	</tbody>
 	        </table>
 	      </div>

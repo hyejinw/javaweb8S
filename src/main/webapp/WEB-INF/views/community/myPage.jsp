@@ -1013,7 +1013,7 @@
 																    <button type="button" class="dropdown-toggle" data-toggle="dropdown" style="border:0px; background-color:transparent;">
 																      <i class="fa-solid fa-circle-info" style="font-size:20px; padding:5px"></i>
 																    </button>
-																    <div class="dropdown-menu" style="padding:5px">
+																    <div class="dropdown-menu" style="padding:5px; width:800px;">
 																      <p>${inspiredVO.explanation}</p>
 																      <input type="hidden" id="explanation${inspiredVO.idx}" value="${inspiredVO.explanation}"/>
 																      <input type="hidden" id="bookTitle${inspiredVO.idx}" value="${inspiredVO.bookTitle}"/>

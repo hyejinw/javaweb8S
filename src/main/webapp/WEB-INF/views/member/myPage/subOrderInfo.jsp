@@ -217,7 +217,6 @@
 									<th>배송 날짜</th>
 									<td>${fn:substring(deliveryVO.deliveryDate,0,10)}</td>
 								<tr>
-								<tr><td colspan="2"></td></tr>
 				    	</c:forEach>
 				    </tbody>
 					</table>			

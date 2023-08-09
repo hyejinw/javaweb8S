@@ -35,6 +35,7 @@ import com.spring.javaweb8S.vo.ChartVO;
 import com.spring.javaweb8S.vo.CollectionVO;
 import com.spring.javaweb8S.vo.DefaultPhotoVO;
 import com.spring.javaweb8S.vo.DeliveryVO;
+import com.spring.javaweb8S.vo.GameStatVO;
 import com.spring.javaweb8S.vo.InspiredVO;
 import com.spring.javaweb8S.vo.MagazineVO;
 import com.spring.javaweb8S.vo.MemberVO;
@@ -133,6 +134,12 @@ public class AdminController {
 		model.addAttribute("p2", p2);
 		model.addAttribute("p3", p3);
 		model.addAttribute("p4", p4);
+		
+		// 6) 게임 통계 
+		GameStatVO diceStat = adminService.getGameStat("bo_dice");
+		GameStatVO rouletteStat = adminService.getGameStat("bo_roulette");
+		model.addAttribute("diceStat", diceStat);
+		model.addAttribute("rouletteStat", rouletteStat);
 		
 		// 차트 통계
 		// 1) 최근 5개월 판매량 추이

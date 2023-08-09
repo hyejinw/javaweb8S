@@ -1088,6 +1088,17 @@
 		SELECT COALESCE(COUNT(idx), 0) AS askNum, category FROM bo_ask GROUP BY category ORDER BY category DESC;
 	</select>
 	
+	<select id="getGameStat" resultType="com.spring.javaweb8S.vo.GameStatVO">
+	 SELECT SUM(totPoint) AS totPoint,  
+		<if test='game != null and game == "bo_dice"'>
+		 CONCAT(ROUND((SUM(success) / (COUNT(*) * 3)) * 100, 1), '%') AS successPercentage
+		</if>
+		<if test='game != null and game == "bo_roulette"'>
+		 CONCAT(ROUND((SUM(success) / (COUNT(*) * 2)) * 100, 1), '%') AS successPercentage
+		</if>
+	 FROM ${game};
+	</select>
+	
 	<insert id="memberDefaultPhotoInsert">
 		INSERT INTO bo_defaultPhoto VALUES (default, #{vo.photoName}, #{vo.memo}, default); 
 	</insert>

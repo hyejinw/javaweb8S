@@ -128,7 +128,7 @@
 		      </div>
 		    </div> --%>
 		    
-		    <div class="card">
+<%-- 		    <div class="card">
 		      <div class="card-header" style="padding:0px">
 	  			  <a href="#collapseSeven" class="collapsed card-link w3-bar-item w3-button w3-padding dropdown-toggle" data-toggle="collapse">
 	  			 		<i class="fa fa-diamond fa-fw"></i>  게임
@@ -140,7 +140,7 @@
 			        <a href="${ctp}/admin/memberList">게임 결과 조회</a>
 		        </div>
 		      </div>
-		    </div>
+		    </div> --%>
 		    
 		    <div class="card">
 		      <div class="card-header" style="padding:0px">

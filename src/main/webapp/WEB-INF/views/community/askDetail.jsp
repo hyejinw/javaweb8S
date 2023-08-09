@@ -9,9 +9,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>책(의)세계</title>
 	<jsp:include page="/WEB-INF/views/include/bs4.jsp"/>
-<!-- 	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css">
-  <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.bundle.min.js"></script> -->
+	<script src="https://t1.kakaocdn.net/kakao_js_sdk/2.3.0/kakao.min.js" integrity="sha384-70k0rrouSYPWJt7q9rSTKpiTfX6USlMYjZUtr1Du+9o4cGvhPAWxngdtVZDdErlh" crossorigin="anonymous"></script>
   <style>
  		html {scroll-behavior:smooth;}
 		a:link {text-decoration: none !important;}
@@ -254,6 +252,37 @@
 				location.href = "${ctp}/community/askDelete?idx="+idx;
 			}
 		}
+		
+		// 카카오톡 공유하기
+		Kakao.init('2957b853b61482d92df3640d007c600f'); // 사용하려는 앱의 JavaScript 키 입력
+	  
+	  function shareMessage() {
+		  let tempTitle = '${vo.askTitle}';
+	    Kakao.Share.sendDefault({
+	      objectType: 'feed',
+	      content: {
+	        title: tempTitle,
+	        imageUrl:
+	          'http://localhost:9090/javaweb8S/resources/images/logo.png',
+	        link: {
+	          // [내 애플리케이션] > [플랫폼] 에서 등록한 사이트 도메인과 일치해야 함
+	          mobileWebUrl: 'http://49.142.157.251:9090/javaweb8S',
+	          webUrl: 'http://49.142.157.251:9090/javaweb8S', //http://49.142.157.251:9090
+	        },
+	      },
+	      buttons: [
+	        {
+	          title: '3개의 책으로',
+	          link: {
+	            /* mobileWebUrl: 'http://localhost:9090/javaweb8S/community/reflectionDetail?idx=${vo.idx}',
+	            webUrl: 'http://localhost:9090/javaweb8S/community/reflectionDetail?idx=${vo.idx}', */
+ 	            mobileWebUrl: 'http://49.142.157.251:9090/javaweb8S/community/askDetail?idx=${vo.idx}',
+	            webUrl: 'http://49.142.157.251:9090/javaweb8S/community/askDetail?idx=${vo.idx}', 
+	          },
+	        },
+	      ],
+	    });
+	  }
   </script>
 </head>
 <body>
@@ -281,7 +310,7 @@
 						</a>
 	 				</div>
 	 				<div class="col-3 text-right">
-					  <a class="btn btn-warning" href="javascript:insert()" style="margin-right:20px;"><i class="fa-solid fa-share-from-square"></i>&nbsp;카카오톡 공유</a>
+					  <a class="btn btn-warning" href="javascript:shareMessage()" style="margin-right:20px;"><i class="fa-solid fa-share-from-square"></i>&nbsp;카카오톡 공유</a>
 	 				</div>
 	 			</div>
 				<div style="text-align:center">
