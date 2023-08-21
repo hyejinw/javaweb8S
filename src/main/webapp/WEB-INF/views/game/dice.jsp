@@ -205,7 +205,7 @@
 						<div style="font-size:20px; background-color:#eee; font-weight:bold; padding:10px">주사위 게임 유의사항</div>
 						<div style="padding:20px">
 							- 일 최대 3번 시도 가능<br/>
-				      - 오늘의 번호와 일치 성공 시, 즉시 포인트 지급됩니다.<br/>
+				      - 두 수의 합이 오늘의 번호와 일치 시, 500 포인트가 지급됩니다.<br/>
 				      - <b>비회원은 참여가 불가능합니다.</b><br/>
 						</div>
 					</div>
@@ -217,7 +217,7 @@
 								<div style="font-size:20px; background-color:#eee; font-weight:bold; padding:10px">주사위 게임 유의사항</div>
 								<div style="padding:20px">
 									- 일 최대 3번 시도 가능<br/>
-						      - 오늘의 번호와 일치 성공 시, 즉시 <b><u>500 포인트</u></b>가 지급됩니다.<br/>
+						      - 두 수의 합이 오늘의 번호와 일치 시, <b><u>500 포인트</u></b>가 지급됩니다.<br/>
 						      - 비회원은 참여가 불가능합니다.<br/>
 								</div>
 							</div>

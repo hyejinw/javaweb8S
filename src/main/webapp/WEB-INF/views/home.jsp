@@ -270,7 +270,7 @@
 											    <button type="button" class="dropdown-toggle" data-toggle="dropdown" style="border:0px; background-color:transparent;">
 											      <i class="fa-solid fa-circle-info" style="font-size:20px; padding:5px"></i>
 											    </button>
-											    <div class="dropdown-menu" style="padding:5px">
+											    <div class="dropdown-menu" style="padding:5px; width:500px;">
 											      <p>${inspiredVO.explanation}</p>
 											    </div>
 											  </span>
