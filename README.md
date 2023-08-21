@@ -4,9 +4,9 @@
 > 기간: 2023.06.15 - 2023.07.31(46일) <br/>
 > 인원: 1인<br/>
 
-사이트 링크 : http://49.142.157.251:9090/javaweb8S/
-PPT 미리보기 : https://www.miricanvas.com/v/123c9ye
-기획서 및 제작과정 : https://docs.google.com/spreadsheets/d/1JJpuV_yccxDZlcDeTWBFe7ow5mrsIqVjEsVXZ7pktCc/edit?usp=sharing
+사이트 링크 : http://49.142.157.251:9090/javaweb8S/ <br/>
+PPT 미리보기 : https://www.miricanvas.com/v/123c9ye <br/>
+기획서 및 제작과정 : https://docs.google.com/spreadsheets/d/1JJpuV_yccxDZlcDeTWBFe7ow5mrsIqVjEsVXZ7pktCc/edit?usp=sharing <br/>
 
 <h1>사용 기술 스택</h1>
 <ul>
@@ -33,3 +33,78 @@ PPT 미리보기 : https://www.miricanvas.com/v/123c9ye
 
   
   ![javaweb8S](https://github.com/hyejinw/javaweb8S/blob/master/src/main/webapp/resources/images/logo.png)
+
+<h1>구현 기능</h1>
+<div>
+    <ul>
+        <li>
+            <strong>회원 관련</strong>
+            <ul>
+                <li>로그인,로그아웃,회원가입,회원탈퇴</li>
+                <li>ID찾기</li>
+                <li>비밀번호 재발급 - 이메일 전송</li>
+                <li>MyPage(주문 내역, 포인트 내역, 작성 문의, 구독 관리, 회원정보 관리)</li>
+            </ul>
+        </li>
+        <li>
+            <strong>매거진</strong>
+            <ul>
+                <li>매거진 상품</li>
+                <li>버튼 페이징</li>
+                <li>최신순, 상품명, 낮은 가격순, 높은 가격순, 발행년도 정렬</li>
+                <li>QnA CRUD</li>
+            </ul>
+        </li>
+        <li>
+           <strong>컬렉션</strong>
+           <ul>
+               <li>컬렉션 리스트 / 컬렉션 상품</li>
+               <li>버튼 페이징</li>
+               <li>최신순, 상품명, 낮은 가격순, 높은 가격순 정렬</li>
+               <li>QnA CRUD</li>
+           </ul>
+        </li>    
+        <li>
+            <strong>공지사항</strong>
+            <ul>
+                <li>게시판 CRUD</li>
+            </ul>
+        </li>
+        <li>
+            <strong>장바구니</strong>
+            <ul>
+                <li>추가, 개별주문, 선택주문</li>
+                <li>'매거진 상품, 매거진 정기구독, 컬렉션 상품' 분류 노출</li>
+            </ul>
+        </li>
+        <li>
+            <strong>결제 - 포트원 결제모듈 사용, KG 이니시스</strong>
+            <ul>
+                <li>배송 주소록 (최대 5개)</li>    
+                <li>포인트 사용 가능</li>
+            </ul>
+        </li>
+       <li>
+           <strong>커뮤니티 관련</strong>
+           <ul>
+               <li>랜덤도서 추출기</li>
+               <li>기록 - 게시판 CRUD</li>
+               <li>기록 댓글 (유튜브 댓글 로직 참고)</li>
+               <li>문장수집</li>
+               <li>MyPage(서재, 저장한 기록, 저장 문장수집, 작성 댓글, 작성 신고, 작성 문의)</li>
+           </ul>
+       </li>
+       <li>
+           <strong>관리자 페이지 관련</strong>
+           <ul>
+               <li>통계 (차트 통계, 일반 통게)</li>
+               <li>회원관리</li>
+               <li>매거진 관리</li>
+               <li>컬렉션 관리</li>
+               <li>커뮤니티 관리</li>
+               <li>판매 관리</li>
+               <li>문의 / 공지 관리</li>
+           </ul>
+       </li>
+    </ul>
+</div>
