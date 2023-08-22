@@ -208,7 +208,8 @@ PPT 미리보기 : https://www.miricanvas.com/v/12a2his <br/>
                 <li>버튼 페이징</li>
                 <li>문의 (공개 여부 선택, 비회원 비밀번호)</li>
                 <li>문의 (답변 완료 시 알림 - 이메일 전송)</li>
-                  <img src="https://i.imgur.com/Z2qHdfk.png" width="500px">
+                  <img src="https://i.imgur.com/L9SYkAL.png" width="500px">
+                  <img src="https://i.imgur.com/JQ5Kxsy.png" width="500px">
             </ul>
         </li>
         <br/>  
@@ -246,8 +247,34 @@ PPT 미리보기 : https://www.miricanvas.com/v/12a2his <br/>
             </ul>
         </li>
         <br/>  
-     
-     
+        <li>
+            <strong>관리자 회원관리</strong>
+            <ul>
+                <li>분류검색, 회원개인정보로 검색</li>
+                <li>페이징 처리</li>
+                <li>회원정보 팝업페이지 (회원정보, 배송지주소록, 포인트적립/사용내역, 구독정보)/li>
+                  <img src="https://i.imgur.com/6jzzJ1L.png" width="500px">
+            </ul>
+        </li>
+        <br/>   
+        <li>
+            <strong>관리자 주문/배송관리</strong>
+            <ul>
+                <li>기간검색, 주문상태별 분류검색, 주문정보로 검색</li>
+                <li>페이징 처리</li>
+                <li>주문정보 팝업페이지/li>
+                  <img src="https://i.imgur.com/9hWP3X1.png" width="500px">
+            </ul>
+        </li>
+        <br/>
+        <li>
+            <strong>기타</strong>
+            <ul>
+                <li>자동화 처리 (매거진 정기구독발송, 뉴스레터 발송, 탈퇴 1개월 초과회원 삭제, 배송관리)</li>
+                <li>게임 (주사위 게임, 룰렛 게임)</li>
+            </ul>
+        </li>
+        <br/>      
     </ul>
 </div>
 <br/>  
