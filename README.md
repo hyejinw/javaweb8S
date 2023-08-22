@@ -162,6 +162,7 @@ PPT 미리보기 : https://www.miricanvas.com/v/12a2his <br/>
                 <li>버튼 페이징</li>
                 <li>관심 저장, 장바구니</li>
                 <li>상품 재고 이상으로 상품 개수 증가제한</li>
+                <li>상품 문의</li>
                   <img src="https://i.imgur.com/HvAiLXw.png" width="500px">
                   <img src="https://i.imgur.com/ZyvYTpr.png" width="500px">
             </ul>
@@ -174,12 +175,77 @@ PPT 미리보기 : https://www.miricanvas.com/v/12a2his <br/>
                 <li>버튼 페이징</li>
                 <li>관심 저장, 장바구니</li>
                 <li>상품 옵션 재고 이상으로 상품 개수 증가제한</li>
-                  <img src="https://i.imgur.com/HvAiLXw.png" width="500px">
-                  <img src="https://i.imgur.com/ZyvYTpr.png" width="500px">
+                <li>상품 문의</li>
+                  <img src="https://i.imgur.com/SEBBJ7A.png" width="500px">
+                  <img src="https://i.imgur.com/lk5ZA2Y.png" width="500px">
+                  <img src="https://i.imgur.com/Ykg3LLz.png" width="500px">
             </ul>
         </li>
         <br/>
-
+        <li>
+            <strong>장바구니</strong>
+            <ul>
+                <li>'컬렉션 상품, 매거진, 정기구독' 별로 분류 노출</li>
+                <li>상품 옵션 재고 이상으로 상품 개수 증가제한</li>
+                <li>상품 삭제, 선택 주문</li>
+                  <img src="https://i.imgur.com/X3XNQ2n.png" width="500px">
+            </ul>
+        </li>
+        <br/>
+        <li>
+            <strong>주문</strong>
+            <ul>
+                <li>배송주소록</li>
+                <li>포인트 사용</li>
+                <li>결제 - 포트원 결제 API 사용</li>
+                  <img src="https://i.imgur.com/Z2qHdfk.png" width="500px">
+            </ul>
+        </li>
+        <br/>     
+        <li>
+            <strong>문의 / 공지사항</strong>
+            <ul>
+                <li>버튼 페이징</li>
+                <li>문의 (공개 여부 선택, 비회원 비밀번호)</li>
+                <li>문의 (답변 완료 시 알림 - 이메일 전송)</li>
+                  <img src="https://i.imgur.com/Z2qHdfk.png" width="500px">
+            </ul>
+        </li>
+        <br/>  
+        <li>
+            <strong>커뮤니티: 기록</strong>
+            <ul>
+                <li>버튼 페이징</li>
+                <li>작성자 팝업 페이지</li>
+                <li>댓글, 문장수집 작성 가능</li>
+                <li>공유 가능(카카오톡 공유하기)</li>
+                  <img src="https://i.imgur.com/gfAUUD8.png" width="500px">
+                  <img src="https://i.imgur.com/OwrqZtq.png" width="500px">
+                  <img src="https://i.imgur.com/6G6jY0E.png" width="500px">
+            </ul>
+        </li>
+        <br/>  
+        <li>
+            <strong>커뮤니티: 회원페이지</strong>
+            <ul>
+                <li>회원 팝업 페이지 (서재/문장수집, 기록)</li>
+                <li>회원 페이지 (서재/문장수집, 기록, 작성댓글, 회원정보, 문의/신고)</li>
+                <li>모든 사용자(비회원 포함) 열람 가능</li>
+                <li>회원 정보 & 문의 / 신고: 해당 마이페이지 회원만 열람 가능</li>
+                  <img src="https://i.imgur.com/uZvLz4N.png" width="500px">
+                  <img src="https://i.imgur.com/PXowwnY.png" width="500px">
+            </ul>
+        </li>
+        <br/>  
+        <li>
+            <strong>관리자 페이지 메인</strong>
+            <ul>
+                <li>일반통계 (구독, 주문/반품, 미확인 문의/신고, 3개의 책, 게임)</li>
+                <li>차트통계 (상품 카테고리별 판매량 추이, 구독자 추이, 카테고리별 문의 수, 상품 판매율 TOP5)</li>
+                  <img src="https://i.imgur.com/UdTSZ36.png" width="500px">
+            </ul>
+        </li>
+        <br/>  
      
      
     </ul>
