@@ -130,8 +130,8 @@ PPT 미리보기 : https://www.miricanvas.com/v/12a2his <br/>
                 <li></li>
                 <li>프론트 유효성 검사</li>
                 <li>SMTP이용 - 임시비밀번호 재발급</li>
-                  <img src="https://i.imgur.com/mjG5alr.png" width="500px">
-                  <img src="https://i.imgur.com/sQdVKEo.png" width="500px">
+                  <img src="https://i.imgur.com/EOhnk2h.png" width="500px">
+                  <img src="https://i.imgur.com/0gReaaA.png" width="500px">
             </ul>
         </li>
         <br/>
