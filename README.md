@@ -127,7 +127,6 @@ PPT 미리보기 : https://www.miricanvas.com/v/12a2his <br/>
         <li>
             <strong>로그인 / 회원가입 / 아이디찾기 / 비밀번호찾기</strong>
             <ul>
-                <li></li>
                 <li>프론트 유효성 검사</li>
                 <li>SMTP이용 - 임시비밀번호 재발급</li>
                   <img src="https://i.imgur.com/EOhnk2h.png" width="500px">
@@ -135,6 +134,53 @@ PPT 미리보기 : https://www.miricanvas.com/v/12a2his <br/>
             </ul>
         </li>
         <br/>
+        <li>
+            <strong>MyPage</strong>
+            <ul>
+                <li>주문내역조회 / 회원정보 / 관심상품,</li>
+                <li>포인트 / 문의</li>
+                <li>배송주소록관리 / 구독관리</li>
+                  <img src="https://i.imgur.com/jprSs3o.png" width="500px">
+            </ul>
+        </li>
+        <br/>
+        <li>
+            <strong>주문내역 조회</strong>
+            <ul>
+                <li>분류검색 / 정보검색 / 기간검색</li>
+                <li>버튼 페이징</li>
+                <li>(상세창)주문 상세정보 확인 가능</li>
+                  <img src="https://i.imgur.com/uWez2dS.png" width="500px">
+                  <img src="https://i.imgur.com/1F9HDrs.png" width="500px">
+            </ul>
+        </li>
+        <br/>
+        <li>
+            <strong>매거진 상품</strong>
+            <ul>
+                <li>분류검색</li>
+                <li>버튼 페이징</li>
+                <li>관심 저장, 장바구니</li>
+                <li>상품 재고 이상으로 상품 개수 증가제한</li>
+                  <img src="https://i.imgur.com/HvAiLXw.png" width="500px">
+                  <img src="https://i.imgur.com/ZyvYTpr.png" width="500px">
+            </ul>
+        </li>
+        <br/>
+        <li>
+            <strong>컬렉션 상품</strong>
+            <ul>
+                <li>분류검색</li>
+                <li>버튼 페이징</li>
+                <li>관심 저장, 장바구니</li>
+                <li>상품 옵션 재고 이상으로 상품 개수 증가제한</li>
+                  <img src="https://i.imgur.com/HvAiLXw.png" width="500px">
+                  <img src="https://i.imgur.com/ZyvYTpr.png" width="500px">
+            </ul>
+        </li>
+        <br/>
+
+     
      
     </ul>
 </div>
