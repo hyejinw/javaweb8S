@@ -266,7 +266,7 @@ PPT 미리보기 : https://www.miricanvas.com/v/12a2his <br/><hr/>
             <ul>
                 <li>분류검색, 회원개인정보로 검색</li>
                 <li>페이징 처리</li>
-                <li>회원정보 팝업페이지 (회원정보, 배송지주소록, 포인트적립/사용내역, 구독정보)/li>
+                <li>회원정보 팝업페이지 (회원정보, 배송지주소록, 포인트적립/사용내역, 구독정보)</li>
                   <img src="https://i.imgur.com/6jzzJ1L.png" width="500px">
             </ul>
         </li>
