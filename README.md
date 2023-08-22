@@ -45,7 +45,7 @@ PPT 미리보기 : https://www.miricanvas.com/v/123c9ye <br/>
                 <li>비밀번호 재발급 - 이메일 전송</li>
                 <li>MyPage(주문 내역, 포인트 내역, 작성 문의, 구독 관리, 회원정보 관리)</li>
             </ul>
-        </li>
+        </li><br/>
         <li>
             <strong>매거진</strong>
             <ul>
@@ -54,7 +54,7 @@ PPT 미리보기 : https://www.miricanvas.com/v/123c9ye <br/>
                 <li>최신순, 상품명, 낮은 가격순, 높은 가격순, 발행년도 정렬</li>
                 <li>QnA CRUD</li>
             </ul>
-        </li>
+        </li><br/>
         <li>
            <strong>컬렉션</strong>
            <ul>
@@ -63,28 +63,28 @@ PPT 미리보기 : https://www.miricanvas.com/v/123c9ye <br/>
                <li>최신순, 상품명, 낮은 가격순, 높은 가격순 정렬</li>
                <li>QnA CRUD</li>
            </ul>
-        </li>    
+        </li><br/>    
         <li>
             <strong>공지사항</strong>
             <ul>
                 <li>게시판 CRUD</li>
             </ul>
-        </li>
+        </li><br/>
         <li>
             <strong>장바구니</strong>
             <ul>
                 <li>추가, 개별주문, 선택주문</li>
                 <li>'매거진 상품, 매거진 정기구독, 컬렉션 상품' 분류 노출</li>
             </ul>
-        </li>
+        </li><br/>
         <li>
             <strong>결제 - 포트원 결제모듈 사용, KG 이니시스</strong>
             <ul>
                 <li>배송 주소록 (최대 5개)</li>    
                 <li>포인트 사용 가능</li>
             </ul>
-        </li>
-       <li>
+        </li><br/>
+        <li>
            <strong>커뮤니티 관련</strong>
            <ul>
                <li>랜덤도서 추출기</li>
@@ -93,8 +93,8 @@ PPT 미리보기 : https://www.miricanvas.com/v/123c9ye <br/>
                <li>문장수집</li>
                <li>MyPage(서재, 저장한 기록, 저장 문장수집, 작성 댓글, 작성 신고, 작성 문의)</li>
            </ul>
-       </li>
-       <li>
+        </li><br/>
+        <li>
            <strong>관리자 페이지 관련</strong>
            <ul>
                <li>통계 (차트 통계, 일반 통게)</li>
