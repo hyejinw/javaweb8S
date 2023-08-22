@@ -108,3 +108,34 @@ PPT 미리보기 : https://www.miricanvas.com/v/12a2his <br/>
        </li>
     </ul>
 </div>
+
+<h1>이미지</h1>
+<div>
+    <ul>
+        <li>
+            <strong>메인 페이지</strong>
+            <ul>
+                <li>싱단 : 최신 or 고정 공지사항(최대 3건) / 임시 비밀번호 변경유도</li>
+                <li>신규 매거진(20개)</li>
+                <li>랜덤도서 추출기 / 최신 문장수집</li>
+                <li>뉴스레터 구독 신청</li>
+                  <img src="https://i.imgur.com/hTVfFI3.png" width="500px">
+                  <img src="https://i.imgur.com/7Tse7DV.png" width="500px">
+            </ul>
+        </li>
+        <br/>
+        <li>
+            <strong>로그인 / 회원가입 / 아이디찾기 / 비밀번호찾기</strong>
+            <ul>
+                <li></li>
+                <li>프론트 유효성 검사</li>
+                <li>SMTP이용 - 임시비밀번호 재발급</li>
+                  <img src="https://i.imgur.com/mjG5alr.png" width="500px">
+                  <img src="https://i.imgur.com/sQdVKEo.png" width="500px">
+            </ul>
+        </li>
+        <br/>
+     
+    </ul>
+</div>
+<br/>  
