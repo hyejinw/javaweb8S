@@ -284,7 +284,7 @@ PPT 미리보기 : https://www.miricanvas.com/v/12a2his <br/><hr/>
         <li>
             <strong>기타</strong>
             <ul>
-                <li>자동화 처리 (매거진 정기구독발송, 뉴스레터 발송, 탈퇴 1개월 초과회원 삭제, 배송관리)</li>
+                <li>자동화 처리 (매거진 정기구독발송, 뉴스레터 발송, 탈퇴 1개월 초과회원 삭제, 배송관리) - Spring Scheduler</li>
                 <li>게임 (주사위 게임, 룰렛 게임)</li>
             </ul>
         </li>
