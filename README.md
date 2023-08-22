@@ -262,7 +262,7 @@ PPT 미리보기 : https://www.miricanvas.com/v/12a2his <br/>
             <ul>
                 <li>기간검색, 주문상태별 분류검색, 주문정보로 검색</li>
                 <li>페이징 처리</li>
-                <li>주문정보 팝업페이지/li>
+                <li>주문정보 팝업페이지</li>
                   <img src="https://i.imgur.com/9hWP3X1.png" width="500px">
             </ul>
         </li>
