@@ -5,8 +5,8 @@
 > 인원: 1인<br/>
 
 사이트 링크 : http://49.142.157.251:9090/javaweb8S/ <br/>
-PPT 미리보기 (91장) : https://www.miricanvas.com/v/12a2his <br/>
-PPT 다운로드 : https://drive.google.com/file/d/1p4PZl48JHmKFaAYMQ4FHhKyQTX-9RHQR/view?usp=sharing <br/>
+PDF 미리보기 (91장) : https://www.miricanvas.com/v/12a2his <br/>
+PDF 다운로드 : https://drive.google.com/file/d/1ZiiV4ejJaLtZY5zU4StAgNLvhIV0ZH-Q/view?usp=sharing <br/>
 기획서 및 제작과정 : https://docs.google.com/spreadsheets/d/1JJpuV_yccxDZlcDeTWBFe7ow5mrsIqVjEsVXZ7pktCc/edit?usp=sharing <br/><hr/>
 
 <h1>사용 기술 스택</h1>
