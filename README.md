@@ -204,6 +204,81 @@ Planning and Development Process : https://docs.google.com/spreadsheets/d/1JJpuV
             </ul>
         </li>
         <br/>
+        <li>
+            <strong>Community: Records</strong>
+            <ul>
+                <li>Button Pagination</li>
+                <li>Author Popup Page</li>
+                <li>Ability to Write Comments and Collect Sentences</li>
+                <li>Sharing Available (KakaoTalk Share)</li>
+                  <img src="https://i.imgur.com/gfAUUD8.png" width="500px">
+                  <img src="https://i.imgur.com/OwrqZtq.png" width="500px">
+                  <img src="https://i.imgur.com/6G6jY0E.png" width="500px">
+            </ul>
+        </li>
+        <br/>  
+        <li>
+            <strong>Community: Member Page</strong>
+            <ul>
+                <li>Member Popup Page (Library/Sentence Collection, Records)</li>
+                <li>Member Page (Library/Sentence Collection, Records, Comments, Member Info, Inquiries/Reports)</li>
+                <li>Accessible to All Users (Including Non-Members)</li>
+                <li>Member Info & Inquiries/Reports: Viewable Only by the Respective My Page Member</li>
+                  <img src="https://i.imgur.com/uZvLz4N.png" width="500px">
+                  <img src="https://i.imgur.com/PXowwnY.png" width="500px">
+            </ul>
+        </li>
+        <br/>  
+        <li>
+            <strong>Admin Page Features</strong>
+            <ul>
+                <li>[Member Management] Member Info, Basic Profile</li>
+                <li>[Magazine Management] Magazines, Magazine Subscriptions, Newsletter Subscriptions</li>
+                <li>[Community Management] Reports, Registered Books, Quotes</li>
+                <li>[Collection Management] Categories, Products</li> 
+                <li>[Sales/Shipping Management] Unified Orders, Returns</li>
+                <li>[Inquiries / Notices] Inquiries, Announcements</li>  
+                <li>[Other Management] Temporary File Management - CKEditor</li>    
+            </ul>
+        </li>
+        <br/>      
+        <li>
+            <strong>Admin Page Main</strong>
+            <ul>
+                <li>General Statistics (Subscriptions, Orders/Returns, Unchecked Inquiries/Reports, 3 Books, Games)</li>
+                <li>Chart Statistics (Sales Trends by Product Category, Subscription Trends, Number of Inquiries by Category, Top 5 Product Sales Rates)</li>
+                  <img src="https://i.imgur.com/UdTSZ36.png" width="500px">
+            </ul>
+        </li>
+        <br/>  
+        <li>
+            <strong>Admin Member Management</strong>
+            <ul>
+                <li>Search by Category / Member Personal Information</li>
+                <li>Pagination</li>
+                <li>Member Info Popup Page (Member Info, Shipping Address Book, Point Accumulation/Usage History, Subscription Info)</li>
+                  <img src="https://i.imgur.com/6jzzJ1L.png" width="500px">
+            </ul>
+        </li>
+        <br/>   
+        <li>
+            <strong>Admin Order/Shipping Management</strong>
+            <ul>
+                <li>Search by Period / Order Status / Order Information</li>
+                <li>Pagination</li>
+                <li>Order Info Popup Page</li>
+                  <img src="https://i.imgur.com/9hWP3X1.png" width="500px">
+            </ul>
+        </li>
+        <br/>
+        <li>
+            <strong>Others</strong>
+            <ul>
+                <li>Automated Processing (Magazine Subscription Delivery, Newsletter Sending, Deletion of Members Exceeding 1 Month After Withdrawal, Shipping Management) - Spring Scheduler</li>
+                <li>Games (Dice Game, Roulette Game)</li>
+            </ul>
+        </li>
+        <br/>      
     </ul>
 </div>
 <br/>
